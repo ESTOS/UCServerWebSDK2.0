@@ -1,0 +1,1166 @@
+{
+	"openapi": "3.1.0",
+	"info": {
+		"title": "ENetUC_AV",
+		"version": "0.0.1",
+		"summary": "Audio\/Video interface.\n\n",
+		"description": "## Audio \/ Video Conversation Modul\n\n@startuml\n\n\"ProCall A\" -&gt; \"UCServer\"                : asnAVMakeCall(offer) F\n\n\"UCServer\" -&gt; \"ProCall B\" : asnNewCall(offer) E\n\n\"UCServer\" &lt;- \"ProCall B\" : asnAVMessage(panswer, candidate) E\n\n\"ProCall A\" &lt;- \"UCServer\"                : asnAVMessage(panswer, candidate) E\n\n\"ProCall A\"       &lt;-&gt;        \"ProCall B\" : ICE - Exchange\n\n\"UCServer\" &lt;- \"ProCall B\" : asnAVAlert(panswer) E\n\n\"ProCall A\" &lt;- \"UCServer\"                : asnAVAlert(panswer) E\n\n\"ProCall A\"       &lt;-&gt;        \"ProCall B\" : RTP - Media transport (pre-connect)\n\n\"UCServer\" &lt;- \"ProCall B\" : asnAVConnect(answer) E\n\n\"ProCall A\" &lt;- \"UCServer\"                : asnAVConnect(answer) E\n\n\"ProCall A\" -&gt; \"UCServer\"                : asnAVCallStateChanged(parties) E\n\n\"UCServer\" -&gt; \"ProCall B\" : asnAVCallStateChanged(parties) E\n\n\"ProCall A\"       &lt;-&gt;        \"ProCall B\" : RTP - Media Exchange (call)\n\n\"ProCall A\" -&gt; \"UCServer\"                :\n\n\"UCServer\" -&gt; \"ProCall B\" : asnAVDropCall() E\n\n\"UCServer\" &lt;- \"ProCall B\" :\n\n\"ProCall A\" &lt;- \"UCServer\"                : asnAVDropCall() E\n\n@enduml\n\n## Moduledescription\n\nThis module defines structures and operations related to audio\/video communication controlling.\n\n"
+	},
+	"paths": {
+		"/asnAVDropCall": {
+			"post": {
+				"tags": ["Audio-Video"],
+				"deprecated": false,
+				"operationId": "1501",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnAVDropCallArgument"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnAVMakeCallV2": {
+			"post": {
+				"tags": ["Audio-Video"],
+				"deprecated": false,
+				"operationId": "1505",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnAVMakeCallV2Argument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnAVMakeCallResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnAVNewCallV2": {
+			"post": {
+				"tags": ["Audio-Video"],
+				"deprecated": false,
+				"operationId": "1572",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnAVNewCallV2Argument"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnAVCallStateChanged": {
+			"post": {
+				"tags": ["Audio-Video"],
+				"description": "Invoked (Event) if CallState \/ Information has changed\n\n",
+				"deprecated": false,
+				"operationId": "1551",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnAVCallStateChangedArgument"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnAVCallMessageV2": {
+			"post": {
+				"tags": ["Audio-Video"],
+				"description": "Invoked (Event) if CallState \/ Information has changed\n\n",
+				"deprecated": false,
+				"operationId": "1573",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnAVCallMessageV2Argument"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnAVConnectV2": {
+			"post": {
+				"tags": ["Audio-Video"],
+				"deprecated": false,
+				"operationId": "1574",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnAVConnectV2Argument"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnAVAlertV2": {
+			"post": {
+				"tags": ["Audio-Video"],
+				"deprecated": false,
+				"operationId": "1575",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnAVAlertV2Argument"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnRequestSTUNandTURN": {
+			"post": {
+				"tags": ["Audio-Video"],
+				"description": "Event von Client zum Server um die Konfiguration von STUN und TURN zu bekommen\n\n",
+				"deprecated": false,
+				"operationId": "1555",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnRequestSTUNandTURNArgument"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnGetSTUNandTURN": {
+			"post": {
+				"tags": ["Audio-Video"],
+				"description": "Konfiguration von STUN und TURN abholen (als operation)\n\n",
+				"deprecated": false,
+				"operationId": "1557",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnGetSTUNandTURNArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnGetSTUNandTURNResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnSTUNandTURNConfigChanged": {
+			"post": {
+				"tags": ["Audio-Video"],
+				"description": "Event von Server zum Client wenn entweder vom Client angefordert durch\n\nasnRequestSTUNandTURN oder wenn Konfiguration am Server geändert wurde.\n\n",
+				"deprecated": false,
+				"operationId": "1556",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnSTUNandTURNConfigChangedArgument"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnAVGetIceServers": {
+			"post": {
+				"tags": ["Audio-Video"],
+				"description": "Konfiguration von STUN und TURN abholen (als operation) - Result browser kompatibel\n\n",
+				"deprecated": false,
+				"operationId": "1558",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnAVGetIceServersArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnAVGetIceServersResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnAVMakeMedia": {
+			"post": {
+				"tags": ["Audio-Video"],
+				"deprecated": false,
+				"operationId": "1559",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnAVMediaChangeArgument"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnAVNewMedia": {
+			"post": {
+				"tags": ["Audio-Video"],
+				"deprecated": false,
+				"operationId": "1560",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnAVMediaChangeArgument"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnAVConnectMedia": {
+			"post": {
+				"tags": ["Audio-Video"],
+				"deprecated": false,
+				"operationId": "1561",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnAVMediaChangeArgument"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnAVAlertMedia": {
+			"post": {
+				"tags": ["Audio-Video"],
+				"deprecated": false,
+				"operationId": "1562",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnAVMediaChangeArgument"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnAVDropMedia": {
+			"post": {
+				"tags": ["Audio-Video"],
+				"deprecated": false,
+				"operationId": "1563",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnAVMediaChangeArgument"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnAVCallHoldV2": {
+			"post": {
+				"tags": ["Audio-Video"],
+				"description": "* AV Call Hold Request\n\n@addded 22.08.2024\n\n",
+				"deprecated": false,
+				"operationId": "1576",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnAVCallMessageV2Argument"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnAVCallHoldAckV2": {
+			"post": {
+				"tags": ["Audio-Video"],
+				"description": "* AV Call Hold Request Acknowledgement\n\n@addded 22.08.2024\n\n",
+				"deprecated": false,
+				"operationId": "1577",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnAVCallMessageV2Argument"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnAVCallRetrieveV2": {
+			"post": {
+				"tags": ["Audio-Video"],
+				"description": "* AV Call Retrieve Request\n\n@addded 22.08.2024\n\n",
+				"deprecated": false,
+				"operationId": "1578",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnAVCallMessageV2Argument"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnAVCallRetrieveAckV2": {
+			"post": {
+				"tags": ["Audio-Video"],
+				"description": "* AV Call Retrieve Request Acknowledgement\n\n@addded 22.08.2024\n\n",
+				"deprecated": false,
+				"operationId": "1579",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnAVCallMessageV2Argument"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnAVTransferGetID": {
+			"post": {
+				"tags": ["Audio-Video"],
+				"description": "* AV Transfer Get ID Request\n\n",
+				"deprecated": false,
+				"operationId": "1568",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnAVTransferArgument"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnAVTransferGetIDResult": {
+			"post": {
+				"tags": ["Audio-Video"],
+				"description": "* AV Transfer Get ID Acknowledgement\n\n",
+				"deprecated": false,
+				"operationId": "1569",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnAVTransferArgument"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnAVTransferStart": {
+			"post": {
+				"tags": ["Audio-Video"],
+				"description": "* AV Transfer Start Request\n\n",
+				"deprecated": false,
+				"operationId": "1570",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnAVTransferArgument"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnAVTransferStartResult": {
+			"post": {
+				"tags": ["Audio-Video"],
+				"description": "* AV Transfer Start Acknowledgement\n\n",
+				"deprecated": false,
+				"operationId": "1571",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnAVTransferArgument"
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"schemas": {
+			"AsnOptionalParameters": {
+				"$ref": "ENetUC_Common.json#/components/schemas/AsnOptionalParameters"
+			},
+			"AsnSystemTime": {
+				"$ref": "ENetUC_Common.json#/components/schemas/AsnSystemTime"
+			},
+			"UTF8StringList": {
+				"$ref": "ENetUC_Common.json#/components/schemas/UTF8StringList"
+			},
+			"AsnRequestError": {
+				"$ref": "ENetUC_Common.json#/components/schemas/AsnRequestError"
+			},
+			"AsnNetDatabaseContact": {
+				"$ref": "ENetUC_Common.json#/components/schemas/AsnNetDatabaseContact"
+			},
+			"AsnCtiNewCallParams": {
+				"$ref": "ENetUC_Common_SIPCTI.json#/components/schemas/AsnCtiNewCallParams"
+			},
+			"AsnConfigSTUNandTURN": {
+				"$ref": "ENetUC_Common_SIPCTI.json#/components/schemas/AsnConfigSTUNandTURN"
+			},
+			"AsnConfigSTUNandTURNList": {
+				"$ref": "ENetUC_Common_SIPCTI.json#/components/schemas/AsnConfigSTUNandTURNList"
+			},
+			"EnumSTUNandTURNType": {
+				"$ref": "ENetUC_Common_SIPCTI.json#/components/schemas/EnumSTUNandTURNType"
+			},
+			"AsnAVMakeCallErrorEnum": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "general",
+						"const": 100
+					}]},
+			"EnumCodecType": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "ePCMU",
+						"const": 0
+					},
+					{
+						"title": "ePCMA",
+						"const": 8
+					},
+					{
+						"title": "eG722",
+						"const": 9
+					},
+					{
+						"title": "eG729",
+						"const": 18
+					},
+					{
+						"title": "eOPUS",
+						"const": 96
+					},
+					{
+						"title": "eTELEPHONE_EVENT",
+						"const": 101
+					},
+					{
+						"title": "eG726_16",
+						"const": 110
+					},
+					{
+						"title": "eG726_24",
+						"const": 111
+					},
+					{
+						"title": "eG726_32",
+						"const": 112
+					},
+					{
+						"title": "eG726_40",
+						"const": 113
+					},
+					{
+						"title": "eVP8",
+						"const": 200
+					},
+					{
+						"title": "eH264",
+						"const": 264
+					}]},
+			"AsnAVMediaType": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "eMEDIATYPEAUDIOVIDEO",
+						"const": 0
+					},
+					{
+						"title": "eMEDIATYPEAUDIO",
+						"const": 1
+					},
+					{
+						"title": "eMEDIATYPEDESKTOPSHARING",
+						"const": 2
+					},
+					{
+						"title": "eMEDIATYPEDESTKOPREQUESTSHARING",
+						"const": 3
+					},
+					{
+						"title": "eMEDIATYPESIP",
+						"const": 65535
+					}]},
+			"AsnAVCallAndConnectionID": {
+				"type": "object",
+				"description": "### Category \nAudio-Video\n### Long \nConnectionID with CallID and physical endpoint (URI \/ EndPointID)\n-&gt; wird benutzt wenn man keine LogEndpointID hat oder wenn alle Endpunkte einer Verbindung (LogEndpointIDs) an einer speziellen EndpointID erreicht werden sollen\n\n### Private \n0",
+				"properties": {
+					"u8sCallID": {
+						"type": "string"
+					},
+					"u8sEndpointID": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"u8sCallID",
+					"u8sEndpointID"
+				]
+			},
+			"AsnAVMakeCallV2Argument": {
+				"type": "object",
+				"description": "### Category \nAudio-Video\n### Long \n**********************************************************\n********************** AVMakeCallV2 **********************\n**********************************************************\nArgument for the asnAVMakeCallV2 operation\n\n### Private \n0",
+				"properties": {
+					"callType": {
+						"type": "integer"
+					},
+					"u8sUriFrom": {
+						"type": "string"
+					},
+					"u8sUriTo": {
+						"type": "string"
+					},
+					"u8sContentType": {
+						"type": "string"
+					},
+					"u8sBody": {
+						"type": "string"
+					},
+					"newCallParams": {
+						"$ref": "#/components/schemas/AsnCtiNewCallParams"
+					},
+					"u8sAssociatedTextChatConversationID": {
+						"type": "string"
+					},
+					"u8sCaps": {
+						"type": "string"
+					},
+					"bIsPublicCall": {
+						"type": "boolean"
+					},
+					"bIsRemoteControlCallOut": {
+						"type": "boolean"
+					},
+					"bIsRemoteControlCallIn": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"callType",
+					"u8sUriFrom",
+					"u8sUriTo",
+					"u8sContentType",
+					"u8sBody"
+				]
+			},
+			"AsnAVCallParty": {
+				"type": "object",
+				"description": "### Category \nAudio-Video\n### Long \n**********************************************************\n**************** asnAVCallStateChanged *******************\n**********************************************************\n* signal call state changes\n\n### Private \n0",
+				"properties": {
+					"endpointID": {
+						"type": "string"
+					},
+					"endPointState": {
+						"type": "integer"
+					}
+				},
+				"required": [
+					"endpointID",
+					"endPointState"
+				]
+			},
+			"AsnAVCallMessageICEV2": {
+				"type": "object",
+				"description": "### Category \nAudio-Video\n### Long \n**********************************************************\n****************** asnAVCallMessageV2 ********************\n**********************************************************\n\n### Private \n0",
+				"properties": {
+					"candidate": {
+						"type": "string"
+					},
+					"sdpMid": {
+						"type": "string"
+					},
+					"sdpMLineIndex": {
+						"type": "integer"
+					}
+				},
+				"required": [
+					"candidate",
+					"sdpMid",
+					"sdpMLineIndex"
+				]
+			},
+			"AsnAVConnectV2Argument": {
+				"type": "object",
+				"description": "### Category \nAudio-Video\n### Long \n**********************************************************\n******************** asnAVConnectV2 **********************\n**********************************************************\n* Connect\/accept an AV Connection and drops forked users\n\n### Private \n0",
+				"properties": {
+					"u8sCallID": {
+						"type": "string"
+					},
+					"endpointIDTo": {
+						"type": "string"
+					},
+					"connectedEndPointID": {
+						"type": "string"
+					},
+					"callType": {
+						"type": "integer"
+					},
+					"u8sUriTo": {
+						"type": "string"
+					},
+					"u8sContentType": {
+						"type": "string"
+					},
+					"u8sBody": {
+						"type": "string"
+					},
+					"u8sCaps": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"u8sCallID",
+					"endpointIDTo",
+					"connectedEndPointID",
+					"callType",
+					"u8sUriTo",
+					"u8sContentType",
+					"u8sBody"
+				]
+			},
+			"AsnAVAlertV2Argument": {
+				"type": "object",
+				"description": "### Category \nAudio-Video\n### Long \n***********************************************************\n*********************** asnAVAlert ************************\n***********************************************************\n* Indicate a remote ringing device, may enable early media\n-&gt; sofort nach Erhalt einen neuen Rufes sollte Alert oder Drop geschickt werden\n-&gt; fuer Early media koennte im Alert ein SDP mitgeschickt werden -&gt; derzeit schicken wirs im Connect\n\n### Private \n0",
+				"properties": {
+					"u8sCallID": {
+						"type": "string"
+					},
+					"endpointIDTo": {
+						"type": "string"
+					},
+					"endpointIDFrom": {
+						"type": "string"
+					},
+					"u8sUriTo": {
+						"type": "string"
+					},
+					"u8sContentType": {
+						"type": "string"
+					},
+					"u8sBody": {
+						"type": "string"
+					},
+					"u8sCaps": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"u8sCallID",
+					"endpointIDTo",
+					"endpointIDFrom",
+					"u8sUriTo",
+					"u8sContentType",
+					"u8sBody"
+				]
+			},
+			"AsnRequestSTUNandTURNArgument": {
+				"type": "object",
+				"description": "### Category \nAudio-Video\n### Private \n0"
+			},
+			"AsnGetSTUNandTURNArgument": {
+				"type": "object",
+				"description": "### Category \nAudio-Video\n### Private \n0"
+			},
+			"AsnGetSTUNandTURNResult": {
+				"type": "object",
+				"description": "### Category \nAudio-Video\n### Private \n0",
+				"properties": {
+					"listConfigSTUNandTURN": {
+						"$ref": "#/components/schemas/AsnConfigSTUNandTURNList"
+					}
+				},
+				"required": [
+					"listConfigSTUNandTURN"
+				]
+			},
+			"AsnSTUNandTURNConfigChangedArgument": {
+				"type": "object",
+				"description": "### Category \nAudio-Video\n### Private \n0",
+				"properties": {
+					"listConfigSTUNandTURN": {
+						"$ref": "#/components/schemas/AsnConfigSTUNandTURNList"
+					}
+				},
+				"required": [
+					"listConfigSTUNandTURN"
+				]
+			},
+			"AsnIceServer": {
+				"type": "object",
+				"description": "### Category \nAudio-Video\n### Long \nWebRtc Browser kompatible iceServers\n\n### Private \n0",
+				"properties": {
+					"username": {
+						"type": "string"
+					},
+					"credential": {
+						"type": "string"
+					},
+					"urls": {
+						"$ref": "#/components/schemas/UTF8StringList"
+					}
+				},
+				"required": [
+					"urls"
+				]
+			},
+			"AsnAVGetIceServersArgument": {
+				"type": "object",
+				"description": "### Category \nAudio-Video\n### Private \n0"
+			},
+			"AsnConfigCodec": {
+				"type": "object",
+				"description": "### Category \nAudio-Video\n### Private \n0",
+				"properties": {
+					"iType": {
+						"type": "integer"
+					}
+				},
+				"required": [
+					"iType"
+				]
+			},
+			"AsnAVMediaChangeArgument": {
+				"type": "object",
+				"description": "### Category \nAudio-Video\n### Long \n**********************************************************\n*** asnAVMedia to inform server about media changes in ***\n*** existing call (currently to enable journalling of  ***\n*** media switching)                                   ***\n**********************************************************\n* Connect\/accept an AV Connection and drops forked users\n\n### Private \n0",
+				"properties": {
+					"u8sCallID": {
+						"type": "string"
+					},
+					"endpointIDTo": {
+						"type": "string"
+					},
+					"connectedEndPointID": {
+						"type": "string"
+					},
+					"iMediaType": {
+						"type": "integer"
+					},
+					"u8sUriFrom": {
+						"type": "string"
+					},
+					"u8sUriTo": {
+						"type": "string"
+					},
+					"u8sContentType": {
+						"type": "string"
+					},
+					"u8sBody": {
+						"type": "string",
+						"format": "byte"
+					},
+					"u8sMediaID": {
+						"type": "string"
+					},
+					"iAvFlags": {
+						"type": "integer"
+					},
+					"iAvDropReason": {
+						"type": "integer"
+					}
+				},
+				"required": [
+					"u8sCallID",
+					"endpointIDTo",
+					"connectedEndPointID",
+					"iMediaType",
+					"u8sUriFrom",
+					"u8sUriTo",
+					"u8sContentType",
+					"u8sBody",
+					"u8sMediaID",
+					"iAvFlags",
+					"iAvDropReason"
+				]
+			},
+			"AsnAVTransferArgument": {
+				"type": "object",
+				"description": "### Category \nAudio-Video\n### Long \n**********************************************************\n********* asnAVTransferGetID\/asnAVTransferStart **********\n**********************************************************\n* transfer message argument\n\n### Private \n0",
+				"properties": {
+					"u8sCallID": {
+						"type": "string"
+					},
+					"endpointIDTo": {
+						"type": "string"
+					},
+					"endpointIDFrom": {
+						"type": "string"
+					},
+					"iTransferResult": {
+						"type": "integer"
+					},
+					"u8sUriTransferTo": {
+						"type": "string"
+					},
+					"u8sUriTransferFrom": {
+						"type": "string"
+					},
+					"u8sTransferTargetID": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"u8sCallID",
+					"endpointIDTo",
+					"endpointIDFrom",
+					"iTransferResult",
+					"u8sUriTransferTo",
+					"u8sUriTransferFrom"
+				]
+			},
+			"AsnAVCallOrConnection": {
+				"oneOf": [
+					{
+						"type": "string"
+					},
+					{
+						"$ref": "#/components/schemas/AsnAVCallAndConnectionID"
+					}
+				]
+			},
+			"AsnAVMakeCallResult": {
+				"type": "object",
+				"description": "### Category \nAudio-Video\n### Long \nResult of the asnAVMakeCall and asnAVMakeCallV2 operation\n\n### Private \n0",
+				"properties": {
+					"callAndConnectionID": {
+						"$ref": "#/components/schemas/AsnAVCallAndConnectionID"
+					},
+					"u8sCTIConnectionID": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"callAndConnectionID",
+					"u8sCTIConnectionID"
+				]
+			},
+			"AsnAVDropCallArgument": {
+				"type": "object",
+				"description": "### Category \nAudio-Video\n### Long \n**********************************************************\n*********************** AVDropCall ***********************\n**********************************************************\n* Drop an AV Connection\nto drop\/reject an incoming call it is recommended to use iAvDropReason BUSY (1) or REJECT (16)\nto hang up an active call it is recommended to use iAvDropReason NORMAL_CALL_CLEARING (0)\nto hang up an outgoing call pending (e.g. ringback) it is recommended to use iAvDropReason CANCEL (2) or NORMAL_CALL_CLEARING (0)\nfurther cause definitions in: http:\/\/svnserver:8080\/svn\/devprocall\/trunk\/estos\/common\/libs\/enetctilib\/include\/EAVCause.h (and the EAVCause.cpp file)\n\n### Private \n0",
+				"properties": {
+					"dropTarget": {
+						"$ref": "#/components/schemas/AsnAVCallOrConnection"
+					},
+					"u8sCause": {
+						"type": "string"
+					},
+					"iAvDropReason": {
+						"type": "integer"
+					}
+				},
+				"required": [
+					"dropTarget",
+					"u8sCause",
+					"iAvDropReason"
+				]
+			},
+			"AsnAVNewCallV2Argument": {
+				"type": "object",
+				"description": "### Category \nAudio-Video\n### Long \n**********************************************************\n********************** asnAVNewCall **********************\n**********************************************************\n* Invoked (Event) signalling a new (incoming) call\n\n### Private \n0",
+				"properties": {
+					"callAndConnectionID": {
+						"$ref": "#/components/schemas/AsnAVCallAndConnectionID"
+					},
+					"u8sCTIConnectionID": {
+						"type": "string"
+					},
+					"callType": {
+						"type": "integer"
+					},
+					"u8sUriFrom": {
+						"type": "string"
+					},
+					"endpointIDFrom": {
+						"type": "string"
+					},
+					"u8sUriTo": {
+						"type": "string"
+					},
+					"u8sContentType": {
+						"type": "string"
+					},
+					"u8sBody": {
+						"type": "string"
+					},
+					"newCallParams": {
+						"$ref": "#/components/schemas/AsnCtiNewCallParams"
+					},
+					"u8sAssociatedTextChatConversationID": {
+						"type": "string"
+					},
+					"u8sCaps": {
+						"type": "string"
+					},
+					"u8sCTITrackerID": {
+						"type": "string"
+					},
+					"asnLocalContact": {
+						"$ref": "#/components/schemas/AsnNetDatabaseContact"
+					},
+					"u8sHoldContactNumberSC": {
+						"type": "string"
+					},
+					"asnHoldContact": {
+						"$ref": "#/components/schemas/AsnNetDatabaseContact"
+					},
+					"u8sRedirectingNumberSC": {
+						"type": "string"
+					},
+					"asnRedirectingContact": {
+						"$ref": "#/components/schemas/AsnNetDatabaseContact"
+					},
+					"bIsRemoteControlCallOut": {
+						"type": "boolean"
+					},
+					"bIsRemoteControlCallIn": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"callAndConnectionID",
+					"u8sCTIConnectionID",
+					"callType",
+					"u8sUriFrom",
+					"endpointIDFrom",
+					"u8sUriTo",
+					"u8sContentType",
+					"u8sBody"
+				]
+			},
+			"AsnAVCallPartyList": {
+				"type": "array",
+				"items": {
+					"$ref": "#/components/schemas/AsnAVCallParty"
+				}
+			},
+			"AsnAVCallStateChangedArgument": {
+				"type": "object",
+				"description": "### Category \nAudio-Video\n### Private \n0",
+				"properties": {
+					"u8sCallID": {
+						"type": "string"
+					},
+					"endpointIDTo": {
+						"type": "string"
+					},
+					"endpointIDFrom": {
+						"type": "string"
+					},
+					"callState": {
+						"type": "integer"
+					},
+					"u8sUriFrom": {
+						"type": "string"
+					},
+					"u8sUriTo": {
+						"type": "string"
+					},
+					"parties": {
+						"$ref": "#/components/schemas/AsnAVCallPartyList"
+					},
+					"optionalParams": {
+						"$ref": "#/components/schemas/AsnOptionalParameters"
+					}
+				},
+				"required": [
+					"u8sCallID",
+					"endpointIDTo",
+					"endpointIDFrom",
+					"callState",
+					"u8sUriFrom",
+					"u8sUriTo",
+					"parties"
+				]
+			},
+			"AsnAVCallMessageV2Argument": {
+				"type": "object",
+				"description": "### Category \nAudio-Video\n### Long \n* send end to end messages\n\n### Private \n0",
+				"properties": {
+					"u8sCallID": {
+						"type": "string"
+					},
+					"endpointIDTo": {
+						"type": "string"
+					},
+					"endpointIDFrom": {
+						"type": "string"
+					},
+					"messageType": {
+						"type": "integer"
+					},
+					"u8sUriTo": {
+						"type": "string"
+					},
+					"u8sContentType": {
+						"type": "string"
+					},
+					"u8sBody": {
+						"type": "string"
+					},
+					"iceCandidate": {
+						"$ref": "#/components/schemas/AsnAVCallMessageICEV2"
+					},
+					"u8sConnectedNumberSC": {
+						"type": "string"
+					},
+					"asnConnectedContact": {
+						"$ref": "#/components/schemas/AsnNetDatabaseContact"
+					},
+					"u8sRedirectingNumberSC": {
+						"type": "string"
+					},
+					"asnRedirectingContact": {
+						"$ref": "#/components/schemas/AsnNetDatabaseContact"
+					}
+				},
+				"required": [
+					"u8sCallID",
+					"endpointIDTo",
+					"endpointIDFrom",
+					"messageType",
+					"u8sUriTo"
+				]
+			},
+			"AsnIceServerList": {
+				"type": "array",
+				"items": {
+					"$ref": "#/components/schemas/AsnIceServer"
+				}
+			},
+			"AsnAVGetIceServersResult": {
+				"type": "object",
+				"description": "### Category \nAudio-Video\n### Private \n0",
+				"properties": {
+					"iceServers": {
+						"$ref": "#/components/schemas/AsnIceServerList"
+					}
+				},
+				"required": [
+					"iceServers"
+				]
+			},
+			"AsnConfigCodecList": {
+				"type": "array",
+				"items": {
+					"$ref": "#/components/schemas/AsnConfigCodec"
+				}
+			},
+			"AsnConfigPorts": {
+				"type": "object",
+				"description": "### Category \nAudio-Video\n### Private \n0",
+				"properties": {
+					"minPort": {
+						"type": "integer"
+					},
+					"maxPort": {
+						"type": "integer"
+					}
+				},
+				"required": [
+					"minPort",
+					"maxPort"
+				]
+			}
+		}
+	}
+}

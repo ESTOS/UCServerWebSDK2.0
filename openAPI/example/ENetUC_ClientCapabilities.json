@@ -1,0 +1,267 @@
+{
+	"openapi": "3.1.0",
+	"info": {
+		"title": "ENetUC_ClientCapabilities",
+		"version": "0.0.1",
+		"summary": "Data structures and methods to transport and notify client capabilities between clients and the server\n\n",
+		"description": "Each client has certain capabilities he is able to handle. They are used to tell other clients the kind of interactions each client is able to process.\n\nIf a client wants to start an audio call to another client both clients have to be able to process audio (speakers and microphone present).\n\nAs soon as a client is capable to handle audio it tells the server and thus other clients that the client is now ready to process audio requests.\n\nBeside well known capabilities clients may exchange customs capabilities. (e.g. client is capable for some sort of sharing and the appropriate sharing resource id)\n\n"
+	},
+	"paths": {
+		"/asnSetClientCapabilitiesV2": {
+			"post": {
+				"tags": ["ClientCapabilities"],
+				"summary": "Event to send client capabilities to the server\n\n",
+				"deprecated": false,
+				"operationId": "3300",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnSetClientCapabilitiesV2Argument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnSetClientCapabilitiesV2Result"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnGetClientCapabilitiesV2": {
+			"post": {
+				"tags": ["ClientCapabilities"],
+				"summary": "Event to send client capabilities to the server\n\n",
+				"deprecated": false,
+				"operationId": "3301",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnGetClientCapabilitiesV2Argument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnGetClientCapabilitiesV2Result"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnClientCapabilitiesV2Changed": {
+			"post": {
+				"tags": ["ClientCapabilities"],
+				"summary": "Event the server will send if client capabilites have changed\n\n",
+				"description": "The server will dispatch events for subscribed contacts towards the clients\n\nThe List will contain a list of client capabiliites with the user ids the refer to\n\n",
+				"deprecated": false,
+				"operationId": "3302",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnClientCapabilitiesV2ChangedArgument"
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"schemas": {
+			"AsnOptionalParameters": {
+				"$ref": "ENetUC_Common.json#/components/schemas/AsnOptionalParameters"
+			},
+			"AsnRequestError": {
+				"$ref": "ENetUC_Common.json#/components/schemas/AsnRequestError"
+			},
+			"AsnStringPairList": {
+				"$ref": "ENetUC_Common.json#/components/schemas/AsnStringPairList"
+			},
+			"UTF8StringList": {
+				"$ref": "ENetUC_Common.json#/components/schemas/UTF8StringList"
+			},
+			"SEQInteger": {
+				"$ref": "ENetUC_Common.json#/components/schemas/SEQInteger"
+			},
+			"AsnClientCapabilityEnum": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "bNothing",
+						"const": 0
+					},
+					{
+						"title": "bAudio",
+						"const": 1
+					},
+					{
+						"title": "bVideo",
+						"const": 2
+					},
+					{
+						"title": "bScreenShare",
+						"const": 3
+					},
+					{
+						"title": "bCalendarExchange",
+						"const": 4
+					},
+					{
+						"title": "bCalendarNotes",
+						"const": 5
+					},
+					{
+						"title": "bCameraControl",
+						"const": 6
+					},
+					{
+						"title": "bPublicChat",
+						"const": 7
+					},
+					{
+						"title": "bPublicCall",
+						"const": 8
+					},
+					{
+						"title": "bConferencing",
+						"const": 9
+					},
+					{
+						"title": "bAudioRemoteControlServer",
+						"const": 10
+					},
+					{
+						"title": "bAudioRemoteControlClient",
+						"const": 11
+					}]},
+			"AsnClientCapabilitiesV2": {
+				"type": "object",
+				"description": "### Category \nClientCapabilities\n### Short \nData structure to transport capabilities a client\/connection is capable to handle\n\n### Long \nThis data structure is used to transport client capabilities between the clients and the server\nIn an invoke towards the server the client tells what the client is capable to handle. This list\ncontains well known properties as well as custom properties a client wants to exchange with other clients.\nWell known capabilites are an integer list which contains enums values of the AsnClientCapabilityEnum.\nAdditionaly clients may specify additional information they need to exchange with other clients using the customCapabilities\nThe serve builds a sum over all connected clients an notifies clients via the PresenceV2 implementation or changed events\nwithin this interface.\n\n### Private \n0",
+				"properties": {
+					"eClientCapabilities": {
+						"$ref": "#/components/schemas/SEQInteger"
+					},
+					"customCapabilities": {
+						"$ref": "#/components/schemas/AsnStringPairList"
+					}
+				},
+				"required": [
+					"eClientCapabilities",
+					"customCapabilities"
+				]
+			},
+			"AsnSetClientCapabilitiesV2Result": {
+				"type": "object",
+				"description": "### Category \nClientCapabilities\n### Private \n0"
+			},
+			"AsnGetClientCapabilitiesV2Argument": {
+				"type": "object",
+				"description": "### Category \nClientCapabilities\n### Short \nArgument for the asnGetClientCapabilitiesV2 event\n\n### Private \n0",
+				"properties": {
+					"u8slistContactIDs": {
+						"$ref": "#/components/schemas/UTF8StringList"
+					}
+				},
+				"required": [
+					"u8slistContactIDs"
+				]
+			},
+			"AsnClientCapabilitiesV2ByID": {
+				"type": "object",
+				"description": "### Category \nClientCapabilities\n### Short \nClient Capabilities with the user identifier to whom they belong\n\n### Private \n0",
+				"properties": {
+					"u8sID": {
+						"type": "string"
+					},
+					"capabilities": {
+						"$ref": "#/components/schemas/AsnClientCapabilitiesV2"
+					}
+				},
+				"required": [
+					"u8sID",
+					"capabilities"
+				]
+			},
+			"AsnClientCapabilitiesV2ByIDList": {
+				"type": "array",
+				"items": {
+					"$ref": "#/components/schemas/AsnClientCapabilitiesV2ByID"
+				}
+			},
+			"AsnSetClientCapabilitiesV2Argument": {
+				"type": "object",
+				"description": "### Category \nClientCapabilities\n### Short \nArgument for the asnSetClientCapabilitiesV2 event\n\n### Private \n0",
+				"properties": {
+					"capabilities": {
+						"$ref": "#/components/schemas/AsnClientCapabilitiesV2"
+					}
+				},
+				"required": [
+					"capabilities"
+				]
+			},
+			"AsnGetClientCapabilitiesV2Result": {
+				"type": "object",
+				"description": "### Category \nClientCapabilities\n### Private \n0",
+				"properties": {
+					"capabilities": {
+						"$ref": "#/components/schemas/AsnClientCapabilitiesV2ByIDList"
+					}
+				},
+				"required": [
+					"capabilities"
+				]
+			},
+			"AsnClientCapabilitiesV2ChangedArgument": {
+				"type": "object",
+				"description": "### Category \nClientCapabilities\n### Short \nArgument for the asnClientCapabilitiesV2Changed method\n\n### Private \n0",
+				"properties": {
+					"capabilities": {
+						"$ref": "#/components/schemas/AsnClientCapabilitiesV2ByIDList"
+					}
+				},
+				"required": [
+					"capabilities"
+				]
+			}
+		}
+	}
+}

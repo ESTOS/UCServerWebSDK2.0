@@ -1,0 +1,490 @@
+﻿UC-Server-Access-Protocol-AV
+	{ iso(1) identified-organization(3) dod(6) internet(1) private(4) enterprise(1) estos(10924) uc-server-access-protocol-v2(2) av(4) }
+
+-- @category Audio-Video
+-- @brief Audio/Video interface.
+-- @long
+-- ## Audio / Video Conversation Modul
+
+-- @startuml
+-- "ProCall A" -> "UCServer"                : asnAVMakeCall(offer) F
+--                "UCServer" -> "ProCall B" : asnNewCall(offer) E
+--                "UCServer" <- "ProCall B" : asnAVMessage(panswer, candidate) E
+-- "ProCall A" <- "UCServer"                : asnAVMessage(panswer, candidate) E
+-- "ProCall A"       <->        "ProCall B" : ICE - Exchange
+--                "UCServer" <- "ProCall B" : asnAVAlert(panswer) E
+-- "ProCall A" <- "UCServer"                : asnAVAlert(panswer) E
+-- "ProCall A"       <->        "ProCall B" : RTP - Media transport (pre-connect)
+--                "UCServer" <- "ProCall B" : asnAVConnect(answer) E
+-- "ProCall A" <- "UCServer"                : asnAVConnect(answer) E
+-- "ProCall A" -> "UCServer"                : asnAVCallStateChanged(parties) E
+--                "UCServer" -> "ProCall B" : asnAVCallStateChanged(parties) E
+-- "ProCall A"       <->        "ProCall B" : RTP - Media Exchange (call)
+-- "ProCall A" -> "UCServer"                : 
+--                "UCServer" -> "ProCall B" : asnAVDropCall() E
+--                "UCServer" <- "ProCall B" : 
+-- "ProCall A" <- "UCServer"                : asnAVDropCall() E
+-- @enduml
+-- ## Moduledescription
+-- This module defines structures and operations related to audio/video communication controlling.
+--
+
+DEFINITIONS
+IMPLICIT TAGS ::=
+BEGIN
+
+IMPORTS
+AsnOptionalParameters, AsnSystemTime, UTF8StringList, AsnRequestError, AsnNetDatabaseContact FROM UC-Server-Access-Protocol-Common
+AsnCtiNewCallParams, AsnConfigSTUNandTURN, AsnConfigSTUNandTURNList, EnumSTUNandTURNType FROM UC-Server-Access-Protocol-SIPCTICommon
+;
+
+-- ConnectionID with CallID and physical endpoint (URI / EndPointID)
+-- -> wird benutzt wenn man keine LogEndpointID hat oder wenn alle Endpunkte einer Verbindung (LogEndpointIDs) an einer speziellen EndpointID erreicht werden sollen
+AsnAVCallAndConnectionID ::= SEQUENCE
+{
+	u8sCallID						UTF8String,
+	u8sEndpointID					UTF8String,
+	...
+}
+
+-- Choice with all combinations
+-- -> wenn man eine LogEndpointID hat dann nimmt man die logconnectionID, wenn nicht und man hat aber eine EndpointID dann nimmt man die connectionID, wenn man aber alle EndpointIDs welche
+-- -> mit dem Call verbunden sind erreichen will, dann kann man auch nur die CallID zur Adressierung verwenden
+AsnAVCallOrConnection ::= CHOICE
+{
+	u8sCallID					[0] UTF8String,
+	connectionID				[1] AsnAVCallAndConnectionID
+}
+
+-- Result of the asnAVMakeCall and asnAVMakeCallV2 operation
+AsnAVMakeCallResult ::= SEQUENCE 
+{
+	callAndConnectionID				AsnAVCallAndConnectionID,
+	u8sCTIConnectionID				UTF8String,							-- CID des erzeugten EVirtualSIPAVCall-Objekts im Line-Call-Model. Nach Rücksprache mit RB leider nicht mit der AV-ConnectionID vereinbar.
+	...
+}
+
+AsnAVMakeCallErrorEnum ::= ENUMERATED 
+{
+	general(100)
+}
+
+-- **********************************************************
+-- *********************** AVDropCall ***********************
+-- **********************************************************
+--* Drop an AV Connection 
+-- to drop/reject an incoming call it is recommended to use iAvDropReason BUSY (1) or REJECT (16)
+-- to hang up an active call it is recommended to use iAvDropReason NORMAL_CALL_CLEARING (0)
+-- to hang up an outgoing call pending (e.g. ringback) it is recommended to use iAvDropReason CANCEL (2) or NORMAL_CALL_CLEARING (0)
+-- further cause definitions in: http://svnserver:8080/svn/devprocall/trunk/estos/common/libs/enetctilib/include/EAVCause.h (and the EAVCause.cpp file)
+AsnAVDropCallArgument ::= SEQUENCE 
+{
+	dropTarget						AsnAVCallOrConnection,				-- will man alle Endpoints ausloesen muss man die CallID schicken (ohne  connectionID)<br />will man alle LogEndpoints eines Endpoints ausloesen muss man die EndpointID schicken
+	u8sCause						UTF8String,							-- g_EAVCause.GetASNCauseStrFromEAVCause(iAvDropReason) sollte benutzt werden - String zur besseren Lesbarkeit im Trace
+	iAvDropReason					INTEGER,							-- EAVCause::dropCause
+	...
+}
+
+asnAVDropCall OPERATION
+	ARGUMENT	arg AsnAVDropCallArgument
+::= 1501
+
+-- **********************************************************
+-- ********************** AVMakeCallV2 **********************
+-- **********************************************************
+-- Argument for the asnAVMakeCallV2 operation
+AsnAVMakeCallV2Argument ::= SEQUENCE 
+{
+	callType						INTEGER,							-- EDataStructuresAVMessages.h
+	u8sUriFrom						UTF8String,							-- Eigene SIP-Identität - wenn nicht definiert oder falsch dann unkorrekte Presenceanzeigen vom Server
+	u8sUriTo						UTF8String,							-- SIP-Identität des Angerufenen (Empfänger)
+	u8sContentType					UTF8String,							-- derzeit L"application/sdp"
+	u8sBody							UTF8String,							-- Session Description Protocol Daten (SDP Offer)
+	newCallParams				[0] AsnCtiNewCallParams OPTIONAL,   -- Additional data for the call
+	u8sAssociatedTextChatConversationID [1] UTF8String OPTIONAL,
+	u8sCaps						[2] UTF8String OPTIONAL,			-- capability strings: HOLD (details see EDataStructuresAVMessages.h) 
+	bIsPublicCall				[3] BOOLEAN OPTIONAL,
+	bIsRemoteControlCallOut		[4] BOOLEAN OPTIONAL,
+	bIsRemoteControlCallIn		[5] BOOLEAN OPTIONAL,
+	...
+}
+
+asnAVMakeCallV2 OPERATION
+	ARGUMENT	arg AsnAVMakeCallV2Argument
+	RESULT		res AsnAVMakeCallResult
+	ERRORS		{AsnRequestError}
+::= 1505
+
+-- **********************************************************
+-- ********************** asnAVNewCall **********************
+-- **********************************************************
+-- * Invoked (Event) signalling a new (incoming) call 
+AsnAVNewCallV2Argument ::= SEQUENCE
+{
+	callAndConnectionID				AsnAVCallAndConnectionID,			-- IDs fuer den Angerufenen (called party)
+	u8sCTIConnectionID				UTF8String,							-- CID des erzeugten EVirtualSIPAVCall-Objekts im Line-Call-Model. Nach Rücksprache mit RB leider nicht mit der AV-ConnectionID vereinbar.
+	-- @linked AsnAVMediaType
+	callType						INTEGER,							-- Media Type
+	u8sUriFrom						UTF8String,							-- SIP-Identität des Anrufenden
+	endpointIDFrom					UTF8String,							-- EndpointIDs des Anrufenden (calling party)
+	u8sUriTo						UTF8String,							-- SIP-Identität des Angerufenen
+	u8sContentType					UTF8String,							-- application/sdp
+	u8sBody							UTF8String,							-- Session Description Protocol Daten (SDP Offer)
+	newCallParams				[0] AsnCtiNewCallParams OPTIONAL,		-- Additional data for the call
+	u8sAssociatedTextChatConversationID [1] UTF8String OPTIONAL,
+	u8sCaps						[2] UTF8String OPTIONAL,				-- capability strings: HOLD, EBTRANS, BTRANS , CTRANS , CANNOT_REJECT (details see EDataStructuresAVMessages.h) 
+	u8sCTITrackerID				[3] UTF8String OPTIONAL,				-- Associated call tracker id
+	asnLocalContact				[4] AsnNetDatabaseContact OPTIONAL,		-- the resolved contact for the hold number
+	u8sHoldContactNumberSC		[5] UTF8String OPTIONAL,				-- the hold number in supercanonic notation
+	asnHoldContact				[6] AsnNetDatabaseContact OPTIONAL,		-- the resolved contact for the hold number
+	u8sRedirectingNumberSC		[7] UTF8String OPTIONAL,				-- the hold number in supercanonic notation
+	asnRedirectingContact		[8] AsnNetDatabaseContact OPTIONAL,		-- the resolved contact for the hold number
+	bIsRemoteControlCallOut		[9] BOOLEAN OPTIONAL,
+	bIsRemoteControlCallIn		[10] BOOLEAN OPTIONAL,
+	...
+}
+
+asnAVNewCallV2 OPERATION
+	ARGUMENT	arg AsnAVNewCallV2Argument
+::= 1572
+
+-- **********************************************************
+-- **************** asnAVCallStateChanged *******************
+-- **********************************************************
+-- * signal call state changes 
+AsnAVCallParty ::= SEQUENCE
+{
+	endpointID						UTF8String,							-- endpointID of the party
+	endPointState					INTEGER,							-- ffs
+	...
+}
+
+AsnAVCallPartyList ::= SEQUENCE OF AsnAVCallParty
+
+AsnAVCallStateChangedArgument ::= SEQUENCE
+{
+	u8sCallID						UTF8String,							-- Die CallID identifiziert den Call
+	endpointIDTo					UTF8String,							-- ID des Message Empfaengers
+	endpointIDFrom					UTF8String,							-- ID des Message Sendenden
+	callState						INTEGER,							-- EDataStructuresAVMessages.h
+	u8sUriFrom						UTF8String,							-- Uri des Message Sendenden
+	u8sUriTo						UTF8String,							-- Uri des Message Empfaengers
+	parties							AsnAVCallPartyList,					-- ffs - wird derzeit als empty Sequence geschickt -> EAVCallPartyList als empty list
+	-- optionalParams Name "u8sRedirectingNumberSC" Value String
+	-- optionalParams Name "redirectingContact" Value BER encoded redirectingContact
+	optionalParams				[0] AsnOptionalParameters OPTIONAL,
+	...
+}
+
+-- Invoked (Event) if CallState / Information has changed
+asnAVCallStateChanged OPERATION
+	ARGUMENT	arg AsnAVCallStateChangedArgument
+::= 1551
+
+-- **********************************************************
+-- ****************** asnAVCallMessageV2 ********************
+-- **********************************************************
+AsnAVCallMessageICEV2 ::= SEQUENCE
+{
+	candidate					UTF8String,
+	sdpMid						UTF8String,
+	sdpMLineIndex				INTEGER,
+	...
+}
+
+-- * send end to end messages 
+AsnAVCallMessageV2Argument ::= SEQUENCE
+{
+	u8sCallID						UTF8String,
+	endpointIDTo					UTF8String,
+	endpointIDFrom					UTF8String,
+
+	-- MessageTypes<br />
+	-- e.g. for stream renegotiation (like Hold over federation) EAV_MESSTYPE_RENEGOTIATE_OFFER (6), EAV_MESSTYPE_RENEGOTIATE_ANSWER (7), EAV_MESSTYPE_RENEGOTIATE_DECLINE (8)
+	-- e.g. for Softphone EAV_MESSTYPE_REINVITE_OFFER (9), EAV_MESSTYPE_REINVITE_ANSWER (10), EAV_MESSTYPE_PRANSWER (11)
+	-- or for ICE candidate handling EAV_MESSTYPE_ICE_CANDIDATE_SDP (2), last candidate EAV_MESSTYPE_ICE_CANDIDATE_END (5)
+	-- or for remote device control (e.g. camera) EAV_MESSTYPE_CAM_CONTROL (3) with arguments in u8sBody like STR_CAMCONTROL_PANLEFT ("PANLEFT")
+	messageType						INTEGER,							-- EDataStructuresAVMessages.h
+	u8sUriTo						UTF8String,							-- Uri des Message Empfaengers - UriFrom sollte dem Message Empfaenger schon bekannt sein
+	u8sContentType				[0] UTF8String OPTIONAL,				-- derzeit L"application/camcontrol" oder L"application/mediastate"
+	u8sBody						[1] UTF8String OPTIONAL,				-- EAVCallMessageArgument::STR_...
+	iceCandidate				[2] AsnAVCallMessageICEV2 OPTIONAL,
+	u8sConnectedNumberSC		[3] UTF8String OPTIONAL,				-- the remote number in supercanonic notation
+	asnConnectedContact			[4] AsnNetDatabaseContact OPTIONAL,		-- the resolved contact for the remote number
+	u8sRedirectingNumberSC		[5] UTF8String OPTIONAL,				-- the redirecting number in supercanonic notation
+	asnRedirectingContact		[6] AsnNetDatabaseContact OPTIONAL,		-- the resolved contact for the redirecting number	
+	...
+}
+
+-- Invoked (Event) if CallState / Information has changed
+asnAVCallMessageV2 OPERATION
+	ARGUMENT	arg AsnAVCallMessageV2Argument
+::= 1573
+
+-- **********************************************************
+-- ******************** asnAVConnectV2 **********************
+-- **********************************************************
+-- * Connect/accept an AV Connection and drops forked users  
+AsnAVConnectV2Argument ::= SEQUENCE 
+{
+	u8sCallID						UTF8String,
+	endpointIDTo					UTF8String,							-- ID des Message Empfaengers
+	connectedEndPointID				UTF8String,							-- ID des Message Sendenden
+	callType						INTEGER,							-- EDataStructuresAVMessages.h
+	u8sUriTo						UTF8String,							-- Uri des Message Empfaengers - UriFrom sollte dem Message Empfaenger schon bekannt sein
+	u8sContentType					UTF8String,							-- derzeit L"application/sdp"
+	u8sBody							UTF8String,							-- Session Description Protocol Daten (SDP Answer)
+	u8sCaps						[0] UTF8String OPTIONAL,				-- capability strings: HOLD, EBTRANS, BTRANS , CTRANS , CANNOT_REJECT (details see EDataStructuresAVMessages.h)  
+	...
+}
+
+asnAVConnectV2 OPERATION
+	ARGUMENT	arg AsnAVConnectV2Argument
+::= 1574
+
+-- ***********************************************************
+-- *********************** asnAVAlert ************************
+-- ***********************************************************
+-- * Indicate a remote ringing device, may enable early media 
+-- -> sofort nach Erhalt einen neuen Rufes sollte Alert oder Drop geschickt werden
+-- -> fuer Early media koennte im Alert ein SDP mitgeschickt werden -> derzeit schicken wirs im Connect
+AsnAVAlertV2Argument ::= SEQUENCE
+{
+	u8sCallID						UTF8String,
+	endpointIDTo					UTF8String,							-- ID des Message Empfaengers
+	endpointIDFrom					UTF8String,							-- ID des Message Sendenden
+	u8sUriTo						UTF8String,							-- Uri des Message Empfaengers - UriFrom sollte dem Message Empfaenger schon bekannt sein
+	u8sContentType					UTF8String,							-- derzeit empty String: L"" - moeglich: L"application/sdp"
+	u8sBody							UTF8String,							-- derzeit empty String: L"" - moeglich: Session Description Protocol Daten (SDP Answer)
+	u8sCaps						[0] UTF8String OPTIONAL,				-- capability strings: HOLD (details see EDataStructuresAVMessages.h) 
+	...
+}
+
+asnAVAlertV2 OPERATION
+	ARGUMENT	arg AsnAVAlertV2Argument
+::= 1575
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~ asnRequestSTUNandTURN ~~~~~~~~~~~~~~~~~~~~~
+-- Event von Client zum Server um die Konfiguration von STUN und TURN zu bekommen
+asnRequestSTUNandTURN OPERATION
+	ARGUMENT	arg AsnRequestSTUNandTURNArgument
+::= 1555
+
+AsnRequestSTUNandTURNArgument ::= SEQUENCE
+{
+	...
+}
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~ asnGetSTUNandTURN ~~~~~~~~~~~~~~~~~~~~~
+-- Konfiguration von STUN und TURN abholen (als operation)
+asnGetSTUNandTURN OPERATION
+	ARGUMENT	arg AsnGetSTUNandTURNArgument
+	RESULT		res AsnGetSTUNandTURNResult
+	ERRORS		{AsnRequestError}
+::= 1557
+
+AsnGetSTUNandTURNArgument ::= SEQUENCE
+{
+	...
+}
+
+AsnGetSTUNandTURNResult ::= SEQUENCE
+{
+	listConfigSTUNandTURN			AsnConfigSTUNandTURNList,
+	...
+}
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~ asnSTUNandTURNConfigChanged ~~~~~~~~~~~~~
+-- Event von Server zum Client wenn entweder vom Client angefordert durch 
+-- asnRequestSTUNandTURN oder wenn Konfiguration am Server geändert wurde.
+asnSTUNandTURNConfigChanged OPERATION
+	ARGUMENT	arg AsnSTUNandTURNConfigChangedArgument
+::= 1556
+
+AsnSTUNandTURNConfigChangedArgument ::= SEQUENCE
+{
+	listConfigSTUNandTURN			AsnConfigSTUNandTURNList,
+	...
+}
+
+-- WebRtc Browser kompatible iceServers
+AsnIceServer ::= SEQUENCE
+{
+	username					[0] UTF8String OPTIONAL,				-- turn username to use
+	credential					[1] UTF8String OPTIONAL,				-- turn password to use
+	urls						UTF8StringList,							-- uris
+	...
+}
+AsnIceServerList ::= SEQUENCE OF AsnIceServer
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~ asnAVGetIceServers ~~~~~~~~~~~~~~~~~~~~~
+-- Konfiguration von STUN und TURN abholen (als operation) - Result browser kompatibel
+asnAVGetIceServers OPERATION
+	ARGUMENT	arg AsnAVGetIceServersArgument
+	RESULT		res AsnAVGetIceServersResult
+	ERRORS		{AsnRequestError}
+::= 1558
+
+AsnAVGetIceServersArgument ::= SEQUENCE
+{
+	...
+}
+
+AsnAVGetIceServersResult ::= SEQUENCE
+{
+	iceServers						AsnIceServerList,
+	...
+}
+
+-- **********************************************************
+-- CodecConfig to set the Codecs per MediaEndpoint in Kurento --
+-- **********************************************************
+EnumCodecType ::= ENUMERATED
+{
+	ePCMU(0),
+	ePCMA(8),
+	eG722(9),
+	eG729(18),
+	eOPUS(96),
+	eTELEPHONE-EVENT(101),
+	eG726-16(110),
+	eG726-24(111),
+	eG726-32(112),
+	eG726-40(113),
+	eVP8(200),
+	eH264(264)
+}
+
+AsnConfigCodec ::= SEQUENCE
+{
+	-- @linked EnumCodecType
+	iType							INTEGER,						-- Codec type
+
+	...
+}
+AsnConfigCodecList ::= SEQUENCE OF AsnConfigCodec
+
+AsnConfigPorts ::= SEQUENCE
+{
+	minPort							INTEGER,						-- minimim config port
+	maxPort							INTEGER,						-- maximum config port
+	...
+}
+
+AsnAVMediaType ::= ENUMERATED
+{
+	eMEDIATYPEAUDIOVIDEO(0),
+	eMEDIATYPEAUDIO(1),
+	eMEDIATYPEDESKTOPSHARING(2),
+	eMEDIATYPEDESTKOPREQUESTSHARING(3),
+	eMEDIATYPESIP(65535)
+}
+
+-- **********************************************************
+-- *** asnAVMedia to inform server about media changes in ***
+-- *** existing call (currently to enable journalling of  ***
+-- *** media switching)                                   ***
+-- **********************************************************
+-- * Connect/accept an AV Connection and drops forked users  
+AsnAVMediaChangeArgument ::= SEQUENCE 
+{
+	u8sCallID						UTF8String,
+	endpointIDTo					UTF8String,			-- ID des Message Empfaengers, hier des Peers (MediaChange messages werden im server terminiert)
+	connectedEndPointID				UTF8String,			-- ID des Message Sendenden
+	-- @linked AsnAVMediaType
+	iMediaType						INTEGER,			-- Media this message relates to
+	u8sUriFrom						UTF8String,			-- Uri des Message Sendenden
+	u8sUriTo						UTF8String,			-- Uri des Message Empfaengers
+	u8sContentType					UTF8String,			-- derzeit L"application/xx"
+	u8sBody							OCTET STRING,		-- Session Description Protocol Daten (SDP Answer)
+	u8sMediaID						UTF8String,			-- ID of the different Media Requests is used as the Connection ID in the journal -> generated by the client when a new media is addedbr />Note: Tracker Id of the original call is as well the Connection ID
+	iAvFlags						INTEGER,			-- Media related flags, currently only IS_ORIGINATOR 0x0001L
+	iAvDropReason					INTEGER,			-- EAVCause::dropCause
+	...
+}
+
+asnAVMakeMedia OPERATION
+	ARGUMENT	arg AsnAVMediaChangeArgument
+::= 1559
+
+asnAVNewMedia OPERATION
+	ARGUMENT	arg AsnAVMediaChangeArgument
+::= 1560
+
+asnAVConnectMedia OPERATION
+	ARGUMENT	arg AsnAVMediaChangeArgument
+::= 1561
+
+asnAVAlertMedia OPERATION
+	ARGUMENT	arg AsnAVMediaChangeArgument
+::= 1562
+
+asnAVDropMedia OPERATION
+	ARGUMENT	arg AsnAVMediaChangeArgument
+::= 1563
+
+-- * AV Call Hold Request
+-- @addded 22.08.2024
+asnAVCallHoldV2 OPERATION
+	ARGUMENT	arg AsnAVCallMessageV2Argument
+::= 1576
+
+-- * AV Call Hold Request Acknowledgement                    
+-- @addded 22.08.2024
+asnAVCallHoldAckV2 OPERATION
+	ARGUMENT	arg AsnAVCallMessageV2Argument
+::= 1577
+
+-- * AV Call Retrieve Request                                
+-- @addded 22.08.2024
+asnAVCallRetrieveV2 OPERATION
+	ARGUMENT	arg AsnAVCallMessageV2Argument
+::= 1578
+
+-- * AV Call Retrieve Request Acknowledgement                
+-- @addded 22.08.2024
+asnAVCallRetrieveAckV2 OPERATION
+	ARGUMENT	arg AsnAVCallMessageV2Argument
+::= 1579
+
+-- **********************************************************
+-- ********* asnAVTransferGetID/asnAVTransferStart **********
+-- **********************************************************
+-- * transfer message argument 
+AsnAVTransferArgument ::= SEQUENCE
+{
+	u8sCallID						UTF8String,
+	endpointIDTo					UTF8String,					-- ID des Message Empfaengers
+	endpointIDFrom					UTF8String,					-- ID des Message Senders
+	iTransferResult					INTEGER,					-- for result Messages, SIP status, e.g.: '202' accepted, '100' trying, '200' OK
+	u8sUriTransferTo				UTF8String,					-- Destination of transfer
+	u8sUriTransferFrom				UTF8String,					-- Transfering Party
+	u8sTransferTargetID				[0] UTF8String OPTIONAL,	-- we ask the Consultation call (C-partner) for an ID to identify it in the transfer request to the A-partner
+	...
+}
+
+-- * AV Transfer Get ID Request                              
+asnAVTransferGetID OPERATION
+	ARGUMENT	arg AsnAVTransferArgument
+::= 1568
+
+-- * AV Transfer Get ID Acknowledgement                      
+asnAVTransferGetIDResult OPERATION
+	ARGUMENT	arg AsnAVTransferArgument
+::= 1569
+
+-- * AV Transfer Start Request                               
+asnAVTransferStart OPERATION
+	ARGUMENT	arg AsnAVTransferArgument
+::= 1570
+
+-- * AV Transfer Start Acknowledgement                       
+asnAVTransferStartResult OPERATION
+	ARGUMENT	arg AsnAVTransferArgument
+::= 1571
+
+END

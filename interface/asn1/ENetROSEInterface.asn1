@@ -1,0 +1,744 @@
+﻿UC-Server-Access-Protocol-Main
+	{ iso(1) identified-organization(3) dod(6) internet(1) private(4) enterprise(1) estos(10924) uc-server-access-protocol-v2(2) main(1) }
+
+-- @category General
+-- @brief General interface
+-- @long
+-- ## Module description 
+-- General interfacefunctions not included in any other module.
+-- 
+-- 
+
+DEFINITIONS
+IMPLICIT TAGS ::=
+BEGIN
+
+IMPORTS
+AsnUserPropertyBag, AsnNetDatabaseContact, AsnNetDatabaseContactList, SEQInteger, AsnIntegerPairList, AsnStringPairList, AsnSystemTime, AsnOptionalParameters, UTF8StringList, AsnRequestError FROM UC-Server-Access-Protocol-Common
+AsnProjectPinRule, AsnProjectPinRuleList, AsnCtiNewCallParams, AsnLineForwards FROM UC-Server-Access-Protocol-SIPCTICommon
+AsnUserDynamicRights, AsnUserDynamicRightsList, AsnUserStaticRights, AsnUserStaticRights2, AsnContactV2, AsnAbsentStateV2, AsnCustomNote FROM UC-Server-Access-Protocol-AsnContactCommon
+SEQAppointmentList, AsnAppointmentEntry FROM UC-Server-Access-Protocol-AppointmentsCommon
+;
+
+ucServerAccessProtocolOID OBJECT IDENTIFIER ::= {iso(1) identified-organization(3) dod(6) internet(1) private(4) enterprise(1) estos(10924) uc-server-access-protocol(1) version-two(2)}
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~ ASN-MEMBERS ~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+AsnContactID ::= UTF8String
+AsnContactIDs ::= SEQUENCE OF AsnContactID
+
+-- @brief Regular expression to reformat a phone number. Replaces AsnNumberFormatRegExpression.
+AsnNumberFormatRegExpression2 ::= SEQUENCE
+{
+	u8sSearch							UTF8String,
+	u8sReplace							UTF8String,
+	bMatchReplace						BOOLEAN,
+	...
+}
+
+-- @brief List of AsnNumberFormatRegExpression. Replaces AsnNumberFormatRegExpressList.
+AsnNumberFormatRegExpressList2 ::= SEQUENCE OF AsnNumberFormatRegExpression2
+
+-- @brief Encapsulates AsnNumberFormatRegExpressList2 together with a readonly flag.
+AsnNumberFormatRegExpressions2 ::= SEQUENCE
+{
+	bIsReadOnlyFromFile					BOOLEAN,
+	formatRules							AsnNumberFormatRegExpressList2,
+	...
+}
+
+-- @brief Enum to indicated how phone numbers should be formatted.
+AsnETAPIDialNumberFormat ::= ENUMERATED
+{
+	-- Normal formatting, all rules apply
+	eTAPIDIALNUMBERFORMATNORMAL					(0),
+	-- Make all numbers upercanoncal (e.g. +49815136856177)
+	eTAPIDIALNUMBERFORMATSUPERCANONIC			(1),
+	-- No rules apply, numbers will be dialed like they were entered; only special character will be removed
+	eTAPIDIALNUMBERFORMATPLAIN					(2),	
+	-- Plain numbers will be dialed like they were entered, supercanonical numbers will be formatted. The PBX will always get dialable numbers.
+	eTAPIDIALNUMBERFORMATDIALABLEPLAIN			(3)
+}
+
+-- @brief Description of formatting and dialing rules for phone numbers.
+-- @long
+-- Each PBX is connected to a phone network which defines the rules to apply if number should be dialed or how
+-- phone numbers are routed and transmitted.
+--
+-- The AsnLocationInformation contains information how to handle
+-- phone numbers to allow comfort functions for the user like formatting phone numbers to display them in a readable manner 
+-- or to enable the user to enter numbers in a short format etc.
+--
+-- Replaces AsnLocationInformation.
+AsnLocationInformation2 ::= SEQUENCE
+{
+	u8sLocationID								UTF8String,
+	u8sLocationCheckSum							UTF8String,					-- Checksum to detec changes in the AsnLocationInformation2.
+	bUseVanity									BOOLEAN,
+	bShowExtendedSettings						BOOLEAN,
+	bUseTkSystem								BOOLEAN,
+	bUseAdvancedLCR								BOOLEAN,
+	bFixedNumberLenExtensionDTMFDialing			BOOLEAN,
+	bMultiLocationSupport						BOOLEAN, 
+	bAutoCreateOtherLocationRules				BOOLEAN,
+	bAllowNumberSearchOtherLocations			BOOLEAN, 
+	bShortenOtherLocationSCNumbersForDialing	BOOLEAN,
+	iCountryID									INTEGER,
+	iLanguage									INTEGER,
+	u8sCountryCode								UTF8String,
+	u8sLocalPrefix								UTF8String,
+	u8sNationalPrefix							UTF8String,
+	u8sInternationalPrefix						UTF8String,
+	u8sLocalDialingRule							UTF8String,
+	u8sNationalDialingRule						UTF8String,
+	u8sInternationalDialingRule					UTF8String,
+	u8sCityCodeNoPrefix							UTF8String,
+	u8sVanityNumbers							UTF8String,
+	u8sTKLocalAccessCode						UTF8String,
+	u8sTKLongDistanceAccessCode					UTF8String,
+	u8sTKInternationalAccessCode				UTF8String,
+	u8sTKPrivateAccessCode						UTF8String,
+	u8sTKForwardingAccessCode					UTF8String,
+	u8sTKAnschlussNr							UTF8String,
+	iTKMinLenInternalNumbers					INTEGER,
+	iTKMaxLenInternalNumbers					INTEGER,
+	numberFormatInternal						AsnNumberFormatRegExpressions2,
+	numberFormatExternal						AsnNumberFormatRegExpressions2,
+	numberFormatAutomaticOtherLocationsDDItoSC	AsnNumberFormatRegExpressions2,
+	numberFormatAutomaticOtherLocationsSCtoDDI	AsnNumberFormatRegExpressions2,
+	numberFormatRegExpressListIn				AsnNumberFormatRegExpressions2,
+	numberFormatRegExpressListOut				AsnNumberFormatRegExpressions2,
+	numberFormatRegExpressListDial				AsnNumberFormatRegExpressions2,
+	numberFormatRegExpressListFinalDial			AsnNumberFormatRegExpressions2,
+	projectPINRules								AsnProjectPinRuleList,
+
+	u8sDDIRangeBegin							UTF8String,
+	u8sDDIRangeEnd								UTF8String,
+
+	-- Dialing Number Format. See AsnETAPIDialNumberFormat for details.
+	-- @linked AsnETAPIDialNumberFormat
+	iDialingNumberFormat						INTEGER,				
+	bNoLocalDialing								BOOLEAN,
+	...
+}
+
+--Remote Tapi Treiber Rufnummern Formatierung
+AsnERemoteTapiNumberFormat ::= ENUMERATED
+{
+	--Plain, wie von PBX
+	eREMOTETAPINUMBERFORMATPLAIN				(0),
+	--Vorformatiert, aber nicht Superkanonisch
+	eREMOTETAPINUMBERFORMATPREFORMAT			(1),
+	--Superkanonisch
+	eREMOTETAPINUMBERFORMATSUPERCANONIC			(2)	
+}
+
+--Remote Tapi Treiber Rufnummern Wahl Formatierung 
+AsnERemoteTapiDialFormat ::= ENUMERATED
+{
+	--Plain wählen, nur PC Wahl Final anwenden
+	eREMOTETAPIDIALFORMATPLAIN					(0),
+	--Komplett Formatieren
+	eREMOTETAPIDIALFORMATALL					(1)
+}
+
+--MultiLine TAPI Treiber - Name der Leitungen
+AsnERemoteTapiLineNames ::= ENUMERATED
+{
+	--Wie vom TAPI-Treiber gemeldet
+	eREMOTETAPILINENAMESORIGINAL				(0),
+	--Mit Standortinformationen erweitert
+	eREMOTETAPILINENAMESLINENUMBER				(1)
+}
+
+-- @brief The different forwarding modes a line could probably support.
+AsnForwardMode ::= ENUMERATED 
+{ 
+	-- Forward unknown
+	iCTIFORWARDUNKNOWN		(0),
+	-- Forward Immediate
+	iCTIFORWARDIMMEDIATE	(1),
+	-- Forward on Busy
+	iCTIFORWARDBUSY			(2),
+	-- Forward on No Answer
+	iCTIFORWARDNOANSW		(3),
+	-- Forward on Busy for internal
+	iCTIFORWARDBUSYINT		(4),
+	-- Forward on Busy for external
+	iCTIFORWARDBUSYEXT		(5),
+	-- Forward on No answer for int
+	iCTIFORWARDNOANSINT		(6),
+	-- Forward on No answer for ext
+	iCTIFORWARDNOANSEXT		(7),
+	-- Forward immediate for intern
+	iCTIFORWARDIMMINT		(8),
+	-- Forward immediate for extern
+	iCTIFORWARDIMMEXT		(9),
+	-- Backend specific forwarding
+	iCTIBACKENDSPECIFIC		(10) -- ~ 0x80000000
+}
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-- @brief Enumeration of possible presence states of a contact.
+-- @long 
+-- The presence state of a contcat (or line, or appointment etc.) is a DWORD (32 Bit) bit field, where the individual Bits
+-- are devided into two seperate spaces: the presence state (AsnPresenceStateEnum) and the presence state flags (AsnPresenceStateFlags)
+-- which contain further deatils about the current presence state.
+AsnPresenceStateEnum ::= ENUMERATED
+{
+    eUNCONTROLLED (0), -- Presence is not available, contact is unknown.
+    eAVAILABLE    (1), -- Contact is available.
+    eBUSY         (2), -- Contact is busy.
+    eABSENT       (3), -- Contact is absent.
+    eDONOTDISTURB (4), -- Contact wished to not being disturbed.
+	eOUTOFORDER   (7)  -- Something does not work, line is not connected, device is broken etc. Contact may not get into this state.
+}
+
+-- @brief The addition state flags for the current presenc state.
+-- @long 
+-- The presence state of a contcat (or line, or appointment etc.) is a DWORD (32 Bit) bit field, where the individual Bits
+-- are devided into two seperate spaces: the presence state (AsnPresenceStateEnum) and the presence state flags (AsnPresenceStateFlags)
+-- which contain further deatils about the current presence state.
+AsnPresenceStateFlags ::= ENUMERATED
+{	
+     eWORKINGAFTERCALL       (65536),  -- 0x00010000 - The contact is doing work after a call and should be treated as "busy". (added after PCE 5.1)
+     eCONFERENCING		    (131072),  -- 0x00020000 - The contact is participating a conference with our conferencing product (added with PCE 7.1)
+     eRINGING             (16777216),  -- 0x01000000 - The contact has a call ringing on one of his phone or A/V lines.
+     eAPPOINTMENT         (33554432),  -- 0x02000000 - The contavct has currently an active appointment in "absent", "busy" or "free" state.
+     eCALL		          (67108864),  -- 0x04000000 - The contact is in a call.
+     eOFFLINE	         (134217728),  -- 0x08000000 - The contact is offline.
+     eNOTESET	         (268435456),  -- 0x10000000 - The contact has set a note.
+     eIDLE		         (536870912),  -- 0x20000000 - The contact does not used his mouse or keyboard for a time or is only logged in with a mobile device.
+     eMOBILEAVAILABLITY (1073741824)   -- 0x40000000 - The contact is most likely reachable on his mobile device.
+     -- ~ eRESERVED2 (2147483648)       - - 0x80000000 ( der ASN1C Compiler für .NET kann dieses Bit nicht richtig setzen und liefert %ASN-E-UNDEFVAL, Referenced value 'eRESERVED2' not defined
+}
+
+-- @brief Helper masks to distinguish the presence state from the presence state flags.
+AsnPresenceStateMasks ::= ENUMERATED
+{
+	ePresenceStateMask          (255),       -- 0x000000ff - Currently the lower byte contains the presence state
+	ePresenceStateFlagsMaskAdd  (16711680),  -- 0x00ff0000 - Additional flags introduced later in the development process of ProCall after Version 5.1.
+	ePresenceStateFlagsMask     (2130706432) -- 0x7f000000 - Currently the top most byte of the DWORD contains the presence state flags. Addendum: a technical constraint in the c# library prevents the usage of the top most bit.
+	-- ~ oberstes Bit darf nicht gesetzt sein, da sonst der ASN1C für .Net den Enum nicht übersetzen kann
+}
+
+-- @brief States a call can have.
+EnumCallState ::= ENUMERATED
+{
+	eCALLSTATEUNKNOWN(0),				-- Call is in an unknown state.
+	eCALLSTATEDESTROYED(1),				-- Call was destroyed by dropping it.
+	eCALLSTATEOFFERING(2),				-- Call is ringing inbound.
+	eCALLSTATEDIALING(4),				-- User is dialing.
+	eCALLSTATERINGBACK(8),				-- Call is ringing outbound (call number is complete)
+	eCALLSTATEBUSY(16),					-- Call outbound is busy.
+	eCALLSTATECONNECTED(32),			-- Call is connected (same for in- and outbound)
+	eCALLSTATECONFERENCED(64),			-- Call is part of a call conference.
+	eCALLSTATEHOLD(128),				-- Call is on hold.
+	eCALLSTATEDISCONNECTED(256),		-- Call is disconnected by the call partner. The user should drop the call too, then it will get destroyed too.
+	eCALLSTATEPREPARECALL(512)			-- Call is in a prepare state (special for procall, this is not a normal PBX state).
+}
+
+-- @brief The disconnected state may be reached by different reasons which may be interesting for the business logic or the user.
+EnumCallDisconnectedReason ::= ENUMERATED
+{
+	eDISCONNECTEDREASONUNKNOWN(0),					-- Disconnect reason unknown, even if the call was successful connected and one of the participants has dropped the call.
+													-- ~ unbekannt, auch wenn erfolgreich verbunden und einer der beiden Teilnehmer hat aufgelegt
+	eDISCONNECTEDREASONUNCONNECTED(1),				-- The call partner did not answer the call.
+	eDISCONNECTEDREASONBUSY(2),						-- The call partner is busy.
+
+													-- Anruf wurde aus einem ECALLSTATE_OFFERING heraus mit redirect oder Pickup weggeholt
+	eDISCONNECTEDREASONREDIRECTEDUNKNOWN(3),		-- The call was redirected or picked in the state offering (eCALLSTATEOFFERING) by an unkown line or participant.
+	eDISCONNECTEDREASONREDIRECTEDBYLINEOWNER(4)		-- The call was redirected or picked in the state offering (eCALLSTATEOFFERING) by the line owner.
+}
+
+-- @brief Contact data source for call AsnCtiCallInformation
+-- @long
+-- In a call information it can be necessary to know, where the contact data of the remote contact was found.<br />
+-- For example with this information, a client can decide not to overwrite a contact in a call, if the source is another client of the same user.
+EnumRemoteContactSource ::= ENUMERATED
+{
+	eUNKNOWN 			(0),	-- Data source is unknown/not set
+	eSERVERPROVIDED 	(1),	-- Server provided the contact data
+	eCLIENTPROVIDED 	(2),	-- The client provided the contact data
+	eOTHERCLIENTPROVIDED (3)		-- Another client provided the contact data (if the same user has more than one client running)
+}
+
+
+-- @brief Technical type of a call.
+--
+EAsnCallType ::= ENUMERATED
+{
+	eCALLTYPENORMAL(0),						-- Just a normal call.
+	eCALLTYPECONSULT(1),					-- Consultation call.
+	eCALLTYPECONFERENCECONTROLER(2),		-- Conference controller call.
+	eCALLTYPECALLBACK(3),					-- Callback call (callback while busy or callback was not answered)
+	eCALLTYPECONFERENCEMEMBER(4),			-- Conference member call.
+	eCALLTYPECONFERENCECONTROLERPENDING(5),	-- Conference controller while building up the conference (US conference model)
+	eCALLTYPECONFERENCEMEMBERPENDING(6)		-- Conference member while building up the conference (US conference model)
+}
+
+-- @brief The state of the call recorder.
+EnumCallRecordingState ::= ENUMERATED
+{
+	eNOCALLRECODRING(0),		-- Call recording not active.
+	eCALLRECORDERCALL(1),		-- This is the call recording call to the ISDN/CAPI device usewd to record the call.
+	eCALLRECORDINGMEMBER(2),	-- Call which will be recorded.
+	eWASCALLRECORDERCALL(3),	-- Call which was the **recorder** call.
+	eWASCALLRECORDINGMEMBER(4)	-- Call which was the **recorded** call.
+}
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~ asnKeepAlive ~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-- @brief Event which can be send to the UCServer regularily to detect connection loss faster.
+asnKeepAlive OPERATION 
+	ARGUMENT	arg AsnKeepAliveArgument
+::= 100
+
+-- @brief Argunment for asnKeepAlive.
+AsnKeepAliveArgument ::= SEQUENCE
+{
+	dummy NULL,	-- no parameter
+	...
+}
+
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~ GET/SET-FUNCTIONS ~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~ asnGetLocationInformation ~~~~~~~~~~~~~~~~~~
+
+-- @brief Argument for asnGetLocationInformation and asnGetLocationInformation2.
+AsnGetLocationInformationArgument ::= SEQUENCE	
+{
+	u8sLocationID						UTF8String,						-- The identifier of a location information. See asnGetLocationIDs as an example how to get a location id.
+	...
+}
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~ asnGetLocationInformation2 ~~~~~~~~~~~~~~~~~
+
+-- @brief Result of asnGetLocationInformation2.
+AsnGetLocationInformation2Result ::= SEQUENCE	
+{
+	asnLocationData		AsnLocationInformation2,		-- Location information (v2) about the phone number rules on the line.
+	...
+}
+
+-- @brief Get a specific location information (AsnLocationInformation2).
+-- @long
+-- This function is replaces asnGetLocationInformation and delivers the new AsnLocationInformation2 for the given location id.
+asnGetLocationInformation2 OPERATION
+	ARGUMENT	arg AsnGetLocationInformationArgument
+	RESULT		res AsnGetLocationInformation2Result
+	ERRORS		{AsnRequestError}
+::= 1119
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~ asnSetLocationInformation2 ~~~~~~~~~~~~~~~~~
+
+AsnSetLocationInformation2Argument ::= SEQUENCE	-- Attention: referenced by ENetUC_Mgmt.asn1
+{
+	asnLocationData		AsnLocationInformation2,
+	...
+}
+
+AsnSetLocationInformation2Result ::= SEQUENCE	-- Attention: referenced by ENetUC_Mgmt.asn1
+{
+	...
+}
+
+asnSetLocationInformation2 OPERATION
+	ARGUMENT	arg AsnSetLocationInformation2Argument
+	RESULT		res AsnSetLocationInformation2Result
+	ERRORS		{AsnRequestError}
+::= 1127
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~ asnAsnGetLocationIDs ~~~~~~~~~~~~~~~~~~~~
+-- Liefert die LocationIDs mit passender MD5 Prüfsumme. 
+-- Wird vom Client verwendet um zu Prüfen ob seine Location Settings noch aktuell sind
+
+AsnGetLocationIDsArgument ::= SEQUENCE	-- Attention: referenced by ENetUC_Mgmt.asn1 
+{
+	locationIDs							[0] UTF8StringList OPTIONAL,
+	...
+}
+
+AsnGetLocationIDsResult ::= SEQUENCE	-- Attention: referenced by ENetUC_Mgmt.asn1 
+{
+	-- first LocationID, last MD5 Checksum
+	locationIDMD5ChecksumList			AsnStringPairList,
+	...
+}
+
+asnGetLocationIDs OPERATION
+	ARGUMENT	arg AsnGetLocationIDsArgument
+	RESULT		res AsnGetLocationIDsResult
+	ERRORS		{AsnRequestError}
+::= 1120
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~ asnLocationInformationChanged ~~~~~~~~~~~~~~~~~~
+
+AsnLocationInformationChangedArgument ::= SEQUENCE 
+{
+	u8sLocationID						UTF8String,
+	-- optionalParams Name "MD5CheckSum" Value UTF8String MD5 Prüfsumme über den Standort
+	optionalParams						AsnOptionalParameters OPTIONAL,
+	...
+}
+
+asnLocationInformationChanged OPERATION
+	ARGUMENT	arg AsnLocationInformationChangedArgument
+::= 1117
+
+--
+
+AsnPresenceRightsFlags ::= ENUMERATED
+{
+    eVisible            (1),
+    eChangeable         (2),
+
+    eAppointmentPrivate (16),       -- 0x0000 0010
+    eAppointmentPublic  (32),       -- 0x0000 0020
+
+    ePatternUsed        (32768),    -- 0x0000 8000
+
+	eBlocked            (0),
+	ePublic             (65536),    -- 0x0001 0000
+	eCompany            (131072),   -- 0x0002 0000
+	eTeam               (262144),   -- 0x0004 0000
+	ePersonal           (524288)    -- 0x0008 0000
+}
+
+AsnPresenceRightsMasks ::= ENUMERATED
+{
+    eAppointmentMask    (240),      -- 0x0000 00F0
+    ePatternFlagsMask   (983040)    -- 0x000F 0000
+}
+
+AsnPhoneControlRightsFlags ::= ENUMERATED
+{
+    eBlocked            (0),
+
+    eNumbersOutbound    (1),    -- 0x0000 0001
+    eNumbersInbound     (2),    -- 0x0000 0002
+    eNumbersRedirected  (4),    -- 0x0000 0004
+
+    eSetForwards        (256),  -- 0x0000 0100
+    eSetPickupCalls     (512)   -- 0x0000 0200
+}
+
+
+AsnPresenceCommonRights ::= ENUMERATED
+{
+    eBlocked   (0),			-- 0x0000 0000      Blocked / not set
+    ePublic    (98305),     -- 0x0001 8001      UR_PRESENCE_PUBLIC  | UR_PRESENCE_PATTERN_USED                                                                                                  | UR_PRESENCE_VISIBLE
+    eCompany   (163873),    -- 0x0002 8021      UR_PRESENCE_COMPANY | UR_PRESENCE_PATTERN_USED | UR_PRESENCE_APPOINTMENT_PUBLIC                                                                 | UR_PRESENCE_VISIBLE
+    eTeam      (294947),    -- 0x0004 8023      UR_PRESENCE_TEAM    | UR_PRESENCE_PATTERN_USED | UR_PRESENCE_APPOINTMENT_PUBLIC                                     | UR_PRESENCE_CHANGEABLE    | UR_PRESENCE_VISIBLE
+    ePersonal  (557107)     -- 0x0008 8033      UR_PRESENCE_PERSONAL| UR_PRESENCE_PATTERN_USED | UR_PRESENCE_APPOINTMENT_PUBLIC | UR_PRESENCE_APPOINTMENT_PRIVATE   | UR_PRESENCE_CHANGEABLE    | UR_PRESENCE_VISIBLE
+}
+
+AsnPhoneControlPrimaryCommonRights ::= ENUMERATED
+{
+    eBlocked    (0),		--  0x0000	Blocked / not set
+ -- ~  ePublic     (),
+    eCompany    (7),        --  0x0007  UR_PHONE_NUMBERS_OUTBOUND   | UR_PHONE_NUMBERS_INBOUND    | UR_PHONE_NUMBERS_REDIRECTED
+    eTeam       (519),      --  0x0207  UR_PHONE_NUMBERS_OUTBOUND   | UR_PHONE_NUMBERS_INBOUND    | UR_PHONE_NUMBERS_REDIRECTED    | UR_PHONE_PICKUP_CALLS
+    ePersonal   (775)       --  0x0307  UR_PHONE_NUMBERS_OUTBOUND   | UR_PHONE_NUMBERS_INBOUND    | UR_PHONE_NUMBERS_REDIRECTED    | UR_PHONE_PICKUP_CALLS | UR_PHONE_SET_FORWARDS
+}
+
+AsnPhoneControlSecondaryCommonRights ::= ENUMERATED
+{
+    eBlocked    (0),		--  0x0000	Blocked / not set 
+ -- ~  ePublic     (),
+ -- ~  eCompany    (),
+    eTeam       (7),        --  0x0007  UR_PHONE_NUMBERS_OUTBOUND   | UR_PHONE_NUMBERS_INBOUND    | UR_PHONE_NUMBERS_REDIRECTED
+    ePersonal   (775)       --  0x0307  UR_PHONE_NUMBERS_OUTBOUND   | UR_PHONE_NUMBERS_INBOUND    | UR_PHONE_NUMBERS_REDIRECTED    | UR_PHONE_PICKUP_CALLS | UR_PHONE_SET_FORWARDS
+}
+
+-- @brief Definitions for Bitfield iContactFeatureSet
+-- @long 
+-- Permissions on functions a current user can execute on another contact.
+-- Server filters rights and permissions.
+AsnContactFeatureSetEnum ::= ENUMERATED
+{
+	eCONTACTFEATURENONE			 (0),			-- Nothing is alllowed on this contact.
+	eCONTACTFEATUREDIAL			 (1),			-- Dial on the primary line of the other contact.
+	eCONTACTFEATURESETFORWARDL1	 (2),			-- Set forward on the first line of the other contact.
+	eCONTACTFEATURESETFORWARDL2  (4),			-- Set forward on the second line of the other contact. 
+	eCONTACTFEATURESWAP			 (8),			-- Swap Call.
+	eCONTACTFEATUREANSWER		 (16),			-- Answer call.
+	eCONTACTFEATUREHANGUP		 (32),			-- Hang up.
+	eCONTACTFEATUREPICKUPL1  	 (64),			-- Pickup a ringing call on the first line of the contact.
+	eCONTACTFEATUREPICKUPL2	     (128),			-- Pickup a ringing call on the second line of the contact.
+	eCONTACTFEATUREHOLD			 (256),			-- Hold the active call.
+	eCONTACTFEATUREMESSAGE		 (512),			-- Send a message.
+	eCONTACTFEATUREREDIRECT		 (1024),		-- Redirect a ringing call.
+	eCONTACTFEATURESETABSENT	 (2048)			-- Set absent state of the contact.
+	-- ~ eCONTACTFEATUREALL	     0xffffffff     
+}
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~ asnUpdateMyContactConfigurationV2 ~~~~~~~~~~~~~
+
+-- The changed contact details for the asnUpdateMyContactConfigurationV2 operation
+AsnUpdateMyContactConfigurationV2Argument ::= SEQUENCE
+{
+	contactChanged					AsnContactV2,
+	...
+}
+
+-- Event that my contact configuration has changed
+asnUpdateMyContactConfigurationV2 OPERATION
+	ARGUMENT	arg AsnUpdateMyContactConfigurationV2Argument
+::= 1309
+
+
+-- @brief Argument for asnSetUserAbsentState
+-- @long
+-- Set change the manual presence of a user, a AsnAbsentState struct has to be sent to the ucserver.
+AsnSetUserAbsentStateArgument ::= SEQUENCE	
+{
+	absentstate							AsnAbsentStateV2, -- The AsnAbsentState data to change the manual presence of the user.
+	...
+}
+
+-- @brief Result of asnSetUserAbsentState if the operation executes successfully.
+-- @long
+-- Result of asnAbsentStateSetUser if the operation executes successfully.
+AsnSetUserAbsentStateResult ::= SEQUENCE
+{
+	bSuccess							BOOLEAN,	-- Should always be true.
+	...
+}
+
+-- @brief Operation to set the manual presence state of a user.
+-- @long
+-- This operation is used to set the manual presence state of a user. This ist mostly used for the logged in contact, but can be used to set it for others user too. 
+-- In order to do that, access rights have to be granted by the other contact to the current user of the calling client.
+--
+-- If the operation was successful, AsnAbsentStateSetUserResult is returned.
+--
+-- If an error occured, AsnRequestError is returned.
+asnSetUserAbsentState OPERATION
+	ARGUMENT	arg AsnSetUserAbsentStateArgument
+	RESULT		res AsnSetUserAbsentStateResult
+	ERRORS		{AsnRequestError}
+::= 1128
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~ asnGetUserAbsentState ~~~~~~~~~~~~~~~~~~~
+
+-- @added 21.08.2024
+AsnGetUserAbsentStateArgument ::= SEQUENCE	-- Attention: referenced by ENetUC_Mgmt.asn1
+{
+	contactId							AsnContactID,
+	...
+}
+
+-- @added 21.08.2024
+AsnGetUserAbsentStateResult ::= SEQUENCE	-- Attention: referenced by ENetUC_Mgmt.asn1
+{
+	absentstate							AsnAbsentStateV2,
+	...
+}
+
+-- @added 21.08.2024
+asnGetUserAbsentState OPERATION
+	ARGUMENT	arg AsnGetUserAbsentStateArgument
+	RESULT		res AsnGetUserAbsentStateResult
+	ERRORS		{AsnRequestError}
+::= 1129
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~ asnResetUserAbsentState ~~~~~~~~~~~~~~~~~~
+
+-- @brief Argument for asnResetUserAbsentState
+-- @long
+-- The argument for asnResetUserAbsentState conatins the ContactID for the contact to reset its absent state to 'none'.
+-- @added 22.08.2024
+AsnResetUserAbsentStateArgument ::= SEQUENCE
+{
+	u8sContactId						UTF8String,
+	...
+}
+
+-- @brief Result of asnResetUserAbsentState that indicates, that the oepration was successful.
+-- @added 22.08.2024
+AsnResetUserAbsentStateResult ::= SEQUENCE
+{
+	...
+}
+
+-- @brief This operation set the manual presence state of a user back, so the system calculated presence will not be affected by it.
+-- @long
+-- The manual presence of a user is a special input to the presence system. 
+-- To set it back to the pure system calculated presence this operation has to be called.
+--
+-- If the operation was successful, AsnAbsentStateResetResult is returned.
+--
+-- If the operation fails, AsnRequestError is returned.
+-- @added 22.08.2024
+asnResetUserAbsentState OPERATION
+	ARGUMENT	arg AsnResetUserAbsentStateArgument
+	RESULT		res AsnResetUserAbsentStateResult
+	ERRORS		{AsnRequestError}
+::= 1130
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~ asnUpdateMyAbsentStateV2 ~~~~~~~~~~~~~~~~~
+
+asnUpdateMyAbsentStateV2 OPERATION
+	ARGUMENT	arg AsnUpdateMyAbsentStateV2Argument
+::= 1313
+
+AsnUpdateMyAbsentStateV2Argument ::= SEQUENCE
+{
+	absentstate							AsnAbsentStateV2,
+	...
+}
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~ asnCustomNoteSet ~~~~~~~~~~~~~~~~~~~~~~~~~
+
+AsnCustomNoteSetArgument ::= SEQUENCE
+{
+	customnote							AsnCustomNote,
+	...
+}
+	
+AsnCustomNoteSetResult ::= SEQUENCE
+{
+	-- optionalParams Name "RemoteInvokeID" Value String
+	optionalParams						AsnOptionalParameters OPTIONAL,
+	...
+}
+
+asnCustomNoteSet OPERATION
+	ARGUMENT	arg	AsnCustomNoteSetArgument
+	RESULT		res	AsnCustomNoteSetResult
+	ERRORS		{AsnRequestError}
+::= 1510
+
+
+AsnUpdateMyCustomNoteArgument ::= SEQUENCE
+{
+	customnote							AsnCustomNote,
+	...
+}
+
+asnUpdateMyCustomNote OPERATION
+	ARGUMENT	arg AsnUpdateMyCustomNoteArgument
+::= 1511
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~ asnGetMetaSettings ~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+AsnMetaDirectoryPasswordEncryption ::= ENUMERATED
+{
+	-- Passwort verschlüsselt übertragen
+	iEncrypted	(0),
+	-- Passwort als Klartext übermitteln
+	iPlain		(1)
+}
+
+AsnGetMetaSettingsArgument ::= SEQUENCE	-- Attention: referenced by ENetUC_Mgmt.asn1
+{
+	eSendPlainPassword					AsnMetaDirectoryPasswordEncryption,	-- Soll das Passwort für das MetaDirectory verschlüsselt übermittelt werden 1: ja, 0(default): nein
+	...
+}
+
+AsnGetMetaSettingsResult ::= SEQUENCE	-- Attention: referenced by ENetUC_Mgmt.asn1
+{
+	metasettings						AsnMetaDirectorySettings,
+	...
+}
+
+AsnMetaDirectorySettings ::= SEQUENCE
+{
+	iMetaEnabled						INTEGER,	-- Meta interface enabled?
+	iMetaPort							INTEGER,	-- TCP Port
+	u8sMetaServer						UTF8String,	-- Servername
+	u8sBaseDN							UTF8String,	-- BaseDN
+	iMetaForceSSL						INTEGER,	-- Soll eine LDAPS-Verbindung aufgebaut werden
+	iMetaUseAccount						INTEGER,	-- Soll User und Passwort für die Metaverbindung verwendet werden
+	u8sMetaUser							UTF8String,	-- Username am MetaDirectory
+	ePasswordEncryption					AsnMetaDirectoryPasswordEncryption, -- Passwort ist verschlüsselt (0) oder Plaintext (1)
+	u8sMetaPassword						UTF8String,	-- Passwort des Users am MetaDirectory
+	iMetaUseInServer					INTEGER,	-- Use the meta with the CTI Server
+	iMetaUseInClient					INTEGER,	-- Use the meta with the ProCall Client
+	...
+}
+
+asnGetMetaSettings OPERATION
+	ARGUMENT	arg AsnGetMetaSettingsArgument
+	RESULT		res AsnGetMetaSettingsResult
+	ERRORS		{AsnRequestError}
+::= 2100
+
+asnGetMetaPhoneBooksSettings OPERATION
+	ARGUMENT	arg AsnGetMetaSettingsArgument
+	RESULT		res AsnGetMetaSettingsResult
+	ERRORS		{AsnRequestError}
+::= 2101
+
+AsnSetMetaSettingsArgument ::= SEQUENCE	-- Attention: referenced by ENetUC_Mgmt.asn1
+{
+	eSendPlainPassword					AsnMetaDirectoryPasswordEncryption,	-- Soll das Passwort für das MetaDirectory verschlüsselt übermittelt werden 1: ja, 0(default): nein
+	metasettings						AsnMetaDirectorySettings,
+	...
+}
+
+AsnSetMetaSettingsResult ::= SEQUENCE	-- Attention: referenced by ENetUC_Mgmt.asn1
+{
+	...
+}
+
+asnSetMetaSettings OPERATION
+	ARGUMENT	arg AsnSetMetaSettingsArgument
+	RESULT		res AsnSetMetaSettingsResult
+	ERRORS		{AsnRequestError}
+::= 2026
+
+asnSetMetaPhoneBooksSettings OPERATION
+	ARGUMENT	arg AsnSetMetaSettingsArgument
+	RESULT		res AsnSetMetaSettingsResult
+	ERRORS		{AsnRequestError}
+::= 2027
+
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~ asnGetGoogleIntegrationSettings ~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-- Temporay helper object for the asnSubscribeServices
+AsnSubscribeServicesArgument ::= SEQUENCE
+{
+   ...
+}
+
+-- Temporay helper object for the asnSubscribeServices
+AsnSubscribeServicesResult ::= SEQUENCE
+{
+	...
+}
+
+-- This is an temporary function we use to separate Login from the implicit logic the server is doing with the login
+-- This function exists while we rework the interface from asnLogon to asnLoginV2
+-- In the future every service will have it´s own login function telling the server that a client is interested in that service
+-- Please be aware that we will remove this function any time as it is just a temporary solution to decouple login from subscribing to services
+asnSubscribeServices OPERATION                  
+	ARGUMENT	arg AsnSubscribeServicesArgument
+	RESULT		res AsnSubscribeServicesResult
+	ERRORS		{AsnRequestError}
+::= 703
+
+END

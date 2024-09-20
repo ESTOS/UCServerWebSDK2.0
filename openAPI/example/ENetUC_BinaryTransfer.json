@@ -1,0 +1,948 @@
+{
+	"openapi": "3.1.0",
+	"info": {
+		"title": "ENetUC_BinaryTransfer",
+		"version": "0.0.1",
+		"summary": "Data structures and methods to transport binary data between clients and the server\n\n",
+		"description": "The binary transfer can be used to transport any binary data blob between clients. It´s primary targeting to transfer\n\nfiles within the chat but may be used to implement file sharing in remote desktop sessions as well as to implement a new procall function:\n\nProvinding files for customers.\n\nThe interface is simple and has no other dependencies.\n\nPrimary target is to be able to transport the file contents inband in the asn.1 connection.\n\nLater the implementation will also target 3rd party file shares like onedrive, awss3, dropbox or ucweb.\n\n"
+	},
+	"paths": {
+		"/asnGetBinaryTransferSettings": {
+			"post": {
+				"tags": ["BinaryTransfer"],
+				"summary": "Getting file transfer settings from the server\n\n",
+				"deprecated": false,
+				"operationId": "3400",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnGetBinaryTransferSettingsArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnGetBinaryTransferSettingsResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnInitBinaryTransferUpload": {
+			"post": {
+				"tags": ["BinaryTransfer"],
+				"summary": "request a transferid for uploading a file towards the server\n\n",
+				"deprecated": false,
+				"operationId": "3410",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnInitBinaryTransferUploadArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnInitBinaryTransferUploadResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnSendBinaryChunk": {
+			"post": {
+				"tags": ["BinaryTransfer"],
+				"summary": "Sending a file chunk to the server via asn.1\n\n",
+				"deprecated": false,
+				"operationId": "3411",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnSendBinaryChunkArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnSendBinaryChunkResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnBinaryTransferUploadCompleted": {
+			"post": {
+				"tags": ["BinaryTransfer"],
+				"summary": "binarytransfer upload completed\n\n",
+				"description": "Telling the server that a file upload to a 3rd party target was completed (or failed)\n\n",
+				"deprecated": false,
+				"operationId": "3412",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnBinaryTransferUploadCompletedArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnBinaryTransferUploadCompletedResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnInitBinaryTransferDownload": {
+			"post": {
+				"tags": ["BinaryTransfer"],
+				"summary": "Initializing fileDownload (getting Download source for the file with u8sTransferID)\n\n",
+				"deprecated": false,
+				"operationId": "3420",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnInitBinaryTransferDownloadArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnInitBinaryTransferDownloadResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnReceiveBinaryChunk": {
+			"post": {
+				"tags": ["BinaryTransfer"],
+				"summary": "Sending a file chunk from the server via asn.1\n\n",
+				"deprecated": false,
+				"operationId": "3421",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnReceiveBinaryChunkArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnReceiveBinaryChunkResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnBinaryTransferDownloadCompleted": {
+			"post": {
+				"tags": ["BinaryTransfer"],
+				"summary": "Telling the server that a file download\n\n",
+				"description": "Telling the server that a file download from  a 3rd party target was completed (or failed)\n\n",
+				"deprecated": false,
+				"operationId": "3422",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnBinaryTransferDownloadCompletedArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnBinaryTransferDownloadCompletedResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnGetBinaryTransferMetaData": {
+			"post": {
+				"tags": ["BinaryTransfer"],
+				"summary": "Retrieves MetaData for a transfer id from the server\n\n",
+				"deprecated": false,
+				"operationId": "3423",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnGetBinaryTransferMetaDataArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnGetBinaryTransferMetaDataResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnBinaryTransferRemoveElement": {
+			"post": {
+				"tags": ["BinaryTransfer"],
+				"summary": "remove file for a transfer id from the server - also the state inside the metadata base will be set\n\n",
+				"description": "removal of file and metadata will only be allowed for the origin sender of the file\n\n",
+				"deprecated": false,
+				"operationId": "3424",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnBinaryTransferRemoveElementArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnBinaryTransferRemoveElementResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnBinaryTransferForwardElement": {
+			"post": {
+				"tags": ["BinaryTransfer"],
+				"summary": "not yet implemented - reserved for future use\n\n",
+				"description": "not yet implemented - reserved for future use\n\n",
+				"deprecated": false,
+				"operationId": "3425",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnBinaryTransferForwardElementArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnBinaryTransferForwardElementResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"schemas": {
+			"AsnRequestError": {
+				"$ref": "ENetUC_Common.json#/components/schemas/AsnRequestError"
+			},
+			"AsnStringPairList": {
+				"$ref": "ENetUC_Common.json#/components/schemas/AsnStringPairList"
+			},
+			"UTF8StringList": {
+				"$ref": "ENetUC_Common.json#/components/schemas/UTF8StringList"
+			},
+			"SEQInteger": {
+				"$ref": "ENetUC_Common.json#/components/schemas/SEQInteger"
+			},
+			"AsnBinaryTransferMetaDataTypeEnum": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "empty",
+						"const": 0
+					},
+					{
+						"title": "picture",
+						"const": 1
+					},
+					{
+						"title": "vcard",
+						"const": 2
+					},
+					{
+						"title": "geodata",
+						"const": 3
+					},
+					{
+						"title": "voicemessage",
+						"const": 4
+					}]},
+			"AsnBinaryTransferRequestErrorEnum": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "noerror",
+						"const": 0
+					},
+					{
+						"title": "serverBusy",
+						"const": 1
+					},
+					{
+						"title": "extensionNotAllowed",
+						"const": 2
+					},
+					{
+						"title": "fileTooBig",
+						"const": 3
+					},
+					{
+						"title": "unknownTransferID",
+						"const": 4
+					},
+					{
+						"title": "transferTerminated",
+						"const": 5
+					},
+					{
+						"title": "invalidPosition",
+						"const": 6
+					},
+					{
+						"title": "filedeleted",
+						"const": 7
+					},
+					{
+						"title": "invalidMetaData",
+						"const": 8
+					},
+					{
+						"title": "databaseFail",
+						"const": 9
+					},
+					{
+						"title": "generalServerError",
+						"const": 9999
+					}]},
+			"AsnBinaryTransferStorageTypeEnum": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "ucserver",
+						"const": 0
+					},
+					{
+						"title": "ucweb",
+						"const": 1
+					},
+					{
+						"title": "dropbox",
+						"const": 2
+					},
+					{
+						"title": "awss3",
+						"const": 3
+					},
+					{
+						"title": "onedrive",
+						"const": 4
+					}]},
+			"AsnBinaryTransferServiceTypeEnum": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "chat",
+						"const": 0
+					},
+					{
+						"title": "screensharing",
+						"const": 1
+					},
+					{
+						"title": "toexternal",
+						"const": 2
+					}]},
+			"AsnBinaryTransferSettings": {
+				"type": "object",
+				"description": "### Category \nBinaryTransfer\n### Short \nData structure describing binary transfer settings\n\n### Long \nThis data structure is used to inform the clients about the configuration for binary transfer for the different services (chat, screensharing, etc...).\n\n### Private \n0",
+				"properties": {
+					"eServiceType": {
+						"type": "integer"
+					},
+					"bEnabled": {
+						"type": "boolean"
+					},
+					"u8sNotAllowedExtensions": {
+						"$ref": "#/components/schemas/UTF8StringList"
+					},
+					"iMaxChunkSizeDownload": {
+						"type": "integer"
+					},
+					"iMaxChunkSizeUpload": {
+						"type": "integer"
+					},
+					"iMaxPreviewSize": {
+						"type": "integer"
+					},
+					"iMaxPreviewDimension": {
+						"type": "integer"
+					},
+					"iMaxFileSizeMB": {
+						"type": "integer"
+					}
+				},
+				"required": [
+					"eServiceType",
+					"bEnabled",
+					"u8sNotAllowedExtensions",
+					"iMaxChunkSizeDownload",
+					"iMaxChunkSizeUpload",
+					"iMaxPreviewSize",
+					"iMaxPreviewDimension",
+					"iMaxFileSizeMB"
+				]
+			},
+			"AsnBinaryTransferStorageSettings": {
+				"type": "object",
+				"description": "### Category \nBinaryTransfer\n### Short \nbinary transfer storage settings\n\n### Long \nThis data structure is used for admin Data structure describing binary transfer storage settings - used by admin\n\n### Private \n0",
+				"properties": {
+					"eStorageType": {
+						"type": "integer"
+					},
+					"bEnabled": {
+						"type": "boolean"
+					},
+					"iMaxFileSizeMB": {
+						"type": "integer"
+					},
+					"iMaxStorageSizeMB": {
+						"type": "integer"
+					},
+					"u8sAllowedMimeTypes": {
+						"$ref": "#/components/schemas/UTF8StringList"
+					},
+					"u8sNotAllowedExtensions": {
+						"$ref": "#/components/schemas/UTF8StringList"
+					},
+					"u8sRootFolder": {
+						"type": "string"
+					},
+					"iMaxFileAgeDays": {
+						"type": "integer"
+					},
+					"bRemoveOutdatedFilesEnabled": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"eStorageType",
+					"bEnabled",
+					"iMaxFileSizeMB",
+					"iMaxStorageSizeMB",
+					"u8sAllowedMimeTypes",
+					"u8sNotAllowedExtensions",
+					"u8sRootFolder",
+					"iMaxFileAgeDays",
+					"bRemoveOutdatedFilesEnabled"
+				]
+			},
+			"AsnBinaryTransferMetaData": {
+				"type": "object",
+				"description": "### Category \nBinaryTransfer\n### Short \nData structure describing binary transfer settings\n\n### Long \nThis data structure is used to inform the clients about the configuration for binary transfer.\n\n### Private \n0",
+				"properties": {
+					"u8sFileNameWithExtension": {
+						"type": "string"
+					},
+					"u8sMimeType": {
+						"type": "string"
+					},
+					"iDataSize": {
+						"type": "integer"
+					},
+					"u8sChecksum": {
+						"type": "string"
+					},
+					"iMediaDuration": {
+						"type": "integer"
+					},
+					"eMetaDataType": {
+						"type": "integer"
+					},
+					"osMetaData": {
+						"type": "string",
+						"format": "byte"
+					},
+					"u8sDescriptionText": {
+						"type": "string"
+					},
+					"u8sBinaryTransferID": {
+						"type": "string"
+					}
+				}
+			},
+			"AsnGetBinaryTransferSettingsArgument": {
+				"type": "object",
+				"description": "### Category \nBinaryTransfer\n### Short \nArgument for the AsnGetBinaryTransferSettings\n\n### Private \n0"
+			},
+			"AsnInitBinaryTransferUploadResult": {
+				"type": "object",
+				"description": "### Category \nBinaryTransfer\n### Short \nResult for the asnInitBinaryTransferUpload\n\n### Private \n0",
+				"properties": {
+					"eTargetType": {
+						"type": "integer"
+					},
+					"u8sTransferID": {
+						"type": "string"
+					},
+					"u8sTargetServiceDetails": {
+						"$ref": "#/components/schemas/AsnStringPairList"
+					}
+				},
+				"required": [
+					"eTargetType",
+					"u8sTransferID"
+				]
+			},
+			"AsnSendBinaryChunkArgument": {
+				"type": "object",
+				"description": "### Category \nBinaryTransfer\n### Short \nArgument for the asnSendBinaryChunk\n\n### Private \n0",
+				"properties": {
+					"u8sTransferID": {
+						"type": "string"
+					},
+					"iDataOffset": {
+						"type": "integer"
+					},
+					"osChunkData": {
+						"type": "string",
+						"format": "byte"
+					}
+				},
+				"required": [
+					"u8sTransferID",
+					"iDataOffset",
+					"osChunkData"
+				]
+			},
+			"AsnSendBinaryChunkResult": {
+				"type": "object",
+				"description": "### Category \nBinaryTransfer\n### Short \nResult for the asnSendBinaryChunk\n\n### Private \n0",
+				"properties": {
+					"iNewPosition": {
+						"type": "integer"
+					}
+				},
+				"required": [
+					"iNewPosition"
+				]
+			},
+			"AsnBinaryTransferUploadCompletedArgument": {
+				"type": "object",
+				"description": "### Category \nBinaryTransfer\n### Short \nArgument for the UploadCompleted\n\n### Private \n0",
+				"properties": {
+					"u8sTransferID": {
+						"type": "string"
+					},
+					"bUploadCompleted": {
+						"type": "boolean"
+					},
+					"u8s3rdPartyFileReference": {
+						"type": "string"
+					},
+					"u8sUploadError": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"u8sTransferID",
+					"bUploadCompleted"
+				]
+			},
+			"AsnBinaryTransferUploadCompletedResult": {
+				"type": "object",
+				"description": "### Category \nBinaryTransfer\n### Short \nResult for the UploadCompleted\n\n### Private \n0"
+			},
+			"AsnInitBinaryTransferDownloadArgument": {
+				"type": "object",
+				"description": "### Category \nBinaryTransfer\n### Short \nArgument for the asnInitBinaryTransferDownload\n\n### Private \n0",
+				"properties": {
+					"u8sTransferID": {
+						"type": "string"
+					},
+					"bProvideMetaData": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"u8sTransferID",
+					"bProvideMetaData"
+				]
+			},
+			"AsnReceiveBinaryChunkArgument": {
+				"type": "object",
+				"description": "### Category \nBinaryTransfer\n### Short \nArgument for the asnReceiveBinaryChunk\n\n### Private \n0",
+				"properties": {
+					"u8sTransferID": {
+						"type": "string"
+					},
+					"iDataOffset": {
+						"type": "integer"
+					},
+					"iChunkSize": {
+						"type": "integer"
+					}
+				},
+				"required": [
+					"u8sTransferID",
+					"iDataOffset",
+					"iChunkSize"
+				]
+			},
+			"AsnReceiveBinaryChunkResult": {
+				"type": "object",
+				"description": "### Category \nBinaryTransfer\n### Short \nResult for the asnReceiveBinaryChunk\n\n### Private \n0",
+				"properties": {
+					"osChunkData": {
+						"type": "string",
+						"format": "byte"
+					},
+					"bCompleted": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"osChunkData",
+					"bCompleted"
+				]
+			},
+			"AsnBinaryTransferDownloadCompletedArgument": {
+				"type": "object",
+				"description": "### Category \nBinaryTransfer\n### Short \nArgument for the asnBinaryTransferDownloadCompleted\n\n### Private \n0",
+				"properties": {
+					"u8sTransferID": {
+						"type": "string"
+					},
+					"bDownloadCompleted": {
+						"type": "boolean"
+					},
+					"u8sDownloadError": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"u8sTransferID",
+					"bDownloadCompleted"
+				]
+			},
+			"AsnBinaryTransferDownloadCompletedResult": {
+				"type": "object",
+				"description": "### Category \nBinaryTransfer\n### Short \nResult for the asnBinaryTransferDownloadCompleted\n\n### Private \n0"
+			},
+			"AsnGetBinaryTransferMetaDataArgument": {
+				"type": "object",
+				"description": "### Category \nBinaryTransfer\n### Short \nArgument for the asnGetBinaryTransferMetaData\n\n### Private \n0",
+				"properties": {
+					"u8sTransferID": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"u8sTransferID"
+				]
+			},
+			"AsnBinaryTransferRemoveElementArgument": {
+				"type": "object",
+				"description": "### Category \nBinaryTransfer\n### Short \nArgument for the asnBinaryTransferRemoveElement\n\n### Private \n0",
+				"properties": {
+					"u8sTransferID": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"u8sTransferID"
+				]
+			},
+			"AsnBinaryTransferRemoveElementResult": {
+				"type": "object",
+				"description": "### Category \nBinaryTransfer\n### Short \nResult for the asnBinaryTransferRemoveElement\n\n### Private \n0",
+				"properties": {
+					"bRemoved": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"bRemoved"
+				]
+			},
+			"AsnBinaryTransferForwardElementArgument": {
+				"type": "object",
+				"description": "### Category \nBinaryTransfer\n### Short \nArgument for the asnBinaryTransferForwardElement\n\n### Private \n0",
+				"properties": {
+					"u8sTransferID": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"u8sTransferID"
+				]
+			},
+			"AsnBinaryTransferForwardElementResult": {
+				"type": "object",
+				"description": "### Category \nBinaryTransfer\n### Short \nResult for the asnBinaryTransferForwardElement\n\n### Private \n0",
+				"properties": {
+					"u8sOrigTransferID": {
+						"type": "string"
+					},
+					"u8sForwardTransferID": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"u8sOrigTransferID",
+					"u8sForwardTransferID"
+				]
+			},
+			"AsnBinaryTransferSettingsList": {
+				"type": "array",
+				"items": {
+					"$ref": "#/components/schemas/AsnBinaryTransferSettings"
+				}
+			},
+			"AsnGetBinaryTransferSettingsResult": {
+				"type": "object",
+				"description": "### Category \nBinaryTransfer\n### Short \nResult for the AsnGetBinaryTransferSettings\n\n### Private \n0",
+				"properties": {
+					"asnBinaryTransferSettingsList": {
+						"$ref": "#/components/schemas/AsnBinaryTransferSettingsList"
+					}
+				},
+				"required": [
+					"asnBinaryTransferSettingsList"
+				]
+			},
+			"AsnInitBinaryTransferUploadArgument": {
+				"type": "object",
+				"description": "### Category \nBinaryTransfer\n### Short \nArgument for the asnInitBinaryTransferUpload\n\n### Private \n0",
+				"properties": {
+					"asnMetaData": {
+						"$ref": "#/components/schemas/AsnBinaryTransferMetaData"
+					},
+					"eServiceType": {
+						"type": "integer"
+					}
+				},
+				"required": [
+					"asnMetaData",
+					"eServiceType"
+				]
+			},
+			"AsnInitBinaryTransferDownloadResult": {
+				"type": "object",
+				"description": "### Category \nBinaryTransfer\n### Short \nResult for the asnInitBinaryTransferDownload\n\n### Private \n0",
+				"properties": {
+					"eSourceType": {
+						"type": "integer"
+					},
+					"asnMetaData": {
+						"$ref": "#/components/schemas/AsnBinaryTransferMetaData"
+					},
+					"u8sTargetServiceDetails": {
+						"$ref": "#/components/schemas/AsnStringPairList"
+					},
+					"u8s3rdPartyFileReference": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"eSourceType"
+				]
+			},
+			"AsnGetBinaryTransferMetaDataResult": {
+				"type": "object",
+				"description": "### Category \nBinaryTransfer\n### Short \nResult for the asnGetBinaryTransferMetaData\n\n### Private \n0",
+				"properties": {
+					"asnMetaData": {
+						"$ref": "#/components/schemas/AsnBinaryTransferMetaData"
+					}
+				},
+				"required": [
+					"asnMetaData"
+				]
+			},
+			"AsnBinaryTransferStorageSettingsList": {
+				"type": "array",
+				"items": {
+					"$ref": "#/components/schemas/AsnBinaryTransferStorageSettings"
+				}
+			},
+			"AsnBinaryTransferMetaDataList": {
+				"type": "array",
+				"items": {
+					"$ref": "#/components/schemas/AsnBinaryTransferMetaData"
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,2957 @@
+{
+	"openapi": "3.1.0",
+	"info": {
+		"title": "ENetUC_CTI",
+		"version": "0.0.1",
+		"summary": "CTI interface\n\n",
+		"description": "## CTI Modul\n\n\n\n\n\n## Module description\n\nThis module contains structures and operations for CTI (remote call control) on TAPI or Bluetooth phone lines in the server.\n\n\n\nA client program has access to all lines owned by the logged in user and to additional lines it has dedicated access.&lt;br \/&gt;\n\nIt is possible to monitor all actions on these lines and to call operations to initiate new calls, set forwards, change states and so on.\n\n\n\n## Prerequisites\n\nIn order to use the operations described in this document you have to make sure:\n\n- The server has lines configured and activated. (Install an appropriate TAPI-driver for your PBX system.)\n\n- There is at least one user activated on the server, who has lines configured to use.\n\n- The client program is connected to the server via UCServer Web Services using a websocket or directly to the server on the client port (default port 7222).\n\n- The client program encodes the data structures as estos JSON or ASN.1 BER.\n\n- The client program is logged in to the server with a user who has access to lines.\n\n\n\nAdditional prerequisites for a operation on the PBX and or the TAPI driver may be necessary.\n\n\n\n### Description of the Line-Call-Model ###\n\nThe remote call control and monitoring of the server is based on a line-call-model. This means, that users, lines and calls are organized in a tree like hierarchy.\n\nEach node in this tree contains configuration data and dynamic data, which can be accessed and observed.\n\n\n\nThe Nodes are:\n\n- The user. This a more a kind of \"meta\" node, it just holds the list of lines, a client has access to if it is logged in as this user.\n\n- The line(s). Defined with the logged in user, a client can retrieve a list of lines, the user has access to. With these lines, the client can (one time) pull information or can attach itself on to get initial data and events if these data changes over time (get-and-subscribe mechanism).\n\nThe line information contains configuration information and dynamic data about the lines status, including current calls.\n\n*Note:* A line is identified by its URI tel:number@pbxsystem. The parameter is often named as \"u8sLinePhoneNumber\".&lt;br \/&gt;The \"u8sPhoneNumber\" is the phone number of a line, but for technical reasons that is not a distinct property of a line. It is possible to have multiple lines with the same phone number!\n\n- The call(s). A line has a list of current calls, which are currently \"on\" the line. If the client is attached to a line for events, new calls will be announced via events. Changes to these calls are also announced via events.\n\nThere is no need to attach to calls explicitly, this is already done by attaching to the line. Call changing events are then sent to the client too.\n\n*Note:* A call is identified by its connection identifier often named as \"ConnectionID\".\n\n\n\n### Remarks ###\n\nSome operations return an empty result object if they are executed successfully. So in this cases, the business logic should wait for result\/error before do additional actions.\n\nPhone numbers are normally used and provided in a so called supercanonic notation containing a full qualified number including country, city, main and extension number: +49815136856177\n\nFor operations affecting multiple calls be sure to check that all calls affected have the corresponding feature set. To merge two calls both calls have to have the feature eCFEATUREMERGECALLS set.\n\n\n\n### Example: Monitoring lines ###\n\n1. Get the lines the client has access to with asnCtiEnumPhoneLines. If you wish to get events if the line list changes afterwards, set the parameter \"attachChangeNotify\" to 1.\n\n2. Use the lines URI to start monitoring for initial data and events on it. asnCtiLineMonitorStart will result in a monitor cross reference id to distinguish between events for different line monitors easier.\n\nThis is useful, if the client has the requirement to monitor the same line multiple times for different use cases.\n\n3. With the line URI you can call functions e.g. asnCtiMakeCall, asnCtiAnswerCall a.s.o. With the line monitoring on, you will get the according changes on the line and its calls as events back.\n\n4. To stop monitoring a line, call asnCtiLineMonitorStop with the corresponding monitor cross reference id.\n\n\n\n### Example: Call data transfer ###\n\n\n\n### Phone number formats ###\n\nThe whole system tries to use supercanonic numbers (+country city main and extension number \/ +49815136856177) whereever possible.\n\nAs long as the number is used in supercanonic notation all components can format the number as required (for dialing, for display, etc.)\n\nYou likely won´t need to format numbers as the system always provides supercanonic numbers.\n\n"
+	},
+	"paths": {
+		"/asnCtiEnumPhoneLines": {
+			"post": {
+				"tags": ["CTI"],
+				"summary": "Retrieve line information from the server.\n\n",
+				"description": "To get information about the lines a user has access to on the server.&lt;br \/&gt;\n\nThere are four possible line types, which can be requested:\n\n- userOwnLines: Own lines which the logged in user is owner of.\n\n- userMonitorLines: Own lines plus the lines, the user has special access rights for.\n\n- systemLocalLines: All lines that are local on the system.\n\n- systemGlobalLines: All local lines plus all global known lines; for future use, current its the same as systemLocalLines.\n\n\n\nIf attachChangeNotify is set to 1, the server will send asnCtiNotifyLineAddRemove events, if lines were added or removed for the given scope (or line type).\n\n\n\nThe monitoring of the line lists can only be stopped by disconnecting from the server.\n\n",
+				"deprecated": false,
+				"operationId": "1260",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnCtiEnumPhoneLinesArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnCtiEnumPhoneLinesResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnCtiSnapshotPhoneLine": {
+			"post": {
+				"tags": ["CTI"],
+				"summary": "Call this function to get the current status of a line.\n\n",
+				"description": "With asnCtiSnapshotPhoneLine a client can retrieve the current status of a line inclusive calls, forwardings, DnD and remote office states.&lt;br \/&gt;\n\n\n\nAttention: Do not poll with this function get changes of the line state. Use asnCtiLineMonitorStart instead, to be notified if something on the is changing.\n\nasnCtiEnumPhoneLines is not necessary be called before asnCtiLineMonitorStart.\n\n",
+				"deprecated": false,
+				"operationId": "1261",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnCtiSnapshotPhoneLineArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnCtiSnapshotPhoneLineResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnCtiLineMonitorStart": {
+			"post": {
+				"tags": ["CTI"],
+				"summary": "Gets the current state of a line and attach for call and change notifies on this line.\n\n",
+				"description": "In order receive events about calls and line state changes a client can call asnCtiLineMonitorStart. The result will contain a current snapshot of the line, the calls and additional information.\n\nTo stop these events call asnCtiLineMonitorStop.\n\n\n\nAttention: To get this information just once without further events, call asnCtiSnapshotPhoneLine instead.\n\n",
+				"deprecated": false,
+				"operationId": "1262",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnCtiLineMonitorStartArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnCtiLineMonitorStartResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnCtiLineMonitorStop": {
+			"post": {
+				"tags": ["CTI"],
+				"summary": "Stops the call and state change events on a line.\n\n",
+				"description": "A client can stop events for state changes and calls on a line with a call to asnCtiLineMonitorStop with the corresponding monitor cross reference ID.\n\n",
+				"deprecated": false,
+				"operationId": "1263",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnCtiLineMonitorStopArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnCtiLineMonitorStopResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnCtiLineSetDoNotDisturb": {
+			"post": {
+				"tags": ["CTI"],
+				"summary": "Set or remove \"Do not Disturb\" feature on the a line.\n\n",
+				"description": "Most PBX support \"Do not Disturb\" (DnD) on phone lines, so the user can prevent being disturbed by phone calls by setting this feature on his phone line.&lt;br \/&gt;\n\nA Client can call this function to set or remove this feature from the line. See AsnCtiLineSetDoNotDisturbArgument for the arguments needed.\n\n",
+				"deprecated": false,
+				"operationId": "1264",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnCtiLineSetDoNotDisturbArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnCtiLineSetDoNotDisturbResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnCtiLineSetRemoteOffice": {
+			"post": {
+				"tags": ["CTI"],
+				"summary": "Changes the state of the \"Remote Office\" feature on a line.\n\n",
+				"description": "\"Remote office\" is a feature, where a user can virtually attach his mobile phone to his line on the PBX. So every incoming call to the line on the PBX will be automatically forwarded to the mobile phone.\n\nAdditionally the outgoing calls will be forwarded to the mobile too, if either the PBX itself supports this feature or the UCServer can emulate it.\n\n",
+				"deprecated": false,
+				"operationId": "1273",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnCtiLineSetRemoteOfficeArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnCtiLineSetRemoteOfficeResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnCtiNotifyLineInfoChanged": {
+			"post": {
+				"tags": ["CTI"],
+				"summary": "Event from the server if a line changed its status or has been added or removed.\n\nIn order to get these events the line must be monitored with asnCtiLineMonitorStart.\n\n",
+				"deprecated": false,
+				"operationId": "1280",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnCtiNotifyLineInfoChangedArgument"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnCtiNotifyLineDoNotDisturbChanged": {
+			"post": {
+				"tags": ["CTI"],
+				"summary": "Event from the server if a line changed its DnD status.\n\nIn order to get these events the line must be monitored with asnCtiLineMonitorStart.\n\n",
+				"deprecated": false,
+				"operationId": "1281",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnCtiNotifyLineDoNotDisturbChangedArgument"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnCtiNotifyLineRemoteOfficeChanged": {
+			"post": {
+				"tags": ["CTI"],
+				"summary": "Event from the server if a line changed its remote office state.\n\nIn order to get these events the line must be monitored with asnCtiLineMonitorStart.\n\n",
+				"deprecated": false,
+				"operationId": "1292",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnCtiNotifyLineRemoteOfficeChangedArgument"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnCtiNotifyMonitorStopped": {
+			"post": {
+				"tags": ["CTI"],
+				"summary": "Event from the server that a monitoring point was closed due to a configuration change\n\nIn order to get these events the line must be monitored with asnCtiLineMonitorStart.\n\nThis event is send to the client if a monitor was closed due to a configuation change on the server\n\nThe client shall remove the monitor point with u8sMonitorCrossRefID on the client side.\n\n",
+				"deprecated": false,
+				"operationId": "1294",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnCtiNotifyMonitorStoppedArgument"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnCtiNotifyLineSortOrderChanged": {
+			"post": {
+				"tags": ["CTI"],
+				"summary": "Event from the server that a monitoring point has changed position from the configurative view\n\nIn order to get these events the line must be monitored with asnCtiLineMonitorStart.\n\nThis event is send to the client if the sort order of the lines has changed (line added, config lines have swapped positions, (no event is dispatched if a line was removed))\n\nThis event is only dispatched for the userOwnLines (see AsnCtiEnumPhoneLinesArgument)\n\n",
+				"deprecated": false,
+				"operationId": "1295",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnCtiNotifyLineSortOrderChangedArgument"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnCtiNotifyLineForwardingChanged": {
+			"post": {
+				"tags": ["CTI"],
+				"summary": "Event from the server if a line changed its forwardings.\n\nIn order to get these events the line must be monitored with asnCtiLineMonitorStart.\n\n",
+				"deprecated": false,
+				"operationId": "1282",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnCtiNotifyLineForwardingChangedArgument"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnCtiNotifyLineCallInformationChanged": {
+			"post": {
+				"tags": ["CTI"],
+				"summary": "Event from the server if a call changed its state.\n\nIn order to get this event the line must be monitored with asnCtiLineMonitorStart.\n\n",
+				"description": "Calls are changing their state and additional information during their live time. This event reflects the new status&lt;br \/&gt;\n\n",
+				"deprecated": false,
+				"operationId": "1283",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnCtiNotifyLineCallInformationChangedArgument"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnCtiNotifyLineAddRemove": {
+			"post": {
+				"tags": ["CTI"],
+				"summary": "Event from the server if asnCtiEnumPhoneLines was called to monitor the lines of the user.\n\nIn order to get this event the line must be monitored via asnCtiEnumPhoneLines.\n\n",
+				"description": "With asnCtiEnumPhoneLines the client defined, which sort of lines it wants to monitor.\n\nIf there are changes to the corresponding line list, this event will reflect the changes to the client.&lt;br \/&gt;\n\n",
+				"deprecated": false,
+				"operationId": "1284",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnCtiNotifyLineAddRemoveArgument"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnCtiNotifyMakeCallResult": {
+			"post": {
+				"tags": ["CTI"],
+				"summary": "Event from the server with the result of an asynchronous make call operation on the server.\n\nIn order to get this event the client must have called asnCtiMakeCall first.\n\n",
+				"description": "Make call is a asynchronous process in the UCServer. So the final result will be send as an event from the server.\n\nThis event contains the result the PBX provided.&lt;br \/&gt;\n\n",
+				"deprecated": false,
+				"operationId": "1285",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnCtiNotifyMakeCallResultArgument"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnCtiNotifyConferenceCreated": {
+			"post": {
+				"tags": ["CTI"],
+				"summary": "Event from the server if there is a conference established on a line.\n\nIn order to get these events the line must be monitored via asnCtiLineMonitorStart.\n\n",
+				"description": "This event will inform the client, if a conference was established and with whom.&lt;br \/&gt;\n\nIn this way, the client gets detailed information about the participants and the conference controller.&lt;br \/&gt;\n\n",
+				"deprecated": false,
+				"operationId": "1286",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnCtiNotifyConferenceCreatedArgument"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnCtiNotifyConferenceDestroyed": {
+			"post": {
+				"tags": ["CTI"],
+				"summary": "Event from the server if a conference is closed\/destroyed.\n\nIn order to get these events the line must be monitored via asnCtiLineMonitorStart.\n\n",
+				"deprecated": false,
+				"operationId": "1287",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnCtiNotifyConferenceDestroyedArgument"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnCtiNotifyConferencePartyAdded": {
+			"post": {
+				"tags": ["CTI"],
+				"summary": "Event from the server when a new participant was added to a conference.\n\nIn order to get these events the line must be monitored via asnCtiLineMonitorStart.\n\n",
+				"deprecated": false,
+				"operationId": "1288",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnCtiNotifyConferencePartyAddedArgument"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnCtiNotifyConferencePartyRemoved": {
+			"post": {
+				"tags": ["CTI"],
+				"summary": "Event from the server when a conference participant was removed.\n\nIn order to get these events the line must be monitored via asnCtiLineMonitorStart.\n\n",
+				"deprecated": false,
+				"operationId": "1289",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnCtiNotifyConferencePartyRemovedArgument"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnCtiNotifyLineCallFeaturesChanged": {
+			"post": {
+				"tags": ["CTI"],
+				"summary": "Event from the server when call features have changed.\n\nIn order to get these events the line must be monitored via asnCtiLineMonitorStart.\n\n",
+				"description": "If the state of a call changes or other events on a call happened its features are most likely change too.\n\nSome changes does not change the call state itself, so there will be no call information change event for that call.\n\nIn this case asnCtiNotifyLineCallFeaturesChanged will be sent if only the call features have changed.\n\n",
+				"deprecated": false,
+				"operationId": "1290",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnCtiNotifyLineCallFeaturesChangedArgument"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnCtiNotifyLineProjectSettingsChanged": {
+			"post": {
+				"tags": ["CTI"],
+				"summary": "Event from the server when the project settings or the location of a line has changed.\n\nIn order to get these events the line must be monitored via asnCtiLineMonitorStart.\n\n",
+				"description": "The project settings are part of the location settings of a line. If the location settings were changed, this event will be sent.\n\n",
+				"deprecated": false,
+				"operationId": "1291",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnCtiNotifyLineProjectSettingsChangedArgument"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnCtiMakeCall": {
+			"post": {
+				"tags": ["CTI"],
+				"summary": "Initiates a new call on a line.\n\n",
+				"description": "In most cases the operation is simple. Just provide the line number (e.g. '+49815136856177') to dial from and the number to dial to, let the server format the dialing number.\n\nThis is it.&lt;br \/&gt;\n\nIt will get a bit more complex, if you want to use additional features like project\/pin rules, hide caller id, provide the contact data and so on.\n\nIn this cases you have to add AsnCtiNewCallParams to your arguments. See AsnCtiNewCallParams for more details.\n\n\n\nRemark: The result of this operation does not necessarily reflect, that a call has been dialed successfully. It just confirms the successful execution of the operation.\n\nThe corresponding result of the dial command itself (to the PBX for example) will be sent as an asnCtiNotifyMakeCallResult event.\n\n",
+				"deprecated": false,
+				"operationId": "1202",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnCtiMakeCallArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnCtiMakeCallResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnCtiDropCall": {
+			"post": {
+				"tags": ["CTI"],
+				"summary": "Drop a call identified by its connection identifier.\n\n",
+				"description": "A call can be dropped by its connection identifier if it is necessary to identify the exact call, e.g. in a conference or one of the held calls on a line.\n\nIf you just want to drop the active call on a line you can call asnCtiLineDropCall instead.\n\n",
+				"deprecated": false,
+				"operationId": "1203",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnCtiDropCallArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnCtiDropCallResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnCtiLineDropCall": {
+			"post": {
+				"tags": ["CTI"],
+				"summary": "Drop the cative call on a line.\n\n",
+				"description": "To simply drop the active call on a line, call this operation.&lt;br \/&gt;\n\nIf there are more than one call on the line, it is recommended to call asnCtiDropCall and specify the exact call to drop by it connection identifier.\n\n",
+				"deprecated": false,
+				"operationId": "1224",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnCtiLineDropCallArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnCtiLineDropCallResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnCtiAnswerCall": {
+			"post": {
+				"tags": ["CTI"],
+				"summary": "Accept a call on a line.\n\n",
+				"description": "If a call is in state OFFERING (see EnumCallState, incoming call ringing) the call can be accepted with this operation.\n\n",
+				"deprecated": false,
+				"operationId": "1207",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnCtiAnswerCallArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnCtiAnswerCallResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnCtiRedirectCall": {
+			"post": {
+				"tags": ["CTI"],
+				"summary": "Redirect an incoming call to another line.\n\n",
+				"description": "To redirect an incoming, ringing call (call state OFFERING) to another line, execute this operation.\n\nThis operation works also for lines, where the user has corresponding access rights to.&lt;br \/&gt;\n\nAdditionally this operation can be executed on a contact of the favorite list where the caller has the access rights to control the lines of the contact.\n\n\n\nRemark: If you want to pickup a call (picking an offering call to an own line), use asnCtiPickupCall.\n\n",
+				"deprecated": false,
+				"operationId": "1208",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnCtiRedirectCallArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnCtiRedirectCallResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnCtiPickupCall": {
+			"post": {
+				"tags": ["CTI"],
+				"summary": "Pickup a ringing call from another line on an own line.\n\n",
+				"description": "Getting an ringing call from another line to an own line execute this operation.&lt;br \/&gt;\n\nPicking up calls requires an appropriate configuration (rights) on the PBX.\n\nThus it is recommended to use asnCtiRedirectCall if you are not aware if the configuration has been set properly.\n\nPicking a call leads to a connected call on the extension picking the call while redirecting leads to an offering call on the new extension.\n\n",
+				"deprecated": false,
+				"operationId": "1222",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnCtiPickupCallArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnCtiPickupCallResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnCtiStartCallRecording": {
+			"post": {
+				"tags": ["CTI"],
+				"summary": "Start recording of a call.\n\n",
+				"description": "If the call recorder is configured on the server, calls can be recorded if the feature eCFEATURESTARTCALLRECORD is set on the call.&lt;br \/&gt;\n\nIf executed successfully, the server will created a conference with the connected party and the call recorder.\n\nIf the caller or called party disconnects, the conference will be terminated and the server will dispatch the recording (wav or mp3 file) to the initiator of the recording.\n\n",
+				"deprecated": false,
+				"operationId": "1230",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnCtiStartCallRecordingArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnCtiStartCallRecordingResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnCtiStopCallRecording": {
+			"post": {
+				"tags": ["CTI"],
+				"summary": "Stop recording of a call.\n\n",
+				"description": "To stop recording a call without destroying the connection this operation is executed.\n\nThis will terminate the conference with the call recorder line without disconnecting the other calls.\n\nTo execute this operation successfully, the feature eCFEATURESTOPCALLRECORD must be set on the call.&lt;br \/&gt;\n\nThe record will be sent to the initiator of the recording.\n\n",
+				"deprecated": false,
+				"operationId": "1231",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnCtiStopCallRecordingArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnCtiStopCallRecordingResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnCtiSetCallData": {
+			"post": {
+				"tags": ["CTI"],
+				"summary": "Add some data to the call which will be transferred to other clients.\n\n",
+				"description": "For some use cases it will be necessary to transfer business data attached to a call to other clients with the call, e.g. while transferring it.&lt;br \/&gt;\n\nWith this operation this data can be added to the call information of a call without setting the whole information structure again.&lt;br \/&gt;\n\nThis operation only executes successfully if the user is the line owner.&lt;br \/&gt;\n\n[TODO: MORE DETAILS NEEDED! Especial for CallDataAnnouncement (ConnectionID unknown)]\n\n",
+				"deprecated": false,
+				"operationId": "1225",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnCtiSetCallDataArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnCtiSetCallDataResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnCtiMergeCalls": {
+			"post": {
+				"tags": ["CTI"],
+				"summary": "Merge two calls on a line together.\n\n",
+				"description": "It is possible to connect two parties with each other. It does not result in a conference, the line is not member of that call any longer after executing the function.\n\nTo execute this successfully, the connection identifier of the calls must be known and the calls must be in the call list of the same line (e.g. one active, one on hold).\n\nBoth calls must have the call feature eCFEATUREMERGECALLS set.\n\n",
+				"deprecated": false,
+				"operationId": "1209",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnCtiMergeCallsArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnCtiMergeCallsResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnCtiSwapHold": {
+			"post": {
+				"tags": ["CTI"],
+				"summary": "Swap puts the active call on hold and retrieves the hold call\n\n",
+				"description": "You can swap between a held call and an active call with this function.&lt;br \/&gt;\n\nThis operation needs two calls on the same line (one active, one held) to execute successfully.\n\nBoth calls must have the call feature eCFEATURESWAPHOLD set.\n\n",
+				"deprecated": false,
+				"operationId": "1210",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnCtiSwapHoldArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnCtiSwapHoldResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnCtiHold": {
+			"post": {
+				"tags": ["CTI"],
+				"summary": "Set the call on hold, so another another call in the same line will be possible to make.\n\n",
+				"description": "For some reasons it is possible to set a call on hold. This can be used to a call back to another line, setup a conference, set a transfer etc.&lt;br \/&gt;\n\nA call on hold isn't disconnect, but the call partner cannot hear what is spoken while on hold and is waiting for further actions.\n\n",
+				"deprecated": false,
+				"operationId": "1211",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnCtiHoldArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnCtiHoldResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnCtiSetForward": {
+			"post": {
+				"tags": ["CTI"],
+				"summary": "Set simple call forwards.\n\n",
+				"description": "Set a call forward on a line (optionally with conditions). Default is a unconditional forward from one line to another.&lt;br \/&gt;\n\nTo set multiple forwards on a line (if it is supported by the PBX system), call this function again on the same line.\n\n",
+				"deprecated": false,
+				"operationId": "1218",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnCtiSetForwardArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnCtiSetForwardResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnCtiRemoveForward": {
+			"post": {
+				"tags": ["CTI"],
+				"summary": "Remove a forward from a line.\n\n",
+				"description": "This operation removes all forwards from a line&lt;br \/&gt;\n\nTo remove one forward form the list of forwards on the line, the optional parameters \"ForwardMode\" and \"ForwardDestination\" must be set to match exactly in the list.&lt;br \/&gt;\n\nThis information can be read from the current line information sent to the client by the event \"asnCtiNotifyLineInfoChanged\" or by calling asnCtiSnapshotPhoneLine.\n\n",
+				"deprecated": false,
+				"operationId": "1219",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnCtiRemoveForwardArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnCtiRemoveForwardResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnCtiDialDigits": {
+			"post": {
+				"tags": ["CTI"],
+				"summary": "Dial DTMF tones on an active call.\n\n",
+				"description": "For call menus or other use cases it is possible to generate dial tones on an active call.&lt;br \/&gt;\n\nThere are different digit modes possible: LINEDIGITMODE_DTMF, LINEDIGITMODE_DTMFEND and LINEDIGITMODE_PULSE\n\n",
+				"deprecated": false,
+				"operationId": "1221",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnCtiDialDigitsArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnCtiDialDigitsResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnCtiCompleteCall": {
+			"post": {
+				"tags": ["CTI"],
+				"summary": "Set a automatic call back if the call was not accepted or busy.\n\n",
+				"description": "If a call was unsuccessful because the remote party was busy or the call was not answered, this operation sets the the complete call function of the PBX system to call back the caller automatically if the called party \/ line is free \/ back again.\n\n",
+				"deprecated": false,
+				"operationId": "1223",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnCtiCompleteCallArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnCtiCompleteCallResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnCtiConference": {
+			"post": {
+				"tags": ["CTI"],
+				"summary": "Initiate a conference call with two already existing calls of a line.\n\n",
+				"description": "To initiate a conference, setup two calls via a call back (asnCtiMakeCall =&gt; get this call establish =&gt; asnCtiMakeCall),\n\nso you have one call on hold and one active. Now execute this operation with the two connection identifiers.\n\nAs result, you should now have a conference with 3 attendants (you and the other two call parties).\n\n",
+				"deprecated": false,
+				"operationId": "1250",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnCtiConferenceArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnCtiConferenceResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"schemas": {
+			"AsnOptionalParameters": {
+				"$ref": "ENetUC_Common.json#/components/schemas/AsnOptionalParameters"
+			},
+			"AsnRequestError": {
+				"$ref": "ENetUC_Common.json#/components/schemas/AsnRequestError"
+			},
+			"AsnSystemTime": {
+				"$ref": "ENetUC_Common.json#/components/schemas/AsnSystemTime"
+			},
+			"AsnNetDatabaseContact": {
+				"$ref": "ENetUC_Common.json#/components/schemas/AsnNetDatabaseContact"
+			},
+			"UTF8StringList": {
+				"$ref": "ENetUC_Common.json#/components/schemas/UTF8StringList"
+			},
+			"AsnProjectPinRuleList": {
+				"$ref": "ENetUC_Common_SIPCTI.json#/components/schemas/AsnProjectPinRuleList"
+			},
+			"AsnCtiNewCallParams": {
+				"$ref": "ENetUC_Common_SIPCTI.json#/components/schemas/AsnCtiNewCallParams"
+			},
+			"AsnProjectPinRule": {
+				"$ref": "ENetUC_Common_SIPCTI.json#/components/schemas/AsnProjectPinRule"
+			},
+			"AsnLineForward": {
+				"$ref": "ENetUC_Common_SIPCTI.json#/components/schemas/AsnLineForward"
+			},
+			"AsnLineForwards": {
+				"$ref": "ENetUC_Common_SIPCTI.json#/components/schemas/AsnLineForwards"
+			},
+			"AsnCtiNotifyLineAddRemoveArgumentEnum": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "added",
+						"const": 0
+					},
+					{
+						"title": "removed",
+						"const": 1
+					}]},
+			"AsnCtiEnumPhoneLinesArgumentEnum": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "userOwnLines",
+						"const": 0
+					},
+					{
+						"title": "userMonitorLines",
+						"const": 1
+					},
+					{
+						"title": "systemLocalLines",
+						"const": 2
+					},
+					{
+						"title": "systemGlobalLines",
+						"const": 3
+					}]},
+			"AsnCtiLineOpenStatus": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "lineStatusDisconnected",
+						"const": 0
+					},
+					{
+						"title": "lineStatusClosed",
+						"const": 1
+					},
+					{
+						"title": "lineStatusOpen",
+						"const": 2
+					},
+					{
+						"title": "lineStatusOpenNoPhoneConnected",
+						"const": 3
+					},
+					{
+						"title": "lineStatusOpenNoPBXConnection",
+						"const": 4
+					},
+					{
+						"title": "lineStatusOpenPBXLoginFailed",
+						"const": 5
+					},
+					{
+						"title": "lineStatusOpenPBXNoLicense",
+						"const": 6
+					},
+					{
+						"title": "lineStatusOpenPBXSessionCountExceeded",
+						"const": 7
+					},
+					{
+						"title": "lineStatusFailedNoLicense",
+						"const": 8
+					},
+					{
+						"title": "lineStatusFailedNoECSTALicense",
+						"const": 9
+					}]},
+			"EnumCallFeatures": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "eCFEATURENONE",
+						"const": 0
+					},
+					{
+						"title": "eCFEATUREANSWER",
+						"const": 1
+					},
+					{
+						"title": "eCFEATUREMAKECALL",
+						"const": 2
+					},
+					{
+						"title": "eCFEATURECOMPLETECALL",
+						"const": 4
+					},
+					{
+						"title": "eCFEATUREMERGECALLS",
+						"const": 16
+					},
+					{
+						"title": "eCFEATUREHANGUP",
+						"const": 32
+					},
+					{
+						"title": "eCFEATUREBLINDTRANSFER",
+						"const": 256
+					},
+					{
+						"title": "eCFEATUREREDIRECT",
+						"const": 512
+					},
+					{
+						"title": "eCFEATUREMAYBEPICKUPED",
+						"const": 1024
+					},
+					{
+						"title": "eCFEATURESWAPHOLD",
+						"const": 4096
+					},
+					{
+						"title": "eCFEATUREHOLD",
+						"const": 8192
+					},
+					{
+						"title": "eCFEATUREUNHOLD",
+						"const": 16384
+					},
+					{
+						"title": "eCFEATURECONFERENCESTARTEU",
+						"const": 65536
+					},
+					{
+						"title": "eCFEATURECONFERENCEADDPARTY",
+						"const": 131072
+					},
+					{
+						"title": "eCFEATURECONFERENCESTARTUSA",
+						"const": 262144
+					},
+					{
+						"title": "eCFEATUREGENERATETONE",
+						"const": 1048576
+					},
+					{
+						"title": "eCFEATUREDIALDIGITS",
+						"const": 2097152
+					},
+					{
+						"title": "eCFEATURESTARTCALLRECORD",
+						"const": 16777216
+					},
+					{
+						"title": "eCFEATURESTOPCALLRECORD",
+						"const": 33554432
+					}]},
+			"EnumLineFeatures": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "eCTILINEFEATURENONE",
+						"const": 0
+					},
+					{
+						"title": "eCTILINEFEATUREMAKECALL",
+						"const": 1
+					},
+					{
+						"title": "eCTILINEFEATUREDONOTDISTURB",
+						"const": 2
+					},
+					{
+						"title": "eCTILINEFEATUREPICKUP",
+						"const": 4
+					},
+					{
+						"title": "eCTILINEFEATUREBLOCKID",
+						"const": 8
+					},
+					{
+						"title": "eCTILINEFEATURENOIMMEDIATEINQUIRY",
+						"const": 16
+					},
+					{
+						"title": "eCTILINEFEATUREREMOTEOFFICE",
+						"const": 32
+					},
+					{
+						"title": "eCTILINEFEATUREINVALIDPASSWORD",
+						"const": 64
+					},
+					{
+						"title": "eCTILINEFEATUREREMOTEOFFICEEMULATION",
+						"const": 128
+					}]},
+			"EnumForwardModes": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "eFORWARDMODEUNKNOWN",
+						"const": 0
+					},
+					{
+						"title": "eFORWARDMODEIMMEDIATE",
+						"const": 1
+					},
+					{
+						"title": "eFORWARDMODEBUSY",
+						"const": 2
+					},
+					{
+						"title": "eFORWARDMODENOANSW",
+						"const": 4
+					},
+					{
+						"title": "eFORWARDMODEBUSYINT",
+						"const": 8
+					},
+					{
+						"title": "eFORWARDMODEBUSYEXT",
+						"const": 16
+					},
+					{
+						"title": "eFORWARDMODENOANSINT",
+						"const": 32
+					},
+					{
+						"title": "eFORWARDMODENOANSEXT",
+						"const": 64
+					},
+					{
+						"title": "eFORWARDMODEIMMINT",
+						"const": 128
+					},
+					{
+						"title": "eFORWARDMODEIMMEXT",
+						"const": 256
+					},
+					{
+						"title": "eFORWARDDISC",
+						"const": 512
+					},
+					{
+						"title": "eFORWARDDISCINT",
+						"const": 1024
+					},
+					{
+						"title": "eFORWARDDISCEXT",
+						"const": 2048
+					},
+					{
+						"title": "eFORWARDADMINDISC",
+						"const": 4096
+					},
+					{
+						"title": "eFORWARDADMINDISCINT",
+						"const": 8192
+					},
+					{
+						"title": "eFORWARDADMINDISCEXT",
+						"const": 16384
+					},
+					{
+						"title": "eFORWARDALLMODESMASK",
+						"const": 32767
+					}]},
+			"EnumForwardController": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "eFORWARDCONTROLLERPBX",
+						"const": 1
+					},
+					{
+						"title": "eFORWARDCONTROLLERTAPISERVERADMIN",
+						"const": 2
+					},
+					{
+						"title": "eFORWARDCONTROLLERTAPISERVERUSER",
+						"const": 4
+					}]},
+			"AsnCtiEnumPhoneLinesErrorEnum": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "success",
+						"const": 0
+					},
+					{
+						"title": "generalerror",
+						"const": 1
+					},
+					{
+						"title": "accessdenied",
+						"const": 2
+					}]},
+			"AsnCtiSnapshotPhoneLineErrorEnum": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "success",
+						"const": 0
+					},
+					{
+						"title": "generalerror",
+						"const": 1
+					},
+					{
+						"title": "accessdenied",
+						"const": 2
+					},
+					{
+						"title": "invalidline",
+						"const": 3
+					}]},
+			"AsnCtiLineMonitorStartErrorEnum": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "success",
+						"const": 0
+					},
+					{
+						"title": "generalerror",
+						"const": 1
+					},
+					{
+						"title": "accessdenied",
+						"const": 2
+					},
+					{
+						"title": "invalidline",
+						"const": 3
+					}]},
+			"AsnCtiLineMonitorStopErrorEnum": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "success",
+						"const": 0
+					},
+					{
+						"title": "generalerror",
+						"const": 1
+					},
+					{
+						"title": "accessdenied",
+						"const": 2
+					},
+					{
+						"title": "invalidline",
+						"const": 3
+					}]},
+			"AsnCtiLineSetDoNotDisturbErrorEnum": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "success",
+						"const": 0
+					},
+					{
+						"title": "generalerror",
+						"const": 1
+					},
+					{
+						"title": "accessdenied",
+						"const": 2
+					},
+					{
+						"title": "invalidline",
+						"const": 3
+					}]},
+			"AsnCtiLineSetRemoteOfficeErrorEnum": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "success",
+						"const": 0
+					},
+					{
+						"title": "generalerror",
+						"const": 1
+					},
+					{
+						"title": "accessdenied",
+						"const": 2
+					},
+					{
+						"title": "invalidline",
+						"const": 3
+					}]},
+			"AsnCtiCallInfoChangedReason": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "reasonCallOffering",
+						"const": 0
+					},
+					{
+						"title": "reasonCallDialing",
+						"const": 1
+					},
+					{
+						"title": "reasonCallRingback",
+						"const": 2
+					},
+					{
+						"title": "reasonCallConnected",
+						"const": 3
+					},
+					{
+						"title": "reasonCallConferenced",
+						"const": 4
+					},
+					{
+						"title": "reasonCallHold",
+						"const": 5
+					},
+					{
+						"title": "reasonRemotePartyChanged",
+						"const": 6
+					},
+					{
+						"title": "reasonRemoteContactChanged",
+						"const": 7
+					},
+					{
+						"title": "reasonProjectOrPrivateChanged",
+						"const": 8
+					},
+					{
+						"title": "reasonCallMemoChanged",
+						"const": 9
+					},
+					{
+						"title": "reasonCallBusy",
+						"const": 10
+					},
+					{
+						"title": "reasonCallDisconnect",
+						"const": 11
+					},
+					{
+						"title": "reasonCallDestroyed",
+						"const": 12
+					},
+					{
+						"title": "reasonHoldContactChanged",
+						"const": 13
+					},
+					{
+						"title": "reasonOther",
+						"const": 14
+					},
+					{
+						"title": "reasonCallDataChanged",
+						"const": 15
+					},
+					{
+						"title": "reasonConnectionToPhoneDestroyed",
+						"const": 16
+					}]},
+			"AsnCtiMakeCallErrorEnum": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "success",
+						"const": 0
+					},
+					{
+						"title": "generalerror",
+						"const": 1
+					},
+					{
+						"title": "accessdenied",
+						"const": 2
+					},
+					{
+						"title": "invalidline",
+						"const": 3
+					}]},
+			"EnumCtiDigitMode": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "eLINEDIGITMODESERVERDECIDE",
+						"const": 0
+					},
+					{
+						"title": "eLINEDIGITMODEPULSE",
+						"const": 1
+					},
+					{
+						"title": "eLINEDIGITMODEDTMF",
+						"const": 2
+					},
+					{
+						"title": "eLINEDIGITMODEDTMFEND",
+						"const": 4
+					}]},
+			"AsnCtiCallData": {
+				"type": "object",
+				"description": "### Category \nCTI\n### Short \nData structure (key value pair) to associate additional information with call objects.\n\n### Long \nData structure to associate additional information with call objects, which can be\ntransferred together with a call to another client.&lt;br \/&gt;\nThe data consists of key\/value pairs. The keys can be used for different use cases and should be named in such a way,\nso that they do not conflict with other uses.&lt;br \/&gt;\n\nThe AsnCtiCallDataList is part of the following OptionalParams of these data structs:\n- AsnCtiCallInformation\n- AsnCtiNewCallParams\nThe Key of the AsnCtiCallDataList is \"calldata\".\n\n### Private \n0",
+				"properties": {
+					"key": {
+						"type": "string"
+					},
+					"value": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"key",
+					"value"
+				]
+			},
+			"AsnCtiLineInfo": {
+				"type": "object",
+				"description": "### Category \nCTI\n### Short \nDescription of a line with its state, phone number etc.\n\n### Long \nThis structure contains the complete description of a line. With this information a client can determine the current state of the line,\nits callable number (u8sPhoneNumber), its unique identification number (u8sLinePhoneNumber, not necessary callable), its current available features and so on.\n\nA client can obtain this information with asnCtiEnumPhoneLines, asnCtiSnapshotPhoneLine and asnCtiLineMonitorStart.\n\nFor visualization of phone numbers in various formats, it is necessary to get the location information of a line.\nThe contents of the u8sLineLocationID field is used to fetch the necessary data from the server. At the moment there is no\nJavaScript implementation of the needed business logic to execute the complete call number formatting rules.\n\n### Private \n0",
+				"properties": {
+					"iType": {
+						"type": "integer"
+					},
+					"iLineOpenStatus": {
+						"type": "integer"
+					},
+					"u8sLinePhoneNumber": {
+						"type": "string"
+					},
+					"u8sDescriptor": {
+						"type": "string"
+					},
+					"u8sPhoneNumber": {
+						"type": "string"
+					},
+					"u8sLineLocationID": {
+						"type": "string"
+					},
+					"iLineFeatures": {
+						"type": "integer"
+					},
+					"iForwardFeaturesPBX": {
+						"type": "integer"
+					},
+					"iForwardFeaturesSERVER": {
+						"type": "integer"
+					},
+					"iForwardFeaturesUSER": {
+						"type": "integer"
+					},
+					"optionalParams": {
+						"$ref": "#/components/schemas/AsnOptionalParameters"
+					}
+				},
+				"required": [
+					"iType",
+					"iLineOpenStatus",
+					"u8sLinePhoneNumber",
+					"u8sDescriptor",
+					"u8sPhoneNumber",
+					"u8sLineLocationID",
+					"iLineFeatures",
+					"iForwardFeaturesPBX",
+					"iForwardFeaturesSERVER",
+					"iForwardFeaturesUSER"
+				]
+			},
+			"AsnRemoteOfficeState": {
+				"type": "object",
+				"description": "### Category \nCTI\n### Short \nRemove office information object\n\n### Private \n0",
+				"properties": {
+					"u8sController": {
+						"type": "string"
+					},
+					"iEnabled": {
+						"type": "integer"
+					},
+					"u8sDestination": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"u8sController",
+					"iEnabled",
+					"u8sDestination"
+				]
+			},
+			"AsnCtiSnapshotPhoneLineArgument": {
+				"type": "object",
+				"description": "### Category \nCTI\n### Short \nArgument for asnCtiSnapshotPhoneLine\n\n### Private \n0",
+				"properties": {
+					"u8sLinePhoneNumber": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"u8sLinePhoneNumber"
+				]
+			},
+			"AsnCtiLineMonitorStartArgument": {
+				"type": "object",
+				"description": "### Category \nCTI\n### Short \nArguments for asnCtiLineMonitorStart\n\n### Private \n0",
+				"properties": {
+					"u8sLinePhoneNumber": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"u8sLinePhoneNumber"
+				]
+			},
+			"AsnCtiLineMonitorStopArgument": {
+				"type": "object",
+				"description": "### Category \nCTI\n### Short \nArguments for asnCtiLineMonitorStop\n\n### Private \n0",
+				"properties": {
+					"u8sMonitorCrossRefID": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"u8sMonitorCrossRefID"
+				]
+			},
+			"AsnCtiLineMonitorStopResult": {
+				"type": "object",
+				"description": "### Category \nCTI\n### Short \nResult of asnCtiLineMonitorStop\n\n### Private \n0"
+			},
+			"AsnCtiLineSetDoNotDisturbArgument": {
+				"type": "object",
+				"description": "### Category \nCTI\n### Long \nArgument for asnCtiLineSetDoNotDisturb (DnD)\n\n### Private \n0",
+				"properties": {
+					"u8sLinePhoneNumber": {
+						"type": "string"
+					},
+					"bDoNotDisturb": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"u8sLinePhoneNumber",
+					"bDoNotDisturb"
+				]
+			},
+			"AsnCtiLineSetDoNotDisturbResult": {
+				"type": "object",
+				"description": "### Category \nCTI\n### Short \nResult of asnCtiLineSetDoNotDisturb\n\n### Private \n0"
+			},
+			"AsnCtiLineSetRemoteOfficeResult": {
+				"type": "object",
+				"description": "### Category \nCTI\n### Short \nResult of asnCtiLineSetRemoteOffice&lt;br \/&gt;\nIf the client receives the Result, the operation was successful.\n\n### Private \n0"
+			},
+			"AsnCtiNotifyLineDoNotDisturbChangedArgument": {
+				"type": "object",
+				"description": "### Category \nCTI\n### Short \nEvent arguments of asnCtiNotifyLineDoNotDisturbChanged\n\n### Private \n0",
+				"properties": {
+					"u8sMonitorCrossRefID": {
+						"type": "string"
+					},
+					"u8sLinePhoneNumber": {
+						"type": "string"
+					},
+					"iDoNotDisturb": {
+						"type": "integer"
+					},
+					"optionalParams": {
+						"$ref": "#/components/schemas/AsnOptionalParameters"
+					}
+				},
+				"required": [
+					"u8sMonitorCrossRefID",
+					"u8sLinePhoneNumber",
+					"iDoNotDisturb"
+				]
+			},
+			"AsnCtiNotifyMonitorStoppedArgument": {
+				"type": "object",
+				"description": "### Category \nCTI\n### Short \nEvent arguments of asnCtiNotifyMonitorStopped\n\n### Private \n0",
+				"properties": {
+					"u8sMonitorCrossRefID": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"u8sMonitorCrossRefID"
+				]
+			},
+			"AsnCtiNotifyLineSortOrderChangedArgument": {
+				"type": "object",
+				"description": "### Category \nCTI\n### Short \nEvent arguments of asnCtiNotifyLineSortOrderChanged\n\n### Private \n0",
+				"properties": {
+					"u8sMonitorCrossRefID": {
+						"type": "string"
+					},
+					"u8sLineURISortOrder": {
+						"$ref": "#/components/schemas/UTF8StringList"
+					}
+				},
+				"required": [
+					"u8sMonitorCrossRefID",
+					"u8sLineURISortOrder"
+				]
+			},
+			"AsnCtiNotifyLineForwardingChangedArgument": {
+				"type": "object",
+				"description": "### Category \nCTI\n### Short \nEvent arguments of asnCtiNotifyLineForwardingChanged\n\n### Private \n0",
+				"properties": {
+					"u8sMonitorCrossRefID": {
+						"type": "string"
+					},
+					"u8sLinePhoneNumber": {
+						"type": "string"
+					},
+					"seqLineForwards": {
+						"$ref": "#/components/schemas/AsnLineForwards"
+					}
+				},
+				"required": [
+					"u8sMonitorCrossRefID",
+					"u8sLinePhoneNumber",
+					"seqLineForwards"
+				]
+			},
+			"AsnCtiNotifyMakeCallResultArgument": {
+				"type": "object",
+				"description": "### Category \nCTI\n### Short \nEvent arguments of asnCtiNotifyMakeCallResult\n\n### Private \n0",
+				"properties": {
+					"u8sLinePhoneNumber": {
+						"type": "string"
+					},
+					"u8sConnectionID": {
+						"type": "string"
+					},
+					"success": {
+						"type": "integer"
+					}
+				},
+				"required": [
+					"u8sLinePhoneNumber",
+					"u8sConnectionID",
+					"success"
+				]
+			},
+			"AsnCtiCallFeature": {
+				"type": "object",
+				"description": "### Category \nCTI\n### Short \nHelper to combine ConnectionID and call features of a call. See asnCtiNotifyLineCallFeaturesChanged.\n\n### Private \n0",
+				"properties": {
+					"u8sConnectionID": {
+						"type": "string"
+					},
+					"iFeatures": {
+						"type": "integer"
+					}
+				},
+				"required": [
+					"u8sConnectionID",
+					"iFeatures"
+				]
+			},
+			"AsnCtiNotifyLineProjectSettingsChangedArgument": {
+				"type": "object",
+				"description": "### Category \nCTI\n### Short \nEvent arguments for asnCtiNotifyLineProjectSettingsChanged\n\n### Private \n0",
+				"properties": {
+					"u8sMonitorCrossRefID": {
+						"type": "string"
+					},
+					"u8sLinePhoneNumber": {
+						"type": "string"
+					},
+					"u8sLocationID": {
+						"type": "string"
+					},
+					"projectList": {
+						"$ref": "#/components/schemas/AsnProjectPinRuleList"
+					}
+				},
+				"required": [
+					"u8sMonitorCrossRefID",
+					"u8sLinePhoneNumber",
+					"u8sLocationID",
+					"projectList"
+				]
+			},
+			"AsnCtiMakeCallArgument": {
+				"type": "object",
+				"description": "### Category \nCTI\n### Short \nArguments for asnCtiMakeCall\n\n### Private \n0",
+				"properties": {
+					"u8sPhoneNumberFrom": {
+						"type": "string"
+					},
+					"u8sPhoneNumberTo": {
+						"type": "string"
+					},
+					"iNumberFormat": {
+						"type": "integer"
+					},
+					"newCallParams": {
+						"$ref": "#/components/schemas/AsnCtiNewCallParams"
+					}
+				},
+				"required": [
+					"u8sPhoneNumberFrom",
+					"u8sPhoneNumberTo",
+					"iNumberFormat"
+				]
+			},
+			"AsnCtiMakeCallResult": {
+				"type": "object",
+				"description": "### Category \nCTI\n### Short \nResult of asnCtiMakeCall.\n\n### Long \nRemark: The result will be sent if asnCtiMakeCall was successfully accepted by the server. It does NOT reflect, if the call was successfully made on the PBX! The result is sent as asnCtiNotifyMakeCallResult event asynchronously.\n\n### Private \n0",
+				"properties": {
+					"u8sConnectionID": {
+						"type": "string"
+					},
+					"optionalParams": {
+						"$ref": "#/components/schemas/AsnOptionalParameters"
+					}
+				},
+				"required": [
+					"u8sConnectionID"
+				]
+			},
+			"AsnCtiDropCallArgument": {
+				"type": "object",
+				"description": "### Category \nCTI\n### Short \nArguments for asnCtiDropCall.\n\n### Private \n0",
+				"properties": {
+					"u8sConnectionID": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"u8sConnectionID"
+				]
+			},
+			"AsnCtiDropCallResult": {
+				"type": "object",
+				"description": "### Category \nCTI\n### Short \nResult of asnCtiDropCall.\nIf an error occured, AsnRequestError will be set.\n\n### Private \n0",
+				"properties": {
+					"bSuccess": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"bSuccess"
+				]
+			},
+			"AsnCtiLineDropCallArgument": {
+				"type": "object",
+				"description": "### Category \nCTI\n### Short \nArguments for asnCtiLineDropCall.\n\n### Private \n0",
+				"properties": {
+					"u8sLineDescriptor": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"u8sLineDescriptor"
+				]
+			},
+			"AsnCtiLineDropCallResult": {
+				"type": "object",
+				"description": "### Category \nCTI\n### Short \nResult of asnCtiLineDropCall.\nIf an error occured, AsnRequestError will be set.\n\n### Private \n0",
+				"properties": {
+					"bSuccess": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"bSuccess"
+				]
+			},
+			"AsnCtiAnswerCallArgument": {
+				"type": "object",
+				"description": "### Category \nCTI\n### Short \nArguments for asnCtiAnswerCall\n\n### Private \n0",
+				"properties": {
+					"u8sConnectionID": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"u8sConnectionID"
+				]
+			},
+			"AsnCtiAnswerCallResult": {
+				"type": "object",
+				"description": "### Category \nCTI\n### Short \nResult of asnCtiAnswerCall.\nIf an error occured, AsnRequestError will be set.\n\n### Private \n0",
+				"properties": {
+					"bSuccess": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"bSuccess"
+				]
+			},
+			"AsnCtiRedirectCallArgument": {
+				"type": "object",
+				"description": "### Category \nCTI\n### Short \nArguments for asnCtiRedirectCall.\n\n### Private \n0",
+				"properties": {
+					"u8sContactID": {
+						"type": "string"
+					},
+					"u8sConnectionID": {
+						"type": "string"
+					},
+					"u8sPhoneNumber": {
+						"type": "string"
+					},
+					"iNumberFormat": {
+						"type": "integer"
+					}
+				},
+				"required": [
+					"u8sContactID",
+					"u8sConnectionID",
+					"u8sPhoneNumber",
+					"iNumberFormat"
+				]
+			},
+			"AsnCtiRedirectCallResult": {
+				"type": "object",
+				"description": "### Category \nCTI\n### Short \nResult of asnCtiRedirectCall.\nIf an error occured, AsnRequestError will be set.\n\n### Private \n0",
+				"properties": {
+					"bSuccess": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"bSuccess"
+				]
+			},
+			"AsnCtiPickupCallArgument": {
+				"type": "object",
+				"description": "### Category \nCTI\n### Short \nArguments for asnCtiPickupCall.\n\n### Private \n0",
+				"properties": {
+					"u8sContactID": {
+						"type": "string"
+					},
+					"u8sConnectionID": {
+						"type": "string"
+					},
+					"u8sPhoneNumber": {
+						"type": "string"
+					},
+					"iNumberFormat": {
+						"type": "integer"
+					}
+				},
+				"required": [
+					"u8sContactID",
+					"u8sConnectionID",
+					"u8sPhoneNumber",
+					"iNumberFormat"
+				]
+			},
+			"AsnCtiPickupCallResult": {
+				"type": "object",
+				"description": "### Category \nCTI\n### Short \nResult of asnCtiPickupCall\nIf an error occured, AsnRequestError will be set.\n\n### Private \n0",
+				"properties": {
+					"bSuccess": {
+						"type": "boolean"
+					},
+					"optionalParams": {
+						"$ref": "#/components/schemas/AsnOptionalParameters"
+					}
+				},
+				"required": [
+					"bSuccess"
+				]
+			},
+			"AsnCtiStartCallRecordingArgument": {
+				"type": "object",
+				"description": "### Category \nCTI\n### Short \nArguments for asnCtiStartCallRecording.\n\n### Private \n0",
+				"properties": {
+					"u8sConnectionID": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"u8sConnectionID"
+				]
+			},
+			"AsnCtiStartCallRecordingResult": {
+				"type": "object",
+				"description": "### Category \nCTI\n### Short \nResult of asnCtiStartCallRecording\nIf an error occured, AsnRequestError will be set.\n\n### Private \n0",
+				"properties": {
+					"bSuccess": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"bSuccess"
+				]
+			},
+			"AsnCtiStopCallRecordingArgument": {
+				"type": "object",
+				"description": "### Category \nCTI\n### Short \nArguments for asnCtiStopCallRecording.\n\n### Private \n0",
+				"properties": {
+					"u8sConnectionID": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"u8sConnectionID"
+				]
+			},
+			"AsnCtiStopCallRecordingResult": {
+				"type": "object",
+				"description": "### Category \nCTI\n### Short \nResult of asnCtiStopCallRecording.\nIf there was no error executing this operation, the result will be returned; otherwise AsnRequestError is set.\n\n### Private \n0"
+			},
+			"AsnCtiSetCallDataResult": {
+				"type": "object",
+				"description": "### Category \nCTI\n### Short \nErgebnis für asnCtiSetCallData\n\n### Private \n0",
+				"properties": {
+					"bSuccess": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"bSuccess"
+				]
+			},
+			"AsnCtiMergeCallsArgument": {
+				"type": "object",
+				"description": "### Category \nCTI\n### Short \nArguments for asnCtiMergeCalls.\n\n### Private \n0",
+				"properties": {
+					"u8sConnectionID1": {
+						"type": "string"
+					},
+					"u8sConnectionID2": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"u8sConnectionID1",
+					"u8sConnectionID2"
+				]
+			},
+			"AsnCtiMergeCallsResult": {
+				"type": "object",
+				"description": "### Category \nCTI\n### Short \nResult of asnCtiMergeCalls.\nIf an error occured, AsnRequestError will be set.\n\n### Private \n0",
+				"properties": {
+					"bSuccess": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"bSuccess"
+				]
+			},
+			"AsnCtiSwapHoldArgument": {
+				"type": "object",
+				"description": "### Category \nCTI\n### Short \nArguments for asnCtiSwapHold.\n\n### Private \n0",
+				"properties": {
+					"u8sConnectionID": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"u8sConnectionID"
+				]
+			},
+			"AsnCtiSwapHoldResult": {
+				"type": "object",
+				"description": "### Category \nCTI\n### Short \nResult of asnCtiSwapHold.\nIf an error occured, AsnRequestError will be set.\n\n### Private \n0",
+				"properties": {
+					"bSuccess": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"bSuccess"
+				]
+			},
+			"AsnCtiHoldArgument": {
+				"type": "object",
+				"description": "### Category \nCTI\n### Short \nArguments for asnCtiHold.\n\n### Private \n0",
+				"properties": {
+					"bHold": {
+						"type": "boolean"
+					},
+					"u8sConnectionID": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"bHold",
+					"u8sConnectionID"
+				]
+			},
+			"AsnCtiHoldResult": {
+				"type": "object",
+				"description": "### Category \nCTI\n### Short \nResult of asnCtiHold.\nIf an error occured, AsnRequestError will be set.\n\n### Private \n0",
+				"properties": {
+					"bSuccess": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"bSuccess"
+				]
+			},
+			"AsnCtiSetForwardArgument": {
+				"type": "object",
+				"description": "### Category \nCTI\n### Short \nArguments for asnCtiSetForward.\n\n### Private \n0",
+				"properties": {
+					"u8sPhoneNumberFrom": {
+						"type": "string"
+					},
+					"u8sPhoneNumberTo": {
+						"type": "string"
+					},
+					"optionalParams": {
+						"$ref": "#/components/schemas/AsnOptionalParameters"
+					}
+				},
+				"required": [
+					"u8sPhoneNumberFrom",
+					"u8sPhoneNumberTo"
+				]
+			},
+			"AsnCtiSetForwardResult": {
+				"type": "object",
+				"description": "### Category \nCTI\n### Short \nResult of asnCtiSetForward.\nIf an error occured, AsnRequestError will be set.\n\n### Private \n0",
+				"properties": {
+					"bSuccess": {
+						"type": "boolean"
+					},
+					"bExistingForwardingChanged": {
+						"type": "boolean"
+					},
+					"optionalParams": {
+						"$ref": "#/components/schemas/AsnOptionalParameters"
+					}
+				},
+				"required": [
+					"bSuccess",
+					"bExistingForwardingChanged"
+				]
+			},
+			"AsnCtiRemoveForwardArgument": {
+				"type": "object",
+				"description": "### Category \nCTI\n### Short \nArguments for asnCtiRemoveForward.\n\n### Private \n0",
+				"properties": {
+					"u8sPhoneNumberFrom": {
+						"type": "string"
+					},
+					"optionalParams": {
+						"$ref": "#/components/schemas/AsnOptionalParameters"
+					}
+				},
+				"required": [
+					"u8sPhoneNumberFrom"
+				]
+			},
+			"AsnCtiRemoveForwardResult": {
+				"type": "object",
+				"description": "### Category \nCTI\n### Short \nResult of asnCtiRemoveForward\nIf an error occured, AsnRequestError will be set.\n\n### Private \n0",
+				"properties": {
+					"bSuccess": {
+						"type": "boolean"
+					},
+					"optionalParams": {
+						"$ref": "#/components/schemas/AsnOptionalParameters"
+					}
+				},
+				"required": [
+					"bSuccess"
+				]
+			},
+			"AsnCtiDialDigitsArgument": {
+				"type": "object",
+				"description": "### Category \nCTI\n### Short \nArguments for asnCtiDialDigits.\n\n### Private \n0",
+				"properties": {
+					"u8sConnectionID": {
+						"type": "string"
+					},
+					"iDigitMode": {
+						"type": "integer"
+					},
+					"iDigitDuration": {
+						"type": "integer"
+					},
+					"u8sDigitsToDial": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"u8sConnectionID",
+					"iDigitMode",
+					"iDigitDuration",
+					"u8sDigitsToDial"
+				]
+			},
+			"AsnCtiDialDigitsResult": {
+				"type": "object",
+				"description": "### Category \nCTI\n### Short \nResult of asnCtiDialDigits.\nIf an error occured, AsnRequestError will be set.\n\n### Private \n0",
+				"properties": {
+					"bSuccess": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"bSuccess"
+				]
+			},
+			"AsnCtiCompleteCallArgument": {
+				"type": "object",
+				"description": "### Category \nCTI\n### Short \nArguments for asnCtiCompleteCall.\n\n### Private \n0",
+				"properties": {
+					"u8sConnectionID": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"u8sConnectionID"
+				]
+			},
+			"AsnCtiCompleteCallResult": {
+				"type": "object",
+				"description": "### Category \nCTI\n### Short \nResult of asnCtiCompleteCall.\nIf an error occured, AsnRequestError will be set.\n\n### Private \n0",
+				"properties": {
+					"bSuccess": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"bSuccess"
+				]
+			},
+			"AsnCtiConferenceArgument": {
+				"type": "object",
+				"description": "### Category \nCTI\n### Short \nArguments for asnCtiConference.\n\n### Private \n0",
+				"properties": {
+					"u8sConnectionID1": {
+						"type": "string"
+					},
+					"u8sConnectionID2": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"u8sConnectionID1",
+					"u8sConnectionID2"
+				]
+			},
+			"AsnCtiConferenceResult": {
+				"type": "object",
+				"description": "### Category \nCTI\n### Short \nResult of asnCtiConference.\nIf an error occured, AsnRequestError will be set.\n\n### Private \n0",
+				"properties": {
+					"bSuccess": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"bSuccess"
+				]
+			},
+			"AsnCtiCallDataList": {
+				"type": "array",
+				"items": {
+					"$ref": "#/components/schemas/AsnCtiCallData"
+				}
+			},
+			"AsnCtiLineInfoList": {
+				"type": "array",
+				"items": {
+					"$ref": "#/components/schemas/AsnCtiLineInfo"
+				}
+			},
+			"AsnCtiCallInformation": {
+				"type": "object",
+				"description": "### Category \nCTI\n### Short \nIn depth information about a call\n\n### Private \n0",
+				"properties": {
+					"u8sLinePhoneNumber": {
+						"type": "string"
+					},
+					"u8sConnectionID": {
+						"type": "string"
+					},
+					"iCallState": {
+						"type": "integer"
+					},
+					"iCallType": {
+						"type": "integer"
+					},
+					"iDisconnectedReason": {
+						"type": "integer"
+					},
+					"iFeatures": {
+						"type": "integer"
+					},
+					"bOutbound": {
+						"type": "boolean"
+					},
+					"bInternal": {
+						"type": "boolean"
+					},
+					"bCallerIDBlocked": {
+						"type": "boolean"
+					},
+					"iCallRecordingState": {
+						"type": "integer"
+					},
+					"bConferenceCtlr": {
+						"type": "boolean"
+					},
+					"u8sConferenceCtlrID": {
+						"type": "string"
+					},
+					"u8sLocalNumberSC": {
+						"type": "string"
+					},
+					"u8sRemoteNumberSC": {
+						"type": "string"
+					},
+					"iRemoteContactSource": {
+						"type": "integer"
+					},
+					"projectPinRule": {
+						"$ref": "#/components/schemas/AsnProjectPinRule"
+					},
+					"u8sNote": {
+						"type": "string"
+					},
+					"u8sTrackerID": {
+						"type": "string"
+					},
+					"utcCallCreated": {
+						"$ref": "#/components/schemas/AsnSystemTime"
+					},
+					"utcCallConnected": {
+						"$ref": "#/components/schemas/AsnSystemTime"
+					},
+					"utcCallDisconnected": {
+						"$ref": "#/components/schemas/AsnSystemTime"
+					},
+					"bIsUnknownHoldContact": {
+						"type": "boolean"
+					},
+					"pLocalContact": {
+						"$ref": "#/components/schemas/AsnNetDatabaseContact"
+					},
+					"pRemoteContact": {
+						"$ref": "#/components/schemas/AsnNetDatabaseContact"
+					},
+					"pu8sHoldNumberSC": {
+						"type": "string"
+					},
+					"pHoldContact": {
+						"$ref": "#/components/schemas/AsnNetDatabaseContact"
+					},
+					"pu8sRedirectingNumber": {
+						"type": "string"
+					},
+					"pRedirectingContact": {
+						"$ref": "#/components/schemas/AsnNetDatabaseContact"
+					},
+					"optionalParams": {
+						"$ref": "#/components/schemas/AsnOptionalParameters"
+					},
+					"callDataList": {
+						"$ref": "#/components/schemas/AsnCtiCallDataList"
+					}
+				},
+				"required": [
+					"u8sLinePhoneNumber",
+					"u8sConnectionID",
+					"iCallState",
+					"iCallType",
+					"iDisconnectedReason",
+					"iFeatures",
+					"bOutbound",
+					"bInternal",
+					"bCallerIDBlocked",
+					"iCallRecordingState",
+					"bConferenceCtlr",
+					"u8sConferenceCtlrID",
+					"u8sLocalNumberSC",
+					"u8sRemoteNumberSC",
+					"iRemoteContactSource",
+					"projectPinRule",
+					"u8sNote",
+					"u8sTrackerID",
+					"utcCallCreated",
+					"utcCallConnected",
+					"utcCallDisconnected",
+					"bIsUnknownHoldContact"
+				]
+			},
+			"AsnCtiCallInformationList": {
+				"type": "array",
+				"items": {
+					"$ref": "#/components/schemas/AsnCtiCallInformation"
+				}
+			},
+			"AsnCtiEnumPhoneLinesArgument": {
+				"type": "object",
+				"description": "### Category \nCTI\n### Short \nArguments for asnCtiEnumPhoneLines.\n\n### Private \n0",
+				"properties": {
+					"typeofLines": {
+						"$ref": "#/components/schemas/AsnCtiEnumPhoneLinesArgumentEnum"
+					},
+					"attachChangeNotify": {
+						"type": "integer"
+					}
+				},
+				"required": [
+					"typeofLines",
+					"attachChangeNotify"
+				]
+			},
+			"AsnCtiEnumPhoneLinesResult": {
+				"type": "object",
+				"description": "### Category \nCTI\n### Long \nIf successful this result will be returned by asnCtiEnumPhoneLines.\n\n### Private \n0",
+				"properties": {
+					"seqLines": {
+						"$ref": "#/components/schemas/AsnCtiLineInfoList"
+					},
+					"u8sLineMonitorCrossRefID": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"seqLines"
+				]
+			},
+			"AsnCtiSnapshotPhoneLineResult": {
+				"type": "object",
+				"description": "### Category \nCTI\n### Short \nIf asnCtiSnapshotPhoneLine is executed successful, AsnCtiSnapshotPhoneLineResult will be returned.\n\n### Private \n0",
+				"properties": {
+					"lineInfo": {
+						"$ref": "#/components/schemas/AsnCtiLineInfo"
+					},
+					"seqCalls": {
+						"$ref": "#/components/schemas/AsnCtiCallInformationList"
+					},
+					"iDoNotDisturb": {
+						"type": "integer"
+					},
+					"seqLineForwards": {
+						"$ref": "#/components/schemas/AsnLineForwards"
+					},
+					"remoteOfficeState": {
+						"$ref": "#/components/schemas/AsnRemoteOfficeState"
+					},
+					"optionalParams": {
+						"$ref": "#/components/schemas/AsnOptionalParameters"
+					}
+				},
+				"required": [
+					"lineInfo",
+					"seqCalls",
+					"iDoNotDisturb",
+					"seqLineForwards",
+					"remoteOfficeState"
+				]
+			},
+			"AsnCtiLineMonitorStartResult": {
+				"type": "object",
+				"description": "### Category \nCTI\n### Long \nIf asnCtiLineMonitorStart is executed successful, AsnCtiLineMonitorStartResult will be returned.\n\n### Private \n0",
+				"properties": {
+					"u8sMonitorCrossRefID": {
+						"type": "string"
+					},
+					"lineInfo": {
+						"$ref": "#/components/schemas/AsnCtiLineInfo"
+					},
+					"seqCalls": {
+						"$ref": "#/components/schemas/AsnCtiCallInformationList"
+					},
+					"iDoNotDisturb": {
+						"type": "integer"
+					},
+					"seqLineForwards": {
+						"$ref": "#/components/schemas/AsnLineForwards"
+					},
+					"remoteOfficeState": {
+						"$ref": "#/components/schemas/AsnRemoteOfficeState"
+					},
+					"optionalParams": {
+						"$ref": "#/components/schemas/AsnOptionalParameters"
+					}
+				},
+				"required": [
+					"u8sMonitorCrossRefID",
+					"lineInfo",
+					"seqCalls",
+					"iDoNotDisturb",
+					"seqLineForwards",
+					"remoteOfficeState"
+				]
+			},
+			"AsnCtiLineSetRemoteOfficeArgument": {
+				"type": "object",
+				"description": "### Category \nCTI\n### Long \nArgument for asnCtiLineSetRemoteOffice\n\n### Private \n0",
+				"properties": {
+					"u8sLinePhoneNumber": {
+						"type": "string"
+					},
+					"remoteOfficeState": {
+						"$ref": "#/components/schemas/AsnRemoteOfficeState"
+					}
+				},
+				"required": [
+					"u8sLinePhoneNumber",
+					"remoteOfficeState"
+				]
+			},
+			"AsnCtiNotifyLineInfoChangedArgument": {
+				"type": "object",
+				"description": "### Category \nCTI\n### Short \nEvent arguments of asnCtiNotifyLineInfoChanged.\n\n### Private \n0",
+				"properties": {
+					"u8sMonitorCrossRefID": {
+						"type": "string"
+					},
+					"u8sLinePhoneNumber": {
+						"type": "string"
+					},
+					"lineInfo": {
+						"$ref": "#/components/schemas/AsnCtiLineInfo"
+					}
+				},
+				"required": [
+					"u8sMonitorCrossRefID",
+					"u8sLinePhoneNumber",
+					"lineInfo"
+				]
+			},
+			"AsnCtiNotifyLineRemoteOfficeChangedArgument": {
+				"type": "object",
+				"description": "### Category \nCTI\n### Short \nEvent arguments of asnCtiNotifyLineRemoteOfficeChanged\n\n### Private \n0",
+				"properties": {
+					"u8sMonitorCrossRefID": {
+						"type": "string"
+					},
+					"u8sLinePhoneNumber": {
+						"type": "string"
+					},
+					"remoteOfficeState": {
+						"$ref": "#/components/schemas/AsnRemoteOfficeState"
+					}
+				},
+				"required": [
+					"u8sMonitorCrossRefID",
+					"u8sLinePhoneNumber",
+					"remoteOfficeState"
+				]
+			},
+			"AsnCtiNotifyLineCallInformationChangedArgument": {
+				"type": "object",
+				"description": "### Category \nCTI\n### Short \nEvent arguments of asnCtiNotifyLineCallInformationChanged.\n\n### Private \n0",
+				"properties": {
+					"u8sMonitorCrossRefID": {
+						"type": "string"
+					},
+					"u8sLinePhoneNumber": {
+						"type": "string"
+					},
+					"reason": {
+						"type": "integer"
+					},
+					"callinformation": {
+						"$ref": "#/components/schemas/AsnCtiCallInformation"
+					}
+				},
+				"required": [
+					"u8sMonitorCrossRefID",
+					"u8sLinePhoneNumber",
+					"reason",
+					"callinformation"
+				]
+			},
+			"AsnCtiNotifyLineAddRemoveArgument": {
+				"type": "object",
+				"description": "### Category \nCTI\n### Short \nEvent arguments of asnCtiNotifyLineAddRemove.\n\n### Private \n0",
+				"properties": {
+					"u8sLineMonitorCrossRefID": {
+						"type": "string"
+					},
+					"u8sLinePhoneNumber": {
+						"type": "string"
+					},
+					"addremove": {
+						"$ref": "#/components/schemas/AsnCtiNotifyLineAddRemoveArgumentEnum"
+					},
+					"lineInfo": {
+						"$ref": "#/components/schemas/AsnCtiLineInfo"
+					}
+				},
+				"required": [
+					"u8sLineMonitorCrossRefID",
+					"u8sLinePhoneNumber",
+					"addremove",
+					"lineInfo"
+				]
+			},
+			"AsnCtiNotifyConferenceCreatedArgument": {
+				"type": "object",
+				"description": "### Category \nCTI\n### Short \nEvent arguments of asnCtiNotifyConferenceCreated\n\n### Private \n0",
+				"properties": {
+					"u8sLineMonitorCrossRefID": {
+						"type": "string"
+					},
+					"u8sLinePhoneNumber": {
+						"type": "string"
+					},
+					"conferenceControllerCallInfo": {
+						"$ref": "#/components/schemas/AsnCtiCallInformation"
+					},
+					"conferenceMemberCallInfoList": {
+						"$ref": "#/components/schemas/AsnCtiCallInformationList"
+					}
+				},
+				"required": [
+					"u8sLineMonitorCrossRefID",
+					"u8sLinePhoneNumber",
+					"conferenceControllerCallInfo",
+					"conferenceMemberCallInfoList"
+				]
+			},
+			"AsnCtiNotifyConferenceDestroyedArgument": {
+				"type": "object",
+				"description": "### Category \nCTI\n### Short \nEvent arguments of asnCtiNotifyConferenceDestroyed\n\n### Private \n0",
+				"properties": {
+					"u8sLineMonitorCrossRefID": {
+						"type": "string"
+					},
+					"u8sLinePhoneNumber": {
+						"type": "string"
+					},
+					"conferenceControllerCallInfo": {
+						"$ref": "#/components/schemas/AsnCtiCallInformation"
+					},
+					"conferenceMemberCallInfoList": {
+						"$ref": "#/components/schemas/AsnCtiCallInformationList"
+					}
+				},
+				"required": [
+					"u8sLineMonitorCrossRefID",
+					"u8sLinePhoneNumber",
+					"conferenceControllerCallInfo",
+					"conferenceMemberCallInfoList"
+				]
+			},
+			"AsnCtiNotifyConferencePartyAddedArgument": {
+				"type": "object",
+				"description": "### Category \nCTI\n### Short \nEvent arguments of asnCtiNotifyConferencePartyAdded\n\n### Private \n0",
+				"properties": {
+					"u8sLineMonitorCrossRefID": {
+						"type": "string"
+					},
+					"u8sLinePhoneNumber": {
+						"type": "string"
+					},
+					"conferenceControllerCallInfo": {
+						"$ref": "#/components/schemas/AsnCtiCallInformation"
+					},
+					"conferenceMemberCallInfo": {
+						"$ref": "#/components/schemas/AsnCtiCallInformation"
+					}
+				},
+				"required": [
+					"u8sLineMonitorCrossRefID",
+					"u8sLinePhoneNumber",
+					"conferenceControllerCallInfo",
+					"conferenceMemberCallInfo"
+				]
+			},
+			"AsnCtiNotifyConferencePartyRemovedArgument": {
+				"type": "object",
+				"description": "### Category \nCTI\n### Short \nEvent arguments of asnCtiNotifyConferencePartyRemoved\n\n### Private \n0",
+				"properties": {
+					"u8sLineMonitorCrossRefID": {
+						"type": "string"
+					},
+					"u8sLinePhoneNumber": {
+						"type": "string"
+					},
+					"conferenceControllerCallInfo": {
+						"$ref": "#/components/schemas/AsnCtiCallInformation"
+					},
+					"conferenceMemberCallInfo": {
+						"$ref": "#/components/schemas/AsnCtiCallInformation"
+					}
+				},
+				"required": [
+					"u8sLineMonitorCrossRefID",
+					"u8sLinePhoneNumber",
+					"conferenceControllerCallInfo",
+					"conferenceMemberCallInfo"
+				]
+			},
+			"AsnCtiCallFeaturesList": {
+				"type": "array",
+				"items": {
+					"$ref": "#/components/schemas/AsnCtiCallFeature"
+				}
+			},
+			"AsnCtiNotifyLineCallFeaturesChangedArgument": {
+				"type": "object",
+				"description": "### Category \nCTI\n### Short \nEvent arguments of asnCtiNotifyLineCallFeaturesChanged.\n\n### Private \n0",
+				"properties": {
+					"u8sLineMonitorCrossRefID": {
+						"type": "string"
+					},
+					"u8sLinePhoneNumber": {
+						"type": "string"
+					},
+					"callFeaturesList": {
+						"$ref": "#/components/schemas/AsnCtiCallFeaturesList"
+					}
+				},
+				"required": [
+					"u8sLineMonitorCrossRefID",
+					"u8sLinePhoneNumber",
+					"callFeaturesList"
+				]
+			},
+			"AsnCtiSetCallDataArgument": {
+				"type": "object",
+				"description": "### Category \nCTI\n### Short \nArguments for asnCtiSetCallData\n\n### Private \n0",
+				"properties": {
+					"u8sConnectionID": {
+						"type": "string"
+					},
+					"callDataList": {
+						"$ref": "#/components/schemas/AsnCtiCallDataList"
+					},
+					"optionalParams": {
+						"$ref": "#/components/schemas/AsnOptionalParameters"
+					}
+				},
+				"required": [
+					"u8sConnectionID",
+					"callDataList"
+				]
+			}
+		}
+	}
+}

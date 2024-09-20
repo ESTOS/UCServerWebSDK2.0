@@ -1,0 +1,642 @@
+﻿UC-Server-Access-Protocol-ClientContent
+	{ iso(1) identified-organization(3) dod(6) internet(1) private(4) enterprise(1) estos(10924) uc-server-access-protocol-v2(2) client-content(12) }
+
+-- @category ClientContactsList
+-- @brief Client content interface (Favorite/Monitor contacts) aka "ClientContent"
+-- @long
+--
+-- 
+-- 
+-- ## Module description
+-- This module describes the interface for the client content, which are the contacts in the "Favorites" tab in the main window and the contacts in the contact monitor.
+-- 
+-- 
+-- ## Client content data model
+-- The client content consists of contact data (the data shown to the user, mainly AsnNetDatabaseContact objects) and the arragment of the contacts in the favorites/monitor, the data structure.
+--
+-- The data is devided in a list of contacts and a tree structure of groupclusters, groups and items.<br />
+-- The root is the "contentstruture" which contains a list of groupclusters (AsnClientContentGroupCluster).<br />
+-- Each groupcluster contains groups (AsnClientContentGroup) and each group contains items (AsnClientContentItem).<br />
+-- Finally the item contains the reference to the contact data in the contactlist.
+--
+-- <pre>
+--   contactlist
+--   contentstructure
+--   |+- listGroupClusters
+--   |   +- listGroups
+--   |   |   +- listItems
+--   |   |   |   +- item (== only a reference to the contact in the contactlist; normally its ENetDatabaseContactID.
+--   |   |   |   +- item
+--   |   |   |   +- item
+--   |   |   .
+--   |   .
+--   .
+-- </pre>
+--
+-- ## How to use the API
+-- This API is highly flexible - it can be used to get client content with contact data and/or content structure and with/without eventing for updates.
+-- <br />
+-- ### Synchronoously without any events:
+-- Example for a new client, getting all the content (incl. photos) for the first time without any eventing. It is using asnGetClientContent, which is always sending
+-- back all the contacts und structure. Onyl the pictures can be left out to save bandwidth.<br />
+--
+-- @startuml
+-- "UCClient" -> "UCServer"					: asnGetClientContent(eNOFILTER)
+-- "UCClient" <- "UCServer"					: AsnGetClientContentResult(revision, contacts, structure)
+-- @enduml
+--
+-- ### Asynchronously and with eventing:
+-- Example for a client, getting all the content and subscribe for events using asnSubscribeClientContent.<br />
+-- This Call subscribes to all Events and is asynchronous. The client content will be sent from the server by the change event asnClientContentChanged.
+-- The event will then always occure if there are changes to the client content data or structure. What has changed is described in asnClientContentChanged.
+--
+-- @startuml
+-- "UCClient" -> "UCServer"					: asnSubscribeClientContent(revision=0, flags=eALL)
+-- "UCClient" <- "UCServer"					: AsnSubscribeClientContentResult(actual revision)
+-- ...
+-- "UCClient" <- "UCServer"					: asnClientContentChanged(actual revision, complete content)
+-- @enduml
+--
+-- ### Subscibe for events with differential update:
+-- If a client has already a cached version of the client content, it can request a differential update from the server by sending his last known revision.
+-- The resulting event contains only the changed entries (see AsnClientContentChangedArgument for Details) and the client has to update its state/cache accordingly.<br />
+--
+-- @startuml
+-- "UCClient" -> "UCServer"					: asnSubscribeClientContent(revision=12345678, flags=eALL)
+-- "UCClient" <- "UCServer"					: AsnSubscribeClientContentResult(actual revision)
+-- ...
+-- "UCClient" <- "UCServer"					: asnClientContentChanged(revision=12346000, diff content)
+-- @enduml
+--
+-- <br />
+-- The synchronous and asynchronous can be used together, e.g. if it makes sense to fetch the complete content at first and then subscribe to the events later on.<br />
+--
+-- #### Remarks:
+-- "Changecounter" or "Revision" of the client content, a 64 Bit Integer.
+--
+-- * For historical reasons the same data ist stored sometimes in strings "u8sContentRevision" or "u8sRevision" and mostly as a 64 bit integer in "iRevision".
+--   It is the same value, just transported with a different representation.
+-- * The revision is a timestamp and will be defined by the server; the client cannot alter this value on the server directly, only by changing parts of the client content.
+-- * A new revision from the server is alwyays higher than an old one. 
+-- 
+-- Setting the iEventFlagsToSubscribe parameter to 
+-- 
+-- * eCONTACTS will only result in contact data events
+-- * eSTRUCTURE will only result in structure events
+-- * eJPEGPHOTO will include the jpeg photos directly in the events; if not set, the contact data will only contain hash values kor the pictures and the client gan request the pictures via asnRequestContactImage if needed.
+--
+-- ## Details on GroupCluster- and Group-IDs
+-- 
+-- - GroupCluster IDs
+--   - The GroupCluster ID is a normal number, starting with '100' and counting up.
+--     - Reserved numbers are between 0-199:
+--       - "0" to "99" -> Reserved 
+--       - "100" -> The favorites tab in the Windows client main window.
+--       - "101" -> First group cluster of the Windoes client which will be shown in the monitor window.
+--		 - "150" to "199" -> Reserved for possible adminstrative purposes.
+--     - "200" -> First group the user can define by himself, so make sure new groupclusters has an id greater or euqals than that.
+-- - Group IDs
+--   - A Group ID is formatted like this "g:G[number]", but with the exception of the following reserved IDs they can be any unique string inside a group cluster.
+--     It is recommended to follow the naming convention and make the IDs unique over the whole structure.
+--     - Following the standard formatting of the Group ids, new ones should start at "g:G800" and upwards.
+--     - GroupID "g:G770" - "g:G778": reserved for special groups.
+--       - "g:G770" - Group with additional phone line items of the user; only visisble in the windows client if enabled in the client settings.
+--       - "g:G771" - Group for the administrative "Jeder sieht jeden im Monitor" setting in the windows client monitor window.
+--       - "g:G772" - Reserved.
+--   - GroupID "g:G779" is the first freely usable group ID inside a group cluster.
+--     For historical reasons the Windows client is always starting with "g:G779" in every group cluster, which is possible, but makes it a bit harder to distinct between the groups over the whole structure.
+--
+-- ## Client Content Tagging
+-- A client can "tag" contacts if changes on these contacts (presence, data etc.) are of special interest for the user.
+-- Technically the "tags" are just the contact IDs in a list. The API provided here makes it possible to change the list on the UCServer and get events, if another client of the same user makes changes to the list.
+-- In the Windows client it is used to inform the user of specific presence state changes of the contacts the user tagged in the UI (e.g. available again, has a call to pickup etc.).
+
+DEFINITIONS
+IMPLICIT TAGS ::=
+BEGIN
+
+IMPORTS
+AsnOptionalParameters, AsnNetDatabaseContact, AsnNetDatabaseContactList, AsnNetDatabaseContactID, AsnNetDatabaseContactIDList, UTF8StringList, AsnRequestError FROM UC-Server-Access-Protocol-Common
+;
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~ asnGetClientContent ~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-- @brief Filter for the content data sent in the result.
+AsnClientContentContactFilter ::= ENUMERATED
+{
+	eNOFILTER   (0),	-- No content filter, just send all data.
+	eNOPICTURES (1)		-- Set this if the client has an own picture chache and don't want the pictures ang get hashes instead.
+}
+
+-- @brief Argument for asnGetClientContent.
+AsnGetClientContentArgument ::= SEQUENCE
+{
+	-- Filter the results - mainly for suppressing the piuctures in the result.
+	-- @linked AsnClientContentContactFilter
+	iContactFilter		INTEGER,
+	-- ~ einen Strukturfilter haben wir mal angedacht, aber es wäre besser, der Server liefert jedem CLient alles aus, was er sehen darf.
+	...
+}
+
+-- @brief Result of asnGetClientContent.
+AsnGetClientContentResult ::= SEQUENCE
+{
+	u8sContentRevision			UTF8String,						-- Actual revision of the client content on the server.
+	contactList					AsnNetDatabaseContactList,		-- List of the contacts in this client content.
+	contentstructure			AsnClientContentStructure,		-- Tree structure of the items in this client content; the leave items of the tree are pointing to the contact objects in the contacts-list.
+
+	-- If the server cannot open the client content for this user in the optional parameters:<br />
+	-- * key "ClientContentXMLError", value error number 0xffffff01 - The XML file cannot be read on the server side.
+	-- * key "FileErrorCode", value is the file access error code
+	optionalParams				AsnOptionalParameters OPTIONAL,
+	...
+}
+
+-- @brief Get the client content data and structure with a single request without any event subscriptions.
+-- @long
+-- For some use cases only the transfer of the client content and structure is needed. In this case one can use this request and get the content synchronously.
+asnGetClientContent OPERATION
+	ARGUMENT	arg	AsnGetClientContentArgument
+	RESULT		res	AsnGetClientContentResult
+	ERRORS		{AsnRequestError}
+::= 1126
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~ asnSubscribeClientContent ~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-- @brief Flags how to subscribe on client content.
+AsnSubscribeClientContentFlags ::= ENUMERATED
+{
+	eALL		(0),    -- eALL = eCONTACTS | eSTRUCTURE | eJPEGPHOTO
+	eCONTACTS 	(1),	-- Get events for changes in the contacts.
+	eSTRUCTURE	(2),	-- Get events for changes in the structure.
+	eJPEGPHOTO	(4)		-- If set, the result includes all existing contact photos. If not set the result contains only the hash values of the photos, and the client can decide if it wants to fetch the photos with asnRequestContactImage.
+}
+
+-- @brief Argument for asnSubscribeClientContent.
+AsnSubscribeClientContentArgument ::= SEQUENCE
+{
+	-- Transaction counter known by the client, the server can return just the changes since last request.<br />
+	-- Send 0 here to get the complete client content known by the server.
+	iRevision						[0] INTEGER 							OPTIONAL,
+
+	-- Subscribe to specific or all events and define the behaviour according the jpeg photos in the contact datasets. See AsnSubscribeClientContentFlags for details.
+	-- @linked AsnSubscribeClientContentFlags
+	iEventFlagsToSubscribe			[1] INTEGER 							OPTIONAL,	
+
+	-- If set the server will only send back the given groupclusters. The field contains a list of groupcluster IDs.
+	u8sGroupClusterIDRestriction	[2]	UTF8StringList						OPTIONAL,
+
+	...
+}
+
+-- @brief Result of asnSubscribeClientContent
+AsnSubscribeClientContentResult ::= SEQUENCE
+{
+	iRevision 			INTEGER,						-- The actual transaction counter known by the server.
+	...
+}
+
+-- @brief Subscribe to the client content of the current user.
+-- @long
+-- Client can get the client content asynchronously with this request and the client will be registered for change events (asnClientContentChanged) of the content. 
+asnSubscribeClientContent OPERATION
+	ARGUMENT	arg AsnSubscribeClientContentArgument
+	RESULT		res AsnSubscribeClientContentResult
+	ERRORS		{AsnRequestError}
+::= 4600
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~ asnUnsubscribeClientContent ~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-- @brief Argument for asnUnsubscribeClientContent.
+AsnUnsubscribeClientContentArgument ::= SEQUENCE
+{
+	...
+}
+
+-- @brief Result of asnUnsubscribeClientContent.
+AsnUnsubscribeClientContentResult ::= SEQUENCE
+{
+	...
+}
+
+-- @brief Unsubscribe from the change events for the client content.
+-- @long
+-- Unsubscribing from the events cannot be parameterized so the call will always unregister all events.
+asnUnsubscribeClientContent OPERATION
+	ARGUMENT	arg AsnUnsubscribeClientContentArgument
+	RESULT		res AsnUnsubscribeClientContentResult
+	ERRORS		{AsnRequestError}
+::= 4601
+
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~ asnChangeClientContent ~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-- @brief Enumeration for the field iFlags in AsnChangeClientContentArgument.
+AsnChangeClientContentFlags ::= ENUMERATED
+{
+	eUPDATEORIGINATOR	(0),	-- reserved
+	eFULLUPDATE			(1)		-- Instead of merging the data, the server should replace the all existing data with the new ones.
+}
+
+-- @brief Argument for asnChangeClientContent.
+AsnChangeClientContentArgument ::= SEQUENCE
+{
+	iRevision 						INTEGER, 											-- The revision the changes are based on.
+	u8sVersion						UTF8String,											-- Version of the content structure
+	iIsEditable						INTEGER,											-- Defines if the user may change the contents or not (usually 1 - change is allowed)
+	addedOrChangedContacts	[0]		AsnNetDatabaseContactList			OPTIONAL,		-- List of contacts (AsnNetDatabaseContact) to add or change. In case of an initial update as a result of asnSubscribeClientContent this list conatins all contacts.
+	removedContacts			[1]		AsnNetDatabaseContactIDList			OPTIONAL,		-- List of contacts, specified by their IDs, to remove from the content.
+	listContentstructure	[2]		AsnClientContentGroupClusterList	OPTIONAL,		-- New layout of the client content tree.
+
+	-- If this flag is set to 1 the UCServer should remove all existing data and set the new ones instead.
+	-- @linked AsnChangeClientContentFlags
+	iFlags							INTEGER,											
+	...
+}
+
+-- @brief Result of asnChangeClientContent.
+-- Event vom Client zum Server, dass sich die ClientDaten geaendert haben
+AsnChangeClientContentResult ::= SEQUENCE
+{
+	iRevision 				INTEGER, 													-- The resulting, new revision of the client content.
+	...
+}
+
+-- @brief Change the client content of the user.
+-- @long
+-- A client can use this request to change the client content. It can change the contact informations and the structure of the content.
+-- 
+asnChangeClientContent OPERATION
+	ARGUMENT	arg AsnChangeClientContentArgument
+	RESULT		res AsnChangeClientContentResult
+	ERRORS		{AsnRequestError}
+::= 4606
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~ asnClientContentChanged ~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-- @brief Enumeration for iFlags in AsnClientContentChangedArgument.
+AsnClientContentChangedFlags ::= ENUMERATED
+{
+	eFULLUPDATE			(0)		-- If nothing is set it is a full update of the given elements..
+}
+
+-- @brief Argument for asnClientContentChanged event.
+AsnClientContentChangedArgument ::= SEQUENCE
+{
+	iRevision 						INTEGER, 											-- Actual revision of the client content.
+	addedOrChangedContacts			[0]	AsnNetDatabaseContactList			OPTIONAL,	-- List of added or changed contacts.
+	removedContacts					[1]	AsnNetDatabaseContactIDList			OPTIONAL,	-- List of contact IDs of removed contacts.
+	listContentstructure			[2]	AsnClientContentGroupClusterList	OPTIONAL,	-- New layout of the client content tree.
+	
+	-- If 0 replace the transmitted data with the current one in the client. The contacts will change independently, the structure always as a whole. In the future other values will be possible.
+	-- @linked AsnClientContentChangedFlags
+	iFlags							INTEGER,				
+	...
+}
+
+-- @brief Event from the server to the client if the client content was changed.
+-- @long
+-- The server send an event to all connected client for this user to update the client content if one of the clients has changed it.
+asnClientContentChanged OPERATION
+	ARGUMENT	arg AsnClientContentChangedArgument
+::= 4607
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~   ClientContent  ~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-- @brief AsnClientContentGroupCluster object contains a list of AsnClientContentGroup objects and some meta data for displaying groups in the UI.
+-- @long
+-- GroupCluster structure contains the list of groups so they can be managed/displayed in the UI.
+-- The original design needed this, to give the user the ability to arrange their contacts in groups AND in "groups of groups" (= clusters).
+-- In the desktop clients main window the favorites tab is a group cluster with visible groups named "Favorites".
+-- In the Monitor window the user can per default manage only groupclusters with exact one group inside.
+-- It is possible to activate the groups in the monitor too, but this feature is very seldom used by users.<br />
+-- GroupClusters contains also an unique id (unique in the client content of the user), a display name and some flags.
+AsnClientContentGroupCluster ::= SEQUENCE
+{	
+	u8sID							UTF8String,				 -- Unique ID of the group cluster inside the whole client content.
+	u8sName							UTF8String,				 -- Display name of the gorup cluster.
+	iIsEditable						INTEGER,				 -- The user may change the contents of this group cluster or not. Used mostly for administrative content, which the user should not manipulate.
+	iIsPersistent					INTEGER,				 -- The content of the group cluster will be saved or not. The non persistent content ist also mostly used for administratve content, which is dynamically created by the server and therefore it makes no sense to save it in the database/file.
+	iIsTabbed						INTEGER,				 -- ignore for now, may be removed in the future.
+	u8sNeighbourClusterID			UTF8String,				 -- ignore for now, may be removed in the future.
+	listGroups						AsnClientContentGroupList,  -- list of AsnClientContentGroups in this cluster.
+	...
+}
+-- @brief List of AsnClientContentGroupCluster objects.
+AsnClientContentGroupClusterList ::= SEQUENCE OF AsnClientContentGroupCluster
+
+-- @brief AsnClientContentGroup object contains the list of AsnClientContentItem objects and some meta data for displaying groups in the UI.
+-- @long
+-- Groups structure contains a list of AsnClientContentItem objects so they can be managed/displayed in the UI.
+-- A group contains also an unique id (unique in the client content of the user), a display name, a sort order, 
+-- if the group is expanded or collapsed in the UI, editable or persistet on the server.
+AsnClientContentGroup ::= SEQUENCE
+{
+	u8sID							UTF8String,				-- Unique ID of this group in the client content.
+	u8sName							UTF8String,				-- Name to display in an UI
+	u8sOrderBy						UTF8String,				-- Sortmechanism to use
+	iAutorefresh					INTEGER,				-- ignore for now, may be removed in the future
+	iExpanded						INTEGER,				-- the client should display this group 'open' (=1, items visible) or 'closed' (=0, only group header visible)
+	iIsEditable						INTEGER,                -- contents of this group can be changed by the user
+	iIsPersistent					INTEGER,				-- contents of this group will be saved by the server; if not, contents ist mostly autmatically generated by the server and will be saved in XML/database
+	listItems						AsnClientContentItemList,  -- list of items (=contact IDs) in this group
+	...
+}
+-- @brief List of AsnClientContentGroup objects.
+AsnClientContentGroupList ::= SEQUENCE OF AsnClientContentGroup
+
+-- @brief AsnClientContentItem describes the item which will be displayed in the UI.
+-- @long
+-- These items are the structural placeholder for the contact data which should be displayed.
+-- It contains a 'pointer' to the data in form of the presence ID which should match a contact entry in the contacts list of the client content.
+-- 
+-- Noteable is, that the AsnNetDatabaseContactIDList can contain more than one reference to a contact (AsnNetDatabaseContactID)
+-- - this makes it possible in the future, that contacts with more than one dataset from different databases can be "merged" in the UI.
+-- This feature ist not implemented yet.
+AsnClientContentItem ::= SEQUENCE
+{
+	u8sID							UTF8String,						-- Unique ID of the item in the client content, not of the contact it represents.
+	u8sPresenceID					UTF8String,						-- Presence ID (aka sip:-address) of the contact, which presence state should be displayed on this item. This makes it possible, that contacts from external databases can have presence information without copying the internal dataset to the contact.
+	iIsEditable						INTEGER,						-- Ignore for now, may be removed in the future.
+	listNetDatabaseContactIDs		AsnNetDatabaseContactIDList,	-- List of AsnNetDatabaseContactID s which can be merged in the UI. As for now, there will be only one supported.
+	selectedNetDatabaseContactID	AsnNetDatabaseContactID,		-- Last selected contact in the UI. This makes it possible, that this item could be displayed on every client. Makes only sense in desktop clients.
+	...
+}
+-- @brief List of AsnClientContentItem objects.
+AsnClientContentItemList ::= SEQUENCE OF AsnClientContentItem
+
+-- @brief AsnClientContentStructure is the root of the client content structure object.
+-- @long
+-- When calling asnGetClientContent or asnSubscribeClientContent, the result contains an instance of this object.
+-- It is the entry point to the structure of the client content which describes which item is in which and which group is in which groupcluster.
+AsnClientContentStructure ::= SEQUENCE
+{
+	iIsEditable						INTEGER,							-- Indication for the client, that changes may be ignored by the server. Nomrally it is 1 because we want the user to manage his favorites for himself.
+	u8sVersion						UTF8String,							-- Version of Content-Structure API, should be at least 2.
+	u8sRevision						UTF8String,							-- Revision of user's content structure; will be set by the server every time the struture/contacts will be changed.
+	u8sLastWriter					UTF8String,							-- ignore for now, may be removed.
+	listGroupClusters				AsnClientContentGroupClusterList,	-- list of groupclusters in this structure.
+	...
+}
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~ Client Content Tagging ~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~ asnClientContentSubscribeToTags ~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-- @brief Subscribe to changes of the tagging status of a contact
+-- @long
+-- A user can set "tags" on a contact, for getting notifies if the presence state of that contact is changing.
+-- This is called here "tagging". These tags are saved as a list on the UCServer and with this subscribtion the client will be 
+-- evented if the list changes on the server.
+--
+-- There is no dedicated unsibscribe mechanism implemented yet; the client will be automatically unsibscribed by logging of or at loosing the connection.
+asnClientContentSubscribeToTags OPERATION
+	ARGUMENT	arg AsnClientContentSubscribeToTagsArgument
+	RESULT		res AsnClientContentSubscribeToTagsResult
+	ERRORS		{AsnRequestError}
+::= 4608
+
+-- @brief Argument for asnClientContentSubscribeToTags
+AsnClientContentSubscribeToTagsArgument ::= SEQUENCE 
+{
+	iSubscribe				INTEGER,  -- always 1
+	...
+}
+
+-- @brief Rsult of asnClientContentSubscribeToTags
+AsnClientContentSubscribeToTagsResult ::= SEQUENCE 
+{
+	...
+}
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~ asnClientContentTaggedIDsChanged ~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-- @brief Event from server to client if tags on contacts have changed.
+-- @long
+-- If another client changes the tag list, this event will be fired to all clients with the new list.
+asnClientContentTaggedIDsChanged OPERATION
+	ARGUMENT	arg AsnClientContentTaggedIDsChangedArgument
+::= 4609
+
+-- @brief Argument for event asnClientContentTaggedIDsChanged.
+AsnClientContentTaggedIDsChangedArgument ::= SEQUENCE 
+{
+	u8sTaggedIDs			UTF8StringList,		-- New contact ID list of the contacts to be tagged.
+	iRevision				INTEGER,			-- Reserved
+	...
+}
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~ asnClientContentTaggedIDsChanged ~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-- @brief Change tags on contacts.
+-- @long
+-- To change the list of tagged contacts, this request will be send to the server with the new list of contact IDs.
+-- To clear the tags just send an empty list.
+asnClientContentSaveTags OPERATION
+	ARGUMENT	arg AsnClientContentSaveTagsArgument
+	RESULT		res AsnClientContentSaveTagsResult
+	ERRORS		{AsnRequestError}
+::= 4610
+
+-- @brief Argument for asnClientContentSaveTags.
+AsnClientContentSaveTagsArgument ::= SEQUENCE 
+{
+	u8sTaggedIDs			UTF8StringList, -- List of contacts to toggle tag state - new contactIDs get tagged, missing contact IDs will be untagged.
+	iRevision				INTEGER,		-- Reserved
+	...
+}
+
+-- @brief Result of asnClientContentSaveTags.
+AsnClientContentSaveTagsResult ::= SEQUENCE 
+{
+	iRevision				INTEGER,		-- Reserved
+	...
+}
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~ AdministrativeMonitorContent ~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-- @brief A group of contact IDs to display as a contact group of a administrative Monitor
+-- @long
+-- This structure describes a group of UCServer users (identified by SIP-Adresses) and the group itself.
+AsnAdministrativeMonitorGroup ::= SEQUENCE
+{
+	u8sGroupURI			UTF8String,								-- ID of the Group in the usermanagement
+	u8sGroupName		UTF8String,								-- Name of the Group (for display)
+	listContactIDs		UTF8StringList,							-- List of ContactIDs (SIP-URIs) of the users in the Group
+	listFunctionKeys	[0] AsnAdministrativeFunctionKeyList OPTIONAL,	-- List of administrative defined function keys for every user in the group
+	
+	-- optionalParams Name "flags" Value number
+	optionalParams		[10] AsnOptionalParameters OPTIONAL,
+	...
+}
+
+-- @brief Flags describing the type of a function key
+AsnAdministrativeFunctionKeyTypes ::= ENUMERATED
+{
+	eAdministrativeFunctionKeyDial		(0)	-- functionkey is a dialing button, the value is simply a number to dial
+}
+
+-- @brief Defines a function key: type (e.g. dialing) and type-dependant value
+AsnAdministrativeFunctionKey ::= SEQUENCE
+{
+	iType				INTEGER,		-- AsnAdministrativeFunctionKeyTypes
+	u8sValue			UTF8String,		-- what to do, depends on type. usually a number to dial
+	u8sName				UTF8String,		-- 
+	...
+}
+
+-- @brief List of AsnAdministrativeMonitorGroup objects.
+AsnAdministrativeMonitorGroupList ::= SEQUENCE OF AsnAdministrativeMonitorGroup
+-- @brief List of AsnAdministrativeFunctionKey objects.
+AsnAdministrativeFunctionKeyList ::= SEQUENCE OF AsnAdministrativeFunctionKey
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~ asnGetAndSubscribeAdministrativeMonitorContent ~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-- @brief Flags describing which events (if so) the client wants to get from the server according to changes to the administrative Monitor Groups.
+AsnAdministrativeMonitorContentSubscriptionFlags ::= ENUMERATED
+{
+	eAdministrativeMonitorContentGroupNoEvents		(0),	-- Set value of 0 will prevent the server of sending events to the client. (See AsnGetAndSubscribeAdministrativeMonitorContentArgument for details).
+	eAdministrativeMonitorContentGroupChanges		(1)		-- If groups are changing on the server, an event will be send from the server to the client with the group(s) with the related groups.
+}
+
+-- @brief Arguments for asnGetAndSubscribeAdministrativeMonitorContent. The content will be generated by the UCServer using the logged in user.
+AsnGetAndSubscribeAdministrativeMonitorContentArgument ::= SEQUENCE 
+{
+	-- Optional parameter. If left out the UCServer assume eAdministrativeMonitorContentGroupChanges (1) as default. 
+	-- This parmameter can be set to eAdministrativeMonitorContentGroupNoEvents (0) for requesting the actual content list but not to subscribe to events.
+	-- @linked AsnAdministrativeMonitorContentSubscriptionFlags
+	iEventFlagsToSubscribe			[0] INTEGER OPTIONAL,
+	...
+}
+
+-- @brief Results of asnGetAndSubscribeAdministrativeMonitorContent
+AsnGetAndSubscribeAdministrativeMonitorContentResult ::= SEQUENCE 
+{
+	listAdministrativeMonitorGroups		AsnAdministrativeMonitorGroupList,			-- List of AsnAdministrativeMonitorGroup objects the clients user is configured for on the UCServer.
+	...
+}
+
+-- @brief Client gets the contacts especial for a attendant console and can subscribe to events if the groups are changing.
+-- @long
+-- For fast call transfer or agent consulting it must be possible to get contact for this purpose, because that
+-- enables additional, specialized features for them in the UI for this use case.
+--
+-- The UCServer will gather the groups and the user IDs according the configuration set by the admin.
+asnGetAndSubscribeAdministrativeMonitorContent OPERATION
+	ARGUMENT	arg AsnGetAndSubscribeAdministrativeMonitorContentArgument
+	RESULT		res AsnGetAndSubscribeAdministrativeMonitorContentResult
+	ERRORS		{AsnRequestError}
+::= 4620
+
+-- @brief Argumment for asnUnsubscribeAdministrativeMonitorContent
+AsnUnsubscribeAdministrativeMonitorContentArgument ::= SEQUENCE
+{
+	...
+}
+
+-- @brief Result of asnUnsubscribeAdministrativeMonitorContent
+AsnUnsubscribeAdministrativeMonitorContentResult ::= SEQUENCE
+{
+	bSuccess			BOOLEAN, -- true if successful (if some error happens, AsnRequestError will contain the reason)
+	...
+}
+
+-- @brief Unsubscribe from events about the Administrative Monitor Content.
+-- @long 
+-- To stop eventing of changes about the AdministrativeMonitorContent call this function.
+asnUnsubscribeAdministrativeMonitorContent OPERATION
+	ARGUMENT	arg AsnUnsubscribeAdministrativeMonitorContentArgument
+	RESULT		res AsnUnsubscribeAdministrativeMonitorContentResult
+	ERRORS		{AsnRequestError}
+::= 4621
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~ asnAdministrativeMonitorContentGroupAdded ~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-- @brief Event from server to client if a Administrative Monitor Content Groups has been added.
+-- @long
+-- If the administrator changed something in the configuration of the groups which are part of the administrative Groups, these changes
+-- will be provided to the clients with this event.
+--
+-- The argument contains the AsnAdministrativeMonitorGroups if it was added.
+asnAdministrativeMonitorContentGroupAdded OPERATION
+	ARGUMENT	arg AsnAdministrativeMonitorContentGroupAddedArgument
+::= 4622
+
+-- @brief Argument for event asnAdministrativeMonitorContentGroupAdded.
+AsnAdministrativeMonitorContentGroupAddedArgument ::= SEQUENCE 
+{
+	adminMonitorGroupAdded	AsnAdministrativeMonitorGroup,	-- Group which was added
+	...
+}
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~ asnAdministrativeMonitorContentGroupChanged ~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-- @brief Event from server to client if changes to the Administrative Monitor Content Groups were made.
+-- @long
+-- If the administrator changed something in the configuration of the groups which are part of the Administrative Groups, these changes
+-- will be provided to the clients with this event.
+--
+-- The argument contains a AsnAdministrativeMonitorGroup if it was changed. 
+-- The changed group will contain the updated list of users, so the client must probably detect if there were users added or removed.
+asnAdministrativeMonitorContentGroupChanged OPERATION
+	ARGUMENT	arg AsnAdministrativeMonitorContentGroupChangedArgument
+::= 4623
+
+-- @brief Argument for event asnAdministrativeMonitorContentGroupChanged.
+AsnAdministrativeMonitorContentGroupChangedArgument ::= SEQUENCE 
+{
+	adminMonitorGroupChanged	AsnAdministrativeMonitorGroup,	-- Groups which was changed
+	...
+}
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~ asnAdministrativeMonitorContentGroupRemoved ~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-- @brief Event from server to client if the Administrative Monitor Content Groups were removed.
+-- @long
+-- If the administrator changed something in the configuration of the groups which are part of the administrative Groups, these changes
+-- will be provided to the clients with this event.
+--
+-- The argument contains the AsnAdministrativeMonitorGroup if it was removed. 
+asnAdministrativeMonitorContentGroupRemoved OPERATION
+	ARGUMENT	arg AsnAdministrativeMonitorContentGroupRemovedArgument
+::= 4624
+
+-- @brief Argument for event asnAdministrativeMonitorContentGroupRemoved.
+AsnAdministrativeMonitorContentGroupRemovedArgument ::= SEQUENCE 
+{
+	adminMonitorGroupRemoved	AsnAdministrativeMonitorGroup,	-- Groups which was deleted
+	...
+}
+
+
+END

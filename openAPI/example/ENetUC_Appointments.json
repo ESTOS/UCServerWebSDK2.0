@@ -1,0 +1,440 @@
+{
+	"openapi": "3.1.0",
+	"info": {
+		"title": "ENetUC_Appointments",
+		"version": "0.0.1",
+		"summary": "Appointment interface.\n\n",
+		"description": "##        Appointments Modul                                        ##\n\n\n\n\n\n##            Module description                            ##\n\nThis module contains all operations and structures used for transferring appointments\n\nfrom and to the appointment database in the UCServer.\n\n"
+	},
+	"paths": {
+		"/asnAppointmentSetEntryList": {
+			"post": {
+				"tags": ["Appointments"],
+				"summary": "Send list of appointments of a user to the server\n\n",
+				"description": "Send a complete list of appointments to the server. This will replace the whole list currently on the server.\n\nCurrently the clients should only send a timeframe of the next 30 days to the server for reducing resource consumption.\n\n\n\n- Anyonymous access: no\n\n- Admin access for other users: yes (e.g. EWS Calendar Replicator)\n\n- User access for other users: no (server will ignore given u8sOwner)\n\n- User access: yes (u8sOwner not neccessary)\n\n",
+				"deprecated": false,
+				"operationId": "400",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnAppointmentSetEntryListArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnAppointmentSetEntryListResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnAppointmentSetSeriesEntriesList": {
+			"post": {
+				"tags": ["Appointments"],
+				"summary": "Send a complete list of recurrent appointments to the server.\n\n",
+				"description": "Send a complete list of recurrent appointments to the server. Each entry must have the same entryID.\n\n",
+				"deprecated": false,
+				"operationId": "406",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnAppointmentSetSeriesEntriesListArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnAppointmentSetSeriesEntriesListResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnAppointmentRemoveEntry": {
+			"post": {
+				"tags": ["Appointments"],
+				"summary": "Removes an Entry from the Server.\n\n",
+				"description": "With this operation the caller can remove an entry from the appointment database identified by its u8sEntryID.\n\n",
+				"deprecated": false,
+				"operationId": "401",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnAppointmentRemoveEntryArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnAppointmentRemoveEntryResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnAppointmentSetEntry": {
+			"post": {
+				"tags": ["Appointments"],
+				"summary": "Send one Entry to the Server.\n\n",
+				"description": "Send one appointment entry to the UCServer for storing it into the appointment database.\n\n",
+				"deprecated": false,
+				"operationId": "402",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnAppointmentSetEntryArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnAppointmentSetEntryResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnAppointmentGetAllEntriesForUser": {
+			"post": {
+				"tags": ["Appointments"],
+				"summary": "Retrieve all appointments of the user.\n\n",
+				"description": "With this operation the client can get all known appointmentzs of the logged in user from the appointment database of the UCServer.\n\n",
+				"deprecated": false,
+				"operationId": "403",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnAppointmentGetAllEntriesForUserArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnAppointmentGetAllEntriesForUserResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnAppointmentGetActualEntrysForUser": {
+			"post": {
+				"tags": ["Appointments"],
+				"summary": "Read the currently active Entry from the Server (scope: current Usersession).\n\n",
+				"deprecated": false,
+				"operationId": "404",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnAppointmentGetActualEntryForUserArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnAppointmentGetActualEntryForUserResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"schemas": {
+			"AsnSystemTime": {
+				"$ref": "ENetUC_Common.json#/components/schemas/AsnSystemTime"
+			},
+			"AsnNetDatabaseContact": {
+				"$ref": "ENetUC_Common.json#/components/schemas/AsnNetDatabaseContact"
+			},
+			"AsnRequestError": {
+				"$ref": "ENetUC_Common.json#/components/schemas/AsnRequestError"
+			},
+			"UTF8StringList": {
+				"$ref": "ENetUC_Common.json#/components/schemas/UTF8StringList"
+			},
+			"AsnAppointmentEntry": {
+				"$ref": "ENetUC_Common_Appointments.json#/components/schemas/AsnAppointmentEntry"
+			},
+			"SEQAppointmentList": {
+				"$ref": "ENetUC_Common_Appointments.json#/components/schemas/SEQAppointmentList"
+			},
+			"AsnAppointmentSetEntryListArgument": {
+				"type": "object",
+				"description": "### Category \nAppointments\n### Short \nArgument for asnAppointmentSetEntryList\n\n### Private \n0",
+				"properties": {
+					"u8sOwner": {
+						"type": "string"
+					},
+					"u8sDataSource": {
+						"type": "string"
+					},
+					"appointments": {
+						"$ref": "#/components/schemas/SEQAppointmentList"
+					}
+				},
+				"required": [
+					"u8sOwner",
+					"u8sDataSource",
+					"appointments"
+				]
+			},
+			"AsnAppointmentSetEntryListResult": {
+				"type": "object",
+				"description": "### Category \nAppointments\n### Short \nThe result of asnAppointmentSetEntryList.\n\n### Private \n0",
+				"properties": {
+					"iResult": {
+						"type": "integer"
+					}
+				},
+				"required": [
+					"iResult"
+				]
+			},
+			"AsnAppointmentSetSeriesEntriesListArgument": {
+				"type": "object",
+				"description": "### Category \nAppointments\n### Short \nArgument for asnAppointmentSetSeriesEntriesList.\n\n### Private \n0",
+				"properties": {
+					"u8sOwner": {
+						"type": "string"
+					},
+					"u8sDataSource": {
+						"type": "string"
+					},
+					"appointments": {
+						"$ref": "#/components/schemas/SEQAppointmentList"
+					}
+				},
+				"required": [
+					"u8sOwner",
+					"u8sDataSource",
+					"appointments"
+				]
+			},
+			"AsnAppointmentSetSeriesEntriesListResult": {
+				"type": "object",
+				"description": "### Category \nAppointments\n### Short \nResul of asnAppointmentSetSeriesEntriesList.\n\n### Private \n0",
+				"properties": {
+					"iResult": {
+						"type": "integer"
+					}
+				},
+				"required": [
+					"iResult"
+				]
+			},
+			"AsnAppointmentRemoveEntryArgument": {
+				"type": "object",
+				"description": "### Category \nAppointments\n### Short \nArgument for asnAppointmentRemoveEntry.\n\n### Private \n0",
+				"properties": {
+					"u8sEntryID": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"u8sEntryID"
+				]
+			},
+			"AsnAppointmentRemoveEntryResult": {
+				"type": "object",
+				"description": "### Category \nAppointments\n### Short \nThe result of asnAppointmentRemoveEntry.\n\n### Private \n0",
+				"properties": {
+					"iResult": {
+						"type": "integer"
+					}
+				},
+				"required": [
+					"iResult"
+				]
+			},
+			"AsnAppointmentSetEntryArgument": {
+				"type": "object",
+				"description": "### Category \nAppointments\n### Short \nArgument for asnAppointmentSetEntry.\n\n### Private \n0",
+				"properties": {
+					"appointment": {
+						"$ref": "#/components/schemas/AsnAppointmentEntry"
+					}
+				},
+				"required": [
+					"appointment"
+				]
+			},
+			"AsnAppointmentSetEntryResult": {
+				"type": "object",
+				"description": "### Category \nAppointments\n### Short \nResult of asnAppointmentSetEntry.\n\n### Private \n0",
+				"properties": {
+					"iResult": {
+						"type": "integer"
+					}
+				},
+				"required": [
+					"iResult"
+				]
+			},
+			"AsnAppointmentGetAllEntriesForUserArgument": {
+				"type": "object",
+				"description": "### Category \nAppointments\n### Short \nArgument for asnAppointmentGetAllEntriesForUser.\n\n### Private \n0",
+				"properties": {
+					"u8sOwner": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"u8sOwner"
+				]
+			},
+			"AsnAppointmentGetAllEntriesForUserResult": {
+				"type": "object",
+				"description": "### Category \nAppointments\n### Short \nResult of asnAppointmentGetAllEntriesForUser.\n\n### Private \n0",
+				"properties": {
+					"iResult": {
+						"type": "integer"
+					},
+					"listAppointments": {
+						"$ref": "#/components/schemas/SEQAppointmentList"
+					}
+				},
+				"required": [
+					"iResult",
+					"listAppointments"
+				]
+			},
+			"AsnAppointmentGetActualEntryForUserArgument": {
+				"type": "object",
+				"description": "### Category \nAppointments\n### Short \nArgument for asnAppointmentGetActualEntrysForUser\n\n### Private \n0",
+				"properties": {
+					"u8sOwner": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"u8sOwner"
+				]
+			},
+			"AsnAppointmentGetActualEntryForUserResult": {
+				"type": "object",
+				"description": "### Category \nAppointments\n### Short \nResult of asnAppointmentGetActualEntrysForUser.\n\n### Private \n0",
+				"properties": {
+					"iResult": {
+						"type": "integer"
+					},
+					"listAppointments": {
+						"$ref": "#/components/schemas/SEQAppointmentList"
+					}
+				},
+				"required": [
+					"iResult",
+					"listAppointments"
+				]
+			}
+		}
+	}
+}

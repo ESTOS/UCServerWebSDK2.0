@@ -1,0 +1,179 @@
+﻿UC-Server-Access-Protocol-SIPCTICommon
+	{ iso(1) identified-organization(3) dod(6) internet(1) private(4) enterprise(1) estos(10924) uc-server-access-protocol-v2(2) sipcticommon(11) }
+
+
+-- @category CommonSIPCTI
+-- @brief Common interface definitions for SIP and CTI functionality
+-- @long
+-- ## Module description
+-- This module contains common usable strutures for the sip and cti interfaces.
+-- 
+-- THERE SHOULD NOT BE ANY FUNCTION/OPERATION DEFINTIONS IN THIS MODULE.
+-- 
+
+DEFINITIONS
+IMPLICIT TAGS ::=
+BEGIN
+
+IMPORTS
+AsnOptionalParameters, AsnNetDatabaseContact, AsnSystemTime, UTF8StringList FROM UC-Server-Access-Protocol-Common
+;
+
+-- @brief Description of a project or pin used in the PBX.
+-- @long
+-- Some PBX support the use of special numbers as prefix/postfix to dialing numbers to implement project
+-- features. This sequence/object conatins the neccassary information to complete or format phone numbers according these rules.
+AsnProjectPinRule ::= SEQUENCE
+{
+	u8sProjectName						UTF8String,
+	u8sProjectPin						UTF8String,
+	iProjectType						INTEGER,
+	bAssociatedCallIsPrivateCall		BOOLEAN,
+	u8sLocationID						UTF8String,
+	u8sUserEnteredPin					UTF8String,
+	u8sUserEnteredUserID				UTF8String,
+	...
+}
+
+-- @brief Enumeration for the iProjectType field values of AsnProjectPinRule.
+-- @long Enumeration values for the iProjectType field values used in AsnProjectPinRule.
+EnumProjectType ::= ENUMERATED
+{
+	ePROJECTTYPEUNKNOWN(0),
+	ePROJECTTYPEPBX(1),
+	ePROJECTTYPEJOURNAL(2),
+	ePROJECTTYPEJOURNALPBX(3),
+	ePROJECTTYPEPBXPRIVATE(4)
+}
+
+-- The different journal call types
+EAsnJournalCallType ::= ENUMERATED 
+{ 
+	eCTICall						(0),	-- A CTI call
+	eVideoChat						(1),	-- Audio Chat (WebRTC based) (only video, no audio)
+	eAudioChat						(2),	-- Video Chat (WebRTC based  (only audio, no video)
+	eAudioVideoChat					(3),	-- Video Chat (WebRTC based) (audio & video)
+	eIM								(4),	-- an instant message
+	eBluetoothMobile				(5),	-- Bluetooth coupled device phone call
+	eBluetoothMobileUnknownDuration	(6),	-- Bluetooth coupled device phone call - due to limitations the duration is unknown (1 second in journal)
+	eSipAVCall						(7),	-- A SIP call 
+	eSMS							(8),	-- an sms
+	eScreenSharing					(9),	-- Screen/Desktop Sharing (WebRTC based)
+	eRequestedScreenSharing			(10)	-- A requested Screen/Desktop Sharing (WebRTC based)
+}
+
+-- The internal call states
+EAsnCallState ::= ENUMERATED
+{
+	unknown							(0),	-- unknown
+	destroyed						(1),	-- the call was destroyed, we did finally hang up
+	offering						(2),	-- inbound ringing
+	dialing							(4),	-- dialtone outbound
+	ringback						(8),	-- outbound, the destination is ringing, the number is complete
+	busy							(16),	-- outbound, destination is busy
+	connected						(32),	-- we are connected (inbound and outbound)
+	conferenced						(64),	-- call is party in a conference (we hold the conference)
+	hold							(128),	-- call is hold
+	disconnected					(256),	-- the destination did hangup, we hear the beep beep as the call has been teriminated on the other side
+	preparecall						(512)	-- the call is in preparation, no phone action has been executed so far
+}
+
+-- @brief List of AsnProjectPinRule
+AsnProjectPinRuleList ::= SEQUENCE OF AsnProjectPinRule
+
+-- @brief Additional information about a call, especial for initiate a call.
+-- @long
+--  asnCtiMakeCall can be used to give the UCServer more information/hints about how to handle a make call with AsnCtiNewCallParams.
+--  It is possible to give data of a project or pin to use to dial the number, hide the own callerid, attach contact data to the call a.s.o.
+AsnCtiNewCallParams ::= SEQUENCE
+{
+	-- Projekt informationen
+	projectPinRule					AsnProjectPinRule,
+	-- Rufnummer unterdrücken (true) oder übertragen (false/DEFAULT)
+	bHideMyCallerID					BOOLEAN,
+	-- Optional NetDatabaseContact, wenn der Client gleich einen mitübergeben will
+	asnRemoteContact				[0] AsnNetDatabaseContact OPTIONAL,
+
+	-- @brief Additionally fields added later in the key-value-field for backward compatibility.
+	-- @long Additionally fields added later in the key-value-field for backward compatibility.
+	-- - key "Address", Type DWORD, TAPI Adresse auf der gewählt werden soll
+	-- - key "FeatureCodeDialing", Type bool, Diese Wahl ist für einen FeatureCode, die Wahl soll nicht sichtbar sein
+	-- - key "FindAndValidateProject", Type UTF8String, Projekt anhand des übergebenen Namens suchen 
+	-- - key "ProjectErrorHandling", Type Integer, Fehlerbehandlung wenn der übergebene Projektname nicht gefunden wird 
+	-- - key "DialRemoteOffice", Type Integer, Diese Wahl soll als Remote Office Wahl durchgeführt werden (assozierte Wahl, RemoteOffice Nummer, Vermitteln auf Zielrufnummer) 
+	-- - key "RemoteOfficeNumber", Type UTF8String, RemoteOffice Rufnummer die für die RemoteOffice Wahl verwendet werden soll 
+	optionalParams					[1] AsnOptionalParameters OPTIONAL,
+	...
+}
+
+-- @brief Enumeration for the iType field values of AsnContactPhoneLine.
+-- @long Enumeration values for the iType field values used in AsnContactPhoneLine.
+AsnContactPhoneLineType ::= ENUMERATED
+{
+	iPHONENUMBERTYPEALL		 (-1),
+	iPHONENUMBERTYPEUNKNOWN   (0),
+	iPHONENUMBERTYPEPRIMARY   (1),
+	iPHONENUMBERTYPESECONDARY (2),
+	iPHONENUMBERTYPEOTHEROWNNUMBER (3)
+}
+
+-- @brief Enumeration values for iType in AsnConfigSTUNandTURN
+EnumSTUNandTURNType ::= ENUMERATED
+{
+	eSTUN(1),
+	eTURN(2)
+}
+
+-- @brief
+-- Sequence describes credentials and/or addresses of STUN/TURN Servers.
+-- @long 
+-- See http://tools.ietf.org/html/draft-uberti-behave-turn-rest-00, mainly section 2.2 Response.
+-- This sequence is used for both, STUN and TURN configurations.
+AsnConfigSTUNandTURN ::= SEQUENCE
+{
+	iType					INTEGER,						-- STUN or TURN Config; see EnumSTUNandTURNType.
+	u8sUsername				UTF8String,						-- TURN username to use (STUN dont need this)
+	u8sPassword				UTF8String,						-- TURN password to use (STUN dont need this)
+	stValidTo				AsnSystemTime,					-- valid to timetamp in UTC
+	listURIs				UTF8StringList,					-- URIs of STUN/TURN services
+	iTTL					INTEGER,						-- Time To Live in seconds
+	...
+}
+
+-- @brief List of AsnConfigSTUNandTURN sequences.
+AsnConfigSTUNandTURNList ::= SEQUENCE OF AsnConfigSTUNandTURN
+
+-- @brief Line forward information object
+-- @long
+-- 
+AsnLineForward ::= SEQUENCE
+{
+	-- Internal ID of this entry
+	iInternalID							INTEGER,
+
+	-- Defines where the forwarding is taking place
+	-- @linked EnumForwardController
+	iForwardController					INTEGER,
+
+	-- Defines the forward mode
+	-- @linked EnumForwardModes
+	iForwardMode						INTEGER,
+
+	-- In case of iForwardMode == eBACKENDSPECIFIC this contains the backend specific forward mode (e.g. TAPI LINEFORWARDMODE_ constants)
+	iBackEndSpecific					INTEGER,
+
+	-- Time in seconds for a forward in case of no answer. 0 if the default time is used.
+	iNoAnswerTime						INTEGER,
+
+	-- Destination number
+	u8sDestination						UTF8String,
+
+	-- List of caller ids (supercanonic) if the forward is based on caller ids
+	u8sCallerIDList						UTF8StringList,
+	
+	...
+}
+-- List of AsnLineForward
+AsnLineForwards ::= SEQUENCE OF AsnLineForward
+
+END

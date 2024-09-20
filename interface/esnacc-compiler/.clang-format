@@ -1,0 +1,74 @@
+# Centralized coding style defines for the esnacc compiler
+# The initial code uses pretty wierd coding style and did not enforce any dedicated style so this is the aim to achive a common same style for all the files
+#
+# The file requires a pretty new clang format, at least 18.
+# At the time of writing the document it is based on 18.1.8
+#
+# https://releases.llvm.org/download.html
+#
+
+---
+# We'll use defaults from the LLVM style
+Language: Cpp
+BasedOnStyle: LLVM
+IndentWidth: 4
+TabWidth: 4
+UseTab: Always
+
+# Constructor und initializer should follow the same rules
+BreakInheritanceList: BeforeColon
+BreakConstructorInitializers: BeforeColon
+PackConstructorInitializers: Never
+
+# public private protected always moved left for clearer visibility
+AccessModifierOffset: -4
+
+# Aligning:
+IndentCaseBlocks: true
+IndentCaseLabels: true
+NamespaceIndentation: All
+
+# We don´t care about line limits...
+ColumnLimit: 500
+AlignAfterOpenBracket: Align
+AlignTrailingComments: true
+
+# Braces in an extra line and none for one liners...
+BreakBeforeBraces: Custom
+BraceWrapping:
+  AfterEnum: true
+  AfterStruct: true
+  AfterFunction: true
+  AfterClass: true
+  AfterNamespace: true
+  AfterUnion: true
+  AfterExternBlock: true
+  BeforeElse: true
+  BeforeCatch: true
+  AfterControlStatement: true
+  SplitEmptyFunction: true
+
+# Remove empty lines at the start of blocks and end of files
+KeepEmptyLinesAtEOF: false
+KeepEmptyLinesAtTheStartOfBlocks: false
+
+# Starting with Version 19 (not yet released we can use the following)
+# KeepEmptyLines:
+#  AtEndOfFile: false
+#  AtStartOfBlock: false
+#  AtStartOfFile: false
+
+RemoveBracesLLVM: true
+
+# Pointer and reference always next to the type int*, std::wstring& strData
+PointerAlignment: Left
+
+# No unreadable single liners
+AllowShortCaseLabelsOnASingleLine: false
+AllowShortBlocksOnASingleLine: false
+AllowShortIfStatementsOnASingleLine: false
+AllowShortLoopsOnASingleLine: false
+AllowShortFunctionsOnASingleLine: false
+
+# No change in the sorting of includes (grown code)
+SortIncludes: Never

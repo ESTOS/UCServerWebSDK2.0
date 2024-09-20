@@ -1,0 +1,336 @@
+﻿UC-Server-Access-Protocol-Tasks
+	{ iso(1) identified-organization(3) dod(6) internet(1) private(4) enterprise(1) estos(10924) uc-server-access-protocol-v2(2) tasks(18) }
+
+
+-- @category Tasks
+-- @brief Task management interface
+-- @long
+-- ## Module description
+-- This module defines structures and operations for the task managment in the UCServer.
+--
+
+
+DEFINITIONS
+IMPLICIT TAGS ::=
+BEGIN
+
+IMPORTS
+AsnSystemTime, AsnNetDatabaseContact, AsnOptionalParameters, AsnRequestError, UTF8StringList FROM UC-Server-Access-Protocol-Common
+AsnProjectPinRule FROM UC-Server-Access-Protocol-SIPCTICommon
+;
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~~ asnTaskEntries ~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+AsnTaskState ::= ENUMERATED
+{
+	notstarted(0),
+	inprogress(1),
+	waitingforothers(2),
+	deferred(3),
+	done(4)
+}
+
+AsnTaskPriority ::= ENUMERATED
+{
+	low(0),
+	normal(1),
+	high(2)
+}
+
+AsnTaskPrivacy ::= ENUMERATED
+{
+	normal(0),
+	personal(1),
+	private(2),
+	confidential(3)
+}
+
+AsnTaskDelegationState ::= ENUMERATED
+{
+	accepted(0),
+	waiting(1),
+	declined(2)
+}
+
+AsnNetDatabaseTask ::= SEQUENCE
+{
+	u8sTaskID							UTF8String,				-- ID of the Taskentry
+	u8sSubject							UTF8String,				-- Subject of the Task
+	contactData							AsnNetDatabaseContact,	-- NetDatabaseContact Information of the Contact to call
+	u8sCallNumber						UTF8String,				-- Number to call
+	projectPinRule						AsnProjectPinRule,		-- Projekt informationen
+	stUTCStartDate						AsnSystemTime,			-- Starttime of the Task
+	stUTCDueDate						AsnSystemTime,			-- Deadline for the Task
+	eState								AsnTaskState,			-- State of the Task
+	ePriority							AsnTaskPriority,		-- Priority of the Task
+	eDelegationState					AsnTaskDelegationState,	-- State of the Delegation (if needed)
+	bReminderActive						BOOLEAN,				-- Reminder will appear if true
+	stUTCReminderTime					AsnSystemTime,			-- Date and Time for Reminder
+	u8sReminderFile						UTF8String,				-- Soundfilename for Reminder
+	u8sListOwners						UTF8StringList,			-- Name(s) of responsible Contact(s)
+	u8sCreator							UTF8String,				-- Creator of the Task
+	stUTCCreationTime					AsnSystemTime,			-- Creation Timestamp of the Task
+	u8sBody								UTF8String,				-- Bodytext of the Task
+	stUTCDateCompleted					AsnSystemTime,			-- Timestamp for State "Done"
+	u8sCompletedFrom					UTF8String,				-- Contact who finished the Task
+	ePrivacy							AsnTaskPrivacy,			-- Privacy Level of the Task
+	-- optionalParams Name "OwnersWhoDeletedTheTask" Value String
+	optionalParams						[0] AsnOptionalParameters OPTIONAL,
+	...
+}
+
+AsnNetDatabaseTaskList ::= SEQUENCE OF AsnNetDatabaseTask
+
+-- Filter flags to retrieve tasks from the server
+AsnNetDatabaseTaskFindFlagsV2 ::= ENUMERATED
+{
+	onlywithstartdate(1),		-- 0x00000001 - Nur die Tasks, die ein Startdatum haben
+	onlywithoutstartdate(2),	-- 0x00000002 - Nur die Tasks, die kein Startdatum haben 
+	onlynotfinished(4),			-- 0x00000004 - Nur die Tasks, die noch nicht erledigt sind
+	onlynotstarted(8),			-- 0x00000008 - Nur die Tasks, die noch nicht begonnen wurden
+	allnormal(16),				-- 0x00000010 - Alle Tasks, die Privacy Normal haben
+	delegateaccepted(32),		-- 0x00000020 - Delegate status accepted
+	delegatedeclined(64),		-- 0x00000040 - Delegate status declined
+	delegatewaiting(128)		-- 0x00000080 - Delegate status waiting
+}
+
+AsnNetDatabaseTaskFindOptionsV2 ::= SEQUENCE
+{
+	-- @linked AsnNetDatabaseTaskFindFlagsV2
+	eFlags								INTEGER,			-- Bitfeld mit weiteren Filtern
+	iMaxNumEntries						INTEGER,			-- Maximale Anzahl der Datensätze
+	stUTCStartDateFrom					AsnSystemTime,		-- Filter auf "StartDate", von
+	stUTCStartDateTo					AsnSystemTime,		-- Filter auf "StartDate", bis.
+	u8slistOwnerNames					UTF8StringList,		-- NICHT IMPLEMENTIERT Die CTI-Benutzernamen, deren Tasks geholt werden sollen
+	...
+}
+
+-- Result of the asnTaskGetEntries and asnTaskGetEntriesV2 operation
+AsnTaskGetEntriesResult ::= SEQUENCE
+{
+	listTasks							AsnNetDatabaseTaskList,
+	...
+}
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~ asnTaskGetEntriesV2 ~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+AsnTaskGetEntriesV2Argument ::= SEQUENCE
+{
+	findOptions							AsnNetDatabaseTaskFindOptionsV2,
+	...
+}
+
+asnTaskGetEntriesV2 OPERATION
+	ARGUMENT	arg AsnTaskGetEntriesV2Argument
+	RESULT		res AsnTaskGetEntriesResult
+	ERRORS		{AsnRequestError}
+::= 2136
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~ asnTaskGetEntryCount ~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+AsnTaskGetEntryCountArgument ::= SEQUENCE
+{
+	findOptions							AsnNetDatabaseTaskFindOptionsV2,
+	...
+}
+
+-- Result of the asnGetTaskEntryCount and asnTaskGetEntryCount operation
+AsnTaskGetEntryCountResult ::= SEQUENCE
+{
+	iCount								INTEGER, -- Anzahl der beschriebenen Entries
+	...
+}
+
+asnTaskGetEntryCount OPERATION
+	ARGUMENT	arg AsnTaskGetEntryCountArgument
+	RESULT		res AsnTaskGetEntryCountResult
+	ERRORS		{AsnRequestError}
+::= 2137
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~~ asnAddTaskEntry ~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+AsnTaskAddEntryArgument ::= SEQUENCE
+{
+	taskEntry							AsnNetDatabaseTask, -- Eintrag der der Datenbank hinzugefügt werden soll
+	...
+}
+
+AsnTaskAddEntryResult ::= SEQUENCE
+{
+	iResult								INTEGER,		-- Erfolgreich: 0, sonst != 0
+	u8sAddedTaskID						UTF8String,		-- Wenn erfolgreich, dann steht hier die neu erzeugte TaskID drin.
+														-- Dabei ist zu beachten, dass der Eintrag erst dann gültig in der Datenbank steht, wenn der entsprechende AddNotify kommt.
+	...
+}
+
+asnTaskAddEntry OPERATION
+	ARGUMENT	arg AsnTaskAddEntryArgument
+	RESULT		res AsnTaskAddEntryResult
+	ERRORS		{AsnRequestError}
+::= 2121
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~ asnRemoveTaskEntries ~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+AsnTaskRemoveEntriesArgument ::= SEQUENCE
+{
+	u8slistTaskID						UTF8StringList, -- ID des Tasks der gelöscht werden soll
+	...
+}
+
+AsnTaskRemoveEntriesResult ::= SEQUENCE
+{
+	dummy								NULL,
+	...
+}
+
+asnTaskRemoveEntries OPERATION
+	ARGUMENT	arg AsnTaskRemoveEntriesArgument
+	RESULT		res AsnTaskRemoveEntriesResult
+	ERRORS		{AsnRequestError}
+::= 2122
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~ asnModifyTaskEntries ~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+AsnTaskModifyEntriesArgument ::= SEQUENCE
+{
+	listTasks							AsnNetDatabaseTaskList, -- Liste der Tasks die geändert werden sollen
+	...
+}
+
+AsnTaskModifyEntriesResult ::= SEQUENCE
+{
+	dummy								NULL,
+	...
+}
+
+asnTaskModifyEntries OPERATION
+	ARGUMENT	arg AsnTaskModifyEntriesArgument
+	RESULT		res AsnTaskModifyEntriesResult
+	ERRORS		{AsnRequestError}
+::= 2123
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~ asnSetTaskEntriesState ~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+AsnTaskSetEntriesStateArgument ::= SEQUENCE
+{
+	eState								AsnTaskState,	-- Status auf den die Taskentries gesetzt werden sollen
+	u8slistTaskIDs						UTF8StringList, -- Liste der TaskIDs, deren Tasks auf erledigt gesetzt werden sollen
+	...
+}
+
+AsnTaskSetEntriesStateResult ::= SEQUENCE
+{
+	...
+}
+
+asnTaskSetEntriesState OPERATION
+	ARGUMENT	arg AsnTaskSetEntriesStateArgument
+	RESULT		res AsnTaskSetEntriesStateResult
+	ERRORS		{AsnRequestError}
+::= 2124
+
+-- NICHT IMPLEMENTIERT
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~ asnDelegateTaskEntries ~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+AsnTaskDelegateEntriesArgument ::= SEQUENCE
+{
+	u8slistTaskIDs						UTF8StringList, -- Liste der TaskIDs, deren Bearbeiter gesetzt werden sollen
+	u8slistOwners						UTF8StringList, -- Liste der Kontakte, die der Task zugeweisen werden soll
+	...
+}
+
+AsnTaskDelegateEntriesResult ::= SEQUENCE
+{
+	...
+}
+
+asnTaskDelegateEntries OPERATION
+	ARGUMENT	arg AsnTaskDelegateEntriesArgument
+	RESULT		res AsnTaskDelegateEntriesResult
+	ERRORS		{AsnRequestError}
+::= 2125
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~ asnSetTaskEntriesReminder ~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+AsnTaskSetEntriesReminderArgument ::= SEQUENCE
+{
+	u8slistTaskIDs						UTF8StringList, -- Liste der TaskIDs, deren Bearbeiter gesetzt werden sollen
+	bReminderActive						BOOLEAN,				-- Reminder will appear if true
+	stReminderTime						AsnSystemTime,			-- Date and Time for Reminder
+	...
+}
+
+AsnTaskSetEntriesReminderResult ::= SEQUENCE
+{
+	...
+}
+
+asnTaskSetEntriesReminder OPERATION
+	ARGUMENT	arg AsnTaskSetEntriesReminderArgument
+	RESULT		res AsnTaskSetEntriesReminderResult
+	ERRORS		{AsnRequestError}
+::= 2126
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~ asnTaskItemsModified ~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+AsnTaskItemsModifiedArgument ::= SEQUENCE
+{
+	listTasks							AsnNetDatabaseTaskList,	-- Die Modifizierten Tasks
+	...
+}
+
+asnTaskItemsModified OPERATION
+	ARGUMENT	arg AsnTaskItemsModifiedArgument
+::= 2130
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~ asnTaskItemsAdded ~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+AsnTaskItemsAddedArgument ::= SEQUENCE
+{
+	listTasks							AsnNetDatabaseTaskList,	-- Die hinzugefügten Tasks
+	...
+}
+
+asnTaskItemsAdded OPERATION
+	ARGUMENT	arg AsnTaskItemsAddedArgument
+::= 2131
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~ asnTaskItemsRemoved ~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+AsnTaskItemsRemovedArgument ::= SEQUENCE
+{
+	u8slistTaskIDs						UTF8StringList,	-- Die IDs der gelöschten Tasks
+	...
+}
+
+asnTaskItemsRemoved OPERATION
+	ARGUMENT	arg AsnTaskItemsRemovedArgument
+::= 2132
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~~ asnTasksReload ~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+AsnTasksReloadArgument ::= SEQUENCE
+{
+	...
+}
+
+asnTasksReload OPERATION
+	ARGUMENT	arg AsnTasksReloadArgument
+::= 2133
+
+
+END

@@ -1,0 +1,147 @@
+{
+	"openapi": "3.1.0",
+	"info": {
+		"title": "ENetUC_Common_Appointments",
+		"version": "0.0.1",
+		"summary": "Common interface definitions\n\n",
+		"description": "## Module description\n\nThis module contains structures that are mainly used in combination with the Appointments\n\nThere should not be any function\/operation defintions in this module.\n\n\n\nTHERE SHOULD NOT BE ANY FUNCTION\/OPERATION DEFINTIONS IN THIS MODULE.\n\n"
+	},
+	"paths": {
+	},
+	"components": {
+		"schemas": {
+			"AsnOptionalParameters": {
+				"$ref": "ENetUC_Common.json#/components/schemas/AsnOptionalParameters"
+			},
+			"AsnSystemTime": {
+				"$ref": "ENetUC_Common.json#/components/schemas/AsnSystemTime"
+			},
+			"EnumAppointmentState": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "eAPPOINTMENTSTATUSFREE",
+						"const": 0
+					},
+					{
+						"title": "eAPPOINTMENTSTATUSTENTATIVE",
+						"const": 1
+					},
+					{
+						"title": "eAPPOINTMENTSTATUSBUSY",
+						"const": 2
+					},
+					{
+						"title": "eAPPOINTMENTSTATUSOUTOFOFFICE",
+						"const": 3
+					}]},
+			"EnumAppointmentImportance": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "eAPPOINTMENTIMPORTANCELESS",
+						"const": 0
+					},
+					{
+						"title": "eAPPOINTMENTIMPORTANCENORMAL",
+						"const": 1
+					},
+					{
+						"title": "eAPPOINTMENTIMPORTANCEURGENT",
+						"const": 2
+					}]},
+			"EnumAppointmentSensitivity": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "eAPPOINTMENTSENSITIVITYNORMAL",
+						"const": 0
+					},
+					{
+						"title": "eAPPOINTMENTSENSITIVITYPERSONAL",
+						"const": 1
+					},
+					{
+						"title": "eAPPOINTMENTSENSITIVITYPRIVATE",
+						"const": 2
+					},
+					{
+						"title": "eAPPOINTMENTSENSITIVITYCONFIDENTIAL",
+						"const": 3
+					}]},
+			"AsnAppointmentEntry": {
+				"type": "object",
+				"description": "### Category \nCommon\n### Short \nDatatype for transport of Appointment Data to and from the UCServer.\n\n### Private \n0",
+				"properties": {
+					"u8sEntryID": {
+						"type": "string"
+					},
+					"u8sOwner": {
+						"type": "string"
+					},
+					"u8sDataSource": {
+						"type": "string"
+					},
+					"stStart": {
+						"$ref": "#/components/schemas/AsnSystemTime"
+					},
+					"stEnd": {
+						"$ref": "#/components/schemas/AsnSystemTime"
+					},
+					"iDuration": {
+						"type": "integer"
+					},
+					"u8sSubject": {
+						"type": "string"
+					},
+					"u8sText": {
+						"type": "string"
+					},
+					"bAllDay": {
+						"type": "boolean"
+					},
+					"iStatus": {
+						"type": "integer"
+					},
+					"u8sCategory": {
+						"type": "string"
+					},
+					"iImportance": {
+						"type": "integer"
+					},
+					"iSensitivity": {
+						"type": "integer"
+					},
+					"bIsValid": {
+						"type": "boolean"
+					},
+					"optionalParams": {
+						"$ref": "#/components/schemas/AsnOptionalParameters"
+					}
+				},
+				"required": [
+					"u8sEntryID",
+					"u8sOwner",
+					"u8sDataSource",
+					"stStart",
+					"stEnd",
+					"iDuration",
+					"u8sSubject",
+					"u8sText",
+					"bAllDay",
+					"iStatus",
+					"u8sCategory",
+					"iImportance",
+					"iSensitivity",
+					"bIsValid"
+				]
+			},
+			"SEQAppointmentList": {
+				"type": "array",
+				"items": {
+					"$ref": "#/components/schemas/AsnAppointmentEntry"
+				}
+			}
+		}
+	}
+}

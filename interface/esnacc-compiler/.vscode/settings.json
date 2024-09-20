@@ -1,0 +1,15 @@
+{
+	"files.exclude": {
+		"**/.DS_Store": true,
+		"**/.git": true,
+		"**/*.ilk": true,
+		"**/*.pdb": true,
+		"**/*.vs": true
+	},
+	"editor.formatOnSave": true,
+	"editor.defaultFormatter": "xaver.clang-format",
+	"C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
+	"[html]": {
+		"editor.defaultFormatter": "vscode.html-language-features"
+	}
+}

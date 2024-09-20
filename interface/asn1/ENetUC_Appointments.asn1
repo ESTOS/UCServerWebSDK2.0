@@ -1,0 +1,197 @@
+﻿UC-Server-Access-Protocol-Appointments
+	{ iso(1) identified-organization(3) dod(6) internet(1) private(4) enterprise(1) estos(10924) uc-server-access-protocol-v2(2) appointments(19) }
+
+-- @category Appointments
+-- @brief Appointment interface.
+-- @long 
+-- ##        Appointments Modul                                        ##
+--
+-- 
+-- ##            Module description                            ##
+-- This module contains all operations and structures used for transferring appointments 
+-- from and to the appointment database in the UCServer.
+
+DEFINITIONS
+IMPLICIT TAGS ::=
+BEGIN
+
+IMPORTS
+AsnSystemTime, AsnNetDatabaseContact, AsnRequestError, UTF8StringList FROM UC-Server-Access-Protocol-Common
+AsnAppointmentEntry, SEQAppointmentList FROM UC-Server-Access-Protocol-AppointmentsCommon
+;
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~ Appointment-Functions ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+-- @brief Send list of appointments of a user to the server
+-- @long 
+-- Send a complete list of appointments to the server. This will replace the whole list currently on the server.
+-- Currently the clients should only send a timeframe of the next 30 days to the server for reducing resource consumption.
+--
+-- - Anyonymous access: no
+-- - Admin access for other users: yes (e.g. EWS Calendar Replicator)
+-- - User access for other users: no (server will ignore given u8sOwner)
+-- - User access: yes (u8sOwner not neccessary)
+--
+asnAppointmentSetEntryList OPERATION			
+	ARGUMENT	arg AsnAppointmentSetEntryListArgument
+	RESULT		res AsnAppointmentSetEntryListResult
+	ERRORS		{AsnRequestError}
+::= 400
+
+-- @brief Argument for asnAppointmentSetEntryList
+AsnAppointmentSetEntryListArgument ::= SEQUENCE 
+{
+	-- Username of the user (NOT the identity/sip address). The server will use the logged in user's name. The parameter is only used, if a user with admin rights will set appointments for other users (e.g. EWS Calendar Replicator).
+	u8sOwner							UTF8String,		
+	-- A String to indicate the source of the appointments. Following strings are used by now:
+	--
+	-- - *MAPI* - MAPI Connector to Microsoft Outlook
+	-- - *EWS* - EWS Calendar Replicator to a Microsoft Exchange Server
+	-- - *LOTUSNOTES* - IBM Notes
+	-- - *Exchange Web Services* - UCClient EWS Connector
+	-- - *Windows Contacts* - Appointment data from the Windows 10 "Calendar"
+	-- - *Google* - Google GSUITE (or other Google online Calendar)
+	-- - *TOBIT* - (depricated) Tobit David
+	--
+	u8sDataSource						UTF8String,		-- Name of the Source Database (e.g. MAPI, NOTES, TOBIT etc.)..
+	appointments						SEQAppointmentList, -- List of AsnAppointmentEntry objects.
+	...
+}
+
+-- @brief The result of asnAppointmentSetEntryList.
+AsnAppointmentSetEntryListResult ::= SEQUENCE 
+{
+	-- Result of the operation.
+	--
+	-- 0: No error, the list was saved successfully.
+	--
+	-- Other values: An error occured in the businesslogic [TBD: more details].
+	iResult								INTEGER,
+	...
+}
+
+
+-- @brief Send a complete list of recurrent appointments to the server.
+-- @long Send a complete list of recurrent appointments to the server. Each entry must have the same entryID.
+asnAppointmentSetSeriesEntriesList OPERATION			-- 
+	ARGUMENT	arg AsnAppointmentSetSeriesEntriesListArgument
+	RESULT		res AsnAppointmentSetSeriesEntriesListResult
+	ERRORS		{AsnRequestError}
+::= 406
+
+-- @brief Argument for asnAppointmentSetSeriesEntriesList.
+AsnAppointmentSetSeriesEntriesListArgument ::= SEQUENCE 
+{
+	u8sOwner							UTF8String,		-- Name of the owner of the appointments. It is only neccessary if the appointments were set for another user (as admin). For user logins, the server will get the username from the logged in user profile.
+	u8sDataSource						UTF8String,		-- Name of the data source. See AsnAppointmentSetEntryListArgument for possible strings.
+	appointments						SEQAppointmentList, -- List of AsnAppointmentEntry. In this case the u8sEntryID should alle be the same.
+	...
+}
+
+-- @brief Resul of asnAppointmentSetSeriesEntriesList.
+AsnAppointmentSetSeriesEntriesListResult ::= SEQUENCE 
+{
+	iResult								INTEGER, -- 0: The call went well, other values indicates, that the database could not be updated. If the call to the server fails, an AsnRequestError will be returned instead of AsnAppointmentSetSeriesEntriesListResult.
+	...
+}
+
+
+
+-- @brief Removes an Entry from the Server.
+-- @long With this operation the caller can remove an entry from the appointment database identified by its u8sEntryID.
+asnAppointmentRemoveEntry OPERATION		-- 
+	ARGUMENT	arg AsnAppointmentRemoveEntryArgument
+	RESULT		res AsnAppointmentRemoveEntryResult
+	ERRORS		{AsnRequestError}
+::= 401
+
+-- @brief Argument for asnAppointmentRemoveEntry.
+AsnAppointmentRemoveEntryArgument ::= SEQUENCE 
+{
+	u8sEntryID							UTF8String, -- The EntryID of the appointment database entry which should be removed.
+	...
+}
+
+-- @brief The result of asnAppointmentRemoveEntry.
+AsnAppointmentRemoveEntryResult ::= SEQUENCE 
+{
+	iResult								INTEGER, -- 0: The call went well and the entry has been removed; all other values indicates, that removing the entzry failed on database level.
+	...
+}
+
+
+-- @brief Send one Entry to the Server.
+-- @long Send one appointment entry to the UCServer for storing it into the appointment database.
+asnAppointmentSetEntry OPERATION 
+	ARGUMENT	arg AsnAppointmentSetEntryArgument
+	RESULT		res AsnAppointmentSetEntryResult
+	ERRORS		{AsnRequestError}
+::= 402
+
+-- @brief Argument for asnAppointmentSetEntry.
+AsnAppointmentSetEntryArgument ::= SEQUENCE 
+{
+	appointment							AsnAppointmentEntry, -- The filled AsnAppointmentEntry structure to save to the database.
+	...
+}
+
+-- @brief Result of asnAppointmentSetEntry.
+AsnAppointmentSetEntryResult ::= SEQUENCE 
+{
+	iResult								INTEGER, -- 0: The database operation went well; all other values indicates, that the call fails on database level.
+	...
+}
+
+
+-- @brief Retrieve all appointments of the user.
+-- @long With this operation the client can get all known appointmentzs of the logged in user from the appointment database of the UCServer.
+asnAppointmentGetAllEntriesForUser OPERATION
+	ARGUMENT	arg AsnAppointmentGetAllEntriesForUserArgument
+	RESULT		res AsnAppointmentGetAllEntriesForUserResult
+	ERRORS		{AsnRequestError}
+::= 403
+
+-- @brief Argument for asnAppointmentGetAllEntriesForUser.
+AsnAppointmentGetAllEntriesForUserArgument ::= SEQUENCE 
+{
+	u8sOwner							UTF8String,		-- Should be the username of the current user. Currently the UCServer ignores this parameter and uses the username of the logged in user instead.
+	...
+}
+
+-- @brief Result of asnAppointmentGetAllEntriesForUser.
+AsnAppointmentGetAllEntriesForUserResult ::= SEQUENCE 
+{
+	iResult								INTEGER, -- 0: The call went well and the listAppointments field contains the appointments found for the user.
+	listAppointments					SEQAppointmentList, -- List of AsnAppointmentEntry.
+	...
+}
+
+
+-- @brief Read the currently active Entry from the Server (scope: current Usersession).
+asnAppointmentGetActualEntrysForUser OPERATION
+	ARGUMENT	arg AsnAppointmentGetActualEntryForUserArgument
+	RESULT		res AsnAppointmentGetActualEntryForUserResult
+	ERRORS		{AsnRequestError}
+::= 404
+
+-- @brief Argument for asnAppointmentGetActualEntrysForUser
+AsnAppointmentGetActualEntryForUserArgument ::= SEQUENCE 
+{
+	u8sOwner							UTF8String,		-- Should be the username of the current user. Currently the UCServer ignores this parameter and uses the username of the logged in user instead.
+	...
+}
+
+-- @brief Result of asnAppointmentGetActualEntrysForUser.
+AsnAppointmentGetActualEntryForUserResult ::= SEQUENCE 
+{
+	iResult								INTEGER, -- 0: Indicates a successful call and the listAppointments should contain all currently "active" appointments of the user.
+	listAppointments					SEQAppointmentList, -- List of AsnAppointmentEntry.
+	...
+}
+
+
+END

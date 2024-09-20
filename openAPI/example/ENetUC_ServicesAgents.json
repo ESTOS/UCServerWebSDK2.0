@@ -1,0 +1,508 @@
+{
+	"openapi": "3.1.0",
+	"info": {
+		"title": "ENetUC_ServicesAgents",
+		"version": "0.0.1",
+		"summary": "API for Server to Server Agents functionality\n\n",
+		"description": "## Module description\n\nThis module defines structures and operations for a agent functionality backend other than UCServer or PBX.\n\n\n\n## Prerequisite for using the interface\n\n- The other service needs a socket for secure data Transmission between client-server and vise versa.\n\n- Installation of ProCall Software in advance at the client side\n\n- Login the other service at the UCServer\n\n- Provide IDs (full canonical telephone numbers or user IDs) of the User, which should use the agnet functionality\n\n- Attach to Events for the user commands (like logon or logoff)\n\n- Provide state changes of the agent with its IDas event to the UCServer\n\n- While closing the connection, detach from events first, unregister IDs and close socket connection to the UCServer.\n\n\n\n\n\n## Functionalities\n\n- If the user can be recognized as agnet user oft the other server it will gain the client UI for agnet state changes\n\n- User commands according state changes of the user will be provided to the other service\n\n- State changes from the other service will be provided to the corresponding clients\n\n\n\n## Sequence diagram\n\n\"Call\": Like a RPC Call, expect results or errors as an answer.\n\n\n\n\"Event\": Behaviour is like an event it is named, this call will not have any results sent back.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n@startuml\n\n== Connection loss between agent service and UCService ==\n\n\n\n\"Agent Service\" -&gt;x \"UCService\"\n\n\"UCService\" &lt;- \"UCService\": Wait for reconnect, do nothing,\\n\nUser actions are ignored.\n\n\"UCService\" &lt;- \"UCService\": Disable all agents, so it is visible to the users,\\n\n that something happend to the agent service,\\n\nwait for reconnect.\n\n\"UCService\" &lt;- \"UCService\": Remove the agents from memory\\n\nand from the UI of the users. Stop waiting.\n\n|||\n\n\"Agent Service\" -&gt; \"UCService\": Reconnecting to the UCService always with\\n\nreregistration of the agents again.\\n\n**See \"Register Agents\".**\n\n\n\n@enduml\n\n"
+	},
+	"paths": {
+		"/asnRegisterServiceAgents": {
+			"post": {
+				"tags": ["AgentServices"],
+				"summary": "register agents to the service\n\n",
+				"description": "@startuml\n\n== Register Agents ==\n\n\n\n\"Agent Service\" -&gt; \"UCService\" : **Call:** asnRegisterServiceAgent\\n\n(AsnRegisterServiceAgentsArgument)\n\nactivate \"UCService\"\n\n\"UCService\" &lt;- \"UCService\": Checks access rights and syntax\\n\nof the arguments\n\n\"Agent Service\" &lt;- \"UCService\" : **Normal Result:** AsnRegisterServiceAgentsResult,\\n\nif the service accepted the registration list\n\n\"Agent Service\" &lt;- \"UCService\" : **Error Result:** AsnRequestError,\\n\nif the service can't accept the registration list\n\ndeactivate \"UCService\"\n\n\"UCService\" &lt;- \"UCService\": Processing the registration list of agents\n\n@enduml\n\n",
+				"deprecated": false,
+				"operationId": "4900",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnRegisterServiceAgentsArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRegisterServiceAgentsResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnUnregisterServiceAgents": {
+			"post": {
+				"tags": ["AgentServices"],
+				"summary": "unregister agents from the service\n\n",
+				"description": "@startuml\n\n== Unregister Agents ==\n\n\n\n\"Agent Service\" -&gt; \"UCService\" : **Call:** asnUnregisterServiceAgents\\n\n(AsnUnregisterServiceAgentsArgument)\n\nactivate \"UCService\"\n\n\"UCService\" &lt;- \"UCService\": Checks access rights and syntax\\n\nof the arguments\n\n\"Agent Service\" &lt;- \"UCService\" : **Normal Result:** AsnUnregisterServiceAgentsResult,\\n\n if the service accepted the deregistration list\n\n\"Agent Service\" &lt;- \"UCService\" : **Error Result:** AsnRequestError,\\n\n if the service can't accept the deregistration list\n\ndeactivate \"UCService\"\n\n\n\n@enduml\n\n",
+				"deprecated": false,
+				"operationId": "4901",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnUnregisterServiceAgentsArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnUnregisterServiceAgentsResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnSetServiceAgentStates": {
+			"post": {
+				"tags": ["AgentServices"],
+				"summary": "Event to set the state of agent(s). There is no answer to this event.\n\n",
+				"description": "@startuml\n\n== Changing agent state initiated by the agent service ==\n\n\n\n\"Agent Service\" -&gt; \"UCService\" : **Event:** asnSetServiceAgentStates\\n\n(AsnSetServiceAgentStatesArgument)\n\n\"UCService\" &lt;- \"UCService\" : Changing the internal state of the agent\\n\nand dispathcing it to the clients\n\n|||\n\n... If there where errors while processing the state\\n\nchange list an event will be sent back to the agent service ...\n\n\"Agent Service\" &lt;- \"UCService\" : **Event:** asnResponseSetServiceAgentStatesFailed\\n\n (AsnResponseSetServiceAgentStatesFailedArgument)\n\n\n\n@enduml\n\n",
+				"deprecated": false,
+				"operationId": "4902",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnSetServiceAgentStatesArgument"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnResponseSetServiceAgentStatesFailed": {
+			"post": {
+				"tags": ["AgentServices"],
+				"summary": "Event to for agent states that the UCServer was unable to set\n\n",
+				"description": "If the UCServer was unable to set agent states while processing asnSetServiceAgentStates, it will\n\nsend back this event with the failed agent states.\n\n",
+				"deprecated": false,
+				"operationId": "4903",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnResponseSetServiceAgentStatesFailedArgument"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnRequestServiceAgentStateChange": {
+			"post": {
+				"tags": ["AgentServices"],
+				"summary": "The state of a agent should be changed\n\n",
+				"description": "This event will be sent by the UCServer when the user wants to change his agent state (button in the UI).\n\nThe connected service should change the agents satte accordingliy and send an update of the resulting agent state back to the UCServer.\n\n\n\nThe UCServer by itself will not cache or predict the agent state resulting, so it will only change the internal state only the service\n\nsend the update.\n\n\n\n\n\n@startuml\n\n== Change agent state initiated by the UCService ==\n\n\n\n... Login of an agent (if its necessary) ...\n\n\"Agent Service\" &lt;-  \"UCService\" : **Event:** asnRequestServiceAgentLogin\\n\n(AsnRequestServiceAgentLoginArgument)\n\nactivate \"Agent Service\"\n\n\"Agent Service\" -&gt; \"Agent Service\" : Processing the state change request\n\n\"Agent Service\" -&gt; \"UCService\" : **Event:** asnSetServiceAgentStates\\n\n(AsnSetServiceAgentStatesArgument)\n\ndeactivate \"Agent Service\"\n\n\n\n... Normal state change triggered by the user on the client ...\n\n\"Agent Service\" &lt;- \"UCService\" : **Event:** asnRequestServiceAgentStateChange\\n\n(AsnRequestServiceAgentStateChangeArgument)\n\nactivate \"Agent Service\"\n\n\"Agent Service\" -&gt; \"Agent Service\" : Processing the state change request\n\n\"Agent Service\" -&gt; \"UCService\" : **Event:** asnSetServiceAgentStates\\n\n(AsnSetServiceAgentStatesArgument)\n\ndeactivate \"Agent Service\"\n\n\n\n... Logout of an agent (if it is necessary) ...\n\n\"Agent Service\" &lt;-  \"UCService\" : **Event:** asnRequestServiceAgentLogout\\n\n(AsnRequestServiceAgentLogoutArgument)\n\nactivate \"Agent Service\"\n\n\"Agent Service\" -&gt; \"Agent Service\" : Processing the state change request\n\n\"Agent Service\" -&gt; \"UCService\" : **Event:** asnSetServiceAgentStates\\n\n(AsnSetServiceAgentStatesArgument)\n\ndeactivate \"Agent Service\"\n\n\n\n@enduml\n\n",
+				"deprecated": false,
+				"operationId": "4904",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnRequestServiceAgentStateChangeArgument"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnRequestServiceAgentLogin": {
+			"post": {
+				"tags": ["AgentServices"],
+				"summary": "The agent should be logged in\n\n",
+				"description": "This event will be sent by the UCServer when the user wants to login.\n\nThe connected service should change the agents satte accordingliy and send an update of the resulting agent state back to the UCServer.\n\n\n\nThe UCServer by itself will not cache or predict the agent state resulting, so it will only change the internal state only the service\n\nsend the update.\n\n",
+				"deprecated": false,
+				"operationId": "4905",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnRequestServiceAgentLoginArgument"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnRequestServiceAgentLogout": {
+			"post": {
+				"tags": ["AgentServices"],
+				"summary": "The agent request a logout\n\n",
+				"description": "This event will be sent by the UCServer when the user wants to logout.\n\nThe connected service should change the agents state accordingliy and send an update of the resulting agent state () back to the UCServer.\n\n\n\nThe UCServer by itself will not cache or predict the agent state resulting, so it will only change the internal state only the service\n\nsend the update.\n\n",
+				"deprecated": false,
+				"operationId": "4906",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnRequestServiceAgentLogoutArgument"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnRequestServiceAgentsStatusUpdate": {
+			"post": {
+				"tags": ["AgentServices"],
+				"summary": "The connected service should update the state of the given agents or all agents\n\n",
+				"deprecated": false,
+				"operationId": "4910",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnRequestServiceAgentsStatusUpdateArgument"
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"schemas": {
+			"AsnNetDatabaseContact": {
+				"$ref": "ENetUC_Common.json#/components/schemas/AsnNetDatabaseContact"
+			},
+			"AsnUserPropertyBag": {
+				"$ref": "ENetUC_Common.json#/components/schemas/AsnUserPropertyBag"
+			},
+			"UTF8StringList": {
+				"$ref": "ENetUC_Common.json#/components/schemas/UTF8StringList"
+			},
+			"AsnRequestError": {
+				"$ref": "ENetUC_Common.json#/components/schemas/AsnRequestError"
+			},
+			"AsnNetDatabaseContactID": {
+				"$ref": "ENetUC_Common.json#/components/schemas/AsnNetDatabaseContactID"
+			},
+			"AsnStringIntegerPairList": {
+				"$ref": "ENetUC_Common.json#/components/schemas/AsnStringIntegerPairList"
+			},
+			"AsnNetServicesAgentsErrors": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "noerror",
+						"const": 0
+					},
+					{
+						"title": "accessdenied",
+						"const": 1
+					},
+					{
+						"title": "agentidmissing",
+						"const": 2
+					},
+					{
+						"title": "groupidmissing",
+						"const": 3
+					},
+					{
+						"title": "agentstatemissing",
+						"const": 4
+					},
+					{
+						"title": "agentcapabilitiesmissing",
+						"const": 5
+					},
+					{
+						"title": "serviceidmissing",
+						"const": 6
+					},
+					{
+						"title": "wrongserviceid",
+						"const": 7
+					},
+					{
+						"title": "servicealreadyconnected",
+						"const": 8
+					},
+					{
+						"title": "serviceallocationfailed",
+						"const": 9
+					},
+					{
+						"title": "noagentsregistered",
+						"const": 10
+					},
+					{
+						"title": "noagentsgiven",
+						"const": 11
+					}]},
+			"AsnServiceAgentStateFailedReasonEnum": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "eUNKNOWNAGENT",
+						"const": 0
+					},
+					{
+						"title": "eUNKNOWNSTATE",
+						"const": 1
+					}]},
+			"AsnAgentACDLoginData": {
+				"type": "object",
+				"description": "### Category \nAgentServices\n### Long \nAdditional data that may be required to login\/monitor ACD groups of a PBX.\n\n### Private \n0",
+				"properties": {
+					"u8sAgentID": {
+						"type": "string"
+					},
+					"u8sGroupID": {
+						"type": "string"
+					},
+					"u8sPassword": {
+						"type": "string"
+					},
+					"u8sDeviceID": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"u8sAgentID",
+					"u8sGroupID",
+					"u8sPassword",
+					"u8sDeviceID"
+				]
+			},
+			"AsnServiceAgent": {
+				"type": "object",
+				"description": "### Category \nAgentServices\n### Short \nStructure with the agent information needed whcih is exchanegd between the agent service and the UCServer.\n\n### Private \n0",
+				"properties": {
+					"u8sGroupID": {
+						"type": "string"
+					},
+					"u8sAgentID": {
+						"type": "string"
+					},
+					"u8sAgentDisplayName": {
+						"type": "string"
+					},
+					"iAgentState": {
+						"type": "integer"
+					},
+					"iPossibleAgentStates": {
+						"type": "integer"
+					},
+					"iRequiredLoginLogoutParams": {
+						"type": "integer"
+					}
+				},
+				"required": [
+					"u8sGroupID",
+					"u8sAgentID"
+				]
+			},
+			"AsnRegisterServiceAgentsResult": {
+				"type": "object",
+				"description": "### Category \nAgentServices\n### Short \nResult of asnRegisterAgents\n\n### Private \n0",
+				"properties": {
+					"u8sServiceID": {
+						"type": "string"
+					},
+					"bSuccess": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"u8sServiceID",
+					"bSuccess"
+				]
+			},
+			"AsnUnregisterServiceAgentsResult": {
+				"type": "object",
+				"description": "### Category \nAgentServices\n### Short \nResult of asnUnregisterServiceAgents\n\n### Private \n0",
+				"properties": {
+					"bSuccess": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"bSuccess"
+				]
+			},
+			"AsnServiceAgentStateFailedReason": {
+				"type": "object",
+				"description": "### Category \nAgentServices\n### Private \n0",
+				"properties": {
+					"u8sServiceAgentID": {
+						"type": "string"
+					},
+					"iFailedReason": {
+						"type": "integer"
+					}
+				},
+				"required": [
+					"u8sServiceAgentID",
+					"iFailedReason"
+				]
+			},
+			"AsnServiceAgentList": {
+				"type": "array",
+				"items": {
+					"$ref": "#/components/schemas/AsnServiceAgent"
+				}
+			},
+			"AsnRegisterServiceAgentsArgument": {
+				"type": "object",
+				"description": "### Category \nAgentServices\n### Short \nArgument for asnRegisterServiceAgents\n\n### Private \n0",
+				"properties": {
+					"u8sServiceID": {
+						"type": "string"
+					},
+					"listAgents": {
+						"$ref": "#/components/schemas/AsnServiceAgentList"
+					},
+					"bClearExistingAgents": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"u8sServiceID",
+					"listAgents"
+				]
+			},
+			"AsnUnregisterServiceAgentsArgument": {
+				"type": "object",
+				"description": "### Category \nAgentServices\n### Short \nArgument for asnUnregisterServiceAgents\n\n### Private \n0",
+				"properties": {
+					"u8sServiceID": {
+						"type": "string"
+					},
+					"listAgents": {
+						"$ref": "#/components/schemas/AsnServiceAgentList"
+					},
+					"bClearExistingAgents": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"u8sServiceID",
+					"listAgents"
+				]
+			},
+			"AsnSetServiceAgentStatesArgument": {
+				"type": "object",
+				"description": "### Category \nAgentServices\n### Short \nArgument for asnSetAgentStates\n\n### Private \n0",
+				"properties": {
+					"listServiceAgentStates": {
+						"$ref": "#/components/schemas/AsnServiceAgentList"
+					}
+				},
+				"required": [
+					"listServiceAgentStates"
+				]
+			},
+			"AsnServiceAgentStateFailedReasonList": {
+				"type": "array",
+				"items": {
+					"$ref": "#/components/schemas/AsnServiceAgentStateFailedReason"
+				}
+			},
+			"AsnResponseSetServiceAgentStatesFailedArgument": {
+				"type": "object",
+				"description": "### Category \nAgentServices\n### Short \nArgument for AsnResponseSetServiceAgentStatesFailed\n\n### Private \n0",
+				"properties": {
+					"listServiceAgentStates": {
+						"$ref": "#/components/schemas/AsnServiceAgentStateFailedReasonList"
+					}
+				},
+				"required": [
+					"listServiceAgentStates"
+				]
+			},
+			"AsnRequestServiceAgentStateChangeArgument": {
+				"type": "object",
+				"description": "### Category \nAgentServices\n### Short \nArgument for asnEventServiceAgentStateChanged\n\n### Private \n0",
+				"properties": {
+					"serviceAgentState": {
+						"$ref": "#/components/schemas/AsnServiceAgent"
+					}
+				},
+				"required": [
+					"serviceAgentState"
+				]
+			},
+			"AsnRequestServiceAgentLoginArgument": {
+				"type": "object",
+				"description": "### Category \nAgentServices\n### Short \nArgument for asnEventServiceAgentStateChanged\n\n### Private \n0",
+				"properties": {
+					"serviceAgentState": {
+						"$ref": "#/components/schemas/AsnServiceAgent"
+					},
+					"loginParameter": {
+						"$ref": "#/components/schemas/AsnAgentACDLoginData"
+					}
+				},
+				"required": [
+					"serviceAgentState",
+					"loginParameter"
+				]
+			},
+			"AsnRequestServiceAgentLogoutArgument": {
+				"type": "object",
+				"description": "### Category \nAgentServices\n### Short \nArgument for asnEventServiceAgentStateChanged\n\n### Private \n0",
+				"properties": {
+					"serviceAgentState": {
+						"$ref": "#/components/schemas/AsnServiceAgent"
+					},
+					"u8sLogoutData": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"serviceAgentState",
+					"u8sLogoutData"
+				]
+			},
+			"AsnRequestServiceAgentsStatusUpdateArgument": {
+				"type": "object",
+				"description": "### Category \nAgentServices\n### Short \nArgument for asnRequestServiceAgentsStatusUpdate\n\n### Long \nThe UCServer needs an update of the current state of the given agents. If the list is empty, the service should\nupdate all agents which are connected to the agent service.\n\n### Private \n0",
+				"properties": {
+					"listServiceAgents": {
+						"$ref": "#/components/schemas/AsnServiceAgentList"
+					}
+				},
+				"required": [
+					"listServiceAgents"
+				]
+			}
+		}
+	}
+}

@@ -1,0 +1,956 @@
+{
+	"openapi": "3.1.0",
+	"info": {
+		"title": "ENetUC_PresenceV2",
+		"version": "0.0.1",
+		"summary": "Presence interface (Version 2)\n\n",
+		"description": "## Module description\n\nThis module defines structures and operations for the presence V2 interface.\n\nA version 2 of the presence interface was necessary to improve the amount of contact and service data.\n\nThe presence shows at any time the current availability of the person you wish to communicate with. For a detailed description see the help of the UCClient.\n\nThe following presence states are available:\n\n- Available (green)\n\n- Busy (red)\n\n- Absent (yellow)\n\n- Inactive (green\/yellow)\n\n- Don't disturb  (red with a white stripe)\n\n- Offline (gray)\n\n\n\nAdditionally the API delivers information in form of contact data, service states and much more.\n\nWith all these infromations, it is possible to create an application, which give user the ability to see a detailed picture of a contact enriched with live state changes.\n\n\n\nThe live changes are results of the different services the UCServer combines the presence state of the user:\n\n- Telephone (via CTI)\n\n- Calendar\n\n- Audio\/Video\n\n- Softphone\n\n- Bluetooth device (locally attached to a client of the user).\n\n- Manual input of the user\n\n\n\n## Prerequisite for using the interface\n\n- The client needs a socket for secure data Transmission between client-server and vise versa.\n\n- Installation of ProCall Software in advance\n\n- Then create a user for testing purposes\n\n- login in this user name and check the functionality of this interface practically\n\n\n\n\n\n## Functionalities\n\n- The status for client will be driven from various sources like:\n\n- Digital Telephone, Mobile, Calender(ms outlook), Audio\/Video Chat, Manually changing Status and Computer system(login\/logout).\n\n- The user has the permission to manually change the status\n\n- The user can set a user-defined status (ex: Coffee Break)\n\n- The user can set a couple of notices (ex: listing the daily appointments)\n\n- The user can change status and notice\n\n- The user can remove status and notice\n\n\n\n\n\n## Events\n\nThe Events that the client receives from the server are:\n\n\n\n\\- **[asnUpdatePresence(V2)](PresenceV2.asnUpdatePresence.html)** :\n\n- It delivers the responses from Server to Client as per Client request\n\n- The Server receives the specific request like [asnCustomNote](Common.type.AsnCustomNote.html) from Client\n\n- The Client reciprocally receives an [asnUpdatePresence(V2)](PresenceV2.asnUpdatePresence.html) from Server\n\n- The Update-Event will also be sent to those clients who are in touch with this client in the same Server\n\n- It receives the Event from server in two forms whether an Argument or an Error\n\n- As Argument: It handles the **Presence** and **iChangedFlags** events\n\n\\- [Presence](PresenceV2.type.AsnUpdatePresenceArgument.html) : it shows updated data of the present-contact.\n\n\\- [iChangedFlags](PresenceV2.type.AsnUpdatePresenceArgument.html) : it indicates that which area triggers the event and it's included because later on the server fills the fields\n\n\\* check the [AsnPresence](PresenceV2.type.AsnPresence.html)(Active details) for more details\n\n\n\n\\- **[asnRemovePresence](PresenceV2.asnRemovePresence.html)** :\n\n- It needs a contact id to remove the presence state\n\n- It has an optionalParams for further implementation\n\n\n\n## How the API works\n\nHere is a very simple diagram of how the presence API works\n\n@startuml\n\n\"Client A\" -&gt; \"UCServer\": asnGetAndSubscribePresence(AsnGetAndSubscribePresenceArgument)\n\n\"Client A\" &lt;- \"UCServer\": AsnGetAndSubscribePresenceResult\n\nnote left\n\nCall asnGetAndSubscribePresence at least\n\nthe ContactIDs of the contacts the client\n\nis interested to get updates from.\n\nend note\n\n...\n\n\"Client A\" &lt;- \"UCServer\": EVENT: asnUpdatePresence(V2)(AsnUpdatePresenceArgument)\n\nnote right\n\nasnUpdatePresence(V2) are events from\n\nthe server with changes\/updates made to\n\nthe contact the client has subscribed to.\n\nend note\n\n...\n\n\"Client A\" -&gt; \"UCServer\": asnUnsubscribePresence(AsnUnsubscribePresenceArgument)\n\n\"Client A\" &lt;- \"UCServer\": AsnUnsubscribePresenceResult\n\nnote left\n\nCall asnUnsubscribePresence for\n\nall contacts (ContactIDs) the server\n\nshould stop fireing events for.\n\nend note\n\n@enduml\n\n"
+	},
+	"paths": {
+		"/asnUpdatePresenceV2": {
+			"post": {
+				"tags": ["PresenceV2"],
+				"summary": "Event from the server to the client about presence updates\n\n",
+				"description": "This event is fired from the server if the client has subscribed by asnGetAndSubscribePresence on a contact (=user).\n\nIt contains the new presence state and other data which has changed.\n\n",
+				"deprecated": false,
+				"operationId": "4504",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnUpdatePresenceV2Argument"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnRemovePresence": {
+			"post": {
+				"tags": ["PresenceV2"],
+				"summary": "Event from the server tzhat the contact has been removed from the presence system.\n\n",
+				"description": "This event will be sent to clients when a contact is removed from the presence system of the ucserver.\n\nMostly by removing or deactivating the contact in the user management system.\n\n",
+				"deprecated": false,
+				"operationId": "4501",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnRemovePresenceArgument"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnGetAndSubscribePresenceV2": {
+			"post": {
+				"tags": ["PresenceV2"],
+				"summary": "Operation to retrieve contact data and to subscribe to events when these data will change.\n\n",
+				"description": "If a client is interested in monitoring the presence and data of its own and other contacts, this operation\n\ngives the possibility to get data about a contact, its used services (lines, appointments, chat etc.) and his calculated presence. See AsnGetAndSubscribePresenceArgument for more information.\n\n\n\nTo unsubscribe from contacts, call asnUnsubscribePresence. This is highly recommended before closing the connection to the ucserver.\n\n\n\nIf the operation fails it will return AsnRequestError.\n\n\n\nIf the operation is successful at least on some given contacts, it will return AsnGetAndSubscribePresenceResult.\n\n",
+				"deprecated": false,
+				"operationId": "4505",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnGetAndSubscribePresenceArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnGetAndSubscribePresenceV2Result"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnUnsubscribePresence": {
+			"post": {
+				"tags": ["PresenceV2"],
+				"summary": "Operation to end subscriptions on contacts on the ucserver.\n\n",
+				"description": "To stop getting events from contacts on the ucserver this operation is called with the list contact IDs of these contacts.\n\n\n\nIf the operation is executes successful, it will return the result AsnUnsubscribePresenceResult.\n\n\n\nIf an error occured, AsnRequestError will be returned.\n\n",
+				"deprecated": false,
+				"operationId": "4503",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnUnsubscribePresenceArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnUnsubscribePresenceResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnSetDynamicRights": {
+			"post": {
+				"tags": ["PresenceV2"],
+				"summary": "Operation to set access rights for another contact on contact data and contcat service information.\n\n",
+				"description": "This operation is used to grant access rights (or changing them) to other users (contacts) on contact informations and service states of this contact.\n\n\n\n**Note**: The access rights in the ucserver are always a sum of the global, group and personal right lists and what they grant. So removing specific rights with this\n\noperation has no effect if the same rights are granted through global or group rights.\n\n\n\nIf the operation was executed successfully the result AsnSetDynamicRightsResult is returned.\n\n\n\nIf an error occured, AsnRequestError is returned.\n\n\n\n**The access rights list**&lt;br \/&gt;\n\nIf a client wants to receive contact data, its logged in contact (= user) has to have access rights granted by the other user to him.\n\nEach user of the ucserver has a list of access rights she gives other users. If someone is in this list, he can see contact data\n\nand\/or service states of the user depending on the rights level granted.\n\n\n\nThe list can be modified by asnSetDynamicRights and asnRemoveDynamicRights.\n\n\n\n**Contact rights challenge**&lt;br \/&gt;\n\nIn conjunction with the access rights list is the mechanic of the \"contact rights challenge\".&lt;br \/&gt;\n\nTo get on the access list of another user, the user must request such rights from him or will get them through administrative configuration.\n\nIf there is no administrative configuration the other user will be \"challenged\" to grant or deny rights to the user.\n\nThis process is started as soon as a user (challenger) requests the ucserver by calling asnGetAndSubscribePresence on another users ContactID (challengee).\n\nThe ucserver checks if there are already given rights and if not, the challenged user gets a new entry in his challenge request list, which then will be\n\ndispatched to all of his clients. These clients should now prompt the user to accept or deny the request and the result will be saved in his access rights list.\n\nOn the other side, the challenger will get data and service status after some time or not. There is no extra notification if the challenge was answered or not.\n\n",
+				"deprecated": false,
+				"operationId": "4510",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnSetDynamicRightsArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnSetDynamicRightsResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnRemoveDynamicRights": {
+			"post": {
+				"tags": ["PresenceV2"],
+				"summary": "This operation is used for removing access rights to contact data and service states between contacts.\n\n",
+				"description": "If a client wants to remove access rights to contact data and service states between contacts, asnRemoveDynamicRights has to be called.\n\n\n\nRemoving access rights will remove an entry in the access rights list of the contact who grants the rights. This means, that\n\n'remote contact' (see. AsnRemoveDynamicRightsArgument) has the chance to request new rights again.\n\n\n\nIn order to prevent the 'remote contact' to request new rights, the contact should be blocked\n\n(setting user right 'blocked'). See asnSetDynamicRights for more details.\n\n",
+				"deprecated": false,
+				"operationId": "4511",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnRemoveDynamicRightsArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRemoveDynamicRightsResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnRequestLargeProfileImage": {
+			"post": {
+				"tags": ["PresenceV2"],
+				"summary": "Request an large image of a contact.\n\n",
+				"description": "With the operation asnRequestLargeProfileImage can request a large image of a contact. The large\n\nimage can be optionally configured by the administrator additionally to the 'normal' small image in order to provide a\n\nhigher resolution image of the contact for special purposes (like LiveChat client).\n\nLike with asnRequestContactImage, this operation is used to get or check the image from the server and the server can\n\ndetermine the need to provide a new image to the client using the given hash value.\n\n",
+				"deprecated": false,
+				"operationId": "1601",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnRequestLargeProfileImageArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestLargeProfileImageResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnRequestContactImage": {
+			"post": {
+				"tags": ["PresenceV2"],
+				"summary": "Request an image of a contact\n\n",
+				"description": "This operation requests the normal (or 'small') Image of a contact. The caller sends\n\na known hash of an already existing image to the server, so that the server can determine\n\nthat the client get the stored image (the hash is not equal) or reponds to the client, that the image has not changed (hash is equal).\n\nIf there is no image, no image is returned.\n\n",
+				"deprecated": false,
+				"operationId": "1602",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnRequestContactImageArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestContactImageResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"schemas": {
+			"AsnOptionalParameters": {
+				"$ref": "ENetUC_Common.json#/components/schemas/AsnOptionalParameters"
+			},
+			"AsnNetDatabaseContact": {
+				"$ref": "ENetUC_Common.json#/components/schemas/AsnNetDatabaseContact"
+			},
+			"AsnUserPropertyBag": {
+				"$ref": "ENetUC_Common.json#/components/schemas/AsnUserPropertyBag"
+			},
+			"UTF8StringList": {
+				"$ref": "ENetUC_Common.json#/components/schemas/UTF8StringList"
+			},
+			"AsnRequestError": {
+				"$ref": "ENetUC_Common.json#/components/schemas/AsnRequestError"
+			},
+			"AsnNetDatabaseContactID": {
+				"$ref": "ENetUC_Common.json#/components/schemas/AsnNetDatabaseContactID"
+			},
+			"AsnStringIntegerPairList": {
+				"$ref": "ENetUC_Common.json#/components/schemas/AsnStringIntegerPairList"
+			},
+			"AsnAbsentStateV2": {
+				"$ref": "ENetUC_Common_AsnContact.json#/components/schemas/AsnAbsentStateV2"
+			},
+			"AsnCustomNote": {
+				"$ref": "ENetUC_Common_AsnContact.json#/components/schemas/AsnCustomNote"
+			},
+			"AsnUserDynamicRights": {
+				"$ref": "ENetUC_Common_AsnContact.json#/components/schemas/AsnUserDynamicRights"
+			},
+			"AsnUserStaticRights": {
+				"$ref": "ENetUC_Common_AsnContact.json#/components/schemas/AsnUserStaticRights"
+			},
+			"AsnUserStaticRights2": {
+				"$ref": "ENetUC_Common_AsnContact.json#/components/schemas/AsnUserStaticRights2"
+			},
+			"SEQAppointmentList": {
+				"$ref": "ENetUC_Common_Appointments.json#/components/schemas/SEQAppointmentList"
+			},
+			"AsnAppointmentEntry": {
+				"$ref": "ENetUC_Common_Appointments.json#/components/schemas/AsnAppointmentEntry"
+			},
+			"AsnClientCapabilitiesV2": {
+				"$ref": "ENetUC_ClientCapabilities.json#/components/schemas/AsnClientCapabilitiesV2"
+			},
+			"EAsnCallType": {
+				"$ref": "ENetROSEInterface.json#/components/schemas/EAsnCallType"
+			},
+			"EAsnJournalCallType": {
+				"$ref": "ENetUC_Common_SIPCTI.json#/components/schemas/EAsnJournalCallType"
+			},
+			"EAsnCallState": {
+				"$ref": "ENetUC_Common_SIPCTI.json#/components/schemas/EAsnCallState"
+			},
+			"AsnPresenceSubscriptionFlags": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "ePresenceSubscriptionPresence",
+						"const": 1
+					},
+					{
+						"title": "ePresenceSubscriptionData",
+						"const": 2
+					},
+					{
+						"title": "ePresenceSubscriptionDataIncludeImage",
+						"const": 4
+					},
+					{
+						"title": "ePresenceSubscriptionConfiguration",
+						"const": 8
+					},
+					{
+						"title": "ePresenceSubscriptionAbsentstate",
+						"const": 16
+					},
+					{
+						"title": "ePresenceSubscriptionNote",
+						"const": 32
+					},
+					{
+						"title": "ePresenceSubscriptionAppointment",
+						"const": 64
+					},
+					{
+						"title": "ePresenceSubscriptionPhoneLines",
+						"const": 128
+					},
+					{
+						"title": "ePresenceSubscriptionPhoneCalls",
+						"const": 256
+					},
+					{
+						"title": "ePresenceSubscriptionPhoneForwards",
+						"const": 512
+					},
+					{
+						"title": "ePresenceSubscriptionMyChallengeUpdates",
+						"const": 1024
+					},
+					{
+						"title": "ePresenceSubscriptionDynamicRightsUpdate",
+						"const": 2048
+					},
+					{
+						"title": "ePresenceSubscriptionDynamicGroupRightsUpdate",
+						"const": 4096
+					},
+					{
+						"title": "ePresenceSubscriptionDynamicGlobalRightsUpdate",
+						"const": 8192
+					},
+					{
+						"title": "ePresenceSubscriptionAgentStatus",
+						"const": 32768
+					},
+					{
+						"title": "ePresenceSubScriptionMonitorGroupingAttribute",
+						"const": 65536
+					}]},
+			"AsnSetDynamicRightsErrorEnum": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "general",
+						"const": 0
+					},
+					{
+						"title": "permissiondenied",
+						"const": 1
+					},
+					{
+						"title": "writeprofiledenied",
+						"const": 2
+					},
+					{
+						"title": "unknownrights",
+						"const": 3
+					}]},
+			"AsnRemoveDynamicRightsErrorEnum": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "general",
+						"const": 0
+					},
+					{
+						"title": "permissiondenied",
+						"const": 1
+					},
+					{
+						"title": "writeprofiledenied",
+						"const": 2
+					},
+					{
+						"title": "unknownrights",
+						"const": 3
+					}]},
+			"EnumRequestImageResult": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "eIMAGEATTACHED",
+						"const": 0
+					},
+					{
+						"title": "eIMAGEHASHNOTCHANGED",
+						"const": 1
+					},
+					{
+						"title": "eNOIMAGEFOUND",
+						"const": 2
+					}]},
+			"AsnPresenceLine": {
+				"type": "object",
+				"description": "### Category \nPresenceV2\n### Short \nThe structure is used to describe a phone line of a contact.\n\n### Long \nThe structure is used to describe a phone line of a contact, including it state, their number and URI, forwards on the line currently set.\n\n### Private \n0",
+				"properties": {
+					"u8sLinePhoneNumber": {
+						"type": "string"
+					},
+					"u8sLineNumber": {
+						"type": "string"
+					},
+					"iState": {
+						"type": "integer"
+					},
+					"iDoNotDisturb": {
+						"type": "integer"
+					},
+					"iForwardFeaturesPBX": {
+						"type": "integer"
+					}
+				},
+				"required": [
+					"u8sLinePhoneNumber",
+					"u8sLineNumber",
+					"iState",
+					"iDoNotDisturb",
+					"iForwardFeaturesPBX"
+				]
+			},
+			"AsnPresenceCallV2": {
+				"type": "object",
+				"description": "### Category \nPresenceV2\n### Short \nThis structure describes the information about a call on a phone line.\n\n### Long \nThis structure describes the information about a call on a phone line of a contact including the last action taken\nby the call (added, removed, changed), the current call state, features\/functions available on the call, call type and\nif available the remote contact.\n\n### added_timestamp \n1726444800\n### Private \n0",
+				"properties": {
+					"iAction": {
+						"type": "integer"
+					},
+					"u8sConnectionID": {
+						"type": "string"
+					},
+					"u8sLinePhoneNumber": {
+						"type": "string"
+					},
+					"u8sLineNumber": {
+						"type": "string"
+					},
+					"u8sCurrentNumberSC": {
+						"type": "string"
+					},
+					"u8sTrackerID": {
+						"type": "string"
+					},
+					"eCallState": {
+						"$ref": "#/components/schemas/EAsnCallState"
+					},
+					"iFeatures": {
+						"type": "integer"
+					},
+					"bOutbound": {
+						"type": "boolean"
+					},
+					"bInternal": {
+						"type": "boolean"
+					},
+					"eCallType": {
+						"$ref": "#/components/schemas/EAsnCallType"
+					},
+					"eJournalCallType": {
+						"$ref": "#/components/schemas/EAsnJournalCallType"
+					},
+					"remoteContact": {
+						"$ref": "#/components/schemas/AsnNetDatabaseContact"
+					}
+				},
+				"required": [
+					"iAction",
+					"u8sConnectionID",
+					"u8sLinePhoneNumber",
+					"u8sLineNumber",
+					"u8sCurrentNumberSC",
+					"u8sTrackerID",
+					"eCallState",
+					"iFeatures",
+					"bOutbound",
+					"bInternal",
+					"eCallType",
+					"eJournalCallType"
+				]
+			},
+			"AsnPresenceForward": {
+				"type": "object",
+				"description": "### Category \nPresenceV2\n### Short \nThis strutures describes the phone forward state of a phone line.\n\n### Long \nA phone line can be set to forward call automatically to other endpoints. This structure describes\nthe different forward states.\n\n### Private \n0",
+				"properties": {
+					"u8sLinePhoneNumber": {
+						"type": "string"
+					},
+					"u8sLineNumber": {
+						"type": "string"
+					},
+					"iInternalID": {
+						"type": "integer"
+					},
+					"u8sDestination": {
+						"type": "string"
+					},
+					"iForwardMode": {
+						"type": "integer"
+					},
+					"iNoAnswerTime": {
+						"type": "integer"
+					}
+				},
+				"required": [
+					"u8sLinePhoneNumber",
+					"u8sLineNumber",
+					"iInternalID",
+					"u8sDestination",
+					"iForwardMode"
+				]
+			},
+			"AsnActualUserDynamicRights": {
+				"type": "object",
+				"description": "### Category \nPresenceV2\n### Short \nStructure for AsnPresence to give the client a hint, whcih access rights are effective to set on an contact.\n\n### Long \nMinimum and maximum of the user dynamic rights which can be set to a contact. See more details in AsnPresence .\n\n### Private \n0",
+				"properties": {
+					"asnMinPossibleRights": {
+						"$ref": "#/components/schemas/AsnUserDynamicRights"
+					},
+					"asnMaxPossibleRights": {
+						"$ref": "#/components/schemas/AsnUserDynamicRights"
+					},
+					"asnCurrentRights": {
+						"$ref": "#/components/schemas/AsnUserDynamicRights"
+					}
+				},
+				"required": [
+					"asnMinPossibleRights",
+					"asnMaxPossibleRights"
+				]
+			},
+			"AsnAgentState": {
+				"type": "object",
+				"description": "### Category \nPresenceV2\n### Short \nStruture for AsnPresence of the actual agent state of the contact\n\n### Long \nTo reflect the actual agent state of a contact which is a PBX or LiveChat Agent, this struture\ncontains the state and agentgroup list of the contact.\n\n### Private \n0",
+				"properties": {
+					"dwState": {
+						"type": "integer"
+					},
+					"mapDetails": {
+						"$ref": "#/components/schemas/AsnStringIntegerPairList"
+					}
+				},
+				"required": [
+					"dwState"
+				]
+			},
+			"AsnRemovePresenceArgument": {
+				"type": "object",
+				"description": "### Category \nPresenceV2\n### Short \nArgument for the event asnRemovePresence.\n\n### Long \nThe argument contains only the ContactID if the contact whcih has been removed.\n\n### Private \n0",
+				"properties": {
+					"u8sContactID": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"u8sContactID"
+				]
+			},
+			"AsnGetAndSubscribePresenceArgument": {
+				"type": "object",
+				"description": "### Category \nPresenceV2\n### Short \nCall this operation to get information about and events of another contact.\n\n### Long \nThis operation enables the client to request informations and events about another contact.\nThe minimal parameter is a list of contact IDs (e.g. 'sip:tester@test.com'). These contacts\nwill be searched in the ucserver and the service will return contact data back in the result\nand send events about changes from there on.\n\nThe data returned and events which will be send are depending on access rights and accessability on the contact data.\n\nWhich events and return values are necessary for the client can be adjusted by the iEventFlagsToSubscribe and\niContactDetailsReturnFilter members.\n\n**Note**: Federation contacts (contgacts managed on another server as the connected one) may not return most of the data\neven the bits are set. This is because the ucserver has to contact the appropriate server first and this can take some time.\nTo prevent long response times, the data which will be eventually given by the appropriate server will be send back via event.\n\nIf the client wants to prevent SIP or XMPP fedeation contacts, it can set bOpenOnlyInternalContacts to true.\n\nIf the client wants to prevent requesting new contact rights on the contact it can set bDontRequestPermissions to true.\n\n### Private \n0",
+				"properties": {
+					"seqContactIDs": {
+						"$ref": "#/components/schemas/UTF8StringList"
+					},
+					"iEventFlagsToSubscribe": {
+						"type": "integer"
+					},
+					"iContactDetailsReturnFilter": {
+						"type": "integer"
+					},
+					"bOpenOnlyInternalContacts": {
+						"type": "boolean"
+					},
+					"bDontRequestPermissions": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"seqContactIDs"
+				]
+			},
+			"AsnUnsubscribePresenceArgument": {
+				"type": "object",
+				"description": "### Category \nPresenceV2\n### Short \nArgument for stopping contact subscrptions on the ucserver.\n\n### Long \nTo stop getting contact events from the ucserver with the operation asnUnsubscribePresence this sequence\ncontains the list of contact IDs to unsubscribe from.\n\n### Private \n0",
+				"properties": {
+					"seqContactIDs": {
+						"$ref": "#/components/schemas/UTF8StringList"
+					}
+				},
+				"required": [
+					"seqContactIDs"
+				]
+			},
+			"AsnUnsubscribePresenceResult": {
+				"type": "object",
+				"description": "### Category \nPresenceV2\n### Short \nResult of asnUnsubscribePresence if the operation was executed successfully\n\n### Long \nThis result sequence is send by the server if the unsibscribe wents successfull. iResult should always be 0.\n\n### Private \n0",
+				"properties": {
+					"iResult": {
+						"type": "integer"
+					}
+				},
+				"required": [
+					"iResult"
+				]
+			},
+			"AsnSetDynamicRightsArgument": {
+				"type": "object",
+				"description": "### Category \nPresenceV2\n### Short \nArgument for asnSetDynamicRights to set\/change access rights to contact data and its service informations\n\n### Long \nThe argument must contain the contact ID of the contact which access rights list has to be modified, the contact ID\nof the contact which gets\/looses the rights and the rights itself.\n\nThe rights can be set with a constant value (iDynamicRights) or more specialized with the optional AsnUserDynamicRights member\n(not recommended, only use it for very special edge cases).\n\nThe values for iDynamicRights are part of AsnPresenceRightsFlags in the general module. The valid values are:\n&lt;ul&gt;\n&lt;li&gt;eBlocked (0)&lt;\/li&gt;\n&lt;li&gt;ePublic (65536, 0x0001 0000)&lt;\/li&gt;\n&lt;li&gt;eCompany (131072, 0x0002 0000)&lt;\/li&gt;\n&lt;li&gt;eTeam (262144, 0x0004 0000)&lt;\/li&gt;\n&lt;li&gt;ePersonal (524288, 0x0008 0000)&lt;\/li&gt;\n&lt;\/ul&gt;\n\n### Private \n0",
+				"properties": {
+					"u8sOwnerContactID": {
+						"type": "string"
+					},
+					"u8sRemoteContactID": {
+						"type": "string"
+					},
+					"iDynamicRights": {
+						"type": "integer"
+					},
+					"dynamicRights": {
+						"$ref": "#/components/schemas/AsnUserDynamicRights"
+					}
+				},
+				"required": [
+					"u8sOwnerContactID",
+					"u8sRemoteContactID",
+					"iDynamicRights"
+				]
+			},
+			"AsnSetDynamicRightsResult": {
+				"type": "object",
+				"description": "### Category \nPresenceV2\n### Short \nResult of asnSetDynamicRights if the operation was successful.\n\n### Long \nIf asnSetDynamicRights was executed successful, this result will be returned and it will contain the resulting access rights list.\n\n### Private \n0",
+				"properties": {
+					"iResult": {
+						"type": "integer"
+					},
+					"dynamicRights": {
+						"$ref": "#/components/schemas/AsnUserDynamicRights"
+					}
+				},
+				"required": [
+					"iResult",
+					"dynamicRights"
+				]
+			},
+			"AsnRemoveDynamicRightsArgument": {
+				"type": "object",
+				"description": "### Category \nPresenceV2\n### Short \nArgument for asnRemoveDynamicRights\n\n### Long \nThe operation asnRemoveDynamicRights get only two parameters in its argument. u8sOwnerContactID of the contact which access list will be changed and\nu8sRemoteContactID of the contact which will be removed from the list.\n\n### Private \n0",
+				"properties": {
+					"u8sOwnerContactID": {
+						"type": "string"
+					},
+					"u8sRemoteContactID": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"u8sOwnerContactID",
+					"u8sRemoteContactID"
+				]
+			},
+			"AsnRemoveDynamicRightsResult": {
+				"type": "object",
+				"description": "### Category \nPresenceV2\n### Short \nResult of asnRemoveDynamicRights\n\n### Long \nThe operation asnRemoveDynamicRights returns this result, if removing the dynmaic rights from the list was successful.\n\n### Private \n0",
+				"properties": {
+					"iResult": {
+						"type": "integer"
+					}
+				},
+				"required": [
+					"iResult"
+				]
+			},
+			"AsnRequestLargeProfileImageArgument": {
+				"type": "object",
+				"description": "### Category \nPresenceV2\n### Short \nArgument for asnRequestLargeProfileImage\n\n### Long \nTo get or check an large image of a contact, the client calls asnRequestContactImage with the ContactID (e.g. 'tester@test.com') or the AsnNetDatabaseContactID of the contact and\nthe known image hash the client already has. If the client has no hash, an empty string will indicate the server that\nthe client does not have an image yet.\n\n### Private \n0",
+				"properties": {
+					"u8sContactID": {
+						"type": "string"
+					},
+					"u8sKnownHash": {
+						"type": "string"
+					},
+					"netDatabaseContactID": {
+						"$ref": "#/components/schemas/AsnNetDatabaseContactID"
+					}
+				},
+				"required": [
+					"u8sContactID",
+					"u8sKnownHash"
+				]
+			},
+			"AsnRequestLargeProfileImageResult": {
+				"type": "object",
+				"description": "### Category \nPresenceV2\n### Short \nResult of asnRequestLargeProfileImage\n\n### Long \nIf the operation asnRequestLargeProfileImage was executed successfully, this result will be send back to the client.\nIf there is no image or the image has not changed according the hash value given in the argument, iResult will contain the corresponding value from EnumRequestImageResult.\nIf the server will send back an image, sImageData will contain the binary data of the image and u8sImageHash the corresponding\nnew hash value for that image.\n\n### Private \n0",
+				"properties": {
+					"iResult": {
+						"type": "integer"
+					},
+					"sImageData": {
+						"type": "string",
+						"format": "byte"
+					},
+					"u8sImageHash": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"iResult"
+				]
+			},
+			"AsnRequestContactImageArgument": {
+				"type": "object",
+				"description": "### Category \nPresenceV2\n### Short \nArgument for asnRequestContactImage\n\n### Long \nTo get or check an image of a contact, the client calls asnRequestContactImage with the AsnNetDatabaseContactID of the contact and\nthe known image hash the client already has. If the client has no hash, an empty string will indicate the server that\nthe client does not have an image yet.\n\n### Private \n0",
+				"properties": {
+					"netDatabaseContactID": {
+						"$ref": "#/components/schemas/AsnNetDatabaseContactID"
+					},
+					"u8sKnownHash": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"netDatabaseContactID",
+					"u8sKnownHash"
+				]
+			},
+			"AsnRequestContactImageResult": {
+				"type": "object",
+				"description": "### Category \nPresenceV2\n### Short \nResult of asnRequestContactImage\n\n### Long \nIf the operation asnRequestContactImage was executed successfully, this result will be send back to the client.\nIf there is no image or the image has not changed according the hash value given in the argument, iResult will contain the corresponding value from EnumRequestImageResult.\nIf the server will send back an image, sImageData will contain the binary data of the image and u8sImageHash the corresponding\nnew hash value for that image.\n\n### Private \n0",
+				"properties": {
+					"iResult": {
+						"type": "integer"
+					},
+					"sImageData": {
+						"type": "string",
+						"format": "byte"
+					},
+					"u8sImageHash": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"iResult"
+				]
+			},
+			"AsnMonitorGroupingAttribute": {
+				"type": "object",
+				"description": "### Category \nPresenceV2\n### Short \nFuture use\n\n### Private \n0",
+				"properties": {
+					"u8sAttributeGUID": {
+						"type": "string"
+					},
+					"u8sAttributeShort": {
+						"type": "string"
+					},
+					"u8sAttributeLong": {
+						"type": "string"
+					},
+					"u8sAdditionalText": {
+						"type": "string"
+					}
+				}
+			},
+			"AsnPresenceLines": {
+				"type": "array",
+				"items": {
+					"$ref": "#/components/schemas/AsnPresenceLine"
+				}
+			},
+			"AsnPresenceCallsV2": {
+				"type": "array",
+				"items": {
+					"$ref": "#/components/schemas/AsnPresenceCallV2"
+				}
+			},
+			"AsnPresenceForwards": {
+				"type": "array",
+				"items": {
+					"$ref": "#/components/schemas/AsnPresenceForward"
+				}
+			},
+			"AsnPresenceV2": {
+				"type": "object",
+				"description": "### Category \nPresenceV2\n### Short \nThis sequence contains the data and service states of a contact, called its 'presence'.\n\n### Long \nAsnPresence contains all the data and service states which represents the 'presence' of a contact.&lt;br \/&gt;\nA client subscribing to the presence of a contact (via asnGetAndSubscribePresence ), will get back this structure filled according to his needs and access rights given.\nThis structure is also used for update events ( asnUpdatePresence(V2) ) and in this case only the changed values or sections will be enclosed.\n\n### Private \n0",
+				"properties": {
+					"u8sContactId": {
+						"type": "string"
+					},
+					"iPresenceState": {
+						"type": "integer"
+					},
+					"asnRemoteContact": {
+						"$ref": "#/components/schemas/AsnNetDatabaseContact"
+					},
+					"asnUserPropertyBag": {
+						"$ref": "#/components/schemas/AsnUserPropertyBag"
+					},
+					"iContactFeatureSet": {
+						"type": "integer"
+					},
+					"iStaticRights": {
+						"type": "integer"
+					},
+					"iMonitorAccessRights": {
+						"type": "integer"
+					},
+					"asnAbsentState": {
+						"$ref": "#/components/schemas/AsnAbsentStateV2"
+					},
+					"asnCustomNote": {
+						"$ref": "#/components/schemas/AsnCustomNote"
+					},
+					"seqActualAppointments": {
+						"$ref": "#/components/schemas/SEQAppointmentList"
+					},
+					"asnNextAppointment": {
+						"$ref": "#/components/schemas/AsnAppointmentEntry"
+					},
+					"seqPhoneLines": {
+						"$ref": "#/components/schemas/AsnPresenceLines"
+					},
+					"seqCalls": {
+						"$ref": "#/components/schemas/AsnPresenceCallsV2"
+					},
+					"seqLineForwards": {
+						"$ref": "#/components/schemas/AsnPresenceForwards"
+					},
+					"asnContactCapabilitiesEx": {
+						"$ref": "#/components/schemas/AsnClientCapabilitiesV2"
+					},
+					"asnCurrentUserDynamicRights": {
+						"$ref": "#/components/schemas/AsnActualUserDynamicRights"
+					},
+					"iStaticRights2": {
+						"type": "integer"
+					},
+					"asnAgentState": {
+						"$ref": "#/components/schemas/AsnAgentState"
+					},
+					"asnMonitorGroupingAttribute": {
+						"$ref": "#/components/schemas/AsnMonitorGroupingAttribute"
+					},
+					"asnNextAppointments": {
+						"$ref": "#/components/schemas/SEQAppointmentList"
+					}
+				},
+				"required": [
+					"u8sContactId"
+				]
+			},
+			"AsnPresenceV2List": {
+				"type": "array",
+				"items": {
+					"$ref": "#/components/schemas/AsnPresenceV2"
+				}
+			},
+			"AsnUpdatePresenceV2Argument": {
+				"type": "object",
+				"description": "### Category \nPresenceV2\n### Short \nArgument of asnUpdatePresence\n\n### Long \nThis argument contains the changes which triggered the event on the server and the new presence state of the corresponding contact.\n\n### Private \n0",
+				"properties": {
+					"presence": {
+						"$ref": "#/components/schemas/AsnPresenceV2"
+					},
+					"iChangedFlags": {
+						"type": "integer"
+					}
+				},
+				"required": [
+					"presence",
+					"iChangedFlags"
+				]
+			},
+			"AsnGetAndSubscribePresenceV2Result": {
+				"type": "object",
+				"description": "### Category \nPresenceV2\n### Short \nResult of asnGetAndSubscribePresence with the list of successfully subscribed contacts.\n\n### Long \nIf the operation was successfully executed this result contains the list of successfully subscribed contacts, containing all requested data (if available).\n\n### Private \n0",
+				"properties": {
+					"seqSubscribedPresence": {
+						"$ref": "#/components/schemas/AsnPresenceV2List"
+					}
+				},
+				"required": [
+					"seqSubscribedPresence"
+				]
+			}
+		}
+	}
+}

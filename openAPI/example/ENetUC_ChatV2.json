@@ -1,0 +1,2459 @@
+{
+	"openapi": "3.1.0",
+	"info": {
+		"title": "ENetUC_ChatV2",
+		"version": "0.0.1",
+		"summary": "Text chat functions\n\n",
+		"description": "## Module description\n\nThis module defines structures and functions for the text chat functionality of the UCServer.\n\n\n\nExample for sending a Chat Message from \"ProCall A\" to \"ProCall B\":\n\n@startuml\n\n\"ProCall A\" -&gt; \"UCServer\"                : asnChatSubscribeEvents\n\nnote right\n\nasnChatSubscribeEvents is\n\nnecessary to receive Chat\n\nEvents\n\nend note\n\nactivate \"UCServer\"\n\n\"ProCall A\" &lt;- \"UCServer\"                : asnChatSubscribeEventsResult\n\ndeactivate \"UCServer\"\n\n\"UCServer\" &lt;- \"ProCall B\" : asnChatSubscribeEvents\n\nactivate \"UCServer\"\n\n\"UCServer\" -&gt; \"ProCall B\" : asnChatSubscribeEventsResult\n\ndeactivate \"UCServer\"\n\n\"ProCall A\" -&gt; \"UCServer\"                : asnChatTextMessage{RecipientURI\/ConversationID,\\n\nMessage, EventCrossRefID, ...}\n\nnote right\n\nEventCrossRefID must be\n\nunique for every Message\n\na Client sends\n\nend note\n\nactivate \"UCServer\"\n\n\"ProCall A\" &lt;- \"UCServer\"                : asnChatTextMessageResult {ConvSequenceID}\n\ndeactivate \"UCServer\"\n\n\"ProCall A\" &lt;- \"UCServer\" : asnChatEvent {Message, ConvSequenceID,\\n\nConversationID, EventCrossRefID, ...}\n\nnote right #FF9999\n\nIt is not guaranteed that\n\nChatTextMessageResult always\n\nis received before ChatEvent!\n\nend note\n\n\"UCServer\" -&gt; \"ProCall B\" : ChatEvent {Message, ConvSequenceID,\\n\nConversationID, EventCrossRefID, ...}\n\n\"ProCall A\" &lt;- \"UCServer\" : ChatEvent {..., DeliverTime, ...}\n\n@enduml\n\n"
+	},
+	"paths": {
+		"/asnChatSubscribeEvents": {
+			"post": {
+				"tags": ["ChatV2"],
+				"summary": "Subscribe to chat notifications, get the changes\n\n",
+				"description": "Subscribing to chat events allows you to get the div of the last known transaction ID to the current one on the server\n\n",
+				"deprecated": false,
+				"operationId": "1410",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnChatSubscribeEventsArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnChatSubscribeEventsResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnChatGetDatabaseID": {
+			"post": {
+				"tags": ["ChatV2"],
+				"summary": "Query the database ID\n\n",
+				"description": "Returns a unique ID of the database that clients can use to determine whether the server is using a new database.\n\n\n\nThis can e.g. then be the case if the server database has been deleted.\n\n",
+				"deprecated": false,
+				"operationId": "1411",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnChatGetDatabaseIDArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnChatGetDatabaseIDResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnChatGetDiffUpdate": {
+			"post": {
+				"tags": ["ChatV2"],
+				"summary": "Pick up changes, even for individual conversations\n\n",
+				"description": "Differential update with the last known TransactionID and ConversationID\n\n",
+				"deprecated": false,
+				"operationId": "1412",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnChatGetDiffUpdateArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnChatGetDiffUpdateResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnChatGetConversationOverview": {
+			"post": {
+				"tags": ["ChatV2"],
+				"summary": "Overview of conversations\n\n",
+				"description": "Delivers new conversations with the last or unread messages in these conversations\n\n",
+				"deprecated": false,
+				"operationId": "1413",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnChatGetConversationOverviewArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnChatGetConversationOverviewResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnChatTextMessage": {
+			"post": {
+				"tags": ["ChatV2"],
+				"summary": "Chat Text Send message\n\n",
+				"description": "Send new chat message\n\n",
+				"deprecated": false,
+				"operationId": "1420",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnChatTextMessageArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnChatTextMessageResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnChatBinaryMessage": {
+			"post": {
+				"tags": ["ChatV2"],
+				"summary": "Send chat binary message\n\n",
+				"description": "Send a new binary message to the server\n\n",
+				"deprecated": false,
+				"operationId": "1421",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnChatBinaryMessageArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnChatBinaryMessageResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnChatForwardMessage": {
+			"post": {
+				"tags": ["ChatV2"],
+				"summary": "Forward a message\n\n",
+				"description": "Used to forward a single message to another user or to a chat room\n\n",
+				"deprecated": false,
+				"operationId": "1422",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnChatForwardMessageArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnChatForwardMessageResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnChatUserlistModify": {
+			"post": {
+				"tags": ["ChatV2"],
+				"summary": "Add, remove, or forward chat to users\n\n",
+				"description": "Add or remove users In one-to-one chats you can signal \"leave\" by removing yourself.\n\n\n\nAdd to a one-to-one chat creates a new multi-user chat, which then remains a multi-user chat.\n\n",
+				"deprecated": false,
+				"operationId": "1425",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnChatUserlistModifyArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnChatUserlistModifyResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnChatFindEvents": {
+			"post": {
+				"tags": ["ChatV2"],
+				"summary": "Search chat events on server\n\n",
+				"description": "Searches for a search string in the chat text messages of the logged-in user and returns all events in which there was a match.\n\n(!) With this search, the ProCall client also receives hits that match the contact details (e.g. first name, last name or email) of the sender of a message.\n\n",
+				"deprecated": false,
+				"operationId": "1433",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnChatFindEventsArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnChatFindEventsResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnChatGetEventsRange": {
+			"post": {
+				"tags": ["ChatV2"],
+				"summary": "Chat Events Range vom Server holen\n\n",
+				"description": "Get messages for a ConversationID before or after a Sequence ID (paging).\n\n",
+				"deprecated": false,
+				"operationId": "1436",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnChatGetEventsRangeArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnChatGetEventsRangeResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnChatGetBinaryMessageEvents": {
+			"post": {
+				"tags": ["ChatV2"],
+				"summary": "Query BinaryMessageEvents which were sent or received from another user or in a certain conversation\n\n",
+				"description": "The following example shows how paging works. We assume the asnConversationIDChoice is the same for both requests. The Client gets the first ten events with the first request and the remaining seven events with the second request.\n\n@startuml\n\n\"Client\" -&gt; \"UCServer\"                : asnChatGetBinaryMessageEvents{..., iPageSize = 10, iPageOffset = 0, ...}\n\nactivate \"UCServer\"\n\n\"Client\" &lt;- \"UCServer\"                 : asnChatEvent{asnChatEventList, ... , optionalParams{iNumTotalResults = 17}}\n\nnote left\n\nClient receives\n\nEvents 1 to 10\n\nend note\n\ndeactivate \"UCServer\"\n\n\"Client\" -&gt; \"UCServer\"                : asnChatGetBinaryMessageEvents{..., iPageSize = 10, iPageOffset = 10, ...}\n\nactivate \"UCServer\"\n\n\"Client\" &lt;- \"UCServer\"                 : asnChatEvent{asnChatEventList, ... , optionalParams{iNumTotalResults = 17}}\n\nnote left\n\nClient receives\n\nEvents 11 to 17\n\nend note\n\ndeactivate \"UCServer\"\n\n@enduml\n\n",
+				"deprecated": false,
+				"operationId": "1437",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnChatGetBinaryMessageEventsArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnChatGetBinaryMessageEventsResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnChatSetMessagesStatus": {
+			"post": {
+				"tags": ["ChatV2"],
+				"summary": "Set status of chat messages in the server\n\n",
+				"description": "Set status (e.g. mark read)\n\n",
+				"deprecated": false,
+				"operationId": "1427",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnChatSetMessagesStatusArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnChatSetMessagesStatusResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnChatGetConversations": {
+			"post": {
+				"tags": ["ChatV2"],
+				"summary": "Get information about chat rooms\n\n",
+				"description": "Get information about chat rooms on the server (name, members, permissions, last message, etc.)\n\n",
+				"deprecated": false,
+				"operationId": "1428",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnChatGetConversationsArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnChatGetConversationsResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnChatGetConversationID": {
+			"post": {
+				"tags": ["ChatV2"],
+				"summary": "Returns the ConversationID for a one-to-one chat\n\n",
+				"deprecated": false,
+				"operationId": "1430",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnChatGetConversationIDArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnChatGetConversationIDResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnChatForward": {
+			"post": {
+				"tags": ["ChatV2"],
+				"summary": "Forward a conversation\n\n",
+				"deprecated": false,
+				"operationId": "1429",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnChatForwardArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnChatForwardResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnChatIsGlobalDisabled": {
+			"post": {
+				"tags": ["ChatV2"],
+				"summary": "Query whether chat is deactivated globally\n\n",
+				"deprecated": false,
+				"operationId": "1431",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnChatIsGlobalDisabledArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnChatIsGlobalDisabledResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnChatWatchConversation": {
+			"post": {
+				"tags": ["ChatV2"],
+				"summary": "watching a public chat conversation room\n\n",
+				"description": "Receiving chat events for a public chat conversation room allows you to pick up the div of the last known ConvSequenceID for the current one on the server\n\n",
+				"deprecated": false,
+				"operationId": "1432",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnChatWatchConversationArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnChatWatchConversationResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnChatSetUserlist": {
+			"post": {
+				"tags": ["ChatV2"],
+				"summary": "Change the list of participants in a public chat conversation room\n\n",
+				"description": "The list of participants in a public chat conversation room is completely replaced by the UserURIs transmitted in the request\n\n",
+				"deprecated": false,
+				"operationId": "1434",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnChatSetUserlistArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnChatSetUserlistResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnChatEvent": {
+			"post": {
+				"tags": ["ChatV2"],
+				"summary": "New events in a chat\n\n",
+				"description": "Notification to a client that a new event has taken place in a chat.\n\n",
+				"deprecated": false,
+				"operationId": "1440",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnChatEventArgument"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnChatUserStatus": {
+			"post": {
+				"tags": ["ChatV2"],
+				"summary": "New user status in a chat\n\n",
+				"description": "New user status in a chat (typing notification)\n\n",
+				"deprecated": false,
+				"operationId": "1441",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnChatUserStatusArgument"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnChatDatabaseIDChanged": {
+			"post": {
+				"tags": ["ChatV2"],
+				"summary": "Change of database ID\n\n",
+				"description": "Event is sent from the server to the client if the database ID changes at runtime.\n\nThis currently happens when the use of a database for chat in the server is switched off. Then one\n\nIn-memory database is used, but is deleted once a day to prevent it from being in memory\n\nAccumulate conversations.\n\n",
+				"deprecated": false,
+				"operationId": "1442",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnChatDatabaseIDChangedArgument"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnChatDatabaseMaintenance": {
+			"post": {
+				"tags": ["ChatV2"],
+				"summary": "Change to the database through automatic maintenance (e.g. \"delete chats after X days\")\n\n",
+				"description": "Event is sent from the server to the clients if chat messages in the server database due to the function\n\n\"Delete chat messages after X days\" will be deleted. The event contains a sequence ID up to which the deletion was carried out.\n\nClients can adapt existing caches accordingly. I.e. TextMessages that have a Sequence ID less than or equal to\n\nhave the ID specified in the event, must be deleted. The event is also sent to the client during the initial subscription.\n\nThe event is only sent to clients who subscribe to it with the optional parameter \"bSubscribeDBMaintenance\" = true\n\nhave requested.\n\n",
+				"deprecated": false,
+				"operationId": "1443",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnChatDatabaseMaintenanceArgument"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnChatMuteConversation": {
+			"post": {
+				"tags": ["ChatV2"],
+				"summary": "mute conversation for user - events are still dispatched, client should check on his site\n\n",
+				"description": "User wants to mute the conversation - events are still dispatched from UCServer, so client needs to adopt its logic about the stuff\n\n",
+				"deprecated": false,
+				"operationId": "1438",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnChatMuteConversationArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnChatMuteConversationResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnChatUnmuteConversation": {
+			"post": {
+				"tags": ["ChatV2"],
+				"summary": "unmute conversation for user\n\n",
+				"description": "User wants to unmute the conversation\n\n",
+				"deprecated": false,
+				"operationId": "1439",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnChatUnmuteConversationArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnChatUnmuteConversationResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnChatMuteStatusChanged": {
+			"post": {
+				"tags": ["ChatV2"],
+				"summary": "mute status of specific conversationid was changed\n\n",
+				"description": "Notification to a client that a mute state was changed\n\n",
+				"deprecated": false,
+				"operationId": "1444",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnChatMuteStatusChangedArgument"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnChatSetConversationAvatar": {
+			"post": {
+				"tags": ["ChatV2"],
+				"summary": "set conversation avatar\n\n",
+				"description": "set avatar for conversationID - members will be informed by event\n\n",
+				"deprecated": false,
+				"operationId": "1460",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnChatSetConversationAvatarArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnChatSetConversationAvatarResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnChatGetConversationAvatar": {
+			"post": {
+				"tags": ["ChatV2"],
+				"summary": "get conversation avatar\n\n",
+				"description": "get avatar for conversationID - only relevant in group-chat context\n\n",
+				"deprecated": false,
+				"operationId": "1461",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnChatGetConversationAvatarArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnChatGetConversationAvatarResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnChatConversationAvatarChanged": {
+			"post": {
+				"tags": ["ChatV2"],
+				"summary": "events when conversation avatar was changed\n\n",
+				"description": "Notification to a client that a new (group-chat) avatar was changed - client might check his local hash or request new image via asnChatGetConversationAvatar\n\n",
+				"deprecated": false,
+				"operationId": "1445",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnChatConversationAvatarChangedArgument"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnChatSetReaction": {
+			"post": {
+				"tags": ["ChatV2"],
+				"summary": "Set the reaction to a chat message for the calling user\n\n",
+				"description": "Set the reaction to a chat message for the calling user\n\n",
+				"deprecated": false,
+				"operationId": "1474",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnChatSetReactionArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnChatSetReactionResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnChatClearReaction": {
+			"post": {
+				"tags": ["ChatV2"],
+				"deprecated": false,
+				"operationId": "1475",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnChatSetReactionArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnChatSetReactionResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"schemas": {
+			"AsnOptionalParameters": {
+				"$ref": "ENetUC_Common.json#/components/schemas/AsnOptionalParameters"
+			},
+			"AsnNetDatabaseContact": {
+				"$ref": "ENetUC_Common.json#/components/schemas/AsnNetDatabaseContact"
+			},
+			"AsnSystemTime": {
+				"$ref": "ENetUC_Common.json#/components/schemas/AsnSystemTime"
+			},
+			"UTF8StringList": {
+				"$ref": "ENetUC_Common.json#/components/schemas/UTF8StringList"
+			},
+			"SEQInteger": {
+				"$ref": "ENetUC_Common.json#/components/schemas/SEQInteger"
+			},
+			"AsnRequestError": {
+				"$ref": "ENetUC_Common.json#/components/schemas/AsnRequestError"
+			},
+			"AsnNetDatabaseJournal": {
+				"$ref": "ENetUC_Journal.json#/components/schemas/AsnNetDatabaseJournal"
+			},
+			"AsnBinaryTransferMetaData": {
+				"$ref": "ENetUC_BinaryTransfer.json#/components/schemas/AsnBinaryTransferMetaData"
+			},
+			"AsnBinaryTransferMetaDataList": {
+				"$ref": "ENetUC_BinaryTransfer.json#/components/schemas/AsnBinaryTransferMetaDataList"
+			},
+			"AsnChatResultEnum": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "noerror",
+						"const": 0
+					},
+					{
+						"title": "forbidden",
+						"const": 1
+					},
+					{
+						"title": "invalidconversationid",
+						"const": 2
+					},
+					{
+						"title": "invalidmessageid",
+						"const": 3
+					},
+					{
+						"title": "tomanymessages",
+						"const": 4
+					},
+					{
+						"title": "unknownrecipient",
+						"const": 5
+					},
+					{
+						"title": "databasefail",
+						"const": 6
+					},
+					{
+						"title": "invalidcrossrefid",
+						"const": 7
+					},
+					{
+						"title": "federationfail",
+						"const": 8
+					},
+					{
+						"title": "requestfail",
+						"const": 9
+					},
+					{
+						"title": "invalidparam",
+						"const": 10
+					},
+					{
+						"title": "notsubscribed",
+						"const": 11
+					}]},
+			"AsnChatUserlistModify": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "added",
+						"const": 1
+					},
+					{
+						"title": "removed",
+						"const": 2
+					},
+					{
+						"title": "update",
+						"const": 3
+					}]},
+			"AsnChatWatchModeEnum": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "watch",
+						"const": 1
+					},
+					{
+						"title": "unwatch",
+						"const": 0
+					}]},
+			"AsnConversationType": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "one_to_one",
+						"const": 1
+					},
+					{
+						"title": "multi_user",
+						"const": 2
+					},
+					{
+						"title": "static_chatroom",
+						"const": 3
+					},
+					{
+						"title": "public_chatroom",
+						"const": 4
+					}]},
+			"AsnChatMessageStatus": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "eRead",
+						"const": 1
+					},
+					{
+						"title": "eUnread",
+						"const": 2
+					},
+					{
+						"title": "eDeleted",
+						"const": 3
+					},
+					{
+						"title": "eUndeleted",
+						"const": 4
+					}]},
+			"AsnChatTypingTime": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "refreshInterval",
+						"const": 20
+					},
+					{
+						"title": "timeout",
+						"const": 30
+					}]},
+			"EnumRequestConversationAvatarResult": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "eDEFAULT",
+						"const": 0
+					},
+					{
+						"title": "eHASHNOTCHANGED",
+						"const": 1
+					},
+					{
+						"title": "eATTACHED",
+						"const": 2
+					}]},
+			"AsnChatParty": {
+				"type": "object",
+				"description": "### Category \nChatV2\n### Private \n0",
+				"properties": {
+					"u8sContactURI": {
+						"type": "string"
+					},
+					"u8sDisplayName": {
+						"type": "string"
+					},
+					"iContactRights": {
+						"type": "integer"
+					},
+					"iLastReadSequenceID": {
+						"type": "integer"
+					},
+					"bReadNotifySupported": {
+						"type": "boolean"
+					},
+					"contactInformation": {
+						"$ref": "#/components/schemas/AsnNetDatabaseContact"
+					}
+				},
+				"required": [
+					"u8sContactURI",
+					"iContactRights"
+				]
+			},
+			"AsnChatSubscribeEventsArgument": {
+				"type": "object",
+				"description": "### Category \nChatV2\n### Private \n0",
+				"properties": {
+					"bReceiveChatEvents": {
+						"type": "boolean"
+					},
+					"iLastKnownGlobTransactionID": {
+						"type": "integer"
+					},
+					"iMaxEvents": {
+						"type": "integer"
+					},
+					"u8sEventListCrossRefID": {
+						"type": "string"
+					},
+					"optionalParams": {
+						"$ref": "#/components/schemas/AsnOptionalParameters"
+					},
+					"bSupportReactions": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"bReceiveChatEvents"
+				]
+			},
+			"AsnChatSubscribeEventsResult": {
+				"type": "object",
+				"description": "### Category \nChatV2\n### Private \n0",
+				"properties": {
+					"iResult": {
+						"type": "integer"
+					}
+				},
+				"required": [
+					"iResult"
+				]
+			},
+			"AsnChatGetDatabaseIDArgument": {
+				"type": "object",
+				"description": "### Category \nChatV2\n### Private \n0"
+			},
+			"AsnChatGetDatabaseIDResult": {
+				"type": "object",
+				"description": "### Category \nChatV2\n### Private \n0",
+				"properties": {
+					"iResult": {
+						"type": "integer"
+					},
+					"u8sDatabaseID": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"iResult",
+					"u8sDatabaseID"
+				]
+			},
+			"AsnChatGetDiffUpdateArgument": {
+				"type": "object",
+				"description": "### Category \nChatV2\n### Private \n0",
+				"properties": {
+					"iLastKnownGlobTransactionID": {
+						"type": "integer"
+					},
+					"iMaxEvents": {
+						"type": "integer"
+					},
+					"u8sEventListCrossRefID": {
+						"type": "string"
+					},
+					"u8sConversationID": {
+						"type": "string"
+					},
+					"iMaxSequenceID": {
+						"type": "integer"
+					}
+				}
+			},
+			"AsnChatGetDiffUpdateResult": {
+				"type": "object",
+				"description": "### Category \nChatV2\n### Private \n0",
+				"properties": {
+					"iResult": {
+						"type": "integer"
+					}
+				},
+				"required": [
+					"iResult"
+				]
+			},
+			"AsnChatGetConversationOverviewArgument": {
+				"type": "object",
+				"description": "### Category \nChatV2\n### Private \n0",
+				"properties": {
+					"iLastKnownGlobTransactionID": {
+						"type": "integer"
+					},
+					"iMaxConversations": {
+						"type": "integer"
+					},
+					"u8sEventListCrossRefID": {
+						"type": "string"
+					},
+					"iNumLastMessages": {
+						"type": "integer"
+					},
+					"bAddUnread": {
+						"type": "boolean"
+					}
+				}
+			},
+			"AsnChatGetConversationOverviewResult": {
+				"type": "object",
+				"description": "### Category \nChatV2\n### Private \n0",
+				"properties": {
+					"iResult": {
+						"type": "integer"
+					}
+				},
+				"required": [
+					"iResult"
+				]
+			},
+			"AsnChatTextMessageArgument": {
+				"type": "object",
+				"description": "### Category \nChatV2\n### Private \n0",
+				"properties": {
+					"u8sRecipientURIs": {
+						"$ref": "#/components/schemas/UTF8StringList"
+					},
+					"u8sMessage": {
+						"type": "string"
+					},
+					"u8sEventCrossRefID": {
+						"type": "string"
+					},
+					"u8sConversationID": {
+						"type": "string"
+					},
+					"u8sConversationName": {
+						"type": "string"
+					},
+					"iConversationType": {
+						"type": "integer"
+					},
+					"iReplyToSequenceID": {
+						"type": "integer"
+					}
+				},
+				"required": [
+					"u8sRecipientURIs",
+					"u8sMessage",
+					"u8sEventCrossRefID"
+				]
+			},
+			"AsnChatTextMessageResult": {
+				"type": "object",
+				"description": "### Category \nChatV2\n### Private \n0",
+				"properties": {
+					"iResult": {
+						"type": "integer"
+					},
+					"iConvSequenceID": {
+						"type": "integer"
+					},
+					"u8sConversationID": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"iResult",
+					"iConvSequenceID",
+					"u8sConversationID"
+				]
+			},
+			"AsnChatBinaryMessageArgument": {
+				"type": "object",
+				"description": "### Category \nChatV2\n### Private \n0",
+				"properties": {
+					"u8sRecipientURIs": {
+						"$ref": "#/components/schemas/UTF8StringList"
+					},
+					"u8sTransferID": {
+						"type": "string"
+					},
+					"u8sEventCrossRefID": {
+						"type": "string"
+					},
+					"u8sConversationID": {
+						"type": "string"
+					},
+					"u8sMessage": {
+						"type": "string"
+					},
+					"iConversationType": {
+						"type": "integer"
+					},
+					"iReplyToSequenceID": {
+						"type": "integer"
+					},
+					"u8sConversationName": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"u8sRecipientURIs",
+					"u8sTransferID",
+					"u8sEventCrossRefID"
+				]
+			},
+			"AsnChatBinaryMessageResult": {
+				"type": "object",
+				"description": "### Category \nChatV2\n### Private \n0",
+				"properties": {
+					"iResult": {
+						"type": "integer"
+					},
+					"iConvSequenceID": {
+						"type": "integer"
+					},
+					"u8sConversationID": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"iResult",
+					"iConvSequenceID",
+					"u8sConversationID"
+				]
+			},
+			"AsnConversationIDChoice": {
+				"oneOf": [
+					{
+						"type": "string"
+					},
+					{
+						"type": "string"
+					}
+				]
+			},
+			"AsnChatForwardMessageResult": {
+				"type": "object",
+				"description": "### Category \nChatV2\n### Private \n0",
+				"properties": {
+					"iResult": {
+						"type": "integer"
+					}
+				},
+				"required": [
+					"iResult"
+				]
+			},
+			"AsnChatUserlistModifyArgument": {
+				"type": "object",
+				"description": "### Category \nChatV2\n### Private \n0",
+				"properties": {
+					"u8sConversationID": {
+						"type": "string"
+					},
+					"iChatUserlistModify": {
+						"type": "integer"
+					},
+					"u8sUserURIs": {
+						"$ref": "#/components/schemas/UTF8StringList"
+					},
+					"u8sEventCrossRefID": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"u8sConversationID",
+					"iChatUserlistModify",
+					"u8sUserURIs",
+					"u8sEventCrossRefID"
+				]
+			},
+			"AsnChatUserlistModifyResult": {
+				"type": "object",
+				"description": "### Category \nChatV2\n### Private \n0",
+				"properties": {
+					"iResult": {
+						"type": "integer"
+					},
+					"iConvSequenceID": {
+						"type": "integer"
+					},
+					"u8sConversationID": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"iResult",
+					"iConvSequenceID"
+				]
+			},
+			"AsnChatFindEventsArgument": {
+				"type": "object",
+				"description": "### Category \nChatV2\n### Private \n0",
+				"properties": {
+					"u8sSearchString": {
+						"type": "string"
+					},
+					"iMaxEvents": {
+						"type": "integer"
+					},
+					"iOffset": {
+						"type": "integer"
+					},
+					"u8sConversationID": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"u8sSearchString",
+					"iMaxEvents"
+				]
+			},
+			"AsnChatGetEventsRangeResult": {
+				"type": "object",
+				"description": "### Category \nChatV2\n### Private \n0",
+				"properties": {
+					"iResult": {
+						"type": "integer"
+					}
+				},
+				"required": [
+					"iResult"
+				]
+			},
+			"AsnChatGetBinaryMessageEventsResult": {
+				"type": "object",
+				"description": "### Category \nChatV2\n### Private \n0",
+				"properties": {
+					"iResult": {
+						"type": "integer"
+					}
+				},
+				"required": [
+					"iResult"
+				]
+			},
+			"AsnChatSequenceIDSet": {
+				"oneOf": [
+					{
+						"$ref": "#/components/schemas/SEQInteger"
+					},
+					{
+						"type": "integer"
+					}
+				]
+			},
+			"AsnChatSetMessagesStatusResult": {
+				"type": "object",
+				"description": "### Category \nChatV2\n### Private \n0",
+				"properties": {
+					"iResult": {
+						"type": "integer"
+					}
+				},
+				"required": [
+					"iResult"
+				]
+			},
+			"AsnChatGetConversationsArgument": {
+				"type": "object",
+				"description": "### Category \nChatV2\n### Private \n0",
+				"properties": {
+					"u8sConversationID": {
+						"type": "string"
+					},
+					"u8sContactURI": {
+						"type": "string"
+					},
+					"bStaticConversations": {
+						"type": "boolean"
+					}
+				}
+			},
+			"AsnChatGetConversationIDArgument": {
+				"type": "object",
+				"description": "### Category \nChatV2\n### Private \n0",
+				"properties": {
+					"u8sContactURI": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"u8sContactURI"
+				]
+			},
+			"AsnChatGetConversationIDResult": {
+				"type": "object",
+				"description": "### Category \nChatV2\n### Private \n0",
+				"properties": {
+					"iResult": {
+						"type": "integer"
+					},
+					"u8sConversationID": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"iResult",
+					"u8sConversationID"
+				]
+			},
+			"AsnChatForwardArgument": {
+				"type": "object",
+				"description": "### Category \nChatV2\n### Private \n0",
+				"properties": {
+					"u8sConversationID": {
+						"type": "string"
+					},
+					"u8sForwardURI": {
+						"type": "string"
+					},
+					"u8sForwardToURIs": {
+						"$ref": "#/components/schemas/UTF8StringList"
+					},
+					"u8sMessage": {
+						"type": "string"
+					},
+					"u8sEventCrossRefID": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"u8sConversationID",
+					"u8sForwardURI",
+					"u8sForwardToURIs",
+					"u8sMessage",
+					"u8sEventCrossRefID"
+				]
+			},
+			"AsnChatForwardResult": {
+				"type": "object",
+				"description": "### Category \nChatV2\n### Private \n0",
+				"properties": {
+					"iResult": {
+						"type": "integer"
+					},
+					"iConvSequenceID": {
+						"type": "integer"
+					}
+				},
+				"required": [
+					"iResult",
+					"iConvSequenceID"
+				]
+			},
+			"AsnChatIsGlobalDisabledArgument": {
+				"type": "object",
+				"description": "### Category \nChatV2\n### Private \n0"
+			},
+			"AsnChatIsGlobalDisabledResult": {
+				"type": "object",
+				"description": "### Category \nChatV2\n### Private \n0",
+				"properties": {
+					"iResult": {
+						"type": "integer"
+					},
+					"bDisabled": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"iResult",
+					"bDisabled"
+				]
+			},
+			"AsnChatWatchConversationArgument": {
+				"type": "object",
+				"description": "### Category \nChatV2\n### Private \n0",
+				"properties": {
+					"iWatchMode": {
+						"type": "integer"
+					},
+					"u8sConversationID": {
+						"type": "string"
+					},
+					"iConvSequenceID": {
+						"type": "integer"
+					},
+					"iMaxEvents": {
+						"type": "integer"
+					},
+					"u8sEventListCrossRefID": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"iWatchMode",
+					"u8sConversationID"
+				]
+			},
+			"AsnChatWatchConversationResult": {
+				"type": "object",
+				"description": "### Category \nChatV2\n### Private \n0",
+				"properties": {
+					"iResult": {
+						"type": "integer"
+					}
+				},
+				"required": [
+					"iResult"
+				]
+			},
+			"AsnChatSetUserlistArgument": {
+				"type": "object",
+				"description": "### Category \nChatV2\n### Private \n0",
+				"properties": {
+					"u8sConversationID": {
+						"type": "string"
+					},
+					"u8sUserURIs": {
+						"$ref": "#/components/schemas/UTF8StringList"
+					},
+					"u8sEventListCrossRefID": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"u8sConversationID",
+					"u8sUserURIs",
+					"u8sEventListCrossRefID"
+				]
+			},
+			"AsnChatSetUserlistResult": {
+				"type": "object",
+				"description": "### Category \nChatV2\n### Private \n0",
+				"properties": {
+					"iResult": {
+						"type": "integer"
+					},
+					"iConvSequenceID": {
+						"type": "integer"
+					}
+				},
+				"required": [
+					"iResult",
+					"iConvSequenceID"
+				]
+			},
+			"AsnChatUserStatusArgument": {
+				"type": "object",
+				"description": "### Category \nChatV2\n### Private \n0",
+				"properties": {
+					"u8sConversationID": {
+						"type": "string"
+					},
+					"u8sSenderURI": {
+						"type": "string"
+					},
+					"bUserTyping": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"u8sConversationID",
+					"u8sSenderURI"
+				]
+			},
+			"AsnChatDatabaseIDChangedArgument": {
+				"type": "object",
+				"description": "### Category \nChatV2\n### Private \n0",
+				"properties": {
+					"u8sDatabaseID": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"u8sDatabaseID"
+				]
+			},
+			"AsnChatDatabaseMaintenanceArgument": {
+				"type": "object",
+				"description": "### Category \nChatV2\n### Private \n0",
+				"properties": {
+					"iDeletedToSequenceID": {
+						"type": "integer"
+					}
+				},
+				"required": [
+					"iDeletedToSequenceID"
+				]
+			},
+			"AsnChatMuteConversationArgument": {
+				"type": "object",
+				"description": "### Category \nChatV2\n### Private \n0",
+				"properties": {
+					"u8sConversationID": {
+						"type": "string"
+					},
+					"u8sEventCrossRefID": {
+						"type": "string"
+					},
+					"asnMutedUntilTime": {
+						"$ref": "#/components/schemas/AsnSystemTime"
+					}
+				},
+				"required": [
+					"u8sConversationID",
+					"u8sEventCrossRefID"
+				]
+			},
+			"AsnChatMuteConversationResult": {
+				"type": "object",
+				"description": "### Category \nChatV2\n### Private \n0",
+				"properties": {
+					"iResult": {
+						"type": "integer"
+					}
+				},
+				"required": [
+					"iResult"
+				]
+			},
+			"AsnChatUnmuteConversationArgument": {
+				"type": "object",
+				"description": "### Category \nChatV2\n### Private \n0",
+				"properties": {
+					"u8sConversationID": {
+						"type": "string"
+					},
+					"u8sEventCrossRefID": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"u8sConversationID",
+					"u8sEventCrossRefID"
+				]
+			},
+			"AsnChatUnmuteConversationResult": {
+				"type": "object",
+				"description": "### Category \nChatV2\n### Private \n0",
+				"properties": {
+					"iResult": {
+						"type": "integer"
+					}
+				},
+				"required": [
+					"iResult"
+				]
+			},
+			"AsnChatMuteStatusChangedArgument": {
+				"type": "object",
+				"description": "### Category \nChatV2\n### Private \n0",
+				"properties": {
+					"u8sConversationID": {
+						"type": "string"
+					},
+					"u8sSenderURI": {
+						"type": "string"
+					},
+					"u8sEventCrossRefID": {
+						"type": "string"
+					},
+					"bMuted": {
+						"type": "boolean"
+					},
+					"asnMutedUntilTime": {
+						"$ref": "#/components/schemas/AsnSystemTime"
+					}
+				},
+				"required": [
+					"u8sConversationID",
+					"u8sSenderURI",
+					"u8sEventCrossRefID",
+					"bMuted"
+				]
+			},
+			"AsnChatSetConversationAvatarArgument": {
+				"type": "object",
+				"description": "### Category \nChatV2\n### Private \n0",
+				"properties": {
+					"u8sConversationID": {
+						"type": "string"
+					},
+					"u8sEventCrossRefID": {
+						"type": "string"
+					},
+					"u8sImageData": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"u8sConversationID",
+					"u8sEventCrossRefID",
+					"u8sImageData"
+				]
+			},
+			"AsnChatSetConversationAvatarResult": {
+				"type": "object",
+				"description": "### Category \nChatV2\n### Private \n0",
+				"properties": {
+					"iResult": {
+						"type": "integer"
+					}
+				},
+				"required": [
+					"iResult"
+				]
+			},
+			"AsnChatGetConversationAvatarArgument": {
+				"type": "object",
+				"description": "### Category \nChatV2\n### Private \n0",
+				"properties": {
+					"u8sConversationID": {
+						"type": "string"
+					},
+					"u8sKnownHash": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"u8sConversationID"
+				]
+			},
+			"AsnChatGetConversationAvatarResult": {
+				"type": "object",
+				"description": "### Category \nChatV2\n### Private \n0",
+				"properties": {
+					"iResult": {
+						"type": "integer"
+					},
+					"iImageResult": {
+						"type": "integer"
+					},
+					"u8sImageHash": {
+						"type": "string"
+					},
+					"u8sImageData": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"iResult",
+					"iImageResult"
+				]
+			},
+			"AsnChatConversationAvatarChangedArgument": {
+				"type": "object",
+				"description": "### Category \nChatV2\n### Private \n0",
+				"properties": {
+					"u8sConversationID": {
+						"type": "string"
+					},
+					"u8sSenderURI": {
+						"type": "string"
+					},
+					"u8sImageHash": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"u8sConversationID",
+					"u8sSenderURI",
+					"u8sImageHash"
+				]
+			},
+			"AsnChatReactionsEmoji": {
+				"type": "object",
+				"description": "### Category \nChatV2\n### Private \n0",
+				"properties": {
+					"u8sEmoji": {
+						"type": "string"
+					},
+					"u8sUsers": {
+						"$ref": "#/components/schemas/UTF8StringList"
+					}
+				},
+				"required": [
+					"u8sEmoji",
+					"u8sUsers"
+				]
+			},
+			"AsnChatSetReactionArgument": {
+				"type": "object",
+				"description": "### Category \nChatV2\n### Private \n0",
+				"properties": {
+					"u8sConversationID": {
+						"type": "string"
+					},
+					"iConvSequenceID": {
+						"type": "integer"
+					},
+					"u8sEmoji": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"u8sConversationID",
+					"iConvSequenceID",
+					"u8sEmoji"
+				]
+			},
+			"AsnChatSetReactionResult": {
+				"type": "object",
+				"description": "### Category \nChatV2\n### Private \n0"
+			},
+			"AsnChatParties": {
+				"type": "array",
+				"items": {
+					"$ref": "#/components/schemas/AsnChatParty"
+				}
+			},
+			"AsnChatForwardMessageArgument": {
+				"type": "object",
+				"description": "### Category \nChatV2\n### Private \n0",
+				"properties": {
+					"u8sSourceConversationID": {
+						"type": "string"
+					},
+					"iSourceSequenceID": {
+						"type": "integer"
+					},
+					"asnForwardDestinationIDChoice": {
+						"$ref": "#/components/schemas/AsnConversationIDChoice"
+					},
+					"u8sEventCrossRefID": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"u8sSourceConversationID",
+					"iSourceSequenceID",
+					"asnForwardDestinationIDChoice",
+					"u8sEventCrossRefID"
+				]
+			},
+			"AsnChatGetEventsRangeArgument": {
+				"type": "object",
+				"description": "### Category \nChatV2\n### Private \n0",
+				"properties": {
+					"asnConversationIDChoice": {
+						"$ref": "#/components/schemas/AsnConversationIDChoice"
+					},
+					"iSequenceID": {
+						"type": "integer"
+					},
+					"iNumLessThanSeqID": {
+						"type": "integer"
+					},
+					"iNumGreaterThanOrEqualSeqID": {
+						"type": "integer"
+					},
+					"u8sEventListCrossRefID": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"asnConversationIDChoice"
+				]
+			},
+			"AsnChatGetBinaryMessageEventsArgument": {
+				"type": "object",
+				"description": "### Category \nChatV2\n### Private \n0",
+				"properties": {
+					"asnConversationIDChoice": {
+						"$ref": "#/components/schemas/AsnConversationIDChoice"
+					},
+					"iPageSize": {
+						"type": "integer"
+					},
+					"iPageOffset": {
+						"type": "integer"
+					},
+					"iLastKnownGlobTransactionID": {
+						"type": "integer"
+					},
+					"u8sEventListCrossRefID": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"asnConversationIDChoice",
+					"iPageSize"
+				]
+			},
+			"AsnChatSetMessagesStatusArgument": {
+				"type": "object",
+				"description": "### Category \nChatV2\n### Private \n0",
+				"properties": {
+					"u8sConversationID": {
+						"type": "string"
+					},
+					"iStatus": {
+						"type": "integer"
+					},
+					"u8sEventCrossRefID": {
+						"type": "string"
+					},
+					"asnSequenceIDSet": {
+						"$ref": "#/components/schemas/AsnChatSequenceIDSet"
+					}
+				},
+				"required": [
+					"u8sConversationID",
+					"iStatus",
+					"u8sEventCrossRefID",
+					"asnSequenceIDSet"
+				]
+			},
+			"AsnChatReactionsEmojiList": {
+				"type": "array",
+				"items": {
+					"$ref": "#/components/schemas/AsnChatReactionsEmoji"
+				}
+			},
+			"AsnChatReactionsResult": {
+				"type": "object",
+				"description": "### Category \nChatV2\n### Private \n0",
+				"properties": {
+					"u8sConversationID": {
+						"type": "string"
+					},
+					"iConvSequenceID": {
+						"type": "integer"
+					},
+					"iTransactionID": {
+						"type": "integer"
+					},
+					"asnEmojiList": {
+						"$ref": "#/components/schemas/AsnChatReactionsEmojiList"
+					}
+				},
+				"required": [
+					"u8sConversationID",
+					"iConvSequenceID",
+					"iTransactionID",
+					"asnEmojiList"
+				]
+			},
+			"AsnChatEventConversation": {
+				"type": "object",
+				"description": "### Category \nChatV2\n### Private \n0",
+				"properties": {
+					"u8sConversationName": {
+						"type": "string"
+					},
+					"asnChatParties": {
+						"$ref": "#/components/schemas/AsnChatParties"
+					},
+					"iChatUserlistModify": {
+						"type": "integer"
+					},
+					"u8sUsersModified": {
+						"$ref": "#/components/schemas/UTF8StringList"
+					},
+					"u8sForwardedFromURI": {
+						"type": "string"
+					},
+					"u8sForwardedURI": {
+						"type": "string"
+					},
+					"u8sLinkedConversationID": {
+						"type": "string"
+					},
+					"iConversationType": {
+						"type": "integer"
+					},
+					"bDeleted": {
+						"type": "boolean"
+					},
+					"optionalParams": {
+						"$ref": "#/components/schemas/AsnOptionalParameters"
+					}
+				}
+			},
+			"AsnChatConversation": {
+				"type": "object",
+				"description": "### Category \nChatV2\n### Private \n0",
+				"properties": {
+					"u8sConversationID": {
+						"type": "string"
+					},
+					"u8sConversationName": {
+						"type": "string"
+					},
+					"iConversationType": {
+						"type": "integer"
+					},
+					"iConvSequenceID": {
+						"type": "integer"
+					},
+					"iGlobTransactionID": {
+						"type": "integer"
+					},
+					"asnChatParties": {
+						"$ref": "#/components/schemas/AsnChatParties"
+					}
+				},
+				"required": [
+					"u8sConversationID",
+					"u8sConversationName",
+					"iConversationType",
+					"iConvSequenceID",
+					"iGlobTransactionID",
+					"asnChatParties"
+				]
+			},
+			"AsnChatConversationList": {
+				"type": "array",
+				"items": {
+					"$ref": "#/components/schemas/AsnChatConversation"
+				}
+			},
+			"AsnChatGetConversationsResult": {
+				"type": "object",
+				"description": "### Category \nChatV2\n### Private \n0",
+				"properties": {
+					"iResult": {
+						"type": "integer"
+					},
+					"asnConversationList": {
+						"$ref": "#/components/schemas/AsnChatConversationList"
+					}
+				},
+				"required": [
+					"iResult",
+					"asnConversationList"
+				]
+			},
+			"AsnChatEvent": {
+				"type": "object",
+				"description": "### Category \nChatV2\n### Private \n0",
+				"properties": {
+					"u8sEventCrossRefID": {
+						"type": "string"
+					},
+					"u8sConversationID": {
+						"type": "string"
+					},
+					"iConvSequenceID": {
+						"type": "integer"
+					},
+					"iGlobTransactionID": {
+						"type": "integer"
+					},
+					"bUpdate": {
+						"type": "boolean"
+					},
+					"u8sSenderURI": {
+						"type": "string"
+					},
+					"asnCreateTime": {
+						"$ref": "#/components/schemas/AsnSystemTime"
+					},
+					"asnChatMessage": {
+						"$ref": "#/components/schemas/AsnChatEventMessage"
+					},
+					"asnChatConversation": {
+						"$ref": "#/components/schemas/AsnChatEventConversation"
+					},
+					"iError": {
+						"type": "integer"
+					},
+					"optionalParams": {
+						"$ref": "#/components/schemas/AsnOptionalParameters"
+					}
+				},
+				"required": [
+					"u8sEventCrossRefID",
+					"u8sConversationID",
+					"iConvSequenceID",
+					"iGlobTransactionID",
+					"bUpdate"
+				]
+			},
+			"AsnChatEventMessage": {
+				"type": "object",
+				"description": "### Category \nChatV2\n### Private \n0",
+				"properties": {
+					"u8sMessage": {
+						"type": "string"
+					},
+					"asnBinaryDescription": {
+						"$ref": "#/components/schemas/AsnBinaryTransferMetaData"
+					},
+					"journalEntry": {
+						"$ref": "#/components/schemas/AsnNetDatabaseJournal"
+					},
+					"asnDeliverTime": {
+						"$ref": "#/components/schemas/AsnSystemTime"
+					},
+					"asnReadTime": {
+						"$ref": "#/components/schemas/AsnSystemTime"
+					},
+					"bRead": {
+						"type": "boolean"
+					},
+					"bDeleted": {
+						"type": "boolean"
+					},
+					"asnReplyToEvent": {
+						"$ref": "#/components/schemas/AsnChatEvent"
+					},
+					"u8sForwardOrigin": {
+						"type": "string"
+					},
+					"asnReactions": {
+						"$ref": "#/components/schemas/AsnChatReactionsEmojiList"
+					}
+				}
+			},
+			"AsnChatEventList": {
+				"type": "array",
+				"items": {
+					"$ref": "#/components/schemas/AsnChatEvent"
+				}
+			},
+			"AsnChatFindEventsResult": {
+				"type": "object",
+				"description": "### Category \nChatV2\n### Private \n0",
+				"properties": {
+					"iResult": {
+						"type": "integer"
+					},
+					"iNumTotalResults": {
+						"type": "integer"
+					},
+					"asnChatEventList": {
+						"$ref": "#/components/schemas/AsnChatEventList"
+					}
+				},
+				"required": [
+					"iResult",
+					"iNumTotalResults",
+					"asnChatEventList"
+				]
+			},
+			"AsnChatEventArgument": {
+				"type": "object",
+				"description": "### Category \nChatV2\n### Private \n0",
+				"properties": {
+					"asnChatEventList": {
+						"$ref": "#/components/schemas/AsnChatEventList"
+					},
+					"u8sEventListCrossRefID": {
+						"type": "string"
+					},
+					"bLastSegment": {
+						"type": "boolean"
+					},
+					"optionalParams": {
+						"$ref": "#/components/schemas/AsnOptionalParameters"
+					}
+				},
+				"required": [
+					"asnChatEventList"
+				]
+			},
+			"AsnChatAppActionNavigateArgument": {
+				"type": "object",
+				"description": "### Category \nChatV2\n### Short \nexecute action from App\n\n### Long \nthe following type's prefixed with AsnChatAppAction currently not part of the client\/server communication\nit will be used within the Win32-Client to communicate with the ProCallApp for Web\nthe advantage using different types is, keep the action and its parameters together!\nnavigate to existing room, args &lt;ConversationId&gt;\n\n### Private \n0",
+				"properties": {
+					"u8sConversationID": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"u8sConversationID"
+				]
+			},
+			"AsnChatAppActionCreateRoomArgument": {
+				"type": "object",
+				"description": "### Category \nChatV2\n### Long \ntrigger Action\/Wizzard for new Multiparty-Chat, args list of UserId's\n\n### Private \n0",
+				"properties": {
+					"u8sUsers": {
+						"$ref": "#/components/schemas/UTF8StringList"
+					}
+				},
+				"required": [
+					"u8sUsers"
+				]
+			},
+			"AsnChatReactionsResultList": {
+				"type": "array",
+				"items": {
+					"$ref": "#/components/schemas/AsnChatReactionsResult"
+				}
+			}
+		}
+	}
+}

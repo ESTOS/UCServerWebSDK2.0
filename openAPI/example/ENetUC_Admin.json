@@ -1,0 +1,2255 @@
+{
+	"openapi": "3.1.0",
+	"info": {
+		"title": "ENetUC_Admin",
+		"version": "0.0.1",
+		"summary": "Administration interface (workstation setup)\n\n",
+		"description": "## Module description\n\nThis module defines structures and functions for administration the UCServer.\n\nThese structures are used by the administrative console (UCServer Administration) and the ClnInst.exe (Workstation settings) on the client.\n\nThese operations need an administrative login on the UCServer.\n\n"
+	},
+	"paths": {
+		"/asnAdminLogin": {
+			"post": {
+				"tags": ["Administration"],
+				"deprecated": false,
+				"operationId": "2904",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnAdminLoginArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnAdminLoginResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnAdminGetUserProfile": {
+			"post": {
+				"tags": ["Administration"],
+				"deprecated": false,
+				"operationId": "2905",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnAdminGetUserProfileArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnAdminGetUserProfileResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnAdminGetUserProfiles": {
+			"post": {
+				"tags": ["Administration"],
+				"deprecated": false,
+				"operationId": "2913",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnAdminGetUserProfilesArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnAdminGetUserProfilesResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnAdminSetUserProfile": {
+			"post": {
+				"tags": ["Administration"],
+				"deprecated": false,
+				"operationId": "2906",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnAdminSetUserProfileArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnAdminSetUserProfileResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnAdminRemoveUserProfile": {
+			"post": {
+				"tags": ["Administration"],
+				"deprecated": false,
+				"operationId": "2912",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnAdminRemoveUserProfileArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnAdminRemoveUserProfileResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnAdminAddUserProfile": {
+			"post": {
+				"tags": ["Administration"],
+				"deprecated": false,
+				"operationId": "2907",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnAdminAddUserProfileArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnAdminAddUserProfileResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnAdminGetComputerProfile": {
+			"post": {
+				"tags": ["Administration"],
+				"deprecated": false,
+				"operationId": "2908",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnAdminGetComputerProfileArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnAdminGetComputerProfileResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnAdminSetComputerProfile": {
+			"post": {
+				"tags": ["Administration"],
+				"deprecated": false,
+				"operationId": "2909",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnAdminSetComputerProfileArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnAdminSetComputerProfileResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnAdminAddComputerProfile": {
+			"post": {
+				"tags": ["Administration"],
+				"deprecated": false,
+				"operationId": "2910",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnAdminAddComputerProfileArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnAdminAddComputerProfileResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnAdminFindUser": {
+			"post": {
+				"tags": ["Administration"],
+				"deprecated": false,
+				"operationId": "2911",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnAdminFindUserArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnAdminFindUserResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnAdminFindGroupProfiles": {
+			"post": {
+				"tags": ["Administration"],
+				"deprecated": false,
+				"operationId": "2916",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnAdminFindGroupProfilesArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnAdminFindGroupProfilesResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnAdminSetGroupProfile": {
+			"post": {
+				"tags": ["Administration"],
+				"deprecated": false,
+				"operationId": "2917",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnAdminSetGroupProfileArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnAdminSetGroupProfileResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnAdminAddGroupProfile": {
+			"post": {
+				"tags": ["Administration"],
+				"deprecated": false,
+				"operationId": "2918",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnAdminAddGroupProfileArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnAdminAddGroupProfileResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnAdminRemoveGroupProfile": {
+			"post": {
+				"tags": ["Administration"],
+				"deprecated": false,
+				"operationId": "2919",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnAdminRemoveGroupProfileArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnAdminRemoveGroupProfileResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnGetDatabaseManagerSettings": {
+			"post": {
+				"tags": ["Administration"],
+				"deprecated": false,
+				"operationId": "2903",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnGetDatabaseManagerSettingsArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnGetDatabaseManagerSettingsResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnGetNetworkInterfacePorts": {
+			"post": {
+				"tags": ["Administration"],
+				"deprecated": false,
+				"operationId": "2900",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnGetNetworkInterfacePortsArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnGetNetworkInterfacePortsResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnGetAvailableLines": {
+			"post": {
+				"tags": ["Administration"],
+				"deprecated": false,
+				"operationId": "2901",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnGetAvailableLinesArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnGetAvailableLinesResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnGetUserManagerSettings": {
+			"post": {
+				"tags": ["Administration"],
+				"deprecated": false,
+				"operationId": "2902",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnGetUserManagerSettingsArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnGetUserManagerSettingsResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnAdminGetPhoneJournalSettings": {
+			"post": {
+				"tags": ["Administration"],
+				"deprecated": false,
+				"operationId": "2920",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnAdminGetPhoneJournalSettingsArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnAdminGetPhoneJournalSettingsResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnAdminSetAnonymousUserAccessToken": {
+			"post": {
+				"tags": ["Administration"],
+				"summary": "Update accessToken for PublicUsers\n\n",
+				"deprecated": false,
+				"operationId": "2922",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnAdminSetAnonymousUserAccessTokenArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnAdminSetAnonymousUserAccessTokenResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnAdminSetAnonymousUserContactData": {
+			"post": {
+				"tags": ["Administration"],
+				"summary": "create or update contactdata for PublicUsers\n\n",
+				"deprecated": false,
+				"operationId": "2923",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnAdminSetAnonymousUserContactDataArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnAdminSetAnonymousUserContactDataResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnAdminRemoveAnonymousUser": {
+			"post": {
+				"tags": ["Administration"],
+				"summary": "remove PublicUser from userdatabase\n\n",
+				"deprecated": false,
+				"operationId": "2924",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnAdminRemoveAnonymousUserArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnAdminRemoveAnonymousUserResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"schemas": {
+			"AsnUserPropertyBag": {
+				"$ref": "ENetUC_Common.json#/components/schemas/AsnUserPropertyBag"
+			},
+			"AsnNetDatabaseContact": {
+				"$ref": "ENetUC_Common.json#/components/schemas/AsnNetDatabaseContact"
+			},
+			"AsnOptionalParameters": {
+				"$ref": "ENetUC_Common.json#/components/schemas/AsnOptionalParameters"
+			},
+			"UTF8StringList": {
+				"$ref": "ENetUC_Common.json#/components/schemas/UTF8StringList"
+			},
+			"AsnRequestError": {
+				"$ref": "ENetUC_Common.json#/components/schemas/AsnRequestError"
+			},
+			"AsnUserDynamicRights": {
+				"$ref": "ENetUC_Common_AsnContact.json#/components/schemas/AsnUserDynamicRights"
+			},
+			"AsnUserDynamicRightsList": {
+				"$ref": "ENetUC_Common_AsnContact.json#/components/schemas/AsnUserDynamicRightsList"
+			},
+			"AsnAdminLoginResultEnum": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "success",
+						"const": 0
+					},
+					{
+						"title": "failed",
+						"const": 1
+					}]},
+			"AsnAdminGetUserProfileErrorEnum": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "success",
+						"const": 0
+					},
+					{
+						"title": "usernotfound",
+						"const": 1
+					},
+					{
+						"title": "accessdenied",
+						"const": 2
+					}]},
+			"AsnAdminUserOnlineStateFilter": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "eNOSTATEFILTER",
+						"const": 0
+					},
+					{
+						"title": "eISONLINEONLY",
+						"const": 1
+					},
+					{
+						"title": "eISOFFLINEONLY",
+						"const": 2
+					}]},
+			"AsnAdminGetUserProfilesErrorEnum": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "success",
+						"const": 0
+					},
+					{
+						"title": "nouserfound",
+						"const": 1
+					},
+					{
+						"title": "accessdenied",
+						"const": 2
+					}]},
+			"AsnAdminSetUserProfileErrorEnum": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "success",
+						"const": 0
+					},
+					{
+						"title": "accessdenied",
+						"const": 1
+					},
+					{
+						"title": "usernotfound",
+						"const": 2
+					},
+					{
+						"title": "sipurialreadyoccupied",
+						"const": 3
+					},
+					{
+						"title": "sipurimalformed",
+						"const": 4
+					}]},
+			"AsnAdminRemoveUserProfileErrorEnum": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "success",
+						"const": 0
+					},
+					{
+						"title": "unknown",
+						"const": 1
+					},
+					{
+						"title": "accessdenied",
+						"const": 2
+					},
+					{
+						"title": "invalidusername",
+						"const": 3
+					}]},
+			"AsnAdminAddUserProfileErrorEnum": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "success",
+						"const": 0
+					},
+					{
+						"title": "accessdenied",
+						"const": 1
+					},
+					{
+						"title": "useralreadyexists",
+						"const": 2
+					}]},
+			"AsnAdminGetComputerProfileErrorEnum": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "success",
+						"const": 0
+					},
+					{
+						"title": "accessdenied",
+						"const": 1
+					},
+					{
+						"title": "computernotfound",
+						"const": 2
+					}]},
+			"AsnAdminSetComputerProfileErrorEnum": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "success",
+						"const": 0
+					},
+					{
+						"title": "accessdenied",
+						"const": 1
+					},
+					{
+						"title": "computernotfound",
+						"const": 2
+					}]},
+			"AsnAdminAddComputerProfileErrorEnum": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "success",
+						"const": 0
+					},
+					{
+						"title": "accessdenied",
+						"const": 1
+					},
+					{
+						"title": "computeralreadyexists",
+						"const": 2
+					}]},
+			"AsnAdminFindUserErrorEnum": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "success",
+						"const": 0
+					},
+					{
+						"title": "invalidparameters",
+						"const": 1
+					},
+					{
+						"title": "accessdenied",
+						"const": 2
+					}]},
+			"AsnAdminFindGroupProfilesFilter": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "allEnabledGroups",
+						"const": 0
+					},
+					{
+						"title": "allGroups",
+						"const": 1
+					},
+					{
+						"title": "dnPath",
+						"const": 2
+					},
+					{
+						"title": "groupName",
+						"const": 3
+					},
+					{
+						"title": "objectGUID",
+						"const": 4
+					}]},
+			"AsnAdminFindGroupProfilesErrorEnum": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "success",
+						"const": 0
+					},
+					{
+						"title": "accessdenied",
+						"const": 1
+					},
+					{
+						"title": "nosearchparameter",
+						"const": 2
+					}]},
+			"AsnAdminSetGroupProfileErrorEnum": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "success",
+						"const": 0
+					},
+					{
+						"title": "accessdenied",
+						"const": 1
+					},
+					{
+						"title": "groupnotfound",
+						"const": 2
+					},
+					{
+						"title": "wrongprofileversion",
+						"const": 3
+					},
+					{
+						"title": "errorsavingprofile",
+						"const": 4
+					}]},
+			"AsnAdminAddGroupProfileErrorEnum": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "success",
+						"const": 0
+					},
+					{
+						"title": "accessdenied",
+						"const": 1
+					},
+					{
+						"title": "groupalreadyexists",
+						"const": 2
+					},
+					{
+						"title": "errorsavingprofile",
+						"const": 3
+					},
+					{
+						"title": "cantaddgroupinactivedirectory",
+						"const": 4
+					}]},
+			"AsnAdminRemoveGroupProfileErrorEnum": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "success",
+						"const": 0
+					},
+					{
+						"title": "accessdenied",
+						"const": 1
+					},
+					{
+						"title": "groupdoesnotexist",
+						"const": 2
+					}]},
+			"AsnGetDatabaseManagerSettingsErrorEnum": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "success",
+						"const": 0
+					},
+					{
+						"title": "accessdenied",
+						"const": 1
+					}]},
+			"AsnGetAvailableLinesErrorEnum": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "success",
+						"const": 0
+					},
+					{
+						"title": "accessdenied",
+						"const": 1
+					}]},
+			"AsnGetUserManagerSettingsErrorEnum": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "success",
+						"const": 0
+					},
+					{
+						"title": "accessdenied",
+						"const": 1
+					}]},
+			"AsnAdminPhoneJournalUnansweredEnum": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "never",
+						"const": 0
+					},
+					{
+						"title": "all",
+						"const": 1
+					},
+					{
+						"title": "first",
+						"const": 2
+					},
+					{
+						"title": "last",
+						"const": 3
+					}]},
+			"AsnAdminGetPhoneJournalSettingsErrorEnum": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "success",
+						"const": 0
+					},
+					{
+						"title": "accessdenied",
+						"const": 1
+					}]},
+			"AsnAdminFindUserArgumentChoice": {
+				"oneOf": [
+					{
+						"nullable": "true"
+					},
+					{
+						"type": "string"
+					}
+				]
+			},
+			"AsnAdminGetUserProfileArgumentChoice": {
+				"oneOf": [
+					{
+						"nullable": "true"
+					},
+					{
+						"type": "string"
+					}
+				]
+			},
+			"AsnAdminLoginArgumentChoice": {
+				"oneOf": [
+					{
+						"type": "string"
+					},
+					{
+						"type": "string"
+					}
+				]
+			},
+			"AsnUserMonitorLine": {
+				"type": "object",
+				"description": "### Category \nAdministration\n### Private \n0",
+				"properties": {
+					"u8sPhoneNumber": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"u8sPhoneNumber"
+				]
+			},
+			"AsnSetUserProfilesErrorListItem": {
+				"type": "object",
+				"description": "### Category \nAdministration\n### Private \n0",
+				"properties": {
+					"u8sUserName": {
+						"type": "string"
+					},
+					"iErrorDetail": {
+						"type": "integer"
+					}
+				},
+				"required": [
+					"u8sUserName",
+					"iErrorDetail"
+				]
+			},
+			"AsnAdminGetUserProfilesArgument": {
+				"type": "object",
+				"description": "### Category \nAdministration\n### Long \nUser Profile laden\n\n### Private \n0",
+				"properties": {
+					"iActiveUsersOnly": {
+						"type": "integer"
+					},
+					"iFilterOnlineState": {
+						"type": "integer"
+					}
+				},
+				"required": [
+					"iActiveUsersOnly",
+					"iFilterOnlineState"
+				]
+			},
+			"AsnAdminSetUserProfileResult": {
+				"type": "object",
+				"description": "### Category \nAdministration\n### Private \n0",
+				"properties": {
+					"bSuccess": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"bSuccess"
+				]
+			},
+			"AsnAdminRemoveUserProfileResult": {
+				"type": "object",
+				"description": "### Category \nAdministration\n### Private \n0",
+				"properties": {
+					"bSuccess": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"bSuccess"
+				]
+			},
+			"AsnAdminAddUserProfileResult": {
+				"type": "object",
+				"description": "### Category \nAdministration\n### Private \n0",
+				"properties": {
+					"bSuccess": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"bSuccess"
+				]
+			},
+			"AsnAdminGetComputerProfileArgument": {
+				"type": "object",
+				"description": "### Category \nAdministration\n### Long \nComputer Profile laden\n\n### Private \n0",
+				"properties": {
+					"u8sClientComputerName": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"u8sClientComputerName"
+				]
+			},
+			"AsnAdminSetComputerProfileResult": {
+				"type": "object",
+				"description": "### Category \nAdministration\n### Private \n0",
+				"properties": {
+					"bSuccess": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"bSuccess"
+				]
+			},
+			"AsnAdminAddComputerProfileResult": {
+				"type": "object",
+				"description": "### Category \nAdministration\n### Private \n0",
+				"properties": {
+					"bSuccess": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"bSuccess"
+				]
+			},
+			"AsnAdminFindUserProfile": {
+				"type": "object",
+				"description": "### Category \nAdministration\n### Private \n0",
+				"properties": {
+					"u8sDNPath": {
+						"type": "string"
+					},
+					"u8sUserName": {
+						"type": "string"
+					},
+					"u8sFirstName": {
+						"type": "string"
+					},
+					"u8sLastName": {
+						"type": "string"
+					},
+					"u8sDisplayName": {
+						"type": "string"
+					},
+					"u8sPhonePrimary": {
+						"type": "string"
+					},
+					"u8sPhoneSecondary": {
+						"type": "string"
+					},
+					"iCtiEnabled": {
+						"type": "integer"
+					}
+				},
+				"required": [
+					"u8sDNPath",
+					"u8sUserName",
+					"u8sFirstName",
+					"u8sLastName",
+					"u8sDisplayName",
+					"u8sPhonePrimary",
+					"u8sPhoneSecondary",
+					"iCtiEnabled"
+				]
+			},
+			"AsnGroupProfile": {
+				"type": "object",
+				"description": "### Category \nAdministration\n### Long \nGruppen-Konfigurationen\n\n### Private \n0",
+				"properties": {
+					"iEnabled": {
+						"type": "integer"
+					},
+					"u8sDNPath": {
+						"type": "string"
+					},
+					"u8sGroupName": {
+						"type": "string"
+					},
+					"u8sobjectGUID": {
+						"type": "string"
+					},
+					"u8sPhoneNumber": {
+						"type": "string"
+					},
+					"u8sPhoneSecondary": {
+						"type": "string"
+					},
+					"u8sGroupLeaderDN": {
+						"type": "string"
+					},
+					"u8sGroupCoLeaderDN": {
+						"type": "string"
+					},
+					"iGroupStaticRights": {
+						"type": "integer"
+					},
+					"iGroupStaticRights2": {
+						"type": "integer"
+					},
+					"asnGroupRightDetails": {
+						"$ref": "#/components/schemas/AsnUserDynamicRights"
+					},
+					"asnGroupLeaderRightDetails": {
+						"$ref": "#/components/schemas/AsnUserDynamicRights"
+					},
+					"listUserDNs": {
+						"$ref": "#/components/schemas/UTF8StringList"
+					},
+					"u8sObjectSid": {
+						"type": "string"
+					},
+					"iGroupProfileVersion": {
+						"type": "integer"
+					},
+					"asnUserPropertyBag": {
+						"$ref": "#/components/schemas/AsnUserPropertyBag"
+					},
+					"u8sSIPURI": {
+						"type": "string"
+					},
+					"u8sMailAddress": {
+						"type": "string"
+					},
+					"optionalParams": {
+						"$ref": "#/components/schemas/AsnOptionalParameters"
+					}
+				},
+				"required": [
+					"iEnabled",
+					"u8sDNPath",
+					"u8sGroupName",
+					"u8sobjectGUID",
+					"u8sPhoneNumber",
+					"u8sPhoneSecondary",
+					"u8sGroupLeaderDN",
+					"u8sGroupCoLeaderDN",
+					"iGroupStaticRights",
+					"asnGroupRightDetails",
+					"asnGroupLeaderRightDetails",
+					"listUserDNs",
+					"u8sObjectSid",
+					"iGroupProfileVersion"
+				]
+			},
+			"AsnAdminFindGroupProfilesArgument": {
+				"type": "object",
+				"description": "### Category \nAdministration\n### Long \nGruppenprofil abfragen; Je nach SearchFilter wird dann am Server nach Gruppe(n) gesucht\nAttention: referenced by ENetUC_Mgmt.asn1\n\n### Private \n0",
+				"properties": {
+					"iSearchFilter": {
+						"type": "integer"
+					},
+					"u8sStringParameter": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"iSearchFilter",
+					"u8sStringParameter"
+				]
+			},
+			"AsnAdminSetGroupProfileResult": {
+				"type": "object",
+				"description": "### Category \nAdministration\n### Private \n0",
+				"properties": {
+					"bSuccess": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"bSuccess"
+				]
+			},
+			"AsnAdminAddGroupProfileResult": {
+				"type": "object",
+				"description": "### Category \nAdministration\n### Private \n0",
+				"properties": {
+					"bSuccess": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"bSuccess"
+				]
+			},
+			"AsnAdminRemoveGroupProfileResult": {
+				"type": "object",
+				"description": "### Category \nAdministration\n### Private \n0",
+				"properties": {
+					"bSuccess": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"bSuccess"
+				]
+			},
+			"AsnGetDatabaseManagerSettingsArgument": {
+				"type": "object",
+				"description": "### Category \nAdministration\n### Long \nDatabaseManager Settings\n\n### Private \n0"
+			},
+			"AsnGetDatabaseManagerSettingsResult": {
+				"type": "object",
+				"description": "### Category \nAdministration\n### Private \n0",
+				"properties": {
+					"u8sEngine": {
+						"type": "string"
+					},
+					"u8sServer": {
+						"type": "string"
+					},
+					"u8sFilePath": {
+						"type": "string"
+					},
+					"u8sLoginName": {
+						"type": "string"
+					},
+					"u8sPassword": {
+						"type": "string"
+					},
+					"u8sDatabaseName": {
+						"type": "string"
+					},
+					"u8sOfflineTable": {
+						"type": "string"
+					},
+					"u8sJournalTable": {
+						"type": "string"
+					},
+					"u8sTrackerTable": {
+						"type": "string"
+					},
+					"u8sConversationTable": {
+						"type": "string"
+					},
+					"u8sAppointmentTable": {
+						"type": "string"
+					},
+					"u8sTaskTable": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"u8sEngine",
+					"u8sServer",
+					"u8sFilePath",
+					"u8sLoginName",
+					"u8sPassword",
+					"u8sDatabaseName",
+					"u8sOfflineTable",
+					"u8sJournalTable",
+					"u8sTrackerTable",
+					"u8sConversationTable",
+					"u8sAppointmentTable",
+					"u8sTaskTable"
+				]
+			},
+			"AsnGetNetworkInterfacePortsArgument": {
+				"type": "object",
+				"description": "### Category \nAdministration\n### Long \nAlle verfügbaren TCP Ports und BindIP Adressen abfragen\n\n### Private \n0"
+			},
+			"AsnGetNetworkInterfacePortsResult": {
+				"type": "object",
+				"description": "### Category \nAdministration\n### Private \n0",
+				"properties": {
+					"iAdminPort": {
+						"type": "integer"
+					},
+					"u8sAdminBindAddress": {
+						"type": "string"
+					},
+					"iNetCtiPort": {
+						"type": "integer"
+					},
+					"u8sNetCtiBindAddress": {
+						"type": "string"
+					},
+					"iNetTSPPort": {
+						"type": "integer"
+					},
+					"u8sNetTSPBindAddress": {
+						"type": "string"
+					},
+					"iLDAPServerPort": {
+						"type": "integer"
+					},
+					"u8sLDAPServerBindAddress": {
+						"type": "string"
+					},
+					"iHTTPServerPort": {
+						"type": "integer"
+					},
+					"u8sHTTPServerBindAddress": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"iAdminPort",
+					"u8sAdminBindAddress",
+					"iNetCtiPort",
+					"u8sNetCtiBindAddress",
+					"iNetTSPPort",
+					"u8sNetTSPBindAddress",
+					"iLDAPServerPort",
+					"u8sLDAPServerBindAddress",
+					"iHTTPServerPort",
+					"u8sHTTPServerBindAddress"
+				]
+			},
+			"AsnGetAvailableLinesArgument": {
+				"type": "object",
+				"description": "### Category \nAdministration\n### Long \nAlle verfügbaren Leitungen zur Auswahl im ClnInst abfragen\n\n### Private \n0",
+				"properties": {
+					"optionalParams": {
+						"$ref": "#/components/schemas/AsnOptionalParameters"
+					}
+				}
+			},
+			"AsnAvailableLineDetails": {
+				"type": "object",
+				"description": "### Category \nAdministration\n### Private \n0",
+				"properties": {
+					"u8sLineURI": {
+						"type": "string"
+					},
+					"u8sLineName": {
+						"type": "string"
+					},
+					"u8sCurrentLineOwner": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"u8sLineURI",
+					"u8sLineName",
+					"u8sCurrentLineOwner"
+				]
+			},
+			"AsnGetUserManagerSettingsArgument": {
+				"type": "object",
+				"description": "### Category \nAdministration\n### Long \nUserManager Settings und aktiver UserManager\nAttention: referenced by ENetUC_Mgmt.asn1\n\n### Private \n0"
+			},
+			"AsnGetUserManagerSettingsResult": {
+				"type": "object",
+				"description": "### Category \nAdministration\n### Long \nAttention: referenced by ENetUC_Mgmt.asn1\n\n### Private \n0",
+				"properties": {
+					"iSelectedUMMode": {
+						"type": "integer"
+					},
+					"iUMSecurity": {
+						"type": "integer"
+					},
+					"iUMSelfInstall": {
+						"type": "integer"
+					},
+					"bAutoBindFirstLine": {
+						"type": "boolean"
+					},
+					"bAutoBindSecondLine": {
+						"type": "boolean"
+					},
+					"iPhoneNumberPreformatFormat": {
+						"type": "integer"
+					},
+					"bLDAPBaseAttributeWriteBackEnabled": {
+						"type": "boolean"
+					},
+					"u8slistPresenceDomain": {
+						"$ref": "#/components/schemas/UTF8StringList"
+					},
+					"optionalParams": {
+						"$ref": "#/components/schemas/AsnOptionalParameters"
+					}
+				},
+				"required": [
+					"iSelectedUMMode",
+					"iUMSecurity",
+					"iUMSelfInstall",
+					"bAutoBindFirstLine",
+					"bAutoBindSecondLine",
+					"iPhoneNumberPreformatFormat",
+					"bLDAPBaseAttributeWriteBackEnabled",
+					"u8slistPresenceDomain"
+				]
+			},
+			"AsnAdminGetPhoneJournalSettingsArgument": {
+				"type": "object",
+				"description": "### Category \nAdministration\n### Long \nUnbeantwortete Anrufe, Einstellungen abholen\n\n### Private \n0"
+			},
+			"AsnAdminGetPhoneJournalSettingsResult": {
+				"type": "object",
+				"description": "### Category \nAdministration\n### Private \n0",
+				"properties": {
+					"iUnansweredCallJournalOption": {
+						"type": "integer"
+					},
+					"iAnsweredRedirectedCallJournalOption": {
+						"type": "integer"
+					},
+					"bAutoMarkReadGroupCallsOnCallback": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"iUnansweredCallJournalOption",
+					"iAnsweredRedirectedCallJournalOption",
+					"bAutoMarkReadGroupCallsOnCallback"
+				]
+			},
+			"AsnAdminSetAnonymousUserAccessTokenArgument": {
+				"type": "object",
+				"description": "### Category \nAdministration\n### Private \n0",
+				"properties": {
+					"u8sAnonymousHintData": {
+						"type": "string"
+					},
+					"u8sAnonymousNewAccessToken": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"u8sAnonymousHintData",
+					"u8sAnonymousNewAccessToken"
+				]
+			},
+			"AsnAdminSetAnonymousUserAccessTokenResult": {
+				"type": "object",
+				"description": "### Category \nAdministration\n### Private \n0",
+				"properties": {
+					"success": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"success"
+				]
+			},
+			"AsnAdminSetAnonymousUserContactDataArgument": {
+				"type": "object",
+				"description": "### Category \nAdministration\n### Private \n0",
+				"properties": {
+					"contactData": {
+						"$ref": "#/components/schemas/AsnNetDatabaseContact"
+					}
+				},
+				"required": [
+					"contactData"
+				]
+			},
+			"AsnAdminSetAnonymousUserContactDataResult": {
+				"type": "object",
+				"description": "### Category \nAdministration\n### Private \n0",
+				"properties": {
+					"success": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"success"
+				]
+			},
+			"AsnAdminRemoveAnonymousUserArgument": {
+				"type": "object",
+				"description": "### Category \nAdministration\n### Private \n0",
+				"properties": {
+					"u8sAnonymousHintData": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"u8sAnonymousHintData"
+				]
+			},
+			"AsnAdminRemoveAnonymousUserResult": {
+				"type": "object",
+				"description": "### Category \nAdministration\n### Private \n0",
+				"properties": {
+					"success": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"success"
+				]
+			},
+			"AsnAdminLoginArgument": {
+				"type": "object",
+				"description": "### Category \nAdministration\n### Long \nUserManager Settings und aktiver UserManager\nCtiServer Administrator login\n\n### Private \n0",
+				"properties": {
+					"u8sAdminUsername": {
+						"type": "string"
+					},
+					"adminPassword": {
+						"$ref": "#/components/schemas/AsnAdminLoginArgumentChoice"
+					}
+				},
+				"required": [
+					"u8sAdminUsername",
+					"adminPassword"
+				]
+			},
+			"AsnAdminLoginResult": {
+				"type": "object",
+				"description": "### Category \nAdministration\n### Private \n0",
+				"properties": {
+					"result": {
+						"$ref": "#/components/schemas/AsnAdminLoginResultEnum"
+					}
+				},
+				"required": [
+					"result"
+				]
+			},
+			"AsnUserMonitorLineList": {
+				"type": "array",
+				"items": {
+					"$ref": "#/components/schemas/AsnUserMonitorLine"
+				}
+			},
+			"AsnUserProfile": {
+				"type": "object",
+				"description": "### Category \nAdministration\n### Private \n0",
+				"properties": {
+					"iEnabled": {
+						"type": "integer"
+					},
+					"u8sDNPath": {
+						"type": "string"
+					},
+					"u8sUserName": {
+						"type": "string"
+					},
+					"u8sSIPURI": {
+						"type": "string"
+					},
+					"u8sobjectGUID": {
+						"type": "string"
+					},
+					"u8sPhoneNumber": {
+						"type": "string"
+					},
+					"u8sPhoneSecondary": {
+						"type": "string"
+					},
+					"userMonitorLineList": {
+						"$ref": "#/components/schemas/AsnUserMonitorLineList"
+					},
+					"iMonitorLineRights": {
+						"type": "integer"
+					},
+					"u8sSAMAccountName": {
+						"type": "string"
+					},
+					"u8sPassword": {
+						"type": "string"
+					},
+					"u8sCallRecordingNumber": {
+						"type": "string"
+					},
+					"u8sMailboxNumber": {
+						"type": "string"
+					},
+					"u8sHomeServer": {
+						"type": "string"
+					},
+					"iUserStaticRights": {
+						"type": "integer"
+					},
+					"iUserStaticRights2": {
+						"type": "integer"
+					},
+					"userDynamicRights": {
+						"$ref": "#/components/schemas/AsnUserDynamicRightsList"
+					},
+					"asnUserContact": {
+						"$ref": "#/components/schemas/AsnNetDatabaseContact"
+					},
+					"asnUserPropertyBag": {
+						"$ref": "#/components/schemas/AsnUserPropertyBag"
+					},
+					"optionalParams": {
+						"$ref": "#/components/schemas/AsnOptionalParameters"
+					},
+					"bWritePicture": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"iEnabled",
+					"u8sDNPath",
+					"u8sUserName",
+					"u8sSIPURI",
+					"u8sobjectGUID",
+					"u8sPhoneNumber",
+					"u8sPhoneSecondary",
+					"userMonitorLineList",
+					"iMonitorLineRights",
+					"u8sSAMAccountName",
+					"u8sPassword",
+					"u8sCallRecordingNumber",
+					"u8sMailboxNumber",
+					"u8sHomeServer",
+					"iUserStaticRights",
+					"userDynamicRights",
+					"asnUserContact",
+					"asnUserPropertyBag"
+				]
+			},
+			"AsnUserProfileList": {
+				"type": "array",
+				"items": {
+					"$ref": "#/components/schemas/AsnUserProfile"
+				}
+			},
+			"AsnSetUserProfilesErrorList": {
+				"type": "array",
+				"items": {
+					"$ref": "#/components/schemas/AsnSetUserProfilesErrorListItem"
+				}
+			},
+			"AsnAdminGetUserProfileArgument": {
+				"type": "object",
+				"description": "### Category \nAdministration\n### Long \nUser Profile laden\n\n### Private \n0",
+				"properties": {
+					"identifier": {
+						"$ref": "#/components/schemas/AsnAdminGetUserProfileArgumentChoice"
+					}
+				},
+				"required": [
+					"identifier"
+				]
+			},
+			"AsnAdminGetUserProfileResult": {
+				"type": "object",
+				"description": "### Category \nAdministration\n### Private \n0",
+				"properties": {
+					"userProfile": {
+						"$ref": "#/components/schemas/AsnUserProfile"
+					}
+				},
+				"required": [
+					"userProfile"
+				]
+			},
+			"AsnAdminGetUserProfilesResult": {
+				"type": "object",
+				"description": "### Category \nAdministration\n### Private \n0",
+				"properties": {
+					"userProfiles": {
+						"$ref": "#/components/schemas/AsnUserProfileList"
+					}
+				},
+				"required": [
+					"userProfiles"
+				]
+			},
+			"AsnAdminSetUserProfileArgument": {
+				"type": "object",
+				"description": "### Category \nAdministration\n### Long \nUser Profile speichern\n\n### Private \n0",
+				"properties": {
+					"userProfile": {
+						"$ref": "#/components/schemas/AsnUserProfile"
+					},
+					"optionalParams": {
+						"$ref": "#/components/schemas/AsnOptionalParameters"
+					}
+				},
+				"required": [
+					"userProfile"
+				]
+			},
+			"AsnAdminRemoveUserProfileArgument": {
+				"type": "object",
+				"description": "### Category \nAdministration\n### Long \nUser Profile löschen (vorallem für Test-Clients benötigt)\nAnmerkung: Im AD Fall kann kein Benutzer gelöscht werden, die Funkltion liefert aktuell trotzdem bSuccess == true\n\n### Private \n0",
+				"properties": {
+					"userProfile": {
+						"$ref": "#/components/schemas/AsnUserProfile"
+					}
+				},
+				"required": [
+					"userProfile"
+				]
+			},
+			"AsnAdminAddUserProfileArgument": {
+				"type": "object",
+				"description": "### Category \nAdministration\n### Long \nUser Profile hinzufügen\nAnmerkung: Im AD Fall kann kein Benutzer hinzugefügt werden, die Funktion liefert aktuell trotzdem bSuccess == true\n\n### Private \n0",
+				"properties": {
+					"userProfile": {
+						"$ref": "#/components/schemas/AsnUserProfile"
+					}
+				},
+				"required": [
+					"userProfile"
+				]
+			},
+			"AsnComputerProfile": {
+				"type": "object",
+				"description": "### Category \nAdministration\n### Long \nComputer Account (EComputerProfile) verwalten\n\n### Private \n0",
+				"properties": {
+					"iEnabled": {
+						"type": "integer"
+					},
+					"u8sDNPath": {
+						"type": "string"
+					},
+					"u8sComputerLogin": {
+						"type": "string"
+					},
+					"u8sComputerPassword": {
+						"type": "string"
+					},
+					"u8sobjectGUID": {
+						"type": "string"
+					},
+					"u8sPhoneNumber": {
+						"type": "string"
+					},
+					"u8sPhoneSecondary": {
+						"type": "string"
+					},
+					"userMonitorLineList": {
+						"$ref": "#/components/schemas/AsnUserMonitorLineList"
+					},
+					"iMonitorLineRights": {
+						"type": "integer"
+					},
+					"asnUserPropertyBag": {
+						"$ref": "#/components/schemas/AsnUserPropertyBag"
+					},
+					"optionalParams": {
+						"$ref": "#/components/schemas/AsnOptionalParameters"
+					}
+				},
+				"required": [
+					"iEnabled",
+					"u8sDNPath",
+					"u8sComputerLogin",
+					"u8sComputerPassword",
+					"u8sobjectGUID",
+					"u8sPhoneNumber",
+					"u8sPhoneSecondary",
+					"userMonitorLineList",
+					"iMonitorLineRights",
+					"asnUserPropertyBag"
+				]
+			},
+			"AsnAdminGetComputerProfileResult": {
+				"type": "object",
+				"description": "### Category \nAdministration\n### Private \n0",
+				"properties": {
+					"computerProfile": {
+						"$ref": "#/components/schemas/AsnComputerProfile"
+					}
+				},
+				"required": [
+					"computerProfile"
+				]
+			},
+			"AsnAdminSetComputerProfileArgument": {
+				"type": "object",
+				"description": "### Category \nAdministration\n### Long \nComputer Profile speichern\n\n### Private \n0",
+				"properties": {
+					"computerProfile": {
+						"$ref": "#/components/schemas/AsnComputerProfile"
+					}
+				},
+				"required": [
+					"computerProfile"
+				]
+			},
+			"AsnAdminAddComputerProfileArgument": {
+				"type": "object",
+				"description": "### Category \nAdministration\n### Long \nComputer Profile hinzufügen\n\n### Private \n0",
+				"properties": {
+					"computerProfile": {
+						"$ref": "#/components/schemas/AsnComputerProfile"
+					}
+				},
+				"required": [
+					"computerProfile"
+				]
+			},
+			"AsnAdminFindUserProfileList": {
+				"type": "array",
+				"items": {
+					"$ref": "#/components/schemas/AsnAdminFindUserProfile"
+				}
+			},
+			"AsnAdminFindUserArgument": {
+				"type": "object",
+				"description": "### Category \nAdministration\n### Long \nUser Profile finden\n\n### Private \n0",
+				"properties": {
+					"find": {
+						"$ref": "#/components/schemas/AsnAdminFindUserArgumentChoice"
+					},
+					"iMaxResults": {
+						"type": "integer"
+					}
+				},
+				"required": [
+					"find",
+					"iMaxResults"
+				]
+			},
+			"AsnAdminFindUserResult": {
+				"type": "object",
+				"description": "### Category \nAdministration\n### Private \n0",
+				"properties": {
+					"userlist": {
+						"$ref": "#/components/schemas/AsnAdminFindUserProfileList"
+					},
+					"iLimitReached": {
+						"type": "integer"
+					}
+				},
+				"required": [
+					"userlist",
+					"iLimitReached"
+				]
+			},
+			"AsnGroupProfileList": {
+				"type": "array",
+				"items": {
+					"$ref": "#/components/schemas/AsnGroupProfile"
+				}
+			},
+			"AsnAdminFindGroupProfilesResult": {
+				"type": "object",
+				"description": "### Category \nAdministration\n### Private \n0",
+				"properties": {
+					"listGroupProfiles": {
+						"$ref": "#/components/schemas/AsnGroupProfileList"
+					}
+				},
+				"required": [
+					"listGroupProfiles"
+				]
+			},
+			"AsnAdminSetGroupProfileArgument": {
+				"type": "object",
+				"description": "### Category \nAdministration\n### Long \nGroupprofile speichern\nDie Gruppe wird im Server modifiziert; die Gruppe wird dabei durch die GUID referenziert (stimmt diese nicht, schlägt der Aufruf fehl).\nDie Daten, die Übernommen werden hängen vom Backend ab.\nÄnderungen von Datenfeldern, die vom AD verwaltet werden (ObjectSID, GUID, DNPath, Member-Liste, Gruppenname) werden NICHT übernommen.\niGroupProfileVersion kann auch nicht geändert werden, da dies von der UCServer Version abhängig ist.\n\n### Private \n0",
+				"properties": {
+					"groupProfile": {
+						"$ref": "#/components/schemas/AsnGroupProfile"
+					}
+				},
+				"required": [
+					"groupProfile"
+				]
+			},
+			"AsnAdminAddGroupProfileArgument": {
+				"type": "object",
+				"description": "### Category \nAdministration\n### Long \nGroup Profile hinzufügen\n\n### Private \n0",
+				"properties": {
+					"groupProfile": {
+						"$ref": "#/components/schemas/AsnGroupProfile"
+					}
+				},
+				"required": [
+					"groupProfile"
+				]
+			},
+			"AsnAdminRemoveGroupProfileArgument": {
+				"type": "object",
+				"description": "### Category \nAdministration\n### Long \nGroup Profile löschen\n\n### Private \n0",
+				"properties": {
+					"groupProfile": {
+						"$ref": "#/components/schemas/AsnGroupProfile"
+					}
+				},
+				"required": [
+					"groupProfile"
+				]
+			},
+			"AsnAvailableLineDetailsList": {
+				"type": "array",
+				"items": {
+					"$ref": "#/components/schemas/AsnAvailableLineDetails"
+				}
+			},
+			"AsnGetAvailableLinesResult": {
+				"type": "object",
+				"description": "### Category \nAdministration\n### Long \nAttention: referenced by ENetUC_Mgmt.asn1\n\n### Private \n0",
+				"properties": {
+					"linelist": {
+						"$ref": "#/components/schemas/AsnAvailableLineDetailsList"
+					}
+				},
+				"required": [
+					"linelist"
+				]
+			},
+			"AsnAdminSetUserProfilesListArgument": {
+				"type": "object",
+				"description": "### Category \nAdministration\n### Long \nUser Profiles Liste speichern\n\n### Private \n0",
+				"properties": {
+					"userProfiles": {
+						"$ref": "#/components/schemas/AsnUserProfileList"
+					}
+				},
+				"required": [
+					"userProfiles"
+				]
+			},
+			"AsnAdminSetUserProfilesListResult": {
+				"type": "object",
+				"description": "### Category \nAdministration\n### Private \n0",
+				"properties": {
+					"bSuccess": {
+						"type": "boolean"
+					},
+					"errorList": {
+						"$ref": "#/components/schemas/AsnSetUserProfilesErrorList"
+					}
+				},
+				"required": [
+					"bSuccess"
+				]
+			},
+			"AsnComputerProfileList": {
+				"type": "array",
+				"items": {
+					"$ref": "#/components/schemas/AsnComputerProfile"
+				}
+			}
+		}
+	}
+}

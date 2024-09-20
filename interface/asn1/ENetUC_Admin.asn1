@@ -1,0 +1,882 @@
+﻿UC-Server-Access-Protocol-Admin
+	{ iso(1) identified-organization(3) dod(6) internet(1) private(4) enterprise(1) estos(10924) uc-server-access-protocol-v2(2) admin(6) }
+
+-- @brief Administration interface (workstation setup)
+-- @category Administration
+-- @long
+-- 
+-- ~## ChangeLog:
+-- 
+-- ## Module description
+-- This module defines structures and functions for administration the UCServer.
+-- These structures are used by the administrative console (UCServer Administration) and the ClnInst.exe (Workstation settings) on the client.
+-- These operations need an administrative login on the UCServer.
+
+DEFINITIONS
+IMPLICIT TAGS ::=
+BEGIN
+
+IMPORTS
+AsnUserPropertyBag, AsnNetDatabaseContact, AsnOptionalParameters, UTF8StringList, AsnRequestError FROM UC-Server-Access-Protocol-Common
+AsnUserDynamicRights, AsnUserDynamicRightsList FROM UC-Server-Access-Protocol-AsnContactCommon
+;
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~ Administrative functions ~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+-- UserManager Settings und aktiver UserManager
+-- CtiServer Administrator login
+AsnAdminLoginArgument ::= SEQUENCE
+{
+	-- user login daten
+	u8sAdminUsername					UTF8String,
+
+	adminPassword CHOICE
+	{
+		u8sAdminPassword				[0] UTF8String,
+		u8sAdminPasswordCrypted			[1] UTF8String
+	},
+	...
+}
+
+AsnAdminLoginResult ::= SEQUENCE
+{
+	result ENUMERATED
+	{
+		success(0),
+		failed(1)
+	},
+	...
+}
+
+asnAdminLogin OPERATION
+	ARGUMENT	arg AsnAdminLoginArgument
+	RESULT		res AsnAdminLoginResult
+	ERRORS		{AsnRequestError}
+::= 2904
+
+-- Benutzer Account (EUserProfile) verwalten
+AsnUserMonitorLineList ::= SEQUENCE OF AsnUserMonitorLine
+
+AsnUserMonitorLine ::= SEQUENCE
+{
+	u8sPhoneNumber						UTF8String,
+	...
+}
+
+AsnUserProfile ::= SEQUENCE
+{
+	iEnabled							INTEGER,
+
+	u8sDNPath							UTF8String,
+	u8sUserName							UTF8String,
+	u8sSIPURI							UTF8String,
+	u8sobjectGUID						UTF8String,
+	
+	u8sPhoneNumber						UTF8String,
+	u8sPhoneSecondary					UTF8String,
+	
+	userMonitorLineList					AsnUserMonitorLineList,
+	iMonitorLineRights					INTEGER,
+
+	u8sSAMAccountName					UTF8String,
+	u8sPassword							UTF8String,
+	u8sCallRecordingNumber				UTF8String,
+	u8sMailboxNumber					UTF8String,
+	u8sHomeServer						UTF8String,
+			
+	iUserStaticRights					INTEGER,
+	iUserStaticRights2					[0] INTEGER OPTIONAL, -- added in UCServer 6
+
+	userDynamicRights					AsnUserDynamicRightsList,
+
+	asnUserContact						AsnNetDatabaseContact,
+	asnUserPropertyBag					AsnUserPropertyBag,
+
+	-- Additional information which were added later (for backward compatibility):  
+	-- - Key "ADDisabled" Value boolean - User profile is disabled in the Active Directory  
+	-- - Key "SourceDB" Value AsnString - User profile is replicated from DB (name)  
+	-- - Key "SourceDBID" Value AsnString - User profile is replicated from DB (ID)  
+	-- - Key "SourceDBStore" Value AsnString - User profile is replicated from DB (StoreID inside the DB)  
+	-- - Key "primaryGroupID" Value int - ID of the primary group of a Active Directiry user  
+	-- - Key "objectSID" Value AsnString - ObjectSID of the user Object in the Active Directory  
+	optionalParams						AsnOptionalParameters OPTIONAL,
+	bWritePicture						[1] BOOLEAN OPTIONAL,
+	...
+}
+
+AsnUserProfileList ::= SEQUENCE OF AsnUserProfile
+
+AsnSetUserProfilesErrorListItem  ::= SEQUENCE
+{
+	u8sUserName							UTF8String,
+	iErrorDetail						INTEGER, -- A number representing the error for the User with Name "u8sUserName"
+	...
+}
+
+AsnSetUserProfilesErrorList ::= SEQUENCE OF AsnSetUserProfilesErrorListItem
+
+-- User Profile laden
+AsnAdminGetUserProfileArgument ::= SEQUENCE	-- Attention: referenced by ENetUC_Mgmt.asn1
+{
+		identifier CHOICE
+	{
+		-- return a new default profile
+		defaultprofile		[0] NULL,
+		-- return the userprofile for the given user name
+		u8sClientUsername	[1] UTF8String
+	},
+	...
+}
+
+AsnAdminGetUserProfileResult ::= SEQUENCE	-- Attention: referenced by ENetUC_Mgmt.asn1
+{
+	userProfile							AsnUserProfile,
+	...
+}
+
+AsnAdminGetUserProfileErrorEnum ::= ENUMERATED	-- Attention: referenced by EUserManagerConnection
+{
+  success(0),
+	usernotfound(1),
+	accessdenied(2)
+}
+
+asnAdminGetUserProfile OPERATION
+	ARGUMENT	arg AsnAdminGetUserProfileArgument
+	RESULT		res AsnAdminGetUserProfileResult
+	ERRORS		{AsnRequestError}
+::= 2905
+
+AsnAdminUserOnlineStateFilter ::= ENUMERATED
+{
+	eNOSTATEFILTER (0),
+	eISONLINEONLY  (1),
+	eISOFFLINEONLY (2)
+}
+
+-- User Profile laden
+AsnAdminGetUserProfilesArgument ::= SEQUENCE
+{
+	iActiveUsersOnly		INTEGER, -- CTI-Enabled users only
+	iFilterOnlineState		INTEGER, -- Filter with actual onlinestate -> AsnAdminUserOnlineStateFilter
+	...
+}
+
+AsnAdminGetUserProfilesResult ::= SEQUENCE
+{
+	userProfiles						AsnUserProfileList,
+	...
+}
+
+AsnAdminGetUserProfilesErrorEnum ::= ENUMERATED
+{
+  success(0),
+	nouserfound(1),
+	accessdenied(2)
+}
+
+asnAdminGetUserProfiles OPERATION
+	ARGUMENT	arg AsnAdminGetUserProfilesArgument
+	RESULT		res AsnAdminGetUserProfilesResult
+	ERRORS		{AsnRequestError}
+::= 2913
+
+-- User Profile speichern
+AsnAdminSetUserProfileArgument ::= SEQUENCE	-- Attention: referenced by ENetUC_Mgmt.asn1
+{
+	userProfile							AsnUserProfile,
+	optionalParams						AsnOptionalParameters OPTIONAL,
+	...	
+}
+	
+AsnAdminSetUserProfileResult ::= SEQUENCE	-- Attention: referenced by ENetUC_Mgmt.asn1
+{
+	bSuccess							BOOLEAN,
+	...
+}
+
+-- User Profiles Liste speichern
+AsnAdminSetUserProfilesListArgument ::= SEQUENCE	-- Attention: referenced by ENetUC_Mgmt.asn1
+{
+	userProfiles						AsnUserProfileList,
+	...
+}
+	
+AsnAdminSetUserProfilesListResult ::= SEQUENCE	-- Attention: referenced by ENetUC_Mgmt.asn1
+{
+	bSuccess					BOOLEAN,
+	errorList					[0] AsnSetUserProfilesErrorList OPTIONAL,
+	...
+}
+
+AsnAdminSetUserProfileErrorEnum ::= ENUMERATED	-- Attention: referenced by EUserManagerConnection 
+{
+	success(0),
+	accessdenied(1),
+	usernotfound(2),
+	sipurialreadyoccupied(3),
+	sipurimalformed(4)
+}
+
+asnAdminSetUserProfile OPERATION
+	ARGUMENT	arg AsnAdminSetUserProfileArgument
+	RESULT		res AsnAdminSetUserProfileResult
+	ERRORS		{AsnRequestError}
+::= 2906
+
+-- User Profile löschen (vorallem für Test-Clients benötigt)
+-- Anmerkung: Im AD Fall kann kein Benutzer gelöscht werden, die Funkltion liefert aktuell trotzdem bSuccess == true
+AsnAdminRemoveUserProfileArgument ::= SEQUENCE	-- Attention: referenced by ENetUC_Mgmt.asn1
+{
+	userProfile							AsnUserProfile,					-- Der u8sUserName muss gesetzt werden als Schlüssel
+	...
+}
+
+AsnAdminRemoveUserProfileResult ::= SEQUENCE	-- Attention: referenced by ENetUC_Mgmt.asn1
+{
+	bSuccess							BOOLEAN,
+	...
+}
+
+AsnAdminRemoveUserProfileErrorEnum ::= ENUMERATED	-- Attention: referenced by EUserManagerConnection 
+{
+	success(0),
+	unknown(1),
+	accessdenied(2),
+	invalidusername(3)
+}
+
+asnAdminRemoveUserProfile OPERATION
+	ARGUMENT	arg AsnAdminRemoveUserProfileArgument
+	RESULT		res AsnAdminRemoveUserProfileResult
+	ERRORS		{AsnRequestError}
+::= 2912
+
+-- User Profile hinzufügen
+-- Anmerkung: Im AD Fall kann kein Benutzer hinzugefügt werden, die Funktion liefert aktuell trotzdem bSuccess == true
+AsnAdminAddUserProfileArgument ::= SEQUENCE	-- Attention: referenced by ENetUC_Mgmt.asn1
+{
+	userProfile							AsnUserProfile,
+	...
+}
+
+AsnAdminAddUserProfileResult ::= SEQUENCE	-- Attention: referenced by ENetUC_Mgmt.asn1
+{
+	bSuccess							BOOLEAN,
+	...
+}
+
+AsnAdminAddUserProfileErrorEnum ::= ENUMERATED	-- Attention: referenced by EUserManagerConnection 
+{
+  success(0),
+	accessdenied(1),
+	useralreadyexists(2)
+}
+
+asnAdminAddUserProfile OPERATION
+	ARGUMENT	arg AsnAdminAddUserProfileArgument
+	RESULT		res AsnAdminAddUserProfileResult
+	ERRORS		{AsnRequestError}
+::= 2907
+
+
+-- Computer Account (EComputerProfile) verwalten
+AsnComputerProfile ::= SEQUENCE
+{
+	-- Member vom Baseprofile
+	iEnabled							INTEGER,
+	u8sDNPath							UTF8String,
+	u8sComputerLogin					UTF8String,
+	u8sComputerPassword					UTF8String,
+	u8sobjectGUID						UTF8String,
+	
+	u8sPhoneNumber						UTF8String,
+	u8sPhoneSecondary					UTF8String,
+	
+	userMonitorLineList					AsnUserMonitorLineList,
+	iMonitorLineRights					INTEGER,
+
+	asnUserPropertyBag					AsnUserPropertyBag,
+
+	-- optionalParams Name "SourceDB" Value string
+	-- optionalParams Name "SourceDBID" Value string
+	-- optionalParams Name "SourceDBStore" Value string
+	optionalParams						[0] AsnOptionalParameters OPTIONAL,
+
+	...
+}
+AsnComputerProfileList ::= SEQUENCE OF AsnComputerProfile
+
+-- Computer Profile laden
+AsnAdminGetComputerProfileArgument ::= SEQUENCE	-- Attention: referenced by ENetUC_Mgmt.asn1
+{
+	-- Computer login daten wenn Computername leer, dann leeres default profile liefern
+	u8sClientComputerName				UTF8String,
+	...
+}
+
+AsnAdminGetComputerProfileResult ::= SEQUENCE	-- Attention: referenced by ENetUC_Mgmt.asn1
+{
+	computerProfile						AsnComputerProfile,
+	...
+}
+
+AsnAdminGetComputerProfileErrorEnum ::= ENUMERATED	-- Attention: referenced by EUserManagerConnection
+{
+	success(0),
+	accessdenied(1),
+	computernotfound(2)
+}
+
+asnAdminGetComputerProfile OPERATION
+	ARGUMENT	arg AsnAdminGetComputerProfileArgument
+	RESULT		res AsnAdminGetComputerProfileResult
+	ERRORS		{AsnRequestError}
+::= 2908
+
+-- Computer Profile speichern
+AsnAdminSetComputerProfileArgument ::= SEQUENCE	-- Attention: referenced by ENetUC_Mgmt.asn1
+{
+	computerProfile						AsnComputerProfile,
+	...
+}
+
+AsnAdminSetComputerProfileResult ::= SEQUENCE	-- Attention: referenced by ENetUC_Mgmt.asn1
+{
+	bSuccess							BOOLEAN,
+	...
+}
+
+AsnAdminSetComputerProfileErrorEnum ::= ENUMERATED	-- Attention: referenced by EUserManagerConnection 
+{
+	success(0),
+	accessdenied(1),
+	computernotfound(2)
+}
+
+asnAdminSetComputerProfile OPERATION
+	ARGUMENT	arg AsnAdminSetComputerProfileArgument
+	RESULT		res AsnAdminSetComputerProfileResult
+	ERRORS		{AsnRequestError}
+::= 2909
+
+-- Computer Profile hinzufügen
+AsnAdminAddComputerProfileArgument ::= SEQUENCE	-- Attention: referenced by ENetUC_Mgmt.asn1
+{
+	computerProfile						AsnComputerProfile,
+	...
+}
+
+AsnAdminAddComputerProfileResult ::= SEQUENCE	-- Attention: referenced by ENetUC_Mgmt.asn1
+{
+	bSuccess							BOOLEAN,
+	...
+}
+
+AsnAdminAddComputerProfileErrorEnum ::= ENUMERATED	-- Attention: referenced by EUserManagerConnection 
+{
+	success(0),
+	accessdenied(1),
+	computeralreadyexists(2)
+}
+
+asnAdminAddComputerProfile OPERATION
+	ARGUMENT	arg AsnAdminAddComputerProfileArgument
+	RESULT		res AsnAdminAddComputerProfileResult
+	ERRORS		{AsnRequestError}
+::= 2910
+
+-- Benutzer Suchen für User Chooser
+AsnAdminFindUserProfileList ::= SEQUENCE OF AsnAdminFindUserProfile
+
+AsnAdminFindUserProfile ::= SEQUENCE
+{
+	-- DN Pfad AD (cn=stefan Eckabuer,cn=users,dc=estos,dc=de)
+	u8sDNPath							UTF8String,
+	-- Benutzerlogin name (ste@estos.de)
+	u8sUserName							UTF8String,
+	-- Vorname
+	u8sFirstName						UTF8String,
+	-- Nachname
+	u8sLastName							UTF8String,
+	-- Angezeigter Name
+	u8sDisplayName						UTF8String,
+	-- Eigene Rufnummer aus Konfig (+49815136856110)
+	u8sPhonePrimary						UTF8String,
+	-- Zweite Rufnummer aus Konfig (+49815136856185)
+	u8sPhoneSecondary					UTF8String,
+	-- CtiEnabled ja/nein
+	iCtiEnabled							INTEGER,
+	...
+	
+}
+
+-- User Profile finden
+AsnAdminFindUserArgument ::= SEQUENCE
+{
+	find CHOICE
+	{
+		-- Wir wollen alle
+		all								[0] NULL,
+		-- Wir suchen nach Rufnummer aus konfig
+		u8sPhoneNumber					[1] UTF8String
+	},
+	-- Maximale Anzahl der gewünschten user (0 für alle)
+	iMaxResults							INTEGER,
+	...
+}
+
+AsnAdminFindUserResult ::= SEQUENCE
+{
+	-- Liste der gefundenen User. Das sind evtl nicht alle
+	userlist							AsnAdminFindUserProfileList,
+	-- Wenn es mehr gibt, als wir abfragen können, dann ist das gesetzt
+	iLimitReached						INTEGER,
+	...
+}
+
+AsnAdminFindUserErrorEnum ::= ENUMERATED
+{
+	success(0),
+	invalidparameters(1),
+	accessdenied(2)
+}
+
+asnAdminFindUser OPERATION
+	ARGUMENT	arg AsnAdminFindUserArgument
+	RESULT		res AsnAdminFindUserResult
+	ERRORS		{AsnRequestError}
+::= 2911
+
+
+-- Gruppen-Konfigurationen
+AsnGroupProfile ::= SEQUENCE
+{
+	-- Member vom Baseprofile
+	iEnabled							INTEGER,
+	u8sDNPath							UTF8String,
+	u8sGroupName						UTF8String,
+	u8sobjectGUID						UTF8String,
+	u8sPhoneNumber						UTF8String, -- Not used, reserved
+	u8sPhoneSecondary					UTF8String, -- Not used, reserved
+
+	u8sGroupLeaderDN					UTF8String,
+	u8sGroupCoLeaderDN					UTF8String,
+	
+	iGroupStaticRights					INTEGER,
+	iGroupStaticRights2					[0] INTEGER OPTIONAL, -- added in UCServer 6
+	
+	asnGroupRightDetails				AsnUserDynamicRights,
+	asnGroupLeaderRightDetails			AsnUserDynamicRights,
+
+	listUserDNs							UTF8StringList,
+
+	-- Active Directory objectSid - SID der Gruppe - Wird benötigt um die primären Guppen der User zuzuordnen
+	u8sObjectSid						UTF8String,
+
+	-- Version dieses Gruppenprofils
+	iGroupProfileVersion				INTEGER,
+
+	asnUserPropertyBag					[1] AsnUserPropertyBag OPTIONAL, -- added in UCServer 6
+	u8sSIPURI							[2] UTF8String OPTIONAL,		 -- added in UCServer 6
+	u8sMailAddress						[3] UTF8String OPTIONAL,		 -- added in UCServer 6
+
+	-- optionalParams Name "SourceDB" Value string
+	-- optionalParams Name "SourceDBID" Value string
+	-- optionalParams Name "SourceDBStore" Value string
+	optionalParams						[4] AsnOptionalParameters OPTIONAL,
+	...
+}
+AsnGroupProfileList ::= SEQUENCE OF AsnGroupProfile
+
+-- Groupprofile vom Server holen
+AsnAdminFindGroupProfilesFilter ::= ENUMERATED
+{
+	allEnabledGroups(0),              		-- Alle im Usermanagement aktivierten Gruppen 
+	allGroups(1),                    		-- Alle Gruppen
+	dnPath(2),                      		-- Spezifischer DN Pfad einer Gruppe (wird im String-Parameter angegeben)
+	groupName(3),      						-- Spezifischer Gruppenname (wird im String Parameter angegeben)
+	objectGUID(4)					        -- Spezifische  ObjectGUID (wird im String Parameter angegeben)
+}
+
+-- Gruppenprofil abfragen; Je nach SearchFilter wird dann am Server nach Gruppe(n) gesucht
+-- Attention: referenced by ENetUC_Mgmt.asn1
+AsnAdminFindGroupProfilesArgument ::= SEQUENCE	
+{	
+	iSearchFilter						INTEGER,	-- Searchfilter-Wert, siehe dazu AsnAdminFindGroupProfilesFilter Enumeration
+	u8sStringParameter					UTF8String, -- Stringparameter für verschiedene Searchfilter
+	...
+}
+
+AsnAdminFindGroupProfilesResult ::= SEQUENCE	-- Attention: referenced by ENetUC_Mgmt.asn1
+{
+	listGroupProfiles					AsnGroupProfileList,
+	...
+}
+
+AsnAdminFindGroupProfilesErrorEnum ::= ENUMERATED	-- Attention: referenced by EUserManagerConnection
+{
+  success(0),
+  accessdenied(1),
+  nosearchparameter(2)
+}
+
+asnAdminFindGroupProfiles OPERATION
+	ARGUMENT	arg AsnAdminFindGroupProfilesArgument
+	RESULT		res AsnAdminFindGroupProfilesResult
+	ERRORS		{AsnRequestError}
+::= 2916
+
+-- Groupprofile speichern
+-- Die Gruppe wird im Server modifiziert; die Gruppe wird dabei durch die GUID referenziert (stimmt diese nicht, schlägt der Aufruf fehl).
+-- Die Daten, die Übernommen werden hängen vom Backend ab.
+-- Änderungen von Datenfeldern, die vom AD verwaltet werden (ObjectSID, GUID, DNPath, Member-Liste, Gruppenname) werden NICHT übernommen.
+-- iGroupProfileVersion kann auch nicht geändert werden, da dies von der UCServer Version abhängig ist.
+AsnAdminSetGroupProfileArgument ::= SEQUENCE
+{
+	groupProfile						AsnGroupProfile,
+	...
+}
+
+AsnAdminSetGroupProfileResult ::= SEQUENCE
+{
+	bSuccess							BOOLEAN,
+	...
+}
+
+AsnAdminSetGroupProfileErrorEnum ::= ENUMERATED 
+{
+	success(0),
+	accessdenied(1),
+	groupnotfound(2),
+	wrongprofileversion(3),
+	errorsavingprofile(4)
+}
+
+asnAdminSetGroupProfile OPERATION
+	ARGUMENT	arg AsnAdminSetGroupProfileArgument
+	RESULT		res AsnAdminSetGroupProfileResult
+	ERRORS		{AsnRequestError}
+::= 2917
+
+-- Group Profile hinzufügen
+AsnAdminAddGroupProfileArgument ::= SEQUENCE	-- Attention: referenced by ENetUC_Mgmt.asn1
+{
+	groupProfile						AsnGroupProfile,
+	...
+}
+
+AsnAdminAddGroupProfileResult ::= SEQUENCE	-- Attention: referenced by ENetUC_Mgmt.asn1
+{
+	bSuccess							BOOLEAN,
+	...
+}
+
+AsnAdminAddGroupProfileErrorEnum ::= ENUMERATED	-- Attention: referenced by EUserManagerConnection 
+{
+	success(0),
+	accessdenied(1),
+	groupalreadyexists(2),
+	errorsavingprofile(3),
+	cantaddgroupinactivedirectory(4)
+}
+
+asnAdminAddGroupProfile OPERATION
+	ARGUMENT	arg AsnAdminAddGroupProfileArgument
+	RESULT		res AsnAdminAddGroupProfileResult
+	ERRORS		{AsnRequestError}
+::= 2918
+
+-- Group Profile löschen
+AsnAdminRemoveGroupProfileArgument ::= SEQUENCE	-- Attention: referenced by ENetUC_Mgmt.asn1
+{
+	groupProfile						AsnGroupProfile,
+	...
+}
+
+AsnAdminRemoveGroupProfileResult ::= SEQUENCE	-- Attention: referenced by ENetUC_Mgmt.asn1
+{
+	bSuccess							BOOLEAN, -- AD Implementierung lässt das Löschen von Gruppen nicht zu, aber es wird TRUE zurückgeliefert
+	...
+}
+
+AsnAdminRemoveGroupProfileErrorEnum ::= ENUMERATED	-- Attention: referenced by EUserManagerConnection 
+{
+success(0),
+	accessdenied(1),
+	groupdoesnotexist(2)
+}
+
+asnAdminRemoveGroupProfile OPERATION
+	ARGUMENT	arg AsnAdminRemoveGroupProfileArgument
+	RESULT		res AsnAdminRemoveGroupProfileResult
+	ERRORS		{AsnRequestError}
+::= 2919
+
+-- DatabaseManager Settings
+AsnGetDatabaseManagerSettingsArgument ::= SEQUENCE
+{
+	...
+}
+
+AsnGetDatabaseManagerSettingsResult ::= SEQUENCE
+{
+    u8sEngine				UTF8String, -- mssql_mdac, jet
+    u8sServer				UTF8String, -- SQL-Server Name
+    u8sFilePath				UTF8String, -- Filepath zur Datenbank im jet/MSAccess Fall
+    u8sLoginName			UTF8String, -- Loginname bei SQL-Server Fall; Ist der Name leer, wird der SQL-Server mit Windows-Anmeldung verwendet. Enthält der Name etwas, wird SQL-Server internes Benutzerverwaltung verwendet.
+    u8sPassword				UTF8String, -- Passwort für den Loginname; wird nur benötigt, wenn SQL-Server Benutzerkennwörter verlangt
+    u8sDatabaseName			UTF8String, -- Datenbanknamen-Prefix für jet-Datenbanken
+    u8sOfflineTable			UTF8String, -- Name der Offline-Journal Datenbank/Tabelle
+    u8sJournalTable			UTF8String, -- Name der Journal Datenbank/Tablle 
+    u8sTrackerTable			UTF8String, -- Name der Call-Tracker Datenbank/Tablle
+    -- ~ u8sMessages			UTF8String,	 Name der Messages Datenbank/Tablle; gibt es seit V3 nicht mehr 
+    u8sConversationTable	UTF8String, -- Name der Conversation Datenbank/Tablle (Chat)
+    -- ~ u8scontact			UTF8String,  Name der Datenbank/Tabelle für Kontaktdaten; gibt es seit V3 nicht mehr
+    u8sAppointmentTable		UTF8String, -- Name der Termin Datenbank/Tabelle
+    u8sTaskTable			UTF8String, -- Name der Aufgaben/geplante Anrufe Datenbank/Tabelle
+	...
+}
+
+
+AsnGetDatabaseManagerSettingsErrorEnum ::= ENUMERATED
+{
+-- Wird in AsnRequestError als Error-Nummer verwendet
+	success(0),
+	accessdenied(1)
+}
+
+asnGetDatabaseManagerSettings OPERATION
+	ARGUMENT	arg AsnGetDatabaseManagerSettingsArgument
+	RESULT		res AsnGetDatabaseManagerSettingsResult
+	ERRORS		{AsnRequestError}
+::= 2903
+
+
+-- Alle verfügbaren TCP Ports und BindIP Adressen abfragen
+AsnGetNetworkInterfacePortsArgument ::= SEQUENCE	-- Attention: referenced by ENetUC_Mgmt.asn1
+{
+	...
+}
+
+AsnGetNetworkInterfacePortsResult ::= SEQUENCE	-- Attention: referenced by ENetUC_Mgmt.asn1
+{
+	iAdminPort							INTEGER,
+	u8sAdminBindAddress					UTF8String,
+	iNetCtiPort							INTEGER,
+	u8sNetCtiBindAddress				UTF8String,
+	iNetTSPPort							INTEGER,
+	u8sNetTSPBindAddress				UTF8String,
+	iLDAPServerPort						INTEGER,
+	u8sLDAPServerBindAddress			UTF8String,
+	iHTTPServerPort						INTEGER,
+	u8sHTTPServerBindAddress			UTF8String,
+	...
+}
+
+asnGetNetworkInterfacePorts OPERATION
+	ARGUMENT	arg AsnGetNetworkInterfacePortsArgument
+	RESULT		res AsnGetNetworkInterfacePortsResult
+	ERRORS		{AsnRequestError}
+::= 2900
+
+-- Alle verfügbaren Leitungen zur Auswahl im ClnInst abfragen
+AsnGetAvailableLinesArgument ::= SEQUENCE	-- Attention: referenced by ENetUC_Mgmt.asn1
+{
+	-- - Key "MobileLines" Value boolean - Add mobile lines to the result, defaults to not adding these lines  
+	-- - Key "SIPLines" Value boolean - Add SIP lines to the result, defaults to not adding these lines  
+	-- - Key "AVLines" Value boolean - Add ProCall AV lines to the result, defaults to not adding these lines
+	optionalParams						AsnOptionalParameters OPTIONAL,
+	...
+}
+
+-- Attention: referenced by ENetUC_Mgmt.asn1
+AsnGetAvailableLinesResult ::= SEQUENCE	
+{
+	linelist							AsnAvailableLineDetailsList,
+	...
+}
+
+AsnAvailableLineDetails ::= SEQUENCE
+{
+	u8sLineURI							UTF8String,
+	u8sLineName							UTF8String,
+	u8sCurrentLineOwner					UTF8String,
+	...
+}
+
+AsnAvailableLineDetailsList ::= SEQUENCE OF AsnAvailableLineDetails
+
+-- Attention: referenced by EUserManagerConnection
+AsnGetAvailableLinesErrorEnum ::= ENUMERATED	
+{
+  success(0),
+	accessdenied(1)
+}
+
+asnGetAvailableLines OPERATION
+	ARGUMENT	arg AsnGetAvailableLinesArgument
+	RESULT		res AsnGetAvailableLinesResult
+	ERRORS		{AsnRequestError}
+::= 2901
+
+-- UserManager Settings und aktiver UserManager
+-- Attention: referenced by ENetUC_Mgmt.asn1
+AsnGetUserManagerSettingsArgument ::= SEQUENCE	
+{
+	...
+}
+
+-- Attention: referenced by ENetUC_Mgmt.asn1
+AsnGetUserManagerSettingsResult ::= SEQUENCE	
+{
+	iSelectedUMMode						INTEGER,
+	iUMSecurity							INTEGER,
+	iUMSelfInstall						INTEGER,
+	bAutoBindFirstLine					BOOLEAN,
+	bAutoBindSecondLine					BOOLEAN,
+	iPhoneNumberPreformatFormat			INTEGER,
+	bLDAPBaseAttributeWriteBackEnabled  BOOLEAN,
+	u8slistPresenceDomain				UTF8StringList,
+
+	-- Optional Params:
+	-- Wenn das Usermanagement auf AD gestellt ist, weerden folgende Informationen noch ergänzt:  
+	--		ActiveDirectoryDomain			[UTF8String]		Die Domäne, in der der UCServer steht  
+	--		ActiveDirectoryBaseDNUsers		[UTF8String]		BaseDN der Benutzer (kann eine ';' getrennte Liste sein!)  
+	--		ActiveDirectoryHostName			[UTF8String]		Rechnername des AD  
+	--		ActiveDirectoryHostPort			[INTEGER]			Portnummer des AD  
+	--		ActiveDirectoryDisabledFields	[UTF8StringList]	Liste der UCServer Felder die in der Benutzerverwaltung optional und deaktiviert sind. (HomePhone sowie Pager sind z.B. beides optionale Felder)  
+	optionalParams						AsnOptionalParameters OPTIONAL,
+	...
+}
+
+-- Attention: referenced by EUserManagerConnection
+AsnGetUserManagerSettingsErrorEnum ::= ENUMERATED
+{
+  success(0),
+	accessdenied(1)
+}
+
+
+asnGetUserManagerSettings OPERATION
+	ARGUMENT	arg AsnGetUserManagerSettingsArgument
+	RESULT		res AsnGetUserManagerSettingsResult
+	ERRORS		{AsnRequestError}
+::= 2902
+
+-- Unbeantwortete Anrufe, Einstellungen abholen
+AsnAdminGetPhoneJournalSettingsArgument ::= SEQUENCE
+{
+	...
+}
+
+AsnAdminPhoneJournalUnansweredEnum ::= ENUMERATED
+{
+	never(0), 
+	all(1),
+	first(2),
+	last(3)
+}
+
+AsnAdminGetPhoneJournalSettingsResult ::= SEQUENCE
+{
+	iUnansweredCallJournalOption			INTEGER,	-- see AsnAdminPhoneJournalUnansweredEnum
+	iAnsweredRedirectedCallJournalOption	INTEGER,	-- see AsnAdminPhoneJournalUnansweredEnum
+	bAutoMarkReadGroupCallsOnCallback		BOOLEAN,	-- Automatically mark journal entries as read, if one member of the group answered the call
+	...
+}
+
+AsnAdminGetPhoneJournalSettingsErrorEnum ::= ENUMERATED
+{
+	success(0),
+	accessdenied(1)
+}
+
+asnAdminGetPhoneJournalSettings OPERATION
+	ARGUMENT	arg AsnAdminGetPhoneJournalSettingsArgument
+	RESULT		res AsnAdminGetPhoneJournalSettingsResult
+	ERRORS		{AsnRequestError}
+::= 2920
+
+
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~ asnAdminSetAnonymousUserTokenAndContact ~~~~~~~~~~~~
+
+AsnAdminSetAnonymousUserAccessTokenArgument ::= SEQUENCE
+{
+	-- contact identifier
+	u8sAnonymousHintData		UTF8String,
+	
+	-- new access token
+	u8sAnonymousNewAccessToken	UTF8String,
+	
+	...
+}
+
+AsnAdminSetAnonymousUserAccessTokenResult ::= SEQUENCE
+{
+	success				BOOLEAN,
+	...
+}
+
+-- @brief Update accessToken for PublicUsers
+asnAdminSetAnonymousUserAccessToken OPERATION
+	ARGUMENT	arg AsnAdminSetAnonymousUserAccessTokenArgument
+	RESULT		res AsnAdminSetAnonymousUserAccessTokenResult
+	ERRORS		{AsnRequestError}
+::= 2922
+
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~ asnAdminSetAnonymousUserContactData ~~~~~~~~~~~~~~~
+
+AsnAdminSetAnonymousUserContactDataArgument ::= SEQUENCE
+{
+	-- updated contactdata information
+    contactData     			AsnNetDatabaseContact,
+	...
+}
+
+AsnAdminSetAnonymousUserContactDataResult ::= SEQUENCE
+{
+	success				BOOLEAN,
+	...
+}
+
+-- @brief create or update contactdata for PublicUsers
+asnAdminSetAnonymousUserContactData OPERATION
+	ARGUMENT	arg AsnAdminSetAnonymousUserContactDataArgument
+	RESULT		res AsnAdminSetAnonymousUserContactDataResult
+	ERRORS		{AsnRequestError}
+::= 2923
+
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~ asnAdminRemoveAnonymousUser ~~~~~~~~~~~~~~~~~~~~~
+
+AsnAdminRemoveAnonymousUserArgument ::= SEQUENCE
+{
+	-- contact identifier
+	u8sAnonymousHintData		UTF8String,
+	...
+}
+
+AsnAdminRemoveAnonymousUserResult ::= SEQUENCE
+{
+	success				BOOLEAN,
+	...
+}
+
+-- @brief remove PublicUser from userdatabase
+asnAdminRemoveAnonymousUser OPERATION
+	ARGUMENT	arg AsnAdminRemoveAnonymousUserArgument
+	RESULT		res AsnAdminRemoveAnonymousUserResult
+	ERRORS		{AsnRequestError}
+::= 2924
+
+
+END

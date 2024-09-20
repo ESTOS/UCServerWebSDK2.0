@@ -1,0 +1,3 @@
+[submodule "interface/esnacc-compiler"]
+	path = interface/esnacc-compiler
+	url = https://github.com/ESTOS/esnacc.git

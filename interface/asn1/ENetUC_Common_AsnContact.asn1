@@ -1,0 +1,367 @@
+﻿UC-Server-Access-Protocol-AsnContactCommon
+	{ iso(1) identified-organization(3) dod(6) internet(1) private(4) enterprise(1) estos(10924) uc-server-access-protocol-v2(2) asncontactcommon(30) }
+
+
+-- @category Common
+-- @brief Common interface definitions
+-- @long
+-- ## Module description
+-- This module contains structures that are mainly used in combination with the AsnContact
+-- There should not be any function/operation defintions in this module.
+-- 
+-- THERE SHOULD NOT BE ANY FUNCTION/OPERATION DEFINTIONS IN THIS MODULE.
+-- 
+
+DEFINITIONS
+IMPLICIT TAGS ::=
+BEGIN
+
+IMPORTS
+AsnOptionalParameters, AsnNetDatabaseContact, AsnSystemTime, AsnUserPropertyBag, UTF8StringList, SEQInteger FROM UC-Server-Access-Protocol-Common
+AsnLineForwards FROM UC-Server-Access-Protocol-SIPCTICommon
+SEQAppointmentList, AsnAppointmentEntry FROM UC-Server-Access-Protocol-AppointmentsCommon
+;
+
+-- @brief Bitfield with access rights for the user to use specific services/functions on the UCserver.
+-- @long
+-- The bitfield is configured by the administrator on the UCServer in the usermanagement section, mainly on the services tabs of the user, computer or group editors.
+--
+-- Some of the flags are only set for specific objects or have only an effect for these objects.
+--
+-- Some of the flags can be set for user AND groups, so a user can get the right from his own configuration or from a group she is member of.
+--
+-- For more flags see AsnUserStaticRights2.
+AsnUserStaticRights ::= ENUMERATED
+{
+	eUSERRIGHTSSENDUSERUSER		(1), 			-- 0x00000001 - User may use text chat.
+	eUSERRIGHTSSENDSMS			(2),			-- 0x00000002 - User may use the SMS service.
+	eUSERRIGHTSEMPTY			(4),			-- 0x00000004 - User may login via WebServices.
+	eUSERRIGHTSUSEPROCALL		(8),			-- 0x00000008 - User may use the UCClient; should always be set.
+	eUSERRIGHTSSELFADMIN		(32), 			-- 0x00000020 - User may change his account settings with the "Workstation settings" program.
+	eUSERRIGHTSUSERCTI			(64), 			-- 0x00000040 - User may use CTI lines.
+	eDONOTUSE					(128),  		-- 0x00000080 - Reserved.
+	eUSERRIGHTSOFFLINEMAIL		(256),			-- 0x00000100 - User may get email for calls while he was absent.
+	eUSERRIGHTSCALLRECORDING	(512),			-- 0x00000200 - User may use call recorder.
+	eUSERRIGHTSUSEPHONEBOOK		(1024),			-- 0x00000400 - User may use the search in phonebooks.
+	eUSERRIGHTSUSERPRESENCE		(2048),			-- 0x00000800 - User is a CTI/Presence user (should always be set).
+	eUSERRIGHTSGROUPALLINMONITOR(4096),			-- 0x00001000 - Users of the group can see all other users in his monitor (available only for groups).
+	eUSERRIGHTSGROUPNOCHANGEMONITOR(8192),		-- 0x00002000 - Users of the group cannot change the content of their monitor (available only for groups).
+	eUSERRIGHTSGROUPVIEWJOURNAL	(16384),		-- 0x00004000 - Users of the group may see the Journal/History of other group members (available only for groups).
+	eUSERRIGHTSGROUPVIEWJOURNALLEADER(32768),	-- 0x00008000 - The group leader may see the Journal/History of all group members (available only for groups).
+	eUSERRIGHTSGROUPEDITJOURNAL	(65536),		-- 0x00010000 - Users of a group may edit Journal/History of other group members (available only for groups).
+	eDONOTUSE2					(131072),		-- 0x00020000 - Reserved.
+	eDONOTUSE3					(262144),		-- 0x00040000 - Reserved.
+	eUSERRIGHTSUSERVIEWJOURNAL	(524288),		-- 0x00080000 - Journal/History functions are available for the user; if not, acces to the journal database is not available for this user.
+	eUSERRIGHTSGLOBALDELETEJOURNAL(1048576),	-- 0x00100000 - Every user of the system may delete Journal/History entries.
+	eUSERRIGHTSOFFLINESMS		(2097152),		-- 0x00200000 - User may get SMS messages for calls whjile he is absent.
+	eUSERRIGHTSDESKSHAREACCEPT	(4194304),		-- 0x00400000 - User may accept desktop sharing invitaions but cannot initiate own session.
+	eUSERRIGHTSDESKSHAREFULL	(8388608),		-- 0x00800000 - User may accept or initiate desktop sharing session.
+	eDONOTUSE4					(16777216),		-- 0x01000000 - Reserved.
+	eUSERRIGHTSAVAUDIO			(33554432),		-- 0x02000000 - User may use audio communication features without video.
+	eUSERRIGHTSAVVIDEO			(67108864),		-- 0x04000000 - User may use audio and video communication features.
+	eUSERRIGHTSFEDDESKSHARE		(134217728)		-- 0x08000000 - User may use desktop sharing over federation connections (experimental!).
+}
+
+-- @brief Bitfield with access rights for the user to use specific services/functions on the UCserver.
+-- @long
+-- The bitfield is configured by the administrator on the UCServer in the usermanagement section, mainly on the services tabs of the user, computer or group editors.
+--
+-- Some of the flags are only set for specific objects or have only an effect for these objects.
+--
+-- Some of the flags can be set for user AND groups, so a user can get the right from his own configuration or from a group she is member of.
+--
+-- For more flags see AsnUserStaticRights.
+AsnUserStaticRights2 ::= ENUMERATED
+{
+	eUSERRIGHTS2ENABLEFORANONYMOUSAPI		(1),		-- 0x00000001 - User is visible for anonymous users (like web site vistors of LiveChat).
+	eUSERRIGHTS2LOGINOVERINTERNET			(2),		-- 0x00000002 - User may login from outside the company network (e.g. from mobile network GSM).
+	eUSERRIGHTS2LOGINBYMOBILE				(4),		-- 0x00000004 - User may login from a mobile device.
+	eUSERRIGHTS2ENABLEAGENTMANAGER			(8),		-- 0x00000008 - User is availible for the agent managemtn system; see Agent API for more details. Available for users and groups.
+	eUSERRIGHTS2ISAGENTSUPERVISOR			(16),		-- 0x00000010 - User is agent subervisor and may change state of other agents.
+	eUSERRIGHTS2GROUPFORPUBLICCHAT			(32),		-- 0x00000020  - Group contains agents who may receive PUBLIC_CHATs and PUBLIC_CALLs.
+	eUSERRIGHTS2GROUPFORPORTAL				(64),		-- 0x00000040 - Group contains agents who may be visible on the contact protal. (Named "portal groups" in the admin UI).
+	eUSERRIGHTS2GROUPFORMONITOR				(128),		-- 0x00000080 - Group is available for administrative monitor content.
+
+	-- Content Sharing
+	eUSERRIGHTS2ENABLECONTENTSHARINGFILES	(512),		-- 0x00000200 - User is allowed to send binary data via the BinaryTransfer interface (default: allowed)
+	eUSERRIGHTS2ENABLECONTENTSHARINGLOCATION(1024),		-- 0x00000400 - User is allowed to share his location via the BinaryTransfer interface (default: allowed)
+	eUSERRIGHTS2ENABLECONTENTSHARINGCONTACTS(2048),		-- 0x00000800 - User is allowed to share a contact via the BinaryTransfer interface (default: allowed)
+
+	eUSERRIGHTS2USECONFERENCING				(4096),  	-- 0x00001000 - User may use conferencing functionality - (default: off - needs seperate license!)
+	eUSERRIGHTS2USETEAMS					(8192),		-- 0x00002000 - User may use MS Teams App
+	eUSERRIGHTS2ALLOWLOGININTERNETDESKTOP 	(16384),	-- 0x00004000 - User may use ProCall Client via Internet (vpnless connection)
+	eUSERRIGHTS2USEWEBAPP					(32768)  	-- 0x00008000 - User may use ProCall WebApp (PWA)
+}
+
+-- @brief The authorizations a user has on another user or gets from him.
+-- @long
+-- The "dynamic rights" are the authorizatio a user gives to or receives from another user. These are managed in levels and transported with these structures.
+AsnUserDynamicRights ::= SEQUENCE
+{
+	u8sObjectID							UTF8String,
+	iPresenceRights						INTEGER,
+	iPhoneControlRightsPrimary			INTEGER,
+	iPhoneControlRightsSecondary		INTEGER,
+	...
+}
+
+-- @brief List of AsnUserDynamicRights.
+AsnUserDynamicRightsList ::= SEQUENCE OF AsnUserDynamicRights
+
+-- @brief Enumeration for the iState field values of AsnContactPhoneLineState.
+-- @long Enumeration values for the iState field values used in AsnContactPhoneLineState.
+AsnContactPhoneLineState ::= ENUMERATED
+{
+	eLINEOFFLINE              (0),
+	eLINEONLINE               (1)
+}
+
+AsnContactCallInformationV2 ::= SEQUENCE
+{
+	u8sContactChangedId					UTF8String, -- The contact id of the contact this information is related to.
+	iPresenceState						INTEGER,	-- Actual presence state of the contact this information is related to.
+	
+	u8sConnectionID						UTF8String,	-- Unique identifier of the call.
+	
+	u8sLinePhoneNumber					UTF8String,	-- Line identfier (or phone number if URI is not available) of the phone 
+	
+	iCallState							INTEGER,	-- Call state in which the call currently is. See EnumCallState for more details.
+													-- @linked EnumCallState
+	
+	iDisconnectedReason					INTEGER,	-- If a call is disconnected, this could contain a reason for the disconnect. See EnumCallDisconnectedReason for more details.
+													-- @linked EnumCallDisconnectedReason
+	
+	iFeatures							INTEGER,	-- This field contains the currently available call features - what can a client do with this call. See EnumCallFeatures for more details.
+													-- @linked EnumCallFeatures
+	
+	bOutbound							BOOLEAN,	-- true if the call was initiated (dialed) on the attached line; false if the call is incoming from outside.
+
+	bInternal							BOOLEAN,	-- true if the call terminates in the same PBX; false if the other device is not attached to this PBX.
+
+	bPrivate							BOOLEAN,	-- true if the call is marked as private, false if not.
+
+	iCallRecordingState					INTEGER,	-- Call recording state of this call. See EnumCallRecordingState for more details.
+	
+	bConferenceCtlr						BOOLEAN,	-- true if this call is used to control a conference.
+
+	u8sCurrentNumberSC					UTF8String,	-- Phone number of the partner.
+
+	u8sTrackerID						UTF8String, -- the call tracker id
+
+	u8sLocalCurrentNumberSC				UTF8String,	-- The called number in supercanonic notation if called outbound. The called number in supercanonic notation if we received the call.
+
+	u8sRedirectingNumber				[0] UTF8String OPTIONAL,	-- May contain the number of the line on which the call was received first and then redirected.
+
+	remoteContact						[1] AsnNetDatabaseContact OPTIONAL, -- If present, this Field contains contact data attached to this call (UCServer intern only)
+
+	...
+}
+
+-- @brief List of AsnContactCallInformation.
+AsnContactCallInformationsV2 ::= SEQUENCE OF AsnContactCallInformationV2
+
+-- @brief Parameter for a SIP line
+AsnSIPLineDetails ::= SEQUENCE
+{
+	-- Available media modes
+	iSIPAVMediaMode									INTEGER,
+	-- List of supported audio codecs
+	iSIPAVAudioCodecs								SEQInteger,
+	-- the minimum media port
+	iMinPort										INTEGER,
+	-- the maximum media port
+	iMaxPort										INTEGER,
+	...
+}
+
+-- @brief Phone line object which is used in the presence object model.
+-- @long 
+-- Not every client will have full CTI functionality, but has to display some information baout the
+-- lines and phone states of users. For this AsnContactPhoneLine represents teh state of a line in the presence model.
+-- @added 13.09.2024
+AsnContactPhoneLineV2 ::= SEQUENCE
+{
+	-- Enum for the type of the line. See AsnContactPhoneLineType for details.
+	-- @linked AsnContactPhoneLineType
+	iType								INTEGER,
+	
+	-- The identificator of a line. This could be a Phonenumber or a phone URI.
+	u8sLinePhoneNumber					UTF8String,
+	
+	-- Description text for a line.
+	u8sDescriptor						UTF8String,
+	
+	-- Phone number of the line.
+	u8sNumber							UTF8String,
+	
+	-- Call which are currently on the line.
+	seqCalls							AsnContactCallInformationsV2,
+
+	-- Line forwardings currently set on the line.
+	seqLineForwards						AsnLineForwards,
+	
+	-- The line state. See AsnContactPhoneLineState for details (eLINEOFFLINE, eLINEONLINE, etc.)
+	iState								AsnContactPhoneLineState,
+	
+	-- Do not disturb flag for this line. TRUE do not disturb is active, FALSE not.
+	bDoNotDisturb						BOOLEAN,
+
+	-- Which sort of call forward is available on this line. See AsnForwardMode for details.
+	-- @linked AsnForwardMode
+	iForwardFeaturesPBX					INTEGER,
+	
+	-- The line adresses on this line
+	u8sAddressNames						UTF8StringList,
+	
+	-- XML with the capabilities of the line
+	u8sAddressCaps						UTF8String,
+
+	-- XML with the feature codes available for this line
+	u8sCTIFeatureCodes					UTF8String,
+	
+	-- the line has to be treated as private
+	bIsPrivateLine						[0] BOOLEAN OPTIONAL,
+
+	-- true if the line is a voiceservices line
+	bIsVoiceServicesLine				[1] BOOLEAN OPTIONAL,
+
+	-- Details of a SIP line
+	sipLineDetails						[2] AsnSIPLineDetails OPTIONAL,
+
+	...
+}
+
+-- @brief List of AsnContactPhoneLineV2 objects.
+AsnContactPhoneLinesV2 ::= SEQUENCE OF AsnContactPhoneLineV2
+
+-- @brief The enum of the state in AsnAbsentState.
+AsnAbsentStateEnum ::= ENUMERATED
+{
+	eABSENTSTATENOTABSENT     (0),  -- Available
+	eABSENTSTATEOUTOFOFFICE   (1),	-- Out of office
+	eABSENTSTATEBUSY		  (2),  -- Busy
+	eABSENTSTATEDONOTDISTURB  (3),	-- Do not disturb
+	eABSENTSTATENOTSET		  (4)   -- Absent state is not set
+}
+
+-- @brief The enum of the reachability in AsnAbsentState.
+AsnReachabilityEnum ::= ENUMERATED
+{
+	eREACHABILITYNORMAL		(0),	-- Empty (in the office)
+	eREACHABILITYPAUSE			(1),	-- Pause
+	eREACHABILITYBUSINESSTRIP	(2),	-- Business trip
+	eREACHABILITYHOMEOFFICE	(3),	-- Home Office
+	eREACHABILITYVACATION		(4),	-- Vacation
+	eREACHABILITYUNREACHABLE	(5)		-- Currently not in use
+
+}
+
+-- different types of external presence providers
+AsnExternalPresenceType ::= ENUMERATED
+{
+	eMSTeams							(0)
+}
+
+-- A state of an external presence provider
+AsnExternalPresenceState ::= SEQUENCE
+{
+	u8sUserName							UTF8String,
+	iState								INTEGER,
+	eType								AsnExternalPresenceType,
+	...
+}
+
+AsnExternalPresenceStates ::= SEQUENCE OF AsnExternalPresenceState
+
+-- @brief The absent state of a user/contact in the ucserver.
+-- @long
+-- AsnAbsentSate is used to describe the manual presence of a User.
+-- The manual presence is used to override the system calculated presence state of the user until a new system
+-- state is calculated or the system calculated one is back to "available" again.
+-- So the manual presence overrides the actual presence at the moment it is set, but it will be overridden by new system 
+-- events other than "available".
+AsnAbsentStateV2 ::= SEQUENCE
+{
+	u8sContactId						UTF8String, -- The Contact ID of the user.
+	eAbsentState						AsnAbsentStateEnum, 
+	-- @linked AsnPresenceStateFlags
+	iPresenceState						[0] INTEGER OPTIONAL, -- The serverside calculated presence state of the contact. This is a 32 Bit field assembled with values from AsnPresenceStateEnum and bits of AsnPresenceStateFlags.
+	stTimeFrom							[1] AsnSystemTime OPTIONAL, -- Timestamp from which the state is valid.
+	stTimeTo							[2] AsnSystemTime OPTIONAL, -- Timestamp the state state is valid to.
+	eReachability						[3] AsnReachabilityEnum OPTIONAL, -- The reachability of the user
+	externalPresenceStates				[4] AsnExternalPresenceStates OPTIONAL, -- external presence state providers that influence the presence
+	...
+}
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~ CustomNotes ~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-- @brief Structure for handling the user defined note.
+AsnCustomNote ::= SEQUENCE
+{
+	u8sContactID						UTF8String, -- Contact ID of the user.
+	u8sUsername							UTF8String,	-- The display name of the user.
+	u8sNote								UTF8String, -- The text the user has set.
+	...
+}
+
+-- @brief The interface representation of an ActveContact (or short "contact") of the UCServer with static contact and dynamic presence data.
+-- @long
+-- The UCServer uses a technology called "ActiveContacts", which are representing contacts with all its static contact information and all
+-- its dynamic/calculated presence information from the different services used by this contact (phone lines, calendar, federation etc.)
+--
+-- All the data is filtered by the UCServer depending on the permissions of the calling client/user. So not every client will get all the information.
+AsnContactV2 ::= SEQUENCE
+{
+	-- The ID of the contact, which is used to get the presence infromations and updates form the server. Note: This ID is only unique for the presence information.
+	-- The contact data behind this is depending on the data source, where the data is copied from while adding the contact to the active user managment.
+	-- This means, a contact may have the same contact ID but different contact data if it is read from another database. To distiguish the different contact
+	-- informations of the same contact see the fields u8sEntryIDDB, u8sEntryIDStore and u8sEntryID of AsnNetDatabaseContact.
+	u8sContactId						UTF8String,	
+
+	-- FeatureSet of the contact on the UCServer. See AsnContactFeatureSetEnum for more details.
+	-- @linked AsnContactFeatureSetEnum
+	iContactFeatureSet					INTEGER,
+	
+	-- The presence state of the contact. This is a 32 Bit field assembled with values from AsnPresenceStateEnum and bits of AsnPresenceStateFlags.
+	-- @linked AsnPresenceStateEnum
+	iPresenceState						INTEGER,
+	
+	-- The active contact may use services and features of the UCServer. The iStaticRights are corresponding rights the admin granted. See AsnUserStaticRights for more details.
+	-- @linked AsnUserStaticRights
+	iStaticRights						INTEGER,
+	iStaticRights2						INTEGER,
+	
+	-- These are the rights, the active contact has on the additional lines the administrator configured for him in the user manager.
+	iMonitorAccessRights				INTEGER,				
+	
+	-- The static contact data of this contact.
+	asnRemoteContact					AsnNetDatabaseContact,
+
+	-- The actual line/call state of the contact. Each line may contain the actual calls a contact currently has.
+	seqPhoneLines						AsnContactPhoneLinesV2,
+
+	-- The actual absent state of the contact. The absent state is the presence state of the user he set manually. 
+	-- This may be overwritten by changes on the different services, the presence of the contact is calculated from (phone, appointment etc.)
+	asnAbsentState						AsnAbsentStateV2,
+
+	-- The contact can set a short note for other users.
+	asnCustomNote						AsnCustomNote,
+	
+	-- List of the currently active appointments of the contact.
+	seqActualAppointments				SEQAppointmentList,
+	
+	-- The next appointment the contact will have. (Helps to display an information like "free for the next x hours")
+	asnNextAppointment					AsnAppointmentEntry,	-- Der n�chste Termin der aktiv wird
+
+	-- Additional information for this contact added for special use cases.
+	asnUserPropertyBag					AsnUserPropertyBag,		
+
+	...
+}
+
+-- @brief List of AsnContactV2 objects.
+AsnContactsV2 ::= SEQUENCE OF AsnContactV2
+
+END

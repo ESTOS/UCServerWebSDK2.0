@@ -1,0 +1,37 @@
+@startuml Client connection setup (as of 20.09.2024)
+participant "Client" as CL
+participant "UCController" as UCC
+participant "UCWeb" as UCW
+participant "UCServer" as UCS
+autonumber
+
+Note over UCW, UCS: The UCServer needs to be connected to UCConnect.\n\
+If the server is connected it established connections to two\n\
+different UCWeb proxies for redundancy reasons.
+Note over CL, UCC: Retrieve one of the UCWeb proxys the UCServer is connected to
+CL->UCC++: https://uccontroller.ucconnect.de/controller/client/ucws?ucsid=<color:blue><b>{UCSID or ALIAS}</b></color>
+CL<--UCC--: 200 OK\n\n\
+{"redirect" : "https://someucweb1.ucconnect.de" }
+...
+Note over CL, UCW: Create and authenticate a session over the UCWeb to the target UCServer
+CL->UCW++: https://someucweb1.ucconnect.de/ws/client/createsession?ucsid=<color:blue><b>{UCSID or ALIAS}</b></color>
+UCW->UCS++: asnNegotiatexx
+UCW<--UCS--: asnNegotiatexxResult: { suportedauthMethods }
+CL<-UCW--: 401 Unauthorized\n\
+WWW-Authenticate: authdata
+...
+loop If authentication requires renegotiation (NTLM, Kerberos)
+CL->UCW++: GET https://someucweb1.ucconnect.de/ws/client/createsession?ucsid=<color:blue><b>{UCSID or ALIAS}</b></color>\n\
+Authorization: authdata\n\
+x-epid: authsessionid <color:green>// for multi handshake auth protocols</color>
+UCW->UCS++: asnCreateUserSession
+UCW<--UCS--: asnCreateUserSessionResult: { u8sSessionID: 'usersessionID' }
+Note left of UCW: Client calls are now happening in the context of //usersessionID//
+UCW->UCS++: asnLogon(AsnLogonArgument)
+UCW<--UCS--: AsnLogonResult
+CL<--UCW--: 200 OK\n\n\n\
+{ sessionID: usersessionID }
+end
+CL->UCW++: wss://someucweb1.ucconnect.de/ws/client/websocket?x-ucsessionid=<color:blue><b>{usersessionID}</b></color>
+CL<--UCW--: 101 SWITCHING PROTOCOLS
+@enduml

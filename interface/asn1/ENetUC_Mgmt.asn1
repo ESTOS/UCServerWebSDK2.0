@@ -1,0 +1,5462 @@
+﻿UC-Server-Access-Protocol-Management
+	{ iso(1) identified-organization(3) dod(6) internet(1) private(4) enterprise(1) estos(10924) uc-server-access-protocol-v2(2) management(20) }
+
+-- @category Management
+-- @brief Administration interface (UCServer administration)
+-- @long
+-- ## Module description
+-- This module defines the structures and operations operationsfor the UCServer management software.
+-- It should be used by the UCServer Administrator, Web based administration tools or automatic provisioning applications.
+-- Several operations are a copy of operations in ENetUC_Admin.asn1 and renamed "asnAdmin..." -> "asnMgmt..."
+-- (for having a clearer separation of the interfaces)
+-- 
+-- ## Versioning
+-- It is important to increment the version of the protocol, whenever there are incompatible changes.
+-- The admin and the server must have an equal version to communicate.
+-- The protocol version defined with the field named AsnManagementProtocolVersion
+-- 
+-- ##        Management operations
+ 
+
+
+DEFINITIONS
+IMPLICIT TAGS ::=
+BEGIN
+
+IMPORTS
+SEQInteger, AsnUserPropertyBag, AsnNetDatabaseContactList, UTF8StringList, AsnRequestError, AsnSystemTime, AsnStringPairList, AsnStringIntegerPairList FROM UC-Server-Access-Protocol-Common
+AsnProjectPinRuleList, AsnConfigSTUNandTURNList, AsnLineForwards FROM UC-Server-Access-Protocol-SIPCTICommon
+AsnUserDynamicRights FROM UC-Server-Access-Protocol-AsnContactCommon
+AsnClientCapabilitiesV2ByIDList, AsnClientCapabilitiesV2 FROM UC-Server-Access-Protocol-ClientCapabilities
+AsnBinaryTransferStorageSettings, AsnBinaryTransferStorageTypeEnum FROM UC-Server-Access-Protocol-BinaryTransfer
+
+AsnUserProfile, AsnUserProfileList, AsnComputerProfile, AsnGroupProfile,
+AsnAdminSetUserProfileArgument, AsnAdminSetUserProfileResult,
+AsnAdminSetUserProfilesListArgument, AsnAdminSetUserProfilesListResult,
+AsnAdminAddComputerProfileArgument, AsnAdminAddComputerProfileResult,
+AsnAdminGetComputerProfileArgument, AsnAdminGetComputerProfileResult,
+AsnAdminSetComputerProfileArgument, AsnAdminSetComputerProfileResult,
+AsnAdminAddGroupProfileArgument, AsnAdminAddGroupProfileResult,
+AsnAdminRemoveGroupProfileArgument, AsnAdminRemoveGroupProfileResult,
+AsnAdminFindGroupProfilesArgument, AsnAdminFindGroupProfilesResult,
+AsnAdminAddUserProfileArgument, AsnAdminAddUserProfileResult,
+AsnAdminRemoveUserProfileArgument, AsnAdminRemoveUserProfileResult,
+AsnAdminGetUserProfileArgument, AsnAdminGetUserProfileResult,
+AsnGetUserManagerSettingsArgument, AsnGetUserManagerSettingsResult,
+AsnGetAvailableLinesArgument, AsnGetAvailableLinesResult,
+AsnGetNetworkInterfacePortsArgument, AsnGetNetworkInterfacePortsResult
+ FROM UC-Server-Access-Protocol-Admin
+
+AsnCtiLineOpenStatus FROM UC-Server-Access-Protocol-CTI
+
+AsnLoginV2Argument, AsnLoginV2Result FROM UC-Server-Access-Protocol-AuthCommon
+AsnNegotiateInterfaceVersionArgument, AsnNegotiateInterfaceVersionResult FROM UC-Server-Access-Protocol-Transport
+
+AsnContactID, AsnMetaDirectoryPasswordEncryption, AsnMetaDirectorySettings, AsnGetLocationIDsArgument,
+AsnGetLocationIDsResult, AsnSetMetaSettingsArgument, AsnSetMetaSettingsResult, AsnGetMetaSettingsArgument, AsnGetMetaSettingsResult 
+ FROM UC-Server-Access-Protocol-Main
+
+;
+
+
+-- @brief The Management protocol version
+-- @long This version must be incremented every time the interface is changed and compatibility is broken.
+AsnManagementProtocolVersion ::= ENUMERATED
+{
+	-- This is the protocol interface version. Increment whenever there are incompatible changes.
+	-- just increment the number, do not add additional members.
+    current(3) 
+}
+
+-- @brief Empty argument/result
+-- @long this type is used as argument or result type when we have no members inside  
+AsnMgmtEmpty ::= SEQUENCE
+{
+	...
+}
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~ User
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+asnMgmtSetUserProfile OPERATION
+	ARGUMENT	arg AsnAdminSetUserProfileArgument
+	RESULT		res AsnAdminSetUserProfileResult
+	ERRORS		{AsnRequestError}
+::= 2656
+
+asnMgmtSetUserProfilesList OPERATION
+	ARGUMENT	arg AsnAdminSetUserProfilesListArgument
+	RESULT		res AsnAdminSetUserProfilesListResult
+	ERRORS		{AsnRequestError}
+::= 2823
+
+-- @brief get all user profiles
+-- @long Create a new GUID and send it as parameter u8sCrossRefId
+-- UCServer will then send Events asnMgmtGetUserProfilesResult with this GUID  
+AsnMgmtGetUserProfilesArgument ::= SEQUENCE
+{
+	iActiveUsersOnly		INTEGER, -- CTI-Enabled users only
+	iFilterOnlineState		INTEGER, -- Filter with actual onlinestate -> AsnAdminUserOnlineStateFilter
+	u8sCrossRefId			UTF8String,
+	...
+}
+
+AsnMgmtGetUserProfilesResult ::= SEQUENCE
+{
+	userProfiles						AsnUserProfileList,
+	...
+}
+
+AsnMgmtGetUserProfilesErrorEnum ::= ENUMERATED
+{
+	success(0),
+	nouserfound(1),
+	accessdenied(2)
+}
+
+-- @brief Get all user profiles
+-- @long Triggers the UCServer to send Events asnMgmtGetUserProfilesResult() to client with 50 user profiles each
+asnMgmtGetUserProfiles OPERATION
+	ARGUMENT	arg AsnMgmtGetUserProfilesArgument
+	RESULT		res AsnMgmtGetUserProfilesResult
+	ERRORS		{AsnRequestError}
+::= 2632
+
+-- @brief bLastSegment is true if this is the last deliver of user profiles
+AsnMgmtGetUserProfilesResultArgument ::= SEQUENCE
+{
+	-- List of user profiles (max 50 in one segment)
+	listUserProfiles			AsnUserProfileList,
+	-- CrossrefID from AsnMgmtGetPushServiceDevicesResult.
+	u8sCrossRefID				UTF8String,
+	-- last Segment for this u8sCrossRefID, TRUE, wenn dieses Segment das Ende der Liste ist.
+	bLastSegment				BOOLEAN,
+	...
+}
+
+-- @brief You have called asnMgmtGetUserProfiles() and get your results here (50 user profiles every this event)  
+asnMgmtGetUserProfilesResult OPERATION
+	ARGUMENT	arg AsnMgmtGetUserProfilesResultArgument
+::= 2726
+
+AsnMgmtGetUsersArgument ::= SEQUENCE
+{
+	-- if true the users will be sent bundled with asnMgmtGetUserListEvent
+	-- (if false or omitted the users will be sent individually with asnMgmtGetUsersEvent)
+	bResultAsList [0] BOOLEAN OPTIONAL, 
+	...
+}
+
+AsnMgmtGetUsersResult ::= SEQUENCE
+{
+	iNumberOfUsers		INTEGER, 
+	...
+}
+
+asnMgmtGetUsers OPERATION
+	ARGUMENT	arg AsnMgmtGetUsersArgument
+	RESULT		res AsnMgmtGetUsersResult 
+	ERRORS		{AsnRequestError}
+ ::= 2501
+
+asnMgmtReloadUserConfig OPERATION
+	ARGUMENT	arg AsnMgmtEmpty
+	RESULT		res AsnMgmtEmpty
+	ERRORS		{AsnRequestError}
+::= 2570
+
+asnMgmtUpdateActiveUserProfiles OPERATION
+	ARGUMENT	arg AsnMgmtEmpty
+	RESULT		res AsnMgmtEmpty 
+	ERRORS		{AsnRequestError}
+::= 2533
+
+AsnClientConnectionDescription ::= SEQUENCE
+{
+	u8sContactID						UTF8String,
+	u8sAnonymousUserName				UTF8String,
+	u8sHintData							UTF8String,
+	u8sConnectionGUID					UTF8String,
+	u8sDeviceName						UTF8String,
+	u8sDeviceID							UTF8String,
+	-- @linked AsnClientAppID
+	iClientAppID						INTEGER,
+	bIsIdle								BOOLEAN,
+	...
+}
+
+AsnClientConnectionDescriptions ::= SEQUENCE OF AsnClientConnectionDescription
+
+AsnMgmtClientConnectionInformation ::= SEQUENCE
+{
+	-- Letztes Gerät auf dem sich der Nutzer angemeldet hat 
+	u8sLastLoginDeviceName				UTF8String,
+	-- Letzter Anmeldezeitpunkt
+	timLastLogin						AsnSystemTime,
+	-- Dieser Client ist aktuell Online
+	bOnline 							BOOLEAN,
+	-- Die AV Leitung dieses Nutzers ist DND
+	bAVLineIsDND 						BOOLEAN,
+	-- Informationen zu den Verbindungen dieses Clients (Geräteverbindungen)
+	connectionDescriptions				AsnClientConnectionDescriptions,
+	-- Die Capabilities der verschiedenen Geräteverbindungen (aufgelöst nach der Verbindungs GUID)
+	clientCapabilities					AsnClientCapabilitiesV2ByIDList,
+	-- Die Summe der Capabilities aller Client Verbindnugen
+	clientCapabilitiesSum				AsnClientCapabilitiesV2,
+	...
+}
+
+AsnMgmtGetUsersEventArgument ::= SEQUENCE
+{
+	userProfile 				AsnUserProfile,
+	clientConnectionInfo		AsnMgmtClientConnectionInformation,
+	...
+}
+
+AsnMgmtUserProfileData ::= SEQUENCE
+{
+	userProfile 				AsnUserProfile,
+	clientConnectionInfo		AsnMgmtClientConnectionInformation,
+	...
+}
+
+AsnMgmtUserProfileDataList ::= SEQUENCE OF AsnMgmtUserProfileData
+
+AsnMgmtGetUserListEventArgument ::= SEQUENCE
+{
+	userProfileDataList AsnMgmtUserProfileDataList,
+	...
+}
+asnMgmtGetUserListEvent OPERATION
+	ARGUMENT	arg AsnMgmtGetUserListEventArgument
+::= 2746
+
+
+AsnMgmtGetUMModeResult ::= SEQUENCE
+{
+	iType 			INTEGER,
+	...
+}
+
+asnMgmtGetUMMode OPERATION
+	ARGUMENT	arg AsnMgmtEmpty
+	RESULT		res AsnMgmtGetUMModeResult
+	ERRORS		{AsnRequestError}
+::= 2560
+
+AsnMgmtSetUMModeArgument ::= SEQUENCE
+{
+	iType 			INTEGER,
+	...
+}
+
+asnMgmtSetUMMode OPERATION
+	ARGUMENT	arg AsnMgmtSetUMModeArgument
+	RESULT		res AsnMgmtEmpty
+	ERRORS		{AsnRequestError}
+::= 2561
+
+AsnMgmtTestUMInterfaceArgument ::= SEQUENCE
+{
+	iType INTEGER,
+	...
+}
+
+asnMgmtTestUMInterface OPERATION
+	ARGUMENT	arg AsnMgmtTestUMInterfaceArgument
+	RESULT		res AsnMgmtEmpty
+	ERRORS		{AsnRequestError}
+::= 2571
+
+AsnMgmtUserProfileGetLargeImageArgument ::= SEQUENCE
+{
+	u8sUsername 		UTF8String,
+	u8sImgHash 			UTF8String,
+	...
+}
+
+AsnMgmtUserProfileGetLargeImageResult ::= SEQUENCE
+{
+	binImageData 		OCTET STRING,
+	u8sImgHash 			UTF8String,
+	...
+}
+
+asnMgmtUserProfileGetLargeImage OPERATION
+	ARGUMENT	arg AsnMgmtUserProfileGetLargeImageArgument
+	RESULT		res AsnMgmtUserProfileGetLargeImageResult
+	ERRORS		{AsnRequestError}
+::= 2609
+
+asnMgmtSubscribeUserGroupComputerModifiedEvents OPERATION
+	ARGUMENT	arg AsnMgmtEmpty
+	RESULT		res AsnMgmtEmpty
+	ERRORS		{AsnRequestError}
+::= 2672
+
+asnMgmtUnsubscribeUserGroupComputerModifiedEvents OPERATION
+	ARGUMENT	arg AsnMgmtEmpty
+	RESULT		res AsnMgmtEmpty
+	ERRORS		{AsnRequestError}
+::= 2671
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~ Group
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ AsnMgmtGetGroupsResult ::= SEQUENCE
+{
+	iNumberOfGroups		INTEGER, 
+	...
+}
+
+asnMgmtGetGroups OPERATION
+	ARGUMENT	arg AsnMgmtEmpty
+	RESULT		res AsnMgmtGetGroupsResult 
+	ERRORS		{AsnRequestError}
+ ::= 2503
+
+AsnMgmtRemoveGroupArgument ::= SEQUENCE
+{
+	u8sGroupName		UTF8String,
+	...
+}
+
+asnMgmtRemoveGroup OPERATION
+	ARGUMENT	arg AsnMgmtRemoveGroupArgument
+	RESULT		res AsnMgmtEmpty
+	ERRORS		{AsnRequestError}
+::= 2554
+
+AsnMgmtGetGroupsEventArgument ::= SEQUENCE
+{
+	groupProfile 				AsnGroupProfile,
+	...
+}
+
+asnMgmtGetGroupsEvent OPERATION
+	ARGUMENT	arg AsnMgmtGetGroupsEventArgument
+::= 2702
+
+
+AsnMgmtAgentPublicPresenceItem ::= SEQUENCE
+{
+	-- URI des Agenten
+	u8sAgentURI						UTF8String, 
+	
+	-- aktuelle öffentliche Präsenz des Agenten
+	-- @linked AsnRankingAgentPublicPresenceEnum
+	iPublicAgentPresence			INTEGER,
+	...
+}
+
+AsnMgmtAgentPublicPresenceItemList ::= SEQUENCE OF AsnMgmtAgentPublicPresenceItem 
+
+
+AsnMgmtGetGroupAgentPublicPresenceArgument ::= SEQUENCE
+{
+	u8sGroupName			UTF8String,
+	...
+}
+
+AsnMgmtGetGroupAgentPublicPresenceResult ::= SEQUENCE
+{
+	listAgentPresence		AsnMgmtAgentPublicPresenceItemList,
+	... 
+}
+
+asnMgmtGetGroupAgentPublicPresence OPERATION
+	ARGUMENT	arg AsnMgmtGetGroupAgentPublicPresenceArgument
+	RESULT		res AsnMgmtGetGroupAgentPublicPresenceResult
+	ERRORS		{AsnRequestError}
+::= 2584
+
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~ Computer
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+AsnMgmtGetComputersResult ::= SEQUENCE
+{
+	iNumberOfComputers		INTEGER, 
+	...
+}
+
+asnMgmtGetComputers OPERATION
+	ARGUMENT	arg AsnMgmtEmpty
+	RESULT		res AsnMgmtGetComputersResult 
+	ERRORS		{AsnRequestError}
+ ::= 2502
+
+AsnMgmtRefreshComputerStatusArgument ::= SEQUENCE
+{
+	u8slistComputers		UTF8StringList, 
+	...
+}
+
+asnMgmtRefreshComputerStatus OPERATION
+	ARGUMENT	arg AsnMgmtRefreshComputerStatusArgument
+	RESULT		res AsnMgmtEmpty 
+	ERRORS		{AsnRequestError}
+ ::= 2504
+
+AsnMgmtClearComputerStatusArgument ::= SEQUENCE
+{
+	u8slistComputers		UTF8StringList, 
+	...
+}
+
+asnMgmtClearComputerStatus OPERATION
+	ARGUMENT	arg AsnMgmtClearComputerStatusArgument
+	RESULT		res AsnMgmtEmpty 
+	ERRORS		{AsnRequestError}
+ ::= 2505
+
+AsnMgmtRemoveComputerArgument ::= SEQUENCE
+{
+	u8sComputerName		UTF8String, 
+	...
+}
+
+asnMgmtRemoveComputer OPERATION
+	ARGUMENT	arg AsnMgmtRemoveComputerArgument
+	RESULT		res AsnMgmtEmpty 
+	ERRORS		{AsnRequestError}
+ ::= 2506
+ 
+AsnMgmtComputerFoundEventArgument ::= SEQUENCE
+{
+	computerProfile 			AsnComputerProfile,
+	softwareStatusComputer		AsnMgmtSoftwareStatusComputer,
+	clientInstallProfileData	AsnMgmtClientInstallProfileData,
+	...
+}
+
+asnMgmtComputerFoundEvent OPERATION
+	ARGUMENT	arg AsnMgmtComputerFoundEventArgument
+::= 2703
+
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~ SMS
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+AsnMgmtSMSSenderAddressType ::= ENUMERATED
+{
+	eSMSSenderAddressUserConfigured(0),
+	eSMSSenderAddressUserConfiguredIfAvailable(1),
+	eSMSSenderAddressServerConfigured(2)
+}
+
+AsnMgmtSMSManagerSettings ::= SEQUENCE
+{
+	bIsActivated				BOOLEAN,
+	u8sConfiguredProvider		UTF8String, 
+	u8sLoginName				UTF8String,
+	u8sLoginPassword			UTF8String,
+	u8sServerSenderAddress		UTF8String,
+	iSenderAddressType			INTEGER, -- @linked AsnMgmtSMSSenderAddressType
+	u8sConfiguredService		UTF8String,
+	...
+}
+
+asnMgmtSetSMSManagerSettings OPERATION
+	ARGUMENT	arg AsnMgmtSMSManagerSettings
+	RESULT		res AsnMgmtEmpty 
+	ERRORS		{AsnRequestError}
+::= 2508
+
+asnMgmtGetSMSManagerSettings OPERATION
+	ARGUMENT	arg AsnMgmtEmpty
+	RESULT		res AsnMgmtSMSManagerSettings 
+	ERRORS		{AsnRequestError}
+::= 2509
+
+AsnMgmtWebSMSProviderList ::= SEQUENCE
+{
+	u8sProviderListAsXML	UTF8String, 
+	...
+}
+
+asnMgmtGetSMSProvider OPERATION
+	ARGUMENT	arg AsnMgmtEmpty
+	RESULT		res AsnMgmtWebSMSProviderList 
+	ERRORS		{AsnRequestError}
+ ::= 2510
+
+AsnMgmtSendSMSArgument ::= SEQUENCE
+{
+	u8sFrom			UTF8String,
+	u8sTo 			UTF8String,
+	u8sBody 		UTF8String,
+	...
+}
+
+AsnMgmtSendSMSResult ::= SEQUENCE
+{
+	u8sResultInfo		UTF8String,
+	bResultWasError 	BOOLEAN,
+	...
+}
+
+asnMgmtSendSMS OPERATION
+	ARGUMENT	arg AsnMgmtSendSMSArgument
+	RESULT		res AsnMgmtSendSMSResult 
+	ERRORS		{AsnRequestError}
+::= 2511
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~ GoogleClient
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+AsnMgmtGoogleClientID ::= SEQUENCE
+{
+	bEnabled 			BOOLEAN,
+	u8sClientID			UTF8String,
+	u8sClientSecret 	UTF8String,
+	...
+}
+
+asnMgmtGetGoogleClientID OPERATION
+	ARGUMENT	arg AsnMgmtEmpty
+	RESULT		res AsnMgmtGoogleClientID 
+	ERRORS		{AsnRequestError}
+::= 2512
+
+asnMgmtSetGoogleClientID OPERATION
+	ARGUMENT	arg AsnMgmtGoogleClientID
+	RESULT		res AsnMgmtEmpty 
+	ERRORS		{AsnRequestError}
+::= 2513
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~ Update
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+AsnMgmtGetClientInstallProfileComputerNamesResult ::= SEQUENCE
+{
+	u8slistComputers 	UTF8StringList,
+	...
+}
+
+asnMgmtGetClientInstallProfileComputerNames OPERATION
+	ARGUMENT	arg AsnMgmtEmpty
+	RESULT		res AsnMgmtGetClientInstallProfileComputerNamesResult 
+	ERRORS		{AsnRequestError}
+::= 2515
+
+AsnMgmtACUBROADCASTSENUM ::= ENUMERATED
+{
+	eACUBROADCASTUPDATE(1),
+	eACUBROADCASTUPDATEALL(2),
+	eACUBROADCASTREPORTSTATUS(3)
+}
+
+AsnMgmtSendBroadcastArgument ::= SEQUENCE
+{
+	iType				INTEGER, -- @linked AsnMgmtACUBROADCASTSENUM
+	u8slistComputers 	UTF8StringList,
+	...
+}
+
+asnMgmtSendBroadcast OPERATION
+	ARGUMENT	arg AsnMgmtSendBroadcastArgument
+	RESULT		res AsnMgmtEmpty 
+	ERRORS		{AsnRequestError}
+::= 2516
+
+AsnMgmtClientInstallProfileAction ::= SEQUENCE
+{
+	-- Identifier des Installationspaketes.
+	-- Immer verfuegbares vordefiniertes Paket ist: "EACUSRV" - der update service
+	--   (ACUFileForUpdate::strIdentifier */
+	u8sPacketIdentifier 	UTF8String,
+	-- Auszufuehrende Aktion.
+	-- einer der ACI_ACTION_NONE konstanten */
+	iAction 				INTEGER,
+	-- MSI Optionen fuer die Installation
+	-- ProCall Spezifisch
+	-- Installationsoption fuer den Client TSP 
+	-- Konstanten aus ACI_CLIENTTSPINSTALLOPTION_NONE*/
+	iClientTspInstallOption INTEGER,
+	...
+}
+
+AsnMgmtClientInstallProfileActionList ::= SEQUENCE OF AsnMgmtClientInstallProfileAction
+
+AsnMgmtClientInstallProfileData ::= SEQUENCE
+{
+	-- Computer Name auf dem die Installation durchgefuehrt werden soll
+	u8sComputerName 	UTF8String,
+	-- Profil Name.
+	-- Mehrere EClientInstallProfileData, die den selben Profil Namen haben koennen
+	-- im Admin zusammen bearbeitet werden.*/
+	u8sProfileName 		UTF8String,
+	-- Konfiguration der Installation.
+	-- Die Aktionen fuer die Installationen /Updates, die durchzufuehren sind */
+	actionList 			AsnMgmtClientInstallProfileActionList,
+	u8sAdminName 		UTF8String,
+	u8sAdminPassword 	UTF8String,
+	bFirstInstallation 	BOOLEAN,
+	-- Letzter Status des Service (ACI_SERVICE_STATUS_...)
+	iLastServiceStatus 	INTEGER,
+	-- Letzter Status der laufenden Software Installation (ACU_UPDATE_STATUS_...)
+	iLastSoftwareStatus INTEGER,
+	u8sLogData 			UTF8String,
+	...
+}
+
+AsnMgmtACUFileForUpdateDescription ::= SEQUENCE
+{
+	-- Eindeutige Nummer welche die entsprechende Datei referenziert
+	iFileID INTEGER,			
+	-- Identifier fuer die zum Update vorgesehene Datei
+	-- Der Identifier entspricht dem im XML. 
+	-- Wenn das Paket ueber den MSI UpgradeCode gesucht wurde wird mit : 
+	-- die Sprache als Zahl angehaengt 1033 fuer English (United States)
+	u8sIdentifier UTF8String,
+	-- Beschreibung der Datei
+	u8sDescription UTF8String,		
+	-- Produkt zu dem das File gehoert
+	u8sProduct UTF8String,			
+	-- Dateiname wie er auf der Platte vorliegt (Alternativ ist der MSIUpgradeCode befuellt)
+	u8sFileName UTF8String,		
+	-- Typ wie die Datei auf dem Client ausgefuehrt wird
+	-- Eine der ACU_EXECUTETYPE_PROCALLMSI Optionen 
+	iExecuteType INTEGER,
+	-- Kommando fuer execute.
+	-- Das hat verschiedene Bedeutungen je nach iExecuteType 
+	u8sExecuteCommand UTF8String,
+	-- Versionsnummer der Datei auf Platte.
+	-- Diese wird beim einlesen des Files in den Server bestimmt.
+	-- exe: Datei version aus resourcen
+	-- msi: productversion Property
+	-- andere: MD5 
+	u8sVersion UTF8String,
+	-- MSI UpgradeCode des MSI auf Platte.
+	-- Dieser wird beim einlesen des Files in den Server bestimmt.
+	-- Dieser wird zum uninstall eines msi produktes auf dem client verwendet 
+	u8sMSIUpgradeCode UTF8String,
+	-- MD5 der Datei.
+	-- Dieses wird beim einlesen der Dateio in den Server berechnet.
+	-- Der MD56 dient zum validieren des Files nach dem download durch den
+	-- ACI Service 
+	u8sValidationCode UTF8String,
+	-- Language des Files oder 0 fuer alle Sprachen (Neutral)
+	-- Muss im xml konfiguriert sein 
+	iFileLanguage INTEGER,
+	iLCIDsEmbedded SEQInteger,
+	-- Zielplatform fuer dieses File.
+	-- Das ist entweder leer (alle) oder
+	-- x64 fuer Windows AMD 64 Platformen oder 
+	-- x86 fuer Windows x86 Platformen.
+	u8sPlatform UTF8String,
+	-- reg key oder file key ob das file installiert ist (int)
+	-- reg:HKEY_LOCAL_MACHINE\Software\ESTOS\UCServer4\Client\InstallCtiClient
+	-- file:%CTICLIENTDIR%\config\oeminfo.bmp 
+	u8sKeyInstalled UTF8String,
+	-- reg key oder file key fuer die version.(u8sing)
+	-- reg:HKEY_LOCAL_MACHINE\Software\ESTOS\UCServer4\Client\InstallVersion
+	-- file:%CTICLIENTDIR%\config\oeminfo.bmp 
+	u8sKeyVersion UTF8String,
+	-- HREGKEY unter dem nach der Sprache zu suchen ist (int)
+	-- HKEY_LOCAL_MACHINE\Software\ESTOS\UCServer4\Client\Language 
+	u8sRegPathLanguage UTF8String,
+	-- Dieses File darf fuer Updates verwendet werden
+	iAllowUpdate INTEGER,
+	-- Dieses File darf fuer Remote Installationen verwendet werden
+	iAllowInstall INTEGER,
+	u8sFilePath [0] UTF8String OPTIONAL,
+	...
+}
+
+AsnMgmtGetClientInstallProfileArgument ::= SEQUENCE
+{
+	u8sComputer			UTF8String,
+	...
+}
+
+AsnMgmtGetClientInstallProfileResult ::= SEQUENCE
+{
+	profileData 		AsnMgmtClientInstallProfileData,
+	...
+}
+asnMgmtGetClientInstallProfile OPERATION
+	ARGUMENT	arg AsnMgmtGetClientInstallProfileArgument
+	RESULT		res AsnMgmtGetClientInstallProfileResult 
+	ERRORS		{AsnRequestError}
+::= 2517
+
+AsnMgmtSetClientInstallProfileArgument ::= SEQUENCE
+{
+	iACICommand			INTEGER,
+	profileData 		AsnMgmtClientInstallProfileData,
+	...
+}
+
+asnMgmtSetClientInstallProfile OPERATION
+	ARGUMENT	arg AsnMgmtSetClientInstallProfileArgument
+	RESULT		res AsnMgmtEmpty 
+	ERRORS		{AsnRequestError}
+::= 2518
+
+AsnMgmtACUFileForUpdateDescriptionList ::= SEQUENCE OF AsnMgmtACUFileForUpdateDescription
+AsnMgmtGetAvailableUpdatesResult ::= SEQUENCE
+{
+	updateDescriptionList 	AsnMgmtACUFileForUpdateDescriptionList,
+	...
+}
+
+AsnUpdateAVBehaviour ::= ENUMERATED
+{
+	waitForIdle(0),					-- Warten bis der Client Idle ist
+	immediate(1),					-- Upate immer sofort ausführen
+	waitForIdleTimed(2)            -- Warten bis der Client Idle ist, maximal iMaxWaitTimeForIdleMinutes Minuten
+}
+
+asnMgmtGetAvailableUpdates OPERATION
+	ARGUMENT	arg AsnMgmtEmpty
+	RESULT		res AsnMgmtGetAvailableUpdatesResult 
+	ERRORS		{AsnRequestError}
+::= 2519
+
+AsnMgmtUpdateServiceSettings ::= SEQUENCE
+{
+	-- Status des Update Service. Verfuegbar oder nicht verfuegbar. 0 oder 1
+	iStatusUpdateService 		INTEGER,
+	-- Aktiv Status des Update Service.	Fuer Updates eingeschaltet oder nicht. 0 oder 1
+	iEACUServiceActive			INTEGER,
+	-- Zeit Limitierung fuer Updates eingeschaltet. 0 oder 1.
+	iEACUServiceTimeLimited		INTEGER,
+	-- Version downgrade erlaubt 0 oder 1.
+	iAllowVersionDowngrade		INTEGER,
+	-- Verhalten bei auf dem Client aktiver Medien Verbindungen
+	iAVBehaviour				INTEGER, -- @linked AsnUpdateAVBehaviour
+	-- Maximale Wartezeit bis der Client Idle ist
+	iMaxWaitTimeForIdleMinutes	INTEGER,
+	-- Zeitliche Einschraenkung von bis 
+	dtTimeFrom 					AsnSystemTime,
+	dtTimeTo					AsnSystemTime,
+	u8sRemoteLocation			[0] UTF8String OPTIONAL,
+	...
+}
+
+asnMgmtGetUpdateServiceSettings OPERATION
+	ARGUMENT	arg AsnMgmtEmpty
+	RESULT		res AsnMgmtUpdateServiceSettings 
+	ERRORS		{AsnRequestError}
+::= 2520
+
+asnMgmtSetUpdateServiceSettings OPERATION
+	ARGUMENT	arg AsnMgmtUpdateServiceSettings
+	RESULT		res AsnMgmtEmpty 
+	ERRORS		{AsnRequestError}
+::= 2521
+
+asnMgmtSoftwarePacketsChanged OPERATION
+	ARGUMENT	arg AsnMgmtEmpty
+::= 2710
+
+AsnMgmtClientInstallProfilePacket ::= SEQUENCE
+{
+	u8sPacketIdentifier				UTF8String,
+	u8sVersion						UTF8String,
+	...
+}
+
+AsnMgmtClientInstallProfilePacketList ::= SEQUENCE OF AsnMgmtClientInstallProfilePacket
+
+AsnMgmtSoftwareStatusComputer ::= SEQUENCE
+{
+	u8sComputerName					UTF8String,
+	u8sUpdateServer					UTF8String,
+	u8sProCallVersion				UTF8String,
+	u8sProCallPacketIdentifier		UTF8String,
+	timProCallLastLogin				AsnSystemTime,
+	u8sUpdateServiceVersion			UTF8String,
+	timUpdateServiceLastLogin		AsnSystemTime,
+	iUpdateServiceStatus			INTEGER,
+	iUpdateServiceWorkingStatus		INTEGER,
+	u8slistInstallLogs				UTF8StringList,
+	installedSoftwareList			AsnMgmtClientInstallProfilePacketList,
+	...
+}
+
+AsnMgmtSoftwareStatusComputerChangedArgument ::= SEQUENCE
+{
+	status			AsnMgmtSoftwareStatusComputer,
+	...
+}
+
+-- @brief Software install status on a computer changed event
+-- @long This event is fired when the software install state onm a computer changed.
+-- This happens during a remote software install operation or a client software update procedure.
+asnMgmtSoftwareStatusComputerChanged OPERATION
+	ARGUMENT	arg AsnMgmtSoftwareStatusComputerChangedArgument
+::= 2709
+
+asnMgmtUpdateSoftwareStatusComputerChanged OPERATION
+	ARGUMENT	arg AsnMgmtEUCWebServicesStatus
+::= 2705
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~ Lines
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+AsnMgmtConResetLineArgument ::= SEQUENCE
+{
+	u8sLineID 	UTF8String,
+	...
+}
+
+asnMgmtConResetLine OPERATION
+	ARGUMENT	arg AsnMgmtConResetLineArgument
+	RESULT		res AsnMgmtEmpty 
+	ERRORS		{AsnRequestError}
+::= 2514
+
+AsnMgmtGetLineStatesEventArgument ::= SEQUENCE
+{
+	iDumpMessage		INTEGER,
+	iDumpType			INTEGER,
+	u8sLineID			UTF8String,
+	iOpenState			INTEGER, -- @linked AsnCtiLineOpenStatus
+	iNumCalls			INTEGER,
+	iSipResponseCode	INTEGER,
+	u8sReasonPhrase		UTF8String,
+	-- ProCall DataCenter only. This is the effective home server identification of the UCServer that (currently) provides this line. 
+	-- For SIPAV lines and TAPI lines not enabled by the "use lines automatically" feature, this is usually the same as the 
+	-- home server in the line's configuration. However, when moving a line between two servers, this may differ for a short period of time.
+	-- For TAPI lines that are enabled by the "use lines automatically" feature this might (temporarily) contain multiple servers in the format (2)server1.domain.de;server2.domain.de
+	-- Important: The format "(count)server1;server2;servern" is only a temporary workaround. do not try to parse!
+	-- @added 28.05.2024
+	u8sEffectiveHomeServer [0] UTF8String OPTIONAL,
+	-- ProCall DataCenter only: List of line status from several servers
+	-- @added 15.07.2024
+	lineStatusList [1] AsnMgmtLineStatusList OPTIONAL,
+
+	...
+}
+
+asnMgmtGetLineStatesEvent OPERATION
+	ARGUMENT	arg AsnMgmtGetLineStatesEventArgument
+::= 2704
+
+AsnMgmtGetLineSourcesResult ::= SEQUENCE
+{
+	u8slistSources UTF8StringList,
+	...
+}
+
+asnMgmtGetLineSources OPERATION
+	ARGUMENT	arg AsnMgmtEmpty
+	RESULT		res AsnMgmtGetLineSourcesResult 
+	ERRORS		{AsnRequestError}
+::= 2530
+
+
+-- @brief ProCall DataCenter only - The line status of one line at a specific server
+-- @added 15.07.2024
+AsnMgmtLineStatus ::= SEQUENCE
+{
+	u8sLineID				UTF8String,
+	eOpenState				AsnCtiLineOpenStatus,
+	iNumCalls				INTEGER,
+	iSipResponseCode		INTEGER,
+	u8sReasonPhrase			UTF8String,
+	-- The server identification for the UCServer that reported this line status
+	u8sAffectedServer [0]	UTF8String OPTIONAL,
+	...
+}
+-- @added 15.07.2024
+AsnMgmtLineStatusList ::= SEQUENCE OF AsnMgmtLineStatus
+
+AsnMgmtLineStateChangedArgument ::= SEQUENCE
+{
+	u8sLineID				UTF8String,
+	iOpenState				INTEGER,	-- @linked AsnCtiLineOpenStatus
+	iNumCalls				INTEGER,
+	iSipResponseCode		INTEGER,
+	u8sReasonPhrase			UTF8String,
+	-- ProCall DataCenter only. This is the effective home server identification of the UCServer that (currently) provides this line. 
+	-- For SIPAV lines and TAPI lines not enabled by the "use lines automatically" feature, this is usually the same as the 
+	-- home server in the line's configuration. However, when moving a line between two servers, this may differ for a short period of time.
+	-- For TAPI lines that are enabled by the "use lines automatically" feature this might (temporarily) contain multiple servers in the format (2)server1.domain.de;server2.domain.de
+	-- Important: The format "(count)server1;server2;servern" is only a temporary workaround. do not try to parse!
+	-- @added 10.06.2024
+	u8sEffectiveHomeServer [0] UTF8String OPTIONAL,
+	
+	-- ProCall DataCenter only: List of line status from several servers
+	-- @added 15.07.2024
+	lineStatusList [1] AsnMgmtLineStatusList OPTIONAL,
+	...
+}
+
+-- @brief Line State changed event
+-- @long This event is fired from the server to the client.
+-- It indicates, that the state of a CTI line has changed.
+asnMgmtLineStateChanged OPERATION
+	ARGUMENT	arg AsnMgmtLineStateChangedArgument
+::= 2708
+
+AsnMgmtGetLineSourceDeviceIDsArgument ::= SEQUENCE
+{
+	u8sLineSource 		UTF8String,
+	...
+}
+
+AsnMgmtGetLineSourceDeviceIDsResult ::= SEQUENCE
+{
+	iListDeviceIDs 			SEQInteger,
+	...
+}
+
+asnMgmtGetLineSourceDeviceIDs OPERATION
+	ARGUMENT	arg AsnMgmtGetLineSourceDeviceIDsArgument
+	RESULT		res AsnMgmtGetLineSourceDeviceIDsResult
+	ERRORS		{AsnRequestError}
+::= 2562
+
+AsnMgmtGetLinesForSourceArgument ::= SEQUENCE
+{
+	u8sLineSource 		UTF8String,
+	...
+}
+
+asnMgmtGetLinesForSource OPERATION
+	ARGUMENT	arg AsnMgmtGetLinesForSourceArgument
+	RESULT		res AsnMgmtEmpty
+	ERRORS		{AsnRequestError}
+::= 2563
+
+AsnMgmtGetLineStatesArgument ::= SEQUENCE
+{
+	iType INTEGER,
+	...
+}
+
+asnMgmtGetLineStates OPERATION
+	ARGUMENT	arg AsnMgmtGetLineStatesArgument
+	RESULT		res AsnMgmtEmpty 
+	ERRORS		{AsnRequestError}
+::= 2529
+
+-- SINGALCALLSONADDRESS_ALL: alle
+-- SINGALCALLSONADDRESS_0     : Adresse 0
+-- SINGALCALLSONADDRESS_0 + 1 : Adresse 1*/
+AsnMgmtTapiLineSINGALCALLSONADDRESSEnum ::= ENUMERATED
+{
+	eSINGALCALLSONADDRESSALL(0),
+	eSINGALCALLSONADDRESS0(1)
+}
+
+AsnMgmtTapiLineConfiguration ::= SEQUENCE
+{
+	-- Enabled to be used by the Server */
+	iEnabled					INTEGER,	
+	-- Journal für die Leitung wird geschrieben */
+	iJournal					INTEGER,
+	-- nicht verwendet
+	iDummyWirelessPhone			INTEGER,
+	-- Rufnummer automatisch bestimmen - aus Address bzw. linename
+	-- Dies ist keine gespeicherte Einstellung. Dies wird immer nur aus der Gruppe bestimmt. */
+	iUseAutomaticPhoneNumber	INTEGER,
+	-- Phone Number Manuell
+	u8sManualPhoneNumber		UTF8String,
+	-- Leitungsname aus Tapi verwenden */
+	iUseTapiLineName			INTEGER,
+	-- LocationID */
+	u8sLocationID				UTF8String,
+	-- Privates Telefon
+	iPrivatePhone				INTEGER,
+	-- Dies ist eine Amtsleitung */
+	iTrunk						INTEGER,
+	-- Custom Properties for individual Line Sources
+	-- Property strings are defined as ELINEPROP_XXX ies */
+	customProps					AsnStringPairList,
+	-- Call auf den folgenden Adressen signalisieren 
+	iSignalCallsOnAddress		INTEGER, -- @linked AsnMgmtTapiLineSINGALCALLSONADDRESSEnum
+	-- Für DataCenter: Konfigurierter HomeServer, der für diese Leitung zuständig ist
+	u8sHomeServer [0]			UTF8String OPTIONAL,
+	...
+ }
+
+AsnMgmtTapiLineConfig4Admin ::= SEQUENCE
+{
+	-- Enabled to be used by the Server */
+	iEnabled					INTEGER,	
+	-- Journal für die Leitung wird geschrieben */
+	iJournal					INTEGER,
+	-- nicht verwendet
+	iDummyWirelessPhone			INTEGER,
+	-- Rufnummer automatisch bestimmen - aus Address bzw. linename
+	-- Dies ist keine gespeicherte Einstellung. Dies wird immer nur aus der Gruppe bestimmt. */
+	iUseAutomaticPhoneNumber	INTEGER,
+	-- Phone Number Manuell
+	u8sManualPhoneNumber		UTF8String,
+	-- Leitungsname aus Tapi verwenden */
+	iUseTapiLineName			INTEGER,
+	-- LocationID */
+	u8sLocationID				UTF8String,
+	-- Tapi DeviceID ist nur während der Laufzeit konstant, nicht nach einem Neustart
+	iTapiDeviceID				INTEGER,
+	-- LineID
+	u8sLineID					UTF8String,
+	-- Phone Number Automatisch
+	u8sAutomaticPhoneNumber		UTF8String,
+	-- Tapi Line Name
+	u8sTapiLineName				UTF8String,
+	-- Tapi Gruppen Name
+	u8sPBXGroupName				UTF8String,
+	-- Administrative CtiServer Rufumleitungen eingeschaltet
+	iAdminForwardingEnabled		INTEGER,
+	-- Administrative CtiServer Rufumleitungen für die Line
+	adminForwarding				AsnLineForwards,
+	-- User CtiServer Rufumleitungen eingeschaltet
+	iUserForwardingEnabled		INTEGER,
+	-- User CtiServer Rufumleitungen für die Line
+	userForwarding				AsnLineForwards,
+	iPrivatePhone				INTEGER,
+	-- Leitungsquelle Name (z.B. Tapi)
+	u8sLineSourceName			UTF8String,
+	-- Custom Properties for individual Line Sources
+	-- Property strings are defined as ELINEPROP_XXX ies */
+	customProps					AsnStringPairList,
+	-- Dynamic enable - Group setting 
+	-- Diese Leitung kann dynamisch enabled werden, wenn benötigt */
+	iAutoActivate				INTEGER,
+	-- PhysicalDeviceID
+	u8sPhysicalDeviceID			UTF8String,
+	-- LineUri
+	u8sLineURI					UTF8String,
+	-- Dies ist eine Amtsleitung */
+	iTrunk						INTEGER,
+	-- Call auf den folgenden Adressen signalisieren 
+	iSignalCallsOnAddress		INTEGER, -- @linked AsnMgmtTapiLineSINGALCALLSONADDRESSEnum
+	-- Addressen auf der Leitung
+	u8slistAddressNames			UTF8StringList,
+	-- LineConfigIdentifier
+	u8sLineConfigIdentifier		UTF8String,
+	-- Für DataCenter: Konfigurierter HomeServer, der für diese Leitung zuständig ist
+	u8sHomeServer [0]			UTF8String OPTIONAL,
+	...
+ }
+
+AsnMgmtOnLineRemovedEventArgument ::= SEQUENCE
+{
+	tapiLineConfig4Admin 		AsnMgmtTapiLineConfig4Admin,
+	...
+}
+
+asnMgmtOnLineRemovedEvent OPERATION
+	ARGUMENT	arg AsnMgmtOnLineRemovedEventArgument
+::= 2715
+
+AsnMgmtOnLineAddedEventArgument ::= SEQUENCE
+{
+	tapiLineConfig4Admin 		AsnMgmtTapiLineConfig4Admin,
+	...
+}
+
+asnMgmtOnLineAddedEvent OPERATION
+	ARGUMENT	arg AsnMgmtOnLineAddedEventArgument
+::= 2716
+
+AsnMgmtOnLineConfigChangedEventArgument ::= SEQUENCE
+{
+	tapiLineConfig4Admin 		AsnMgmtTapiLineConfig4Admin,
+	...
+}
+
+asnMgmtOnLineConfigChangedEvent OPERATION
+	ARGUMENT	arg AsnMgmtOnLineConfigChangedEventArgument
+::= 2747
+
+AsnMgmtOnLineCapsChangedEventArgument ::= SEQUENCE
+{
+	tapiLineConfig4Admin 		AsnMgmtTapiLineConfig4Admin,
+	...
+}
+
+asnMgmtOnLineCapsChangedEvent OPERATION
+	ARGUMENT	arg AsnMgmtOnLineCapsChangedEventArgument
+::= 2718
+
+AsnMgmtOnCtiLineFoundEventArgument ::= SEQUENCE
+{
+	tapiLineConfig4Admin 		AsnMgmtTapiLineConfig4Admin,
+	...
+}
+
+-- Wird als Antwort auf asnMgmtGetLinesForSource geschickt
+asnMgmtOnCtiLineFoundEvent OPERATION
+	ARGUMENT	arg AsnMgmtOnCtiLineFoundEventArgument
+::= 2713
+
+AsnMgmtOnLineGroupAddedArgument ::= SEQUENCE
+{
+	config    AsnMgmtTapiLineGroupConfiguration,
+	...
+}
+
+asnMgmtOnLineGroupAdded OPERATION
+	ARGUMENT	arg AsnMgmtOnLineGroupAddedArgument
+::= 2717
+
+AsnMgmtOnLineGroupChangedArgument ::= SEQUENCE
+{
+	config    AsnMgmtTapiLineGroupConfiguration,
+	...
+}
+
+asnMgmtOnLineGroupConfigChangedEvent OPERATION
+	ARGUMENT	arg AsnMgmtOnLineGroupChangedArgument
+::= 2748
+
+AsnMgmtOnLineGroupRemovedArgument ::= SEQUENCE
+{
+	u8sLineSourceName 	UTF8String,
+	u8sPBXGroupName 	UTF8String,
+	...
+}
+
+asnMgmtOnLineGroupRemoved OPERATION
+	ARGUMENT	arg AsnMgmtOnLineGroupRemovedArgument
+::= 2714
+
+AsnMgmtGetLineGroupsArgument ::= SEQUENCE
+{
+	u8sLineSourceName 	UTF8String,
+	...
+}
+
+AsnMgmtGetLineGroupsResult ::= SEQUENCE
+{
+	u8slistLineGroups 	UTF8StringList,
+	...
+}
+
+asnMgmtGetLineGroups OPERATION
+	ARGUMENT	arg AsnMgmtGetLineGroupsArgument
+	RESULT		res AsnMgmtGetLineGroupsResult
+	ERRORS		{AsnRequestError}
+::= 2569
+
+asnMgmtUnsubscribeLineEvents OPERATION
+	ARGUMENT	arg AsnMgmtEmpty
+	RESULT		res AsnMgmtEmpty
+	ERRORS		{AsnRequestError}
+::= 2576
+
+AsnMgmtSubscribeLineEventsArgument ::= SEQUENCE
+{
+	u8sTAPILineID 	UTF8String,
+	...
+}
+
+asnMgmtSubscribeLineEvents OPERATION
+	ARGUMENT	arg AsnMgmtSubscribeLineEventsArgument
+	RESULT		res AsnMgmtEmpty
+	ERRORS		{AsnRequestError}
+::= 2625
+
+AsnMgmtGetLineConfigArgument ::= SEQUENCE
+{
+	u8sLineSource		UTF8String,
+	iDeviceID			INTEGER,
+	...
+}
+
+AsnMgmtGetLineConfigResult ::= SEQUENCE
+{
+	config 	AsnMgmtTapiLineConfig4Admin,
+	...
+}
+
+asnMgmtGetLineConfig OPERATION
+	ARGUMENT	arg AsnMgmtGetLineConfigArgument
+	RESULT		res AsnMgmtGetLineConfigResult
+	ERRORS		{AsnRequestError}
+::= 2578
+
+AsnMgmtSetLineConfigArgument ::= SEQUENCE
+{
+	u8sLineSource		UTF8String,
+	iDeviceID			INTEGER,
+	config 				AsnMgmtTapiLineConfiguration,
+	...
+}
+
+asnMgmtSetLineConfig OPERATION
+	ARGUMENT	arg AsnMgmtSetLineConfigArgument
+	RESULT		res AsnMgmtEmpty
+	ERRORS		{AsnRequestError}
+::= 2579
+
+AsnMgmtDeleteLineArgument ::= SEQUENCE
+{
+	u8sLineSource		UTF8String,
+	u8sLineID			UTF8String,
+	...
+}
+
+asnMgmtDeleteLine OPERATION
+	ARGUMENT	arg AsnMgmtDeleteLineArgument
+	RESULT		res AsnMgmtEmpty
+	ERRORS		{AsnRequestError}
+::= 2580
+
+AsnMgmtETapiUIDllCallbackArgument ::= SEQUENCE
+{
+	binData			OCTET STRING,
+	...
+}
+AsnMgmtETapiUIDllCallbackResult ::= SEQUENCE
+{
+	binData			OCTET STRING,
+	...
+}
+
+asnMgmtETapiUIDllCallback OPERATION
+	ARGUMENT	arg AsnMgmtETapiUIDllCallbackArgument
+	RESULT		res AsnMgmtETapiUIDllCallbackResult
+	ERRORS		{AsnRequestError}
+::= 2590
+
+AsnMgmtCtiFeatureCode ::= SEQUENCE
+{
+	-- FeatureCode ist aktive
+	bEnabled 		BOOLEAN,
+	-- Name
+	u8sFeatureName	UTF8String,
+	-- Code
+	u8sFeatureCode	UTF8String,
+	...
+}
+AsnMgmtCtiFeatureCodeList ::= SEQUENCE OF AsnMgmtCtiFeatureCode
+
+AsnSIPAVResponseCodes ::= ENUMERATED
+{
+	rcdefault(0),		-- 
+	rcbusy(1),			-- 
+	rctmpavailable(2),	-- 
+	rcdecline(3),		-- 
+	rcringing(4)		--
+}
+
+AsnMgmtEnumLineType ::= ENUMERATED
+{
+	-- Unbekannter Leitungstype
+	unknown(0),
+	-- TAPI CTI Leitung
+	cti(1),
+	-- Bluetooth Leitung
+	mobile(2),
+	-- SIP AV Leitung
+	sipav(3),
+	-- AV Client Leitung
+	clientav(4)
+}
+
+AsnMgmtTapiLineGroupConfiguration ::= SEQUENCE
+{
+	--Tapi Provider Name - identifier for the group
+	u8sLineSourceName			UTF8String,
+	u8sPBXGroupName				UTF8String,
+	iDefaultEnabled				INTEGER,
+	iDefaultAutoActivate		INTEGER,
+	iDefaultAutoCreate			INTEGER,
+	iDefaultJournal				INTEGER,
+	iLineIDAutomatic			INTEGER,
+	iPhoneNumberAutomatic		INTEGER,
+	iUseTapiLineNames			INTEGER,
+	u8sLocationID				UTF8String,
+	-- Wenn m_bAutomaticLocationFinding gesetzt ist versucht der Server Anhand der Rufnummer der Leitung die passende Location automatisch zu ermitteln
+	bAutomaticLocationFinding	BOOLEAN,
+	-- In dieser BitMaske werden ETAPILINFEATURESUPPORTED_ Bits gespeichert die Aufschluss darüber geben ob ein TSP ein bestimmtes Leistungsmerkmal unterstützt
+	-- Es handelt sich hierbei also nicht um ein konfiguratives Property 
+	iSupportedFeatures			INTEGER,
+	objFeatureCodes				AsnMgmtCtiFeatureCodeList,
+	-- Custom Properties for individual Line groups
+	-- Property strings are defined as ELINEPROP_XXX ies */
+	customProps					AsnStringPairList,
+	-- Server side SIPAV Response for rejecting calls if no client registered
+	-- @linked AsnSIPAVResponseCodes
+	iRejectCodeSrv				INTEGER,
+	-- SIPAV Response for rejecting calls if client registered
+	-- @linked AsnSIPAVResponseCodes
+	iRejectCodeClnt				INTEGER,
+	-- hide client side softphone reject
+	bHideRejectClnt				BOOLEAN,
+	-- Typ der Leitung (SIP, CTI, AV, BlueTooth etc.)
+	-- @linked AsnMgmtEnumLineType
+	iLineType					INTEGER,
+	-- Forwarding for line group when no client is registered (connected) for that line
+	adminGroupForwarding		AsnLineForwards,
+	-- @Cfg Media min Ports to Clients
+	iMinPort					INTEGER,
+	-- @Cfg Media max Ports to Clients
+	iMaxPort					INTEGER,
+	-- @Cfg Disable Early Media
+	bNoEarlyMedia				BOOLEAN,
+	...
+}
+
+AsnMgmtGetLineGroupConfigArgument ::= SEQUENCE
+{
+	u8sLineSourceName	UTF8String,
+	u8sGroupName		UTF8String,
+	...
+}
+
+AsnMgmtGetLineGroupConfigResult ::= SEQUENCE
+{
+	config          AsnMgmtTapiLineGroupConfiguration,
+	...
+}
+
+asnMgmtGetLineGroupConfig OPERATION
+	ARGUMENT	arg AsnMgmtGetLineGroupConfigArgument
+	RESULT		res AsnMgmtGetLineGroupConfigResult
+	ERRORS		{AsnRequestError}
+::= 2608
+
+AsnMgmtSetLineGroupConfigArgument ::= SEQUENCE
+{
+	config          AsnMgmtTapiLineGroupConfiguration,
+	...
+}
+
+asnMgmtSetLineGroupConfig OPERATION
+	ARGUMENT	arg AsnMgmtSetLineGroupConfigArgument
+	RESULT		res AsnMgmtEmpty
+	ERRORS		{AsnRequestError}
+::= 2607
+
+AsnMgmtRequestPBXLineExistsArgument ::= SEQUENCE
+{
+	u8sPhoneNumber		UTF8String,
+	...
+}
+
+AsnMgmtRequestPBXLineExistsResult ::= SEQUENCE
+{
+	u8sCorrectNumberSC		UTF8String,
+	...
+}
+
+asnMgmtRequestPBXLineExists OPERATION
+	ARGUMENT	arg AsnMgmtRequestPBXLineExistsArgument
+	RESULT		res AsnMgmtRequestPBXLineExistsResult
+	ERRORS		{AsnRequestError}
+::= 2613
+
+AsnMgmtLineEventForAdmin ::= SEQUENCE
+{
+	u8sTAPILineID			UTF8String,
+	u8sCallerIDTAPI			UTF8String,
+	u8sCalledIDTAPI			UTF8String,
+	u8sConnectedIDTAPI		UTF8String,
+	bOutBoundCall			BOOLEAN,
+	iCallState				INTEGER,	
+	...
+}
+
+AsnMgmtOnLineEvent4AdminEventArgument ::= SEQUENCE
+{
+	lineEvent4Admin 	AsnMgmtLineEventForAdmin,
+	...
+}
+
+asnMgmtOnLineEvent4AdminEvent OPERATION
+	ARGUMENT	arg AsnMgmtOnLineEvent4AdminEventArgument
+::= 2721
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~ User Manager
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+AsnMgmtDeskShareAccess ::= ENUMERATED
+{
+	eDeskShareAccessNone(0),	-- Benutzer dürfen gar kein Desktop Sharing verwenden.
+	eDeskShareAccessAccept(1),	-- Benutzer dürfen nur Anfragen/Aufforderungen beantworten.
+	eDeskShareAccessFull(2)		-- Benutzer dürfen alles, also insb. auch Desktop Sharing selbst initiieren.
+}
+
+AsnMgmtEnumUMSecurity ::= ENUMERATED
+{
+	eUMSECURITYINDIVIDUAL(0),
+	eUMSECURITYWINUSERNAME(1),
+	eUMSECURITYDOMAIN(2)
+}
+
+AsnMgmtEnumUMSelfInstall ::= ENUMERATED
+{
+	eUMSELFINSTALLFULL(0),
+	eUMSELFINSTALLSIMPLE(1),   
+	eUMSELFINSTALLNONE(2)     
+}
+
+AsnUserManagerSettings ::= SEQUENCE
+{
+	-- Security for User Authentication
+	-- @linked AsnMgmtEnumUMSecurity
+    iUMSecurity							INTEGER,       
+	-- Security for User Self Installation
+	-- @linked AsnMgmtEnumUMSelfInstall
+    iUMSelfInstall						INTEGER,    
+	-- Ist der Computer Mitglied einer Domain?
+	-- Statische Konfiguration, die beim Start des Servers bestimmt wird.
+	-- Nicht konfigurierbar
+	iComputerIsDomainMember				INTEGER,
+	-- NT Domain Name des Computers (ESTOS)
+	-- Statische Konfiguration, die beim Start des Servers bestimmt wird.
+	-- Nicht konfigurierbar
+	u8sComputerDomainNT					UTF8String,
+	-- Full Qualified domain name (estos.de)
+	-- Statische Konfiguration, die beim Start des Servers bestimmt wird.
+	-- Nicht konfigurierbar
+	u8sComputerDomainFQ					UTF8String,
+	-- Hostname des Domain controller (AVALON)
+	-- Statische Konfiguration, die beim Start des Servers bestimmt wird.
+	-- Nicht konfigurierbar 
+	u8sDomainController					UTF8String,
+	-- Nutzerrechte die für alle Nutzer gleich gelten.
+	-- Die Rechte sind additiv, d.h., wenn hier ein Recht gesetzt wird, 
+	-- kann es einem Nutzer nicht mehr genommen werden. Soll es keine
+	-- globalen Rechte geben, einfach alle Flags auf 0 setzen.
+	objGlobalUserRightDetails			AsnUserDynamicRights,
+	 -- 1 Wenn alle Benutzer alle Benutzer in den Monitor eingeblendet bekommen.
+	 -- 0 Wenn nicht.
+	iShowAllUsersInAllMonitors			INTEGER,
+	-- 1 Wenn kein Benutzer seine Monitorkonfiguration ändern darf.
+	-- 0 Wenn die Benutzer ihre Konfiguration ändern dürfen.
+	iDisableAllMonitorConfiguration		INTEGER,
+	-- true: Clients können das gesamte Journal einsehen, 
+	-- false (default): Clients können das Journal nicht komplett sehen
+	bAllJournalEntriesVisible			BOOLEAN, 
+	-- Bitfeld für speziell unterstützte Features des UserManagers. Ermöglicht das
+	-- Aktivieren und Deaktivieren von Funktionen z.B. auf Basis des Lizenzschlüssels oder
+	-- Gegebenheiten, auf die nur der Server direkt Zugriff hat.
+	iFeatures							INTEGER,
+	-- true: Benutzer dürfen Journaleinträge löschen.
+	bDeleteJournalEntriesEnabled		BOOLEAN,		
+	-- true: Leitungen zu den Rufnummern des Benutzers automatisch suchen und zuweisen
+	bAutoBindLinesForUsersPhoneNumbers	BOOLEAN,	
+	-- Die LIste der Domänen, für die dieser Server auch Präsenzinformationen bereit stellt
+	u8slistPresenceDomains				UTF8StringList,
+	-- Server Identifikation als Homeserver für Benutzerprofile
+	u8sHomeServerIdentification			UTF8String,
+	-- Unterbindet das Chaten im lokalen Netzwerk. Einstellung kann auch von der Registry beeinflusst werden.
+	bInternalChatDisabled				BOOLEAN, 
+	-- @linked AsnMgmtDeskShareAccess
+	iDeskShareAccess					INTEGER,  
+	-- true: Presence ist für alle Clients abgeschalten; false oder nicht existent: Presence ist an (default).
+	bPresenceDisabled					BOOLEAN, 
+	-- true: Benutzer dürfen keine Rechte über den Client vergeben; false oder nicht existent: Benutzer dürfen (default).
+	bUserUserRightsDisabled				BOOLEAN, 
+	-- true: Chats werden nicht in der Datenbank persistiert; false oder nicht existent: Chats werden in der Datenbank persistiert (default).
+	bChatDatabaseDisabled				BOOLEAN, 
+	-- true: Audio Chat ist für alle User abgeschalten; default ist an (false).
+	bAVAudioDisabled					BOOLEAN, 
+	-- true: Video Chat ist für alle User abgeschalten; default ist an (false).
+	bAVVideoDisabled					BOOLEAN, 
+	-- true: Deskshare über Federartion für alle User abgeschalten; default ist an (false).
+	bDeskshareFedDisabled				BOOLEAN, 
+	-- true: Benutzer darf sich per Mobile App anmelden
+	bLoginByMobile						BOOLEAN, 
+	-- true: Benutzer darf sich von ausserhalb des Intranets (mit Mobile) anmelden
+	bLoginOverInternet					BOOLEAN, 
+	-- true: Benutzer ist für Anonyme Benutzer sichtbar, z.B. per suche
+	bEnableForAnonymousApi				BOOLEAN, 
+	-- true: Die Profilseite des Benutzers wird dargestellt
+	bProfilePageVisible					BOOLEAN, 
+	-- userdefined customfields aktivieren
+	bEnableUserdefinedCustomFields		BOOLEAN, 		
+	-- binarytransfer enabled; default ist an (true)
+	bEnableBinaryTransferSend			BOOLEAN,
+	
+	-- Liste der UserDefined CustomFields (Key-Value-Liste, Key=Feldbezeichner, Value=Anzeigename)
+	mapUserDefinedCustomFields			AsnStringPairList,
+	--	globale userrechte fuer user die ueber monitorgruppen andere user im monitor haben. optional wegen kompatibilitaet
+    objGlobalObserverGroupUserRightDetails			[0] AsnUserDynamicRights OPTIONAL,
+	
+	-- Die naechsten Settings werden in GetCallParams()/PutCallParams() nicht uebertragen
+	-- -> also auch nicht ueber Asn
+	-- 		alle Properties wurden in den Settings gefunden -> Seite im Admin im WizardFall nicht anzeigen
+	-- bool m_bFullyConfigured,
+	-- 		Voreinstellung zur Verwendung von Kontaktdaten d. CtiUser
+	-- iDefaultPhonebookFlags, 
+	-- 		die liste der domänen, fuer die web2procall presence geleakt wird
+	-- 		FIVE-1351
+	-- mapWebPresenceDomains		AsnUserDynamicRights,
+	--      use anonymous user management mit lazy initialization
+	--      LC-593 
+	-- bUseLazyAnonymousUserManager		BOOLEAN, 
+
+	-- MS-TeamsIntegration enabled; default ist aus (false)
+	bEnableTeamsIntegration			BOOLEAN,
+	
+	-- true: Benutzer darf sich von ausserhalb des Intranets auch mit Desktop Clients anmelden
+	bLoginOverInternetAllowDesktop			BOOLEAN, 
+
+	-- true: Benutzer darf sich mit der WebApp (PWA) anmelden
+	bUseWebAppEnabled				[1] BOOLEAN OPTIONAL,
+
+	-- @added 01.07.2024
+	-- @brief Wich user replicator should be used (defaults to eNONE)
+	eUserReplicator					[2] AsnEUserReplicatorType OPTIONAL,
+	
+	...
+}
+
+-- @added 01.07.2024
+-- @brief Represents all the availble user replicators eNONE is the default and means user replication is dissabled
+AsnEUserReplicatorType ::= ENUMERATED
+{
+	eNONE(0),
+	eENTRAID(1)
+}
+
+AsnMgmtUserManagerLDAPAttribute ::= SEQUENCE
+{
+	-- CtiServer Attributename (normalerweise der Feldname des NetDatabaseContact Feldes)
+	u8sCtiServerAttributeName 					UTF8String,
+	-- LDAP Attributname
+	u8sLDAPAttributeName 						UTF8String,
+	-- Default Name des Attributes (Default Mapping)
+	u8sLDAPAttributeDefaultName 				UTF8String,
+	
+	-- Flag das definiert ob diese Feld überhaupt als Leitung gezogen werden darf
+	bThisFieldCanQueryaPhoneLine 				BOOLEAN,
+	-- Leitungen für dieses Rufnummernfeld binden
+	bQueryLinesForThisPhoneNumberField 			BOOLEAN,
+	-- Leitungen für dieses Rufnummernfeld binden
+	bQueryLinesForThisPhoneNumberFieldDefault 	BOOLEAN,
+
+	-- Dieses Feld darf deaktiviert werden (ist Optional aktiv)
+	bOptionalEnabled							BOOLEAN,
+	-- Dieses Feld ist aktiv (nur gültig wenn bOptionalEnabled = true ist, ansonsten immer true)
+	bEnabled									BOOLEAN,
+	-- Default Wert für enabled (nur gültig wenn bOptionalEnabled = true ist, ansonsten immer true)
+	bEnabledDefault								BOOLEAN,
+	
+	...
+}
+AsnMgmtUserManagerLDAPAttributeList ::= SEQUENCE OF AsnMgmtUserManagerLDAPAttribute
+
+AsnMgmtSchemaExtensionVersion ::= ENUMERATED
+{
+	eSCHEMAEXTENSIONVERSIONNOTDETECTABLE(-1),
+	eSCHEMAEXTENSIONVERSIONNONE(0),
+	eSCHEMAEXTENSIONVERSION3(1),
+	eSCHEMAEXTENSIONVERSION4(2),
+	eSCHEMAEXTENSIONVERSION6(3)
+}
+
+-- Plain = superkanonisch
+-- Plain w ext = superkanonisch mit extension - erlaubt
+-- Internal = gekürzt auf rein interne Nummern
+-- Readable = +49(8151)36856-162
+-- DIN 5008:2005 = +49 8151 36856-162
+-- Dialable = durch Rufnummernformatierung wählbar gemacht
+AsnMgmtPhoneNumberFormats ::= ENUMERATED
+{	
+	ePHONENUMBERFORMATPLAIN(0),				-- Supercanonisch -> +49815136856116
+	ePHONENUMBERFORMATPLAININTERNAL(1),		-- Supercanonisch, intern gekürzt -> 116
+	ePHONENUMBERFORMATREADABLE(2),			-- Lesbar, ungekürzt -> +49 (8151) 36856-116
+	ePHONENUMBERFORMATREADABLEINTERNAL(3),  -- Lesbar, intern gekürzt -> 116
+	ePHONENUMBERFORMATDIALABLE(4),			-- Wählbar -> 0049815136856116
+	ePHONENUMBERFORMATDIN(5),				-- entsprechend DIN 5008:2005 -> +49 8151 36856-116
+	ePHONENUMBERFORMATDININTERNAL(6),		-- entsprechend DIN 5008:2005, intern gekürzt -> 116
+	ePHONENUMBERFORMATPLAINWEXT(7),			-- Supercanonisch '-' erlaubt -> +49815136856-116
+	ePHONENUMBERFORMATPLAINWEXTINTERNAL(8), -- Supercanonisch '-' erlaubt -> 116
+	ePHONENUMBERFORMATUNFORMATTED(9)		-- Übergebener String wird nicht formatiert
+}
+
+AsnMgmtUserManagerActiveDirectorySettings ::= SEQUENCE
+{
+	-- Active Directory Server
+	u8sHost								UTF8String,
+	-- Active Directory Server LDAP Port
+	iPort								INTEGER,
+	-- Domain
+	u8sDomain							UTF8String,
+	-- Username (Administrator@estos.de)
+	u8sUsername							UTF8String,
+	-- Password
+	u8sPassword							UTF8String,
+	-- LDAPS erzwingen
+	iForceLDAPS							INTEGER,
+	-- User BaseDN aus der Konfiguration.
+	-- Wenn dieser leer ist wird er automatisch bestimmt. (defaultNamingContext) 
+	u8sBaseDNUsers						UTF8String,
+	-- Computer BaseDN aus der Konfiguration.
+	-- Wenn dieser leer ist wird er automatisch bestimmt. (defaultNamingContext) 
+	u8sBaseDNComputers					UTF8String,
+	-- Group BaseDN aus der Konfiguration.
+	-- Wenn dieser leer ist wird er automatisch bestimmt. (defaultNamingContext) 
+	u8sBaseDNGroups						UTF8String,
+	-- Zurückschreiben von LDAP Basisattributen wird unterstützt */
+	bLDAPBaseAttributeWriteBackEnabled	BOOLEAN,
+	--  Attributmapping für die CtiServer LDAP Attribute (Welches Benutzerprofilfeld wird aus welchem LDAP Feld geholt...)
+	objAttributeMapping  				AsnMgmtUserManagerLDAPAttributeList,
+	-- Rufnummernformat welches der Admin beim zuweisen von Leitungen automatisch anwendet.
+	-- Unabhängig davon werden die Rufnummern genau so in die Benutzerverwaltung geschrieben 
+	-- wie diese im Admin im Benutzerprofil eingegeben wurden. Es ist eine reine Vorformatierung.
+	 -- @linkedAsnMgmtPhoneNumberFormats
+	iPhoneNumberPreformatFormat			INTEGER,
+	-- Dieses Property ist kein Settings Property sondern ein Laufzeit Property.
+	-- Es ist in den Settings hinterlegt da das generische Interface zu den Benutzerverwaltungen für ein Property kein weitere Methode erhält.
+	-- Schema Erweiterungsversion
+	-- @linked AsnMgmtSchemaExtensionVersion
+	iExtensionVersion					INTEGER,
+	-- Dieses Property ist kein Settings Property sondern ein Laufzeit Property.
+	-- Es ist in den Settings hinterlegt da das generische Interface zu den Benutzerverwaltungen für ein Property kein weitere Methode erhält.
+	-- Letzter Error Code
+	iLastErrorCode						INTEGER,
+	-- LDAP Filter fuer User-Objekte
+	u8sLDAPFilterUsers					[0] UTF8String OPTIONAL,
+	-- LDAP Filter fuer Gruppen-Objekte
+	u8sLDAPFilterGroups					[1] UTF8String OPTIONAL,
+	-- LDAP Filter fuer Computer-Objekte
+	u8sLDAPFilterComputers				[2] UTF8String OPTIONAL,
+	...
+}
+
+-- UserManagement interface type
+AsnMgmtUserManagerInterfaceType ::= ENUMERATED
+{ 
+	eUSERMANAGERINTERFACETYPEUNKNOWN(0),
+	eUSERMANAGERINTERFACETYPEBUILTIN(1),
+	eUSERMANAGERINTERFACETYPEACTIVEDIRECTORY(2),
+	eUSERMANAGERINTERFACETYPELDAP(3),
+	eUSERMANAGERINTERFACETYPEBUILTINDB(4)
+}
+
+AsnMgmtGetUMInterfaceSettingsArgument ::= SEQUENCE
+{
+	iInterfaceType		INTEGER,  -- @linked AsnMgmtUserManagerInterfaceType
+	...
+}
+
+AsnMgmtGetUMInterfaceSettingsResult ::= SEQUENCE
+{
+	settings		AsnMgmtUserManagerActiveDirectorySettings,
+	...
+}
+
+asnMgmtGetUMInterfaceSettings OPERATION
+	ARGUMENT	arg AsnMgmtGetUMInterfaceSettingsArgument
+	RESULT		res AsnMgmtGetUMInterfaceSettingsResult
+	ERRORS		{AsnRequestError}
+::= 2606
+
+AsnMgmtSetUMInterfaceSettingsArgument ::= SEQUENCE
+{
+	iInterfaceType		INTEGER,  -- @linked AsnMgmtUserManagerInterfaceType
+	settings			AsnMgmtUserManagerActiveDirectorySettings,
+	...
+}
+
+asnMgmtSetUMInterfaceSettings OPERATION
+	ARGUMENT	arg AsnMgmtSetUMInterfaceSettingsArgument
+	RESULT		res AsnMgmtEmpty
+	ERRORS		{AsnRequestError}
+::= 2605
+
+AsnMgmtGetUMSettingsResult ::= SEQUENCE
+{
+	settings		AsnUserManagerSettings,
+	...
+}
+
+asnMgmtGetUMSettings OPERATION
+	ARGUMENT	arg AsnMgmtEmpty
+	RESULT		res AsnMgmtGetUMSettingsResult
+	ERRORS		{AsnRequestError}
+::= 2610
+
+AsnMgmtSetUMSettingsArgument ::= SEQUENCE
+{
+	settings		AsnUserManagerSettings,
+	...
+}
+
+asnMgmtSetUMSettings OPERATION
+	ARGUMENT	arg AsnMgmtSetUMSettingsArgument
+	RESULT		res AsnMgmtEmpty
+	ERRORS		{AsnRequestError}
+::= 2611
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~ License
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+AsnMgmtAddLicenseArgument ::= SEQUENCE
+{
+	u8sLicense 	UTF8String,
+	...
+}
+
+asnMgmtAddLicense OPERATION
+	ARGUMENT	arg AsnMgmtAddLicenseArgument
+	RESULT		res AsnMgmtEmpty 
+	ERRORS		{AsnRequestError}
+::= 2523
+
+AsnMgmtRemoveLicenseArgument ::= SEQUENCE
+{
+	u8sLicense 	UTF8String,
+	...
+}
+
+asnMgmtRemoveLicense OPERATION
+	ARGUMENT	arg AsnMgmtRemoveLicenseArgument
+	RESULT		res AsnMgmtEmpty 
+	ERRORS		{AsnRequestError}
+::= 2524
+
+AsnMgmtELICENSEFEATURE ::= ENUMERATED
+{
+	eELICENSEFEATUREUSERS(1),
+	eELICENSEFEATURELINES(2),
+	eELICENSEFEATURECLIENTS(3),
+	eELICENSEFEATUREUMREPLICATOR(4),
+	eELICENSEFEATUREANALYTICS(5),
+	eELICENSEFEATUREINSTANCES(6),
+	eELICENSEFEATURESERVERLINES(7),
+	eELICENSEFEATURECHALLENGEPBX(8),
+	eELICENSEFEATURECSTACONNECTIONS(9),
+	eELICENSEFEATURECHANNELS(10)
+}
+
+AsnMgmtECOMPROMISESTATUS ::= ENUMERATED
+{
+	-- Kein Missbrauch bekannt
+	eECOMPROMISESTATUSVALID(0),
+	-- Blacklistet in der WaWi (auf Basis ProduktID Seriennummer)
+	eECOMPROMISESTATUSBLACKLISTEDINVALID(1),
+	-- Blacklistet in der WaWi (auf Basis ProduktID Seriennummer in Verbindung mit dem letzten Bindungsdatum (alle die aelter sind sind ungueltig))
+	eECOMPROMISESTATUSREBOUNDINVALID(2),
+	-- Wie ECOMPROMISESTATUSBLACKLISTEDINVALID aber temporaer gueltig (Uebergangslizenz) (Ob wirklich gueltig steht im expired Flag)
+	eECOMPROMISESTATUSBLACKLISTEDTEMPORARY(3),
+	-- Wie ECOMPROMISESTATUSREBOUNDINVALID aber temporaer gueltig (Ueergangslizenz) (Ob wirklich gueltig steht im expired Flag)
+	eECOMPROMISESTATUSREBOUNDTEMPORARY(4)
+}
+
+AsnMgmtFeatureCount ::= SEQUENCE
+{
+	feature 	INTEGER, -- @linked AsnMgmtELICENSEFEATURE
+	iCount		INTEGER,
+	...
+}
+
+AsnMgmtFeatureCountList ::= SEQUENCE OF AsnMgmtFeatureCount
+
+AsnMgmtLicenseDetails ::= SEQUENCE
+{
+	featureCount					AsnMgmtFeatureCountList,
+	iProductID 						INTEGER,
+	iBaseProductIDRequired 			INTEGER,
+	iLicenseVersion					INTEGER,
+	bIsTrialFeatureLicense			BOOLEAN,
+	bIsUpgradeLicense				BOOLEAN,
+	bIsUpgradeLicenseAnyVersion		BOOLEAN,
+	iRequiredOldLicenseVersion		INTEGER,
+	bRequiresUpgradeLicense 		BOOLEAN,
+	bIsTestLicense 					BOOLEAN,
+	bIsNotForResale 				BOOLEAN,
+	bRequiresHWBinding 				BOOLEAN,
+	bIsHWBound 						BOOLEAN,
+	bIsDynamicLicense				BOOLEAN,
+	u8sLicenseCode					UTF8String,
+	validTo							AsnSystemTime,
+	contractEnd						AsnSystemTime,
+	u8sDescription             		UTF8String,
+	bIsExpired 						BOOLEAN,
+	iCompromiseStatus				INTEGER, -- @linked AsnMgmtECOMPROMISESTATUS
+	iLicenseSerial					INTEGER,
+	iGenuineStatus					INTEGER,
+	genuineCheckTimeStamp			AsnSystemTime,
+	...
+}
+
+AsnMgmtSetLicenseGenuineStatusArgument ::= SEQUENCE
+{
+	genuineInfos					AsnStringPairList,
+	...
+}
+
+AsnMgmtSetLicenseGenuineStatusResult ::= SEQUENCE
+{
+	u8slistUpdateLicenseCodes		UTF8StringList,
+	...
+}
+
+asnMgmtSetLicenseGenuineStatus OPERATION
+	ARGUMENT	arg AsnMgmtSetLicenseGenuineStatusArgument
+	RESULT		res AsnMgmtSetLicenseGenuineStatusResult
+	ERRORS		{AsnRequestError}
+::= 2583
+
+
+AsnMgmtGetLicenseArgument ::= SEQUENCE
+{
+	iCount 	INTEGER,
+	...
+}
+
+AsnMgmtGetLicenseResult ::= SEQUENCE
+{
+	details							AsnMgmtLicenseDetails,
+	...
+}
+
+AsnMgmtGetLicenseErrorEnum ::= ENUMERATED
+{
+	eLICENSEERREXISTS(-23),
+	eLICENSEERRINVALIDLICENSE(-25),
+	eLICENSEERRDEPENDENCIES(-26),
+	eLICENSEERRREQUIRESHARDWAREID(-27),
+	eLICENSEERRFORBIDDENCOMBINATION(-28),
+	eLICENSEERRLICENSEEXPIRED(-29),
+	eLICENSEERRBLACKLISTEDINVALID(-30),
+	eLICENSEERRREBOUNDINVALID(-31)
+}
+
+asnMgmtGetLicense OPERATION
+	ARGUMENT	arg AsnMgmtGetLicenseArgument
+	RESULT		res AsnMgmtGetLicenseResult
+	ERRORS		{AsnRequestError}
+::= 2525
+
+AsnMgmtGetHasCurrentVersionLicensesResult ::= SEQUENCE
+{
+	iNumUsers 	INTEGER,
+	...
+}
+
+asnMgmtGetHasCurrentVersionLicenses OPERATION
+	ARGUMENT	arg AsnMgmtEmpty
+	RESULT		res AsnMgmtGetHasCurrentVersionLicensesResult 
+	ERRORS		{AsnRequestError}
+::= 2526
+
+AsnMgmtGetNumLicensesResult ::= SEQUENCE
+{
+	iNumLicenses 	INTEGER,
+	...
+}
+
+asnMgmtGetNumLicenses OPERATION
+	ARGUMENT	arg AsnMgmtEmpty
+	RESULT		res AsnMgmtGetNumLicensesResult 
+	ERRORS		{AsnRequestError}
+::= 2527
+
+AsnMgmtGetRemainingTrialDaysResult ::= SEQUENCE
+{
+	iRemainingTestDays	INTEGER, 
+	...
+}
+
+asnMgmtGetRemainingTrialDays OPERATION
+	ARGUMENT	arg AsnMgmtEmpty
+	RESULT		res AsnMgmtGetRemainingTrialDaysResult 
+	ERRORS		{AsnRequestError}
+ ::= 2507
+
+AsnMgmtGetHWIDResult ::= SEQUENCE
+{
+	u8sHWID 			UTF8String,
+	u8sSystemIdentifier UTF8String,
+	...
+}
+
+asnMgmtGetHWID OPERATION
+	ARGUMENT	arg AsnMgmtEmpty
+	RESULT		res AsnMgmtGetHWIDResult 
+	ERRORS		{AsnRequestError}
+::= 2522
+
+AsnMgmtOnLicensesHaveChangedEventArgument ::= SEQUENCE
+{
+	...
+}
+
+asnMgmtOnLicensesHaveChangedEvent OPERATION
+	ARGUMENT	arg AsnMgmtOnLicensesHaveChangedEventArgument
+::= 2725
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~ Webservice
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+AsnMgmtEUCWSCapabilities ::= SEQUENCE
+{
+	iCapabilities					INTEGER,
+	u8slistAliases					UTF8StringList,
+	u8slistLicenses					UTF8StringList,
+	u8slistCERObject				UTF8StringList,
+	u8sVserviceDomain				[0] UTF8String OPTIONAL,	-- address of Starface PBX used for SIP Registration configuration
+	-- @added 15.05.2024
+	u8sVserviceLastImageVersion		[1]	UTF8String OPTIONAL,	-- Version of the newest configured PBX-Image - needed for Update trigger
+	...
+}
+
+AsnMgmtEUCWSStatus ::= SEQUENCE
+{
+	u8sWCSID			UTF8String,
+	iStatus				INTEGER,
+	u8sURL				UTF8String,
+	u8sUCSID			UTF8String,
+	u8sLastError		UTF8String,
+	bUCConnect			BOOLEAN,
+	capabilities		AsnMgmtEUCWSCapabilities,
+	...
+}
+
+AsnMgmtEUCWSStatusList ::= SEQUENCE OF AsnMgmtEUCWSStatus
+
+AsnMgmtEUCWebServicesStatus ::= SEQUENCE
+{
+	u8sUCSID			UTF8String,
+	ucConnectStatus		AsnMgmtEUCWSStatus,
+	ucwsStatusMap		AsnMgmtEUCWSStatusList,
+	...
+}
+
+AsnMgmtVerifyUCWebServicesConfigError ::= ENUMERATED
+{
+	eUCWSSERVERSTATUSCONNECTED(0),
+	eUCWSSERVERSTATUSUNKNOWN(1),
+	eUCWSSERVERSTATUSINVALIDUCSID(2),
+	eUCWSSERVERSTATUSLOGINFAILED(3),
+	eUCWSSERVERSTATUSFAILED(4),
+	eUCWSSERVERSTATUSREDIRECT(5)
+}
+
+AsnMgmtEUCWebServiceConfig ::= SEQUENCE
+{
+	u8sWCSID			UTF8String,
+	u8sUCSID			UTF8String,
+	u8sUCSPassword		UTF8String,
+	u8sServerAddress	UTF8String,
+	...
+}
+
+AsnMgmtEUCWebServiceConfigList ::= SEQUENCE OF AsnMgmtEUCWebServiceConfig
+
+AsnMgmtEUCWebServiceConfig4Admin ::= SEQUENCE
+{
+	u8sServicesUser			UTF8String,
+	u8sServicesPassword		UTF8String,
+	configList				AsnMgmtEUCWebServiceConfigList,
+	...
+}
+
+asnMgmtUCWebServiceStatusChanged OPERATION
+	ARGUMENT	arg AsnMgmtEUCWebServicesStatus
+::= 2706
+
+asnMgmtGetUCWebServicesStatus OPERATION
+	ARGUMENT	arg AsnMgmtEmpty
+	RESULT		res AsnMgmtEUCWebServicesStatus 
+	ERRORS		{AsnRequestError}
+::= 2534
+
+asnMgmtVerifyUCWebServicesConfig OPERATION
+	ARGUMENT	arg AsnMgmtEUCWebServiceConfig
+	RESULT		res AsnMgmtEUCWSStatus 
+	ERRORS		{AsnRequestError}
+::= 2535
+
+AsnMgmtGetLocalWebServiceConfig4AdminResult ::= SEQUENCE
+{
+	configs		AsnMgmtEUCWebServiceConfigList,
+	...
+}
+
+asnMgmtGetLocalWebServiceConfig4Admin OPERATION
+	ARGUMENT	arg AsnMgmtEmpty
+	RESULT		res AsnMgmtGetLocalWebServiceConfig4AdminResult
+	ERRORS		{AsnRequestError}
+::= 2813
+
+asnMgmtGetWebServiceConfig4Admin OPERATION
+	ARGUMENT	arg AsnMgmtEmpty
+	RESULT		res AsnMgmtEUCWebServiceConfig4Admin
+	ERRORS		{AsnRequestError}
+::= 2536
+
+asnMgmtSetWebServiceConfig4Admin OPERATION
+	ARGUMENT	arg AsnMgmtEUCWebServiceConfig4Admin
+	RESULT		res AsnMgmtEmpty
+	ERRORS		{AsnRequestError}
+::= 2537
+
+AsnMgmtMobileAccessOption ::= ENUMERATED
+{
+	eNONE(0),
+	eUCCONNECT(1),
+	eOWNSERVERS(2)
+}
+
+AsnMgmtWebServiceAccessParams ::= SEQUENCE
+{
+	u8sHost					UTF8String,
+	iPort					INTEGER,
+	iSSL					INTEGER,
+	iController				INTEGER,
+	u8sUCSID				UTF8String,
+	...
+}
+
+AsnMgmtUCConnectSettings ::= SEQUENCE
+{
+	iMobileAccessOption			INTEGER, -- @linked AsnMgmtMobileAccessOption
+	u8sUCSID					UTF8String,
+	u8sControllerAddress		UTF8String,
+	u8sUCSPassword				UTF8String,
+	u8sAccountMail				UTF8String,
+	iTurnEnabled				INTEGER,
+	u8sPushServiceAddress		UTF8String,
+	iPushPolicyAccepted			INTEGER,
+	u8sPortalAddress			UTF8String,
+	webServiceExternalAccess 	AsnMgmtWebServiceAccessParams,
+	bUseProxy					INTEGER,
+	u8sProxyServer				UTF8String,
+	u8sProxyUser				UTF8String,
+	u8sProxyPassword			UTF8String,
+	u8sBypassServer				UTF8String,
+	...
+}
+
+asnMgmtGetUCConnectSettings OPERATION
+	ARGUMENT	arg AsnMgmtEmpty
+	RESULT		res AsnMgmtUCConnectSettings
+	ERRORS		{AsnRequestError}
+::= 2538
+
+asnMgmtSetUCConnectSettings OPERATION
+	ARGUMENT	arg AsnMgmtUCConnectSettings
+	RESULT		res AsnMgmtEmpty
+	ERRORS		{AsnRequestError}
+::= 2539
+
+AsnMgmtSendMailArgument ::= SEQUENCE
+{
+	u8sFrom 		UTF8String,
+	u8sTo 			UTF8String,
+	u8sSubject 		UTF8String,
+	u8sMessage 		UTF8String,
+	...
+}
+
+asnMgmtSendMail OPERATION
+	ARGUMENT	arg AsnMgmtSendMailArgument
+	RESULT		res AsnMgmtEmpty
+	ERRORS		{AsnRequestError}
+::= 2581
+
+AsnMgmtSendInviteMailArgument ::= SEQUENCE
+{
+	u8slistAddresses	UTF8StringList,
+	u8sMessage			UTF8String,
+	u8sUserURL			UTF8String,
+	u8sAppConfigURL		UTF8String,
+	iWaitForSend		INTEGER,
+	...
+}
+
+asnMgmtSendInviteMail OPERATION
+	ARGUMENT	arg AsnMgmtSendInviteMailArgument
+	RESULT		res AsnMgmtEmpty
+	ERRORS		{AsnRequestError}
+::= 2582
+
+AsnMgmtEMailConnectorSettings ::= SEQUENCE
+{
+	u8sSMTPServer 		UTF8String,
+	u8sLoginName		UTF8String,
+	u8sLoginPassword 	UTF8String,
+	u8sAdminMailAddr 	UTF8String,
+	u8sMailFromAddr		UTF8String,
+	u8sMailFromName		UTF8String,	
+	iSMTPPort			INTEGER,
+	iAllowUTF8Encoding	INTEGER,
+	iRequireTLS			INTEGER,
+	...
+}
+
+-- @brief CtiServer Administrator login
+asnMgmtGetMailSettings OPERATION
+	ARGUMENT	arg AsnMgmtEmpty
+	RESULT		res AsnMgmtEMailConnectorSettings
+	ERRORS		{AsnRequestError}
+::= 2542
+
+-- @brief CtiServer Administrator login
+asnMgmtSetMailSettings OPERATION
+	ARGUMENT	arg AsnMgmtEMailConnectorSettings
+	RESULT		res AsnMgmtEmpty
+	ERRORS		{AsnRequestError}
+::= 2543
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~ TapiProblemSettings
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+AsnMgmtTapiProblemSettings ::= SEQUENCE
+{
+	iReinitAutorestart 		INTEGER,
+	iLineOpenFailedAction 	INTEGER,
+	iLineOpenDelayTime 		INTEGER,
+	...
+}
+
+-- @brief CtiServer Administrator login
+asnMgmtGetTapiProblemSettings OPERATION
+	ARGUMENT	arg AsnMgmtEmpty
+	RESULT		res AsnMgmtTapiProblemSettings
+	ERRORS		{AsnRequestError}
+::= 2544
+
+-- @brief CtiServer Administrator login
+asnMgmtSetTapiProblemSettings OPERATION
+	ARGUMENT	arg AsnMgmtTapiProblemSettings
+	RESULT		res AsnMgmtEmpty
+	ERRORS		{AsnRequestError}
+::= 2545
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~ Database
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+AsnDatabaseManagerAuthModeEnum ::= ENUMERATED
+{
+	eAuthImplicitWindows(0),
+	eAuthExplicitSQL(1),
+	eAuthExplicitWindows(2)
+}
+
+-- @brief Get DatabaseManager Settings
+-- @long return: success(0), accessdenied(1)
+-- Attention: this type is momentarily not used by asnMgmtGetDatabaseManagerSettings()
+AsnMgmtDatabaseManagerSettings ::= SEQUENCE
+{
+	iAuthMode               INTEGER,    -- @linked AsnDatabaseManagerAuthModeEnum 
+    u8sEngine				UTF8String, -- mssql_mdac, jet
+    u8sServer				UTF8String, -- SQL-Server Name
+    u8sFilePath				UTF8String, -- Filepath zur Datenbank im jet/MSAccess Fall
+    u8sLoginName			UTF8String, -- Loginname bei SQL-Server Fall; Ist der Name leer, wird der SQL-Server mit Windows-Anmeldung verwendet. Enthält der Name etwas, wird SQL-Server internes Benutzerverwaltung verwendet.
+    u8sPassword				UTF8String, -- Passwort für den Loginname; wird nur benötigt, wenn SQL-Server Benutzerkennwörter verlangt
+    u8sDatabaseName			UTF8String, -- Datenbanknamen-Prefix für jet-Datenbanken
+    u8sOfflineTable			UTF8String, -- Name der Offline-Journal Datenbank/Tabelle
+    u8sJournalTable			UTF8String, -- Name der Journal Datenbank/Tablle 
+    u8sTrackerTable			UTF8String, -- Name der Call-Tracker Datenbank/Tablle
+    -- ~ u8sMessages		UTF8String,	 Name der Messages Datenbank/Tablle; gibt es seit V3 nicht mehr 
+    u8sConversationTable	UTF8String, -- Name der Conversation Datenbank/Tablle (Chat)
+    -- ~ u8scontact			UTF8String,  Name der Datenbank/Tabelle für Kontaktdaten; gibt es seit V3 nicht mehr
+    u8sAppointmentTable		UTF8String, -- Name der Termin Datenbank/Tabelle
+    u8sTaskTable			UTF8String, -- Name der Aufgaben/geplante Anrufe Datenbank/Tabelle
+	u8sODBCConfiguredDriver	UTF8String, -- Which ODBC driver shall be used (allows the user to select one)
+	u8sODBCAvailableDrivers	[0] AsnStringPairList OPTIONAL, -- the list of available ODBC drivers
+	bJetDBsExist			[1] BOOLEAN OPTIONAL,	-- true if the server has found a JETDB on disc
+	...
+}
+
+AsnMgmtGetDatabaseManagerSettingsResult ::= SEQUENCE
+{
+	settings                AsnMgmtDatabaseManagerSettings,
+	...
+}
+
+AsnMgmtGetDatabaseManagerSettingsErrorEnum ::= ENUMERATED
+{
+-- Wird in AsnRequestError als Error-Nummer verwendet
+	success(0),
+	accessdenied(1)
+}
+
+asnMgmtGetDatabaseManagerSettings OPERATION
+	ARGUMENT	arg AsnMgmtEmpty
+	RESULT		res AsnMgmtGetDatabaseManagerSettingsResult
+	ERRORS		{AsnRequestError}
+::= 2640
+
+AsnMgmtSetDatabaseManagerSettingsArgument ::= SEQUENCE
+{
+	settings                AsnMgmtDatabaseManagerSettings,
+	...
+}
+
+AsnMgmtSetDatabaseManagerSettingsErrorEnum ::= ENUMERATED
+{
+-- Wird in AsnRequestError als Error-Nummer verwendet
+	success(0),
+	accessdenied(1)
+}
+
+asnMgmtSetDatabaseManagerSettings OPERATION
+	ARGUMENT	arg AsnMgmtSetDatabaseManagerSettingsArgument
+	RESULT		res AsnMgmtEmpty
+	ERRORS		{AsnRequestError}
+::= 2549
+
+AsnMgmtGetAvailableDatabasesArgument ::= SEQUENCE
+{
+	settings                AsnMgmtDatabaseManagerSettings,
+	...
+}
+
+AsnMgmtGetAvailableDatabasesResult ::= SEQUENCE
+{
+	u8slistDatabaseNames   	UTF8StringList,
+	...
+}
+
+asnMgmtGetAvailableDatabases OPERATION
+	ARGUMENT	arg AsnMgmtGetAvailableDatabasesArgument
+	RESULT		res AsnMgmtGetAvailableDatabasesResult
+	ERRORS		{AsnRequestError}
+::= 2550
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~ ListeningInterfaces
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+AsnInterfaceTypeEnum ::= ENUMERATED
+{
+	eINTERFACETYPEUNDEF(-1),
+	eINTERFACETYPEADMIN(0),					-- Interface für die Administration
+	eINTERFACETYPECLIENT(1),				-- Interface für Clients
+	eINTERFACETYPETSP(2),					-- Interface für TSPs
+	eINTERFACETYPEHTTP(3),					-- Interface für WebService (HTTP)
+	eINTERFACETYPEHTTPS(4),					-- Interface für WebService (HTTPS)
+	eINTERFACETYPELDAP(5),					-- Interface für LDAP
+	eINTERFACETYPELDAPS(6),					-- Interface für LDAPs
+	eINTERFACETYPEHTTPNODEJS(7),			-- Interface für WebService via nodejs (HTTP)
+	eINTERFACETYPEHTTPSNODEJS(8),			-- Interface für WebService via nodejs (HTTPS)
+	eINTERFACETYPESIPREGISTRAR(9),		-- Interface für SIP Client Registrierungen (Server ist ein Registrar)
+	eINTERFACETYPESIPFEDERATION(10),		-- Interface für SIP Federation Verbindungen
+	eINTERFACETYPEXMPPFEDERATION(11)		-- Interface für XMPP Federation Verbindungen
+}
+
+AsnInterfaceProtocolEnum ::= ENUMERATED
+{
+	ePROTOCOLUNDEF(-1),
+	ePROTOCOLTCP(0),						-- TCP unverschlüsselt
+	ePROTOCOLSTARTTLSOPTIONAL(1),			-- STARTTLS optional - Socket initial TCP (Zertifikat im Store)
+	ePROTOCOLSTARTTLSMANDATORY(2),			-- STARTTLS verpflichtend - Socket initial TCP (Zertifikat im Store)
+	ePROTOCOLTLS(3),						-- TLS verschlüsselt - Socket initial TLS (Zertifikat im Store)
+	ePROTOCOLTLSFILECERT(4),				-- TLS verschlüsselt (Zertifikat in einem File)
+	ePROTOCOLUDP(5),						-- UDP unverschlüsselt
+	ePROTOCOLMTLS(6)						-- MTLS verschlüsselt
+}
+
+AsnListeningInterface ::= SEQUENCE
+{
+	-- interface enabled/disabled
+	bEnabled					BOOLEAN,
+	-- Eindeutige ID für dieses Interface
+	u8sInterfaceGUID			UTF8String,
+	-- Dieses Interface ist für folgende Verbindungen (kann sich zur Laufzeit NICHT ändern)
+	iInterfaceType				INTEGER,	-- @linked AsnInterfaceTypeEnum
+	-- Protokoll welches verwendet wird
+	iProtocol					INTEGER,	-- @linked AsnInterfaceProtocolEnum
+	-- Bind Adresse
+	u8sBindAddress				UTF8String,
+	-- Port 
+	iPort						INTEGER,
+	-- Interface ist das Default Interface
+	bIsDefault					BOOLEAN,
+	-- Fingerprint des zu verwendenen Zertifikats
+	u8sCertHash					UTF8String,
+	-- Certificate Container File (.ecert)
+	u8sCertContainerFile		UTF8String,
+	-- Certificate Container Content (only for Server->Admin->Server)
+	u8sCertContainerContent		UTF8String,
+	-- DNS Name unter dem das Interface erreichbar ist
+	u8sDNSName					UTF8String,
+	-- Öffentliche IP-Adresse/Port
+	u8sPublicIP					UTF8String,
+	iPublicPort					INTEGER,
+	...
+}
+AsnListeningInterfaceList ::= SEQUENCE OF AsnListeningInterface
+
+AsnMgmtGetListeningInterfacesResult ::= SEQUENCE
+{
+	listeningInterfaces				AsnListeningInterfaceList,
+	u8sServerNameFQDN 				UTF8String,
+	iSupportedListenInterfaceTypes 	INTEGER,
+	...
+}
+
+asnMgmtGetListeningInterfaces OPERATION
+	ARGUMENT	arg AsnMgmtEmpty
+	RESULT		res AsnMgmtGetListeningInterfacesResult
+	ERRORS		{AsnRequestError}
+::= 2551
+
+AsnMgmtSetListeningInterfacesArgument ::= SEQUENCE
+{
+	listeningInterfaces				AsnListeningInterfaceList,
+	bDisconnectClients				BOOLEAN,
+	...
+}
+
+asnMgmtSetListeningInterfaces OPERATION
+	ARGUMENT	arg AsnMgmtSetListeningInterfacesArgument
+	RESULT		res AsnMgmtEmpty
+	ERRORS		{AsnRequestError}
+::= 2552
+
+AsnInterfaceStatusEnum ::= ENUMERATED
+{
+	eINTERFACESTATUSUNDEF(-1),			-- Status bzw. Interface unbekannt
+	eINTERFACESTATUSNOTINITIALIZED(0),	-- Nicht initialisiert
+	eINTERFACESTATUSFAILED(1),			-- Fehlgeschlagen (Port in use, IPV6 nicht verfügbar)
+	eINTERFACESTATUSCERTERROR(2),		-- Fehlgeschlagen, Zertifikats Fehler
+	eINTERFACESTATUSOPEN(5)			-- Initialisiert und offen
+}
+
+AsnListeningInterfaceStatus ::= SEQUENCE
+{
+	-- Eindeutige ID für dieses Interface
+	u8sInterfaceGUID	UTF8String,
+	-- Status des Interfaces
+	iStatus				INTEGER, -- @linked AsnInterfaceStatusEnum
+	-- Liste der SocketServer SocketIDs zum Interface
+	iSocketServerIDs	SEQInteger,
+	-- Anzahl der aktuell verbundenen Clients
+	iOpenConnections	INTEGER,
+	...
+}
+AsnListeningInterfaceStatusList ::= SEQUENCE OF AsnListeningInterfaceStatus
+
+AsnMgmtGetListeningInterfaceStatusesResult ::= SEQUENCE
+{
+	listeningInterfaceStatuses	AsnListeningInterfaceStatusList,
+	...
+}
+
+asnMgmtGetListeningInterfaceStatuses OPERATION
+	ARGUMENT	arg AsnMgmtEmpty
+	RESULT		res AsnMgmtGetListeningInterfaceStatusesResult
+	ERRORS		{AsnRequestError}
+::= 2553
+
+AsnMgmtOnListenInterfaceStatusesEventArgument ::= SEQUENCE
+{
+	statuses 		AsnListeningInterfaceStatusList,
+	...
+}
+
+asnMgmtOnListenInterfaceStatusesEvent OPERATION
+	ARGUMENT	arg AsnMgmtOnListenInterfaceStatusesEventArgument
+::= 2719
+
+AsnMgmtOnListenInterfaceStatusesChangedEventArgument ::= SEQUENCE
+{
+	statusesAdded	AsnListeningInterfaceStatusList,
+	statusesUpdated	AsnListeningInterfaceStatusList,
+	statusesRemoved	AsnListeningInterfaceStatusList,
+	...
+}
+
+asnMgmtOnListenInterfaceStatusesChangedEvent OPERATION
+	ARGUMENT	arg AsnMgmtOnListenInterfaceStatusesChangedEventArgument
+::= 2720
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~ Logger
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+asnMgmtDeleteLogfiles OPERATION
+	ARGUMENT	arg AsnMgmtEmpty
+	RESULT		res AsnMgmtEmpty
+	ERRORS		{AsnRequestError}
+::= 2555
+
+asnMgmtAquireLoggerLock OPERATION
+	ARGUMENT	arg AsnMgmtEmpty
+	RESULT		res AsnMgmtEmpty
+	ERRORS		{AsnRequestError}
+::= 2556
+
+asnMgmtReleaseLoggerLock OPERATION
+	ARGUMENT	arg AsnMgmtEmpty
+	RESULT		res AsnMgmtEmpty
+	ERRORS		{AsnRequestError}
+::= 2557
+
+AsnMgmtLogFileSettings ::= SEQUENCE
+{
+	iWindowsEventLogLevel		INTEGER,
+	iLogLevel					INTEGER,				
+	iNumberOfLogfilesToKeep		INTEGER,
+	iMailToAdmin				INTEGER,			
+	iLogfileSize				INTEGER,			
+	u8sLogFilePath				UTF8String,
+	iPerformanceMonitoring		INTEGER,
+	mediaServerLogFileSettings	AsnMediaServerLogFile,
+	...
+}
+
+--Entries to enable the Administrator to select the the logging of the Media Server
+AsnMediaServerLogFile ::= SEQUENCE
+{
+	--aktuell selektierter Log-Level (Alias Name)
+	u8sLogLevel				UTF8String,
+	--Alias Namensliste der Log-Levels
+	u8slistLogLevel			UTF8StringList,			
+	iRestartImmediately		INTEGER,
+	...
+}
+
+AsnMgmtGetLogFileSettingsResult ::= SEQUENCE
+{
+	logfileSettings 		AsnMgmtLogFileSettings,
+	...
+}
+
+asnMgmtGetLogFileSettings OPERATION
+	ARGUMENT	arg AsnMgmtEmpty
+	RESULT		res AsnMgmtGetLogFileSettingsResult
+	ERRORS		{AsnRequestError}
+::= 2564
+
+AsnMgmtGetLogFileSettingsArgument ::= SEQUENCE
+{
+	logfileSettings 		AsnMgmtLogFileSettings,
+	...
+}
+
+asnMgmtSetLogFileSettings OPERATION
+	ARGUMENT	arg AsnMgmtGetLogFileSettingsArgument
+	RESULT		res AsnMgmtEmpty
+	ERRORS		{AsnRequestError}
+::= 2565
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~ Location
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+--Standortinformationen mit vollstaendigem Satz fuer Uebrtragung zwischen UCServer und UCAdmin
+
+AsnNumberFormatRegExpressionMgmt ::= SEQUENCE
+{
+	u8sSearch							UTF8String,
+	u8sReplace							UTF8String,
+	bMatchReplace						BOOLEAN,
+	bAutoCreatedRule					BOOLEAN,
+	u8sAutoRuleforLocation				UTF8String,
+	...
+}
+
+AsnNumberFormatRegExpressListMgmt ::= SEQUENCE OF AsnNumberFormatRegExpressionMgmt
+
+AsnNumberFormatRegExpressionsMgmt ::= SEQUENCE
+{
+	bIsReadOnlyFromFile					BOOLEAN,
+	formatRules							AsnNumberFormatRegExpressListMgmt,
+	...
+}
+
+AsnRuleSoftphoneEmergencyMgmtListMgmt ::= SEQUENCE OF AsnRuleSoftphoneEmergencyMgmt
+
+AsnRuleSoftphoneEmergencyMgmt ::= SEQUENCE
+{
+	u8sName								UTF8String,
+	u8sEmergencyNumber					UTF8String,
+	u8sPrefix							UTF8String,
+	u8sSubnetID							UTF8String,
+	iSubnetMaskLen						INTEGER,
+	...
+}
+
+--Vorwahl mit liste von NXX nummern,
+--die als Foreign PNA Local Calls gewählt werden.
+AsnELocalDialingRuleForeignPNALocalCallItem ::= SEQUENCE
+{
+	-- Wie vom TAPI-Treiber gemeldet
+	u8sAreaCode				UTF8String,
+	-- Mit Standortinformationen erweitert
+	u8slistNXXPrefixList		UTF8StringList,
+	...
+}
+AsnELocalDialingRuleForeignPNALocalCallItemList ::= SEQUENCE OF AsnELocalDialingRuleForeignPNALocalCallItem
+
+--Liste der Provider
+AsnELCRProvider ::= SEQUENCE
+{
+	u8sProviderName 		UTF8String,
+	u8sProviderNumber 		UTF8String,
+	iProviderCOLOR			INTEGER,
+	...
+}
+AsnELCRProviderList ::= SEQUENCE OF AsnELCRProvider
+
+--Liste der Provider nach Zeit
+AsnELCRZone ::= SEQUENCE
+{
+	u8sZoneName					UTF8String,
+	u8slistZonePrefixList		UTF8StringList,
+	--Jeder dieser Strings enthält 48 Zeichen (48 Halbe Stunden)
+	--Jedes dieser Zeichen zeigt auf einen Provider
+	--Die Zeichen sind 0 - 9 und A - Z
+	--0 bedeutet kein Provider
+	u8sTimeToProviderWeekDay	UTF8String,
+	u8sTimeToProviderSaturday	UTF8String,
+	u8sTimeToProviderSunday		UTF8String,
+	...
+}
+AsnELCRZoneList ::= SEQUENCE OF AsnELCRZone
+
+--Spezielle Behandlung der ConnectedID
+AsnEConnectedIdDealing ::= ENUMERATED
+{
+	eCONNECTEDIDDEALINGNORMAL(0),	-- ConnectedID nach den eingegebenen Regeln formatieren
+	eCONNECTEDIDDEALINGIGNORE(1)	-- ConnectedID ignorieren
+}
+
+AsnLocationInformationMgmt ::= SEQUENCE
+{
+	-- Checksum
+	u8sLocationCheckSum							UTF8String,	-- Prüfsumme für die Location um Änderungen ermitteln zu können
+	-- Country
+	iCountryID									INTEGER,
+	-- Country code
+	u8sCountryCode								UTF8String,
+	-- Wert aus ELocationCountryList gesetzt mit SetCountry
+	u8sLocalPrefix								UTF8String,
+	-- Wert aus ELocationCountryList gesetzt mit SetCountry
+	u8sNationalPrefix							UTF8String,
+	-- Wert aus ELocationCountryList gesetzt mit SetCountry
+	u8sInternationalPrefix						UTF8String,
+	-- Die Wahlregel für Ortsgespräche. Diese kann unwirksam werden, wenn LocalSpecial Dialing Rules definiert sind
+	u8sLocalDialingRule							UTF8String,
+	-- Die Wahlregel für Ferngespräche
+	u8sNationalDialingRule						UTF8String,
+	-- Die Wahlregel für Internetionale Gespräche
+	u8sInternationalDialingRule					UTF8String,
+	-- WahlRegeln speziell Nord Amerika
+	-- Dort existieren verschiedene Wahlregeln für kostenfreie und kostenpflichtige Gespräche
+	-- Diese Wahlregeln sind in jeder Area (Vorwahl) unterschiedlich.
+	-- Diese Wahlregeln werden aus den m_LocalDialingRuleMap gelesen bei der Konfiguration
+	-- Selbe Vorwahl, kostenfreies Gespräch (gleiche LATA) - ELOCALDIALINGRULE_HOMEPNALOCAL
+	u8sLocalDialingRuleHomePNALocal				UTF8String,
+	-- Selbe Vorwahl, kostenpflichtiges Gespräch (andere LATA) - ELOCALDIALINGRULE_HOMEPNATOLL
+	u8sLocalDialingRuleHomePNAToll				UTF8String,
+	-- Andere Vorwahl, kostenfreies Gespräch (gleiche LATA) - ELOCALDIALINGRULE_FOREIGNPNALOCAL
+	u8sLocalDialingRuleForeignPNALocal			UTF8String,
+	-- Sprache als LANG_id
+	-- Verwendet Primary LANGID z.B. LANG_GERMAN
+	-- und SUB LangID z.B. SUBLANG_DEFAULT
+	iLanguage									INTEGER,
+	-- Vorwahl immer ohne nationalen access code.
+	-- Wenn es keine m_strNationalDialingRule gibt, ist der 
+	-- CityCode immer leer
+	u8sCityCodeNoPrefix							UTF8String,
+	-- Flag welches ermöglicht das auch im Ortsnetz mit Vorwahl gewählt wird
+	bNoLocalDialing								BOOLEAN,
+	-- Liste der Vanity Vorwahlen (, getrennt)
+	u8sVanityNumbers							UTF8String,
+	-- Use Vanity?
+	bUseVanity									BOOLEAN,
+	-- Remote Tapi Treiber Rufnummern Formatierung
+	-- @linked AsnERemoteTapiNumberFormat
+	iRemoteTapiNumberFormat						INTEGER,
+	-- Remote Tapi Treiber Rufnummern Wahl Formatierung
+	-- @linked AsnERemoteTapiDialFormat
+	iRemoteTapiDialFormat						INTEGER,
+	-- MultiLine TAPI Treiber - Name der Leitungen
+	-- @linked AsnERemoteTapiLineNames
+	iRemoteTapiLineNames						INTEGER,
+	-- Dialing Number Format
+	-- @linked AsnETAPIDialNumberFormat
+	iDialingNumberFormat						INTEGER,
+	-- Automatische Nachwahl von Nebenstellennummern bei Ländern mit fixer Rufnummernlänge
+	-- Bei Ländern mit fixer Rufnummernlänge werden Nebenstellennummern nach der Verbindungsherstellung automatisch nachgewählt
+	bFixedNumberLenExtensionDTMFDialing			BOOLEAN,
+	-- Dies ist ein Mobile Device Standort
+	bMobileDeviceLocation						BOOLEAN,
+	-- In dieser Location werden die erweiterten Einstellungen angezeigt
+	-- damit sind alle Settings sichtbar, ansonsten nur elementar wichtige für 95% der Installationen
+	bShowExtendedSettings						BOOLEAN,
+	-- Dieser Standort steht für den MuliLocationSupport bereit
+	bMultiLocationSupport						BOOLEAN, 
+	-- Automatisch Regeln zum umformatieren kurzer Rufnummern in die Lange Notation erstellen
+	bAutoCreateOtherLocationRules				BOOLEAN,
+	-- Rufnummernauflösung über die Suche Standortübergreifend erlauben
+	bAllowNumberSearchOtherLocations			BOOLEAN, 
+	-- Superkanonische Rufnummern anderer Standorte bei der Wahl entsprechend verkürzen
+	bShortenOtherLocationSCNumbersForDialing	BOOLEAN,
+	-- Telefonanlage wird benutzt
+	bUseTkSystem								BOOLEAN,
+	-- Anschlussnummer bei Anlagenanschluss (z.B. 36856)
+	u8sTKAnschlussNr							UTF8String,
+	-- Gesplitetter Bereich für Anschlussnummer (36856 [0-2])
+	-- In Deutschland kann ein Anlagenanschluss eingeschränkte Durchwahlbereiche haben
+	-- Die folgende Variablen schänken den Bereich für die Anschlussnummer ein.
+	-- Default ist leer (alle) 
+	-- Wir verwendet um festzustellen von welchen internen Rufnummern es externe Repräsentierungen gibt
+	u8sDDIRangeBegin							UTF8String,
+	u8sDDIRangeEnd								UTF8String,
+	-- Amtskennziffer im Ort (z.B. 0)
+	u8sTKLocalAccessCode						UTF8String,
+	--  Amtskennziffer National (z.B. 0)
+	u8sTKLongDistanceAccessCode					UTF8String,
+	-- Amtskennziffer International (z.B. 0)
+	u8sTKInternationalAccessCode				UTF8String,
+	-- Amtskennziffer Privatgespräch (z.B. 0)
+	-- Kann ? und % als platzhalter für persönliche PIN enthalten.
+	-- ?: eine Ziffer
+	-- %: n Ziffern
+	u8sTKPrivateAccessCode						UTF8String,
+	-- Amtskennziffer für Rufumleitung setzen
+	u8sTKForwardingAccessCode					UTF8String,
+	-- Minimale Länge interner Nummern
+	iTKMinLenInternalNumbers					INTEGER,
+	-- Maximale Länge interner Nummern
+	iTKMaxLenInternalNumbers					INTEGER,
+	-- Amtskennziffer(n) bei ankommend gemeldeter Nummer abschneiden
+	u8slistTKAkzListRemoveIn					UTF8StringList,
+	-- Amtskennziffer(n) bei abgehend gemeldeter Nummer abschneiden
+	u8slistTKAkzListRemoveOut					UTF8StringList,
+	-- Amtskennziffer(n) bei Meldung einer Rufumleitung abschneiden
+	u8slistTKAkzListRemoveForwarding			UTF8StringList,
+	-- Spezielle Behandlung der ConnectedID, normal, formatieren, ignorieren
+	-- @linked AsnEConnectedIdDealing
+	iConnectedIDDealing							INTEGER,
+	-- Amtskennziffer(n) bei abgehend gemeldeter Nummer ConnecteID
+	u8slistTKAkzListRemoveConnectedIDIn			UTF8StringList,
+	-- Amtskennziffer(n) bei ankommende gemeldeter Nummer ConnecteID
+	u8slistTKAkzListRemoveConnectedIDOut		UTF8StringList,
+	-- Reguläre Ausdrücke zur erweiterten Erkennung interner Rufnummern
+	-- Dient zur Erkennung interner Rufnummern, formatiert, sofern ein Replace Ausdruck hinterlegt ist, die Rufnummer automatisch um
+	numberFormatInternal						AsnNumberFormatRegExpressionsMgmt,
+	-- Reguläre Ausdrücke zur erweiterten Erkennung externer Rufnummern
+	-- Das sind meist wohl die selben wie SpecialNumbers.
+	-- Allerdings nur dann, wenn man nicht selbige auch als interne Rufnummern hat. */
+	-- Dient zur Erkennung externer Rufnummern, formatiert, sofern ein Replace Ausdruck hinterlegt ist, die Rufnummer automatisch um
+	numberFormatExternal						AsnNumberFormatRegExpressionsMgmt,
+	-- Liste mit Ausdrücken zur automatischen Standortrufnummernmanipulation. 
+	-- Gefuellt wenn m_bMultiLocationEnabled && m_bAutoCreateOtherLocationRules gesetzt ist nach dem Laden aller Standorteinstellungen
+	numberFormatAutomaticOtherLocationsDDItoSC	AsnNumberFormatRegExpressionsMgmt,
+	-- Liste mit Ausdrücken zur automatischen Standortrufnummernmanipulation. 
+	-- Gefüllt wenn m_bMultiLocationEnabled && m_bShortenOtherLocationSCNumbersForDialing gesetzt ist nach dem Laden aller Standorteinstellungen
+	numberFormatAutomaticOtherLocationsSCtoDDI	AsnNumberFormatRegExpressionsMgmt,
+	-- Rufnummern Formatierung (Reguläre Ausdrücke oder direktes Suchen Ersetzen (abhängig von internem Flag)
+	numberFormatRegExpressListIn				AsnNumberFormatRegExpressionsMgmt,
+	-- Rufnummern Formatierung (Reguläre Ausdrücke oder direktes Suchen Ersetzen (abhängig von internem Flag)
+	numberFormatRegExpressListOut				AsnNumberFormatRegExpressionsMgmt,
+	-- Rufnummern Formatierung (Reguläre Ausdrücke oder direktes Suchen Ersetzen (abhängig von internem Flag)
+	-- Diese Liste wird verarbeitet, nachdem die Rufnummer superkanonisch gemacht wurde.
+	-- Hat das Ergebnis ein + am Anfang, wird weiterformatiert,
+	-- sonst direkt gewählt
+	numberFormatRegExpressListDial				AsnNumberFormatRegExpressionsMgmt,
+	-- Rufnummern Formatierung (Reguläre Ausdrücke oder direktes Suchen Ersetzen (abhängig von internem Flag)
+	-- Diese Liste wird verarbeitet, nachdem alle Formattierung abgeschlossen ist.
+	-- Diese Regel wird auch für die Remote Tapi Treiber angewendet
+	numberFormatRegExpressListFinalDial			AsnNumberFormatRegExpressionsMgmt,
+	-- Reguläre Ausdrücke um eine Leitungsrufnummer zu formen.
+	-- Im Admin kann man hier in den erweiterten Einstellungen reguläre Ausdrücke hinterlegen nach denen Leitungsrufnummern formatiert werden
+	-- Diese Ausdrücke müssen aus der Rufnummer eine superkanonische Rufnummer machen. Sobald ein Ausdruck hinterlegt ist wird in diesem Standort
+	-- nurnoch über diese Regulären Ausdrücke gearbeitet. Die Ausdrücke werden NUR für Leitungsrufnummer verwendet
+	numberFormatRegExpressLinePhoneNumbers		AsnNumberFormatRegExpressionsMgmt,
+	-- Location Identifier (z.B. Default)
+	u8sLocationID								UTF8String,
+	-- Flag, welche Ausnahmen für die Eigene Vorwahl gilt. 
+	-- Alle im eigenen Ortsnetz sind kostenfrei
+	-- Kostenfreie Konfigurieren (die anderen sind kostenpflichtig)
+	-- Kostenpflichtige Konfigurieren (die anderen sind kostenfrei)
+	iLocalDialingRuleHomePNAFlag				INTEGER,
+	-- Liste der NXX Nummern in der eigenen Vorwahl, die als Local Call gelten
+	u8slistLocalDialingRulesHomePNALocalCalls	UTF8StringList,
+	-- Liste der NXX Nummern in der eigenen Vorwahl,die als Local Call gelten
+	u8slistLocalDialingRulesHomePNATollCalls	UTF8StringList,
+	-- Flag, welche Ausnahmen für fremde Vorwahlen gelten. 
+	-- Alle in anderen Ortsnetzen sind Ferngespräche
+	-- Es gibt kostenfreie Gespräche
+	iLocalDialingRuleForeignPNAFlag				INTEGER,
+	-- Liste der Vorwahlen mit NXX Nummern aus anderen Vorwahlen,die als Local Call gelten
+	localDialingRuleForeignPNALocalCallItemList AsnELocalDialingRuleForeignPNALocalCallItemList,
+	-- LeastCostRouting verwenden
+	bUseAdvancedLCR								BOOLEAN,
+	-- Liste der Provider
+	lCRProviderVector							AsnELCRProviderList,
+	-- Liste der Provider
+	lCRZoneList									AsnELCRZoneList,
+	-- Projektkennziffern
+	projectPINRules								AsnProjectPinRuleList,
+	-- rules for emergency numbers enabled
+	bRulesSoftphoneEmergencyEnabled				BOOLEAN,
+	-- Client Warnings enabled
+	bRulesSoftphoneEmergencyClientWarningEnabled BOOLEAN,
+	-- rules for emergency numbers dialed from softphone
+	rulesSoftphoneEmergency						AsnRuleSoftphoneEmergencyMgmtListMgmt,
+	...
+}
+
+AsnMgmtGetLocationInformationMgmtArgument ::= SEQUENCE
+{
+	u8sLocationID						UTF8String,
+	...
+}
+
+AsnMgmtGetLocationInformationMgmtResult ::= SEQUENCE
+{
+	asnLocationData						AsnLocationInformationMgmt,
+	...
+}
+
+asnMgmtGetLocationInformationMgmt OPERATION
+	ARGUMENT	arg AsnMgmtGetLocationInformationMgmtArgument
+	RESULT		res AsnMgmtGetLocationInformationMgmtResult
+	ERRORS		{AsnRequestError}
+::= 2634
+
+AsnMgmtSetLocationInformationMgmtArgument ::= SEQUENCE
+{
+	asnLocationData						AsnLocationInformationMgmt,
+	...
+}
+
+AsnMgmtSetLocationInformationMgmtResult ::= SEQUENCE
+{
+	...
+}
+
+asnMgmtSetLocationInformationMgmt OPERATION
+	ARGUMENT	arg AsnMgmtSetLocationInformationMgmtArgument
+	RESULT		res AsnMgmtSetLocationInformationMgmtResult
+	ERRORS		{AsnRequestError}
+::= 2635
+
+AsnMgmtDeleteLocationArgument ::= SEQUENCE
+{
+	u8sLocationID 	UTF8String,
+	...
+}
+
+asnMgmtDeleteLocation OPERATION
+	ARGUMENT	arg AsnMgmtDeleteLocationArgument
+	RESULT		res AsnMgmtEmpty
+	ERRORS		{AsnRequestError}
+::= 2577
+
+AsnMgmtLocationChangedArgument ::= SEQUENCE
+{
+	u8sLocationID			UTF8String,
+	u8sMD5CheckSum			UTF8String,
+	...
+}
+
+-- @brief Location changed event
+-- @long This event is fired from the server to the client.
+-- It indicates, that the location information for the given locationID has changed.
+-- The client should reload the location information.
+asnMgmtLocationChanged OPERATION
+	ARGUMENT	arg AsnMgmtLocationChangedArgument
+::= 2707
+
+asnMgmtGetLocationIDs OPERATION
+	ARGUMENT	arg AsnGetLocationIDsArgument
+	RESULT		res AsnGetLocationIDsResult
+	ERRORS		{AsnRequestError}
+::= 2633
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~ CSTA
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+AsnCSTAServerSettings ::= SEQUENCE
+{
+	-- TCP Server enabled?
+	iCSTAServerEnabled 					INTEGER,       
+	-- TCP Port
+	iCSTAServerPort 					INTEGER,                  
+	-- bind to tcp address
+	u8sCSTAServerBindAddress			UTF8String,        
+	-- TCP Server enabled?
+	iCSTAServerSSLEnabled 				INTEGER,       
+	-- TCP Port
+	iCSTAServerSSLPort 					INTEGER,                  
+	-- bind to tcp address
+	u8sCSTAServerSSLBindAddress			UTF8String,        
+	-- Hash for Certificate
+	u8sCSTAServerSSLCertificateHash		UTF8String,        
+	-- User Name
+	u8sCSTAServerUser					UTF8String,        
+	-- User Password
+	u8sCSTAServerPasswd					UTF8String,        
+	...
+}
+
+AsnMgmtGetCSTAServerSettingsResult ::= SEQUENCE
+{
+	settings 			AsnCSTAServerSettings,
+	...
+}
+
+asnMgmtGetCSTAServerSettings OPERATION
+	ARGUMENT	arg AsnMgmtEmpty
+	RESULT		res AsnMgmtGetCSTAServerSettingsResult
+	ERRORS		{AsnRequestError}
+::= 2585
+
+AsnMgmtSetCSTAServerSettingsArgument ::= SEQUENCE
+{
+	settings 			AsnCSTAServerSettings,
+	...
+}
+
+asnMgmtSetCSTAServerSettings OPERATION
+	ARGUMENT	arg AsnMgmtSetCSTAServerSettingsArgument
+	RESULT		res AsnMgmtEmpty
+	ERRORS		{AsnRequestError}
+::= 2586
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~ STUN and TURN
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+AsnAVSTUNANDTURNSERVERTYPE ::= ENUMERATED
+{
+	-- Not used
+	eUNDEF(-1),				
+	-- Stun Server
+	eSTUN(0),				
+	-- Turn Server mit Username und Password (momentan unbenutzt)
+	eTURNUSERPASSWD(1),	
+	-- Turn Server mit Shared Secret (UCServer Intern)
+	eTURNSHAREDSECRET(2)	
+}
+
+AsnAVStunOrTurnServer ::= SEQUENCE
+{
+	-- Typ
+	-- @linked AsnAVSTUNANDTURNSERVERTYPE
+	iType			INTEGER, 
+	-- 	typ = TURN_USER_PASSWD: username; typ = TURN_SHARED_SECRET: Leer
+	u8sUsername 	UTF8String,       
+	-- typ = TURN_USER_PASSWD: credential; typ = TURN_SHARED_SECRET: Shared Secret
+	u8sPassword 	UTF8String,                  
+	-- Config Value
+	iTTLSeconds		INTEGER,        
+	-- Liste der Turn Server URIs
+	u8slistStrUris 	UTF8StringList,       
+	...
+}
+AsnAVStunOrTurnServerList ::= SEQUENCE OF AsnAVStunOrTurnServer 
+
+AsnAVSTUNANDTURNPROVIDERTYPE ::= ENUMERATED
+{
+	-- Use own Servers
+	eTURNPROVIDERTYPEOWNSERVERS(0),
+	-- Turn Provider
+	eTURNPROVIDERTYPEEXTERNAL(1),
+	-- UCConnect
+	eTURNPROVIDERTYPEUCCONNECT(2)
+}
+
+AsnAVStunOrTurnSettings ::= SEQUENCE
+{
+	-- Provider Type
+	-- @linked AsnAVSTUNANDTURNPROVIDERTYPE
+	iTurnProviderType			INTEGER,
+	-- List of own STUN and TURN Servers
+	listOwnServers 				AsnAVStunOrTurnServerList,
+	-- Selected TURN Provider
+	u8sTURNProvider				UTF8String,
+	-- Config Params for TURN Provider
+	u8spairlistProviderParams 	AsnStringPairList,
+	...
+}
+
+AsnMgmtGetSTUNandTURNSettingsResult ::= SEQUENCE
+{
+	settings 		AsnAVStunOrTurnSettings,
+	...
+}
+
+asnMgmtGetSTUNandTURNSettings OPERATION
+	ARGUMENT	arg AsnMgmtEmpty
+	RESULT		res AsnMgmtGetSTUNandTURNSettingsResult
+	ERRORS		{AsnRequestError}
+::= 2587
+
+AsnMgmtSetSTUNandTURNSettingsArgument ::= SEQUENCE
+{
+	settings 		AsnAVStunOrTurnSettings,
+	...
+}
+
+asnMgmtSetSTUNandTURNSettings OPERATION
+	ARGUMENT	arg AsnMgmtSetSTUNandTURNSettingsArgument
+	RESULT		res AsnMgmtEmpty
+	ERRORS		{AsnRequestError}
+::= 2588
+
+AsnMgmtGetSTUNandTURNConsumerConfigArgument ::= SEQUENCE
+{
+	settings 		AsnAVStunOrTurnSettings,
+	...
+}
+
+AsnMgmtGetSTUNandTURNConsumerConfigResult ::= SEQUENCE
+{
+	config 		AsnConfigSTUNandTURNList,
+	...
+}
+
+asnMgmtGetSTUNandTURNConsumerConfig OPERATION
+	ARGUMENT	arg AsnMgmtGetSTUNandTURNConsumerConfigArgument
+	RESULT		res AsnMgmtGetSTUNandTURNConsumerConfigResult
+	ERRORS		{AsnRequestError}
+::= 2589
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~ Database
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+AsnMgmtDBManSettings ::= SEQUENCE
+{
+	iNetDBEnabled 		INTEGER,
+	...
+}
+
+AsnMgmtGetDBManSettingsResult ::= SEQUENCE
+{
+	settings 			AsnMgmtDBManSettings,
+	...
+}
+
+asnMgmtGetDBManSettings OPERATION
+	ARGUMENT	arg AsnMgmtEmpty
+	RESULT		res AsnMgmtGetDBManSettingsResult
+	ERRORS		{AsnRequestError}
+::= 2558
+
+AsnMgmtGetDBManSettingsArgument ::= SEQUENCE
+{
+	settings 			AsnMgmtDBManSettings,
+	...
+}
+
+asnMgmtSetDBManSettings OPERATION
+	ARGUMENT	arg AsnMgmtGetDBManSettingsArgument
+	RESULT		res AsnMgmtEmpty
+	ERRORS		{AsnRequestError}
+::= 2559
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~ XMPP
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+AsnXMPPSettings ::= SEQUENCE
+{
+	-- general 
+	iXMPPEnabled 						INTEGER,
+	-- s2s port
+	iS2SPort 							INTEGER,				
+	-- s2s bind address
+	u8sS2SBindAddress					UTF8String,	
+	-- proxy
+	iProxyEnabled 						INTEGER,
+	-- proxy port
+	iProxyPort 							INTEGER,			
+	-- proxy address
+	u8sProxyAddress						UTF8String,	
+	-- proxy password
+	u8sProxyPwdEncrypted				UTF8String,	
+	-- Domain allow (whitelist)
+	u8sintpairlistDomainsAllow 			AsnStringIntegerPairList,
+	-- TLS certificate hash
+	u8sCertificateHash					UTF8String, 
+	-- global tls level
+	iEncryptionLevel 					INTEGER,		
+	-- per host tls level
+	u8sintpairlistDomainEncryptionLevel AsnStringIntegerPairList, 
+	...
+}
+
+AsnMgmtGetXmppSettingsResult ::= SEQUENCE
+{
+	settings 		AsnXMPPSettings,
+	...
+}
+
+asnMgmtGetXmppSettings OPERATION
+	ARGUMENT	arg AsnMgmtEmpty
+	RESULT		res AsnMgmtGetXmppSettingsResult
+	ERRORS		{AsnRequestError}
+::= 2591
+
+AsnMgmtSetXmppSettingsArgument ::= SEQUENCE
+{
+	settings 		AsnXMPPSettings,
+	...
+}
+
+asnMgmtSetXmppSettings OPERATION
+	ARGUMENT	arg AsnMgmtSetXmppSettingsArgument
+	RESULT		res AsnMgmtEmpty
+	ERRORS		{AsnRequestError}
+::= 2592
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~ SIPFederation
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+AsnListenInterfaceDescription ::= SEQUENCE
+{
+	bEnabled 				BOOLEAN,
+	u8sIPAddress			UTF8String,	 		
+	iPort 					INTEGER,			
+	iProtocol 				INTEGER,			
+	iService 				INTEGER,			
+	u8sGUID 				UTF8String,				
+	iStaticRouteRefCount 	INTEGER,			
+	...
+}
+AsnListenInterfaceDescriptionList ::= SEQUENCE OF AsnListenInterfaceDescription
+
+AsnSIPFEDSettings ::= SEQUENCE
+{
+	-- Common
+	u8sFederationServiceURL			UTF8String,
+	-- Network listen Interfaces enabled
+	iNetworkInterfacesEnabled		INTEGER,					
+	-- Network listen Interfaces
+	networkInterfaces          		AsnListenInterfaceDescriptionList,	
+	-- Public IP enabled
+	iUsePublicIP					INTEGER,					
+	-- Public Port
+	iPublicPort						INTEGER,					
+	-- Public IP
+	u8sPublicIP						UTF8String,				
+	-- Federation enabled
+	iFederationEnabled				INTEGER,				
+	-- Network bind address for federation
+	u8sFederationBindAddress		UTF8String,	
+	-- Federation proxy enabled
+	iProxyEnabled					INTEGER,						
+	-- PCE-2391: Direct federation service username
+	u8sProxyUsername				UTF8String,			
+	-- Direct federation service password
+	u8sProxyPassword				UTF8String,            
+	-- Edge server enabled
+	iEdgeServerEnabled				INTEGER,				
+	-- Edge server port
+	iEdgeServerPort					INTEGER,				
+	-- Edge server transport protocol
+	iEdgeServerProtocol				INTEGER,			
+	-- Edge server certificate hash
+	u8sEdgeServerCertificate		UTF8String,		
+	-- PCE-2391: Edge server username
+	u8sEdgeServerUsername			UTF8String,		
+	-- Edge server ip address
+	u8sEdgeServerAddress			UTF8String,		
+	-- Edge server register password
+	u8sEdgeServerPassword			UTF8String,		
+	-- Open Federation enabled
+	iOpenFederationEnabled			INTEGER,	
+	-- Static routes enabled
+	iStaticRoutesEnabled			INTEGER,				
+	-- Static routings formatted string list
+	u8slistStaticRoutes				UTF8StringList,	
+	-- Domain allow formatted string list
+	u8slistDomainsAllow				UTF8StringList,			
+	-- Allow global federation
+	iGlobalAllow					INTEGER,					
+	-- Allow global presence level
+	iGlobalAllowPresenceLevel		INTEGER,		
+	-- Domain deny string list
+	u8slistDomainsDeny				UTF8StringList,			
+	-- Registrar enabled
+	iRegistrarEnabled				INTEGER,				
+	-- PCE-2361: Auswahl Zertifikat/Hash unter 'SIP/SIP-Server'
+	u8sSipServerCertHash			UTF8String,	
+	-- PCE-2668: Indicates whether a server restart is required or not
+	bServerRestartRequiredFlag    	BOOLEAN,
+	...
+}
+
+AsnMgmtGetSIPFEDSettingsResult ::= SEQUENCE
+{
+	settings 		AsnSIPFEDSettings,
+	...
+}
+
+asnMgmtGetSIPFEDSettings OPERATION
+	ARGUMENT	arg AsnMgmtEmpty
+	RESULT		res AsnMgmtGetSIPFEDSettingsResult
+	ERRORS		{AsnRequestError}
+::= 2593
+
+AsnMgmtSetSIPFEDSettingsArgument ::= SEQUENCE
+{
+	settings 		AsnSIPFEDSettings,
+	...
+}
+
+asnMgmtSetSIPFEDSettings OPERATION
+	ARGUMENT	arg AsnMgmtSetSIPFEDSettingsArgument
+	RESULT		res AsnMgmtEmpty
+	ERRORS		{AsnRequestError}
+::= 2594
+
+AsnMgmtGetSIPFEDPubIPAdrResult ::= SEQUENCE
+{
+	u8sPublicIPAddress 		UTF8String,
+	...
+}
+
+asnMgmtGetSIPFEDPubIPAdr OPERATION
+	ARGUMENT	arg AsnMgmtEmpty
+	RESULT		res AsnMgmtGetSIPFEDPubIPAdrResult
+	ERRORS		{AsnRequestError}
+::= 2595
+
+AsnMgmtStartSipFedXmppDiagnosticsArgument ::= SEQUENCE
+{
+	u8slistCommands 		UTF8StringList,
+	...
+}
+
+asnMgmtStartSipFedXmppDiagnostics OPERATION
+	ARGUMENT	arg AsnMgmtStartSipFedXmppDiagnosticsArgument
+	RESULT		res AsnMgmtEmpty
+	ERRORS		{AsnRequestError}
+::= 2596
+
+AsnMgmtGetSIPFEDSrvStateResult ::= SEQUENCE
+{
+	u8sServerState 		UTF8String,
+	...
+}
+
+asnMgmtGetSIPFEDSrvState OPERATION
+	ARGUMENT	arg AsnMgmtEmpty
+	RESULT		res AsnMgmtGetSIPFEDSrvStateResult
+	ERRORS		{AsnRequestError}
+::= 2597
+
+AsnMgmtGetSIPFEDNetStateResult ::= SEQUENCE
+{
+	u8slistNetStates 		UTF8StringList,
+	...
+}
+
+asnMgmtGetSIPFEDNetState OPERATION
+	ARGUMENT	arg AsnMgmtEmpty
+	RESULT		res AsnMgmtGetSIPFEDNetStateResult
+	ERRORS		{AsnRequestError}
+::= 2598
+
+AsnGatewayModelEnum ::= ENUMERATED
+{
+	gwmodelgeneral(0),
+	gwmodelunifyopenscapebusiness(100),
+	gwmodelmitelmivoiceoffice400(200),
+	gwmodelmitelmivoiceofficemxone(201),
+	gwmodelferrariofficemastergate(300),
+	gwmodelavmfritzbox7490(400),
+	gwmodelasteriskpbx(500),
+	gwmodelpanasonicns1000(600),
+	gwmodelpanasonicnsx(601)
+}
+
+AsnGatewayTypesEnum ::= ENUMERATED
+{
+	gatewaystdsipwsipmediagw(0),    -- call to/from a gateway with using a mediaserver
+	gatewaystdsipwomediagw(4),      -- call to/from a gateway without using a mediaserver
+	mediagatewayrtp(1),             -- call to/from mediagateway callleg that speaks rtp
+	mediagatewaydtls(2),            -- call to/from mediagateway callleg that speaks dtls
+	federationstdsip(3),            -- call is a federation call
+	gatewaystdsipwkurentomediagw(5) -- call to/from a gateway with using a kurento mediaserver
+}
+
+AsnMediaModesEnum ::= ENUMERATED
+{
+	mediastdlegacy(0),       -- "Legacy" mode without using encryption
+	mediastdlegacysrtp(1),   -- "Legacy" mode with encryption (SRTP)
+	mediastdwebrtc(2)        -- webRTC mode
+}
+
+AsnSIPConnectionTypeEnum ::= ENUMERATED
+{
+	eSIPUDP(1),
+	eSIPTCP(2),
+	eSIPTLS(3),
+	eSIPMTLS(6)
+}
+
+AsnAudioCodesEnum ::= ENUMERATED
+{
+	audiocodecg711ulaw(0),
+	audiocodecg711alaw(1),
+	audiocodecg722(2),
+	audiocodecopus(3)
+}
+
+AsnSIPGatewaySettingsRegisteredUser ::= SEQUENCE
+{
+	-- I.d.R. die Leitungsnummer. Wird als UserPart in der SIP-Adresse verwendet.
+	u8sUserName			UTF8String,
+	-- Scheint überall im Code ein "*" zu sein. Wird das wirklich benötigt?
+	u8sListenUserName	UTF8String,
+	-- Anzeigename (Benutzername) -> das was dann typischerweise im Telefondisplay angezeigt wird.
+	u8sDisplayName		UTF8String,
+	-- Entspricht normalerweise der Leitungsnummer. Damit wird sich angemeldet.
+	u8sAuthUserName		UTF8String,
+	-- Passwort zum Anmelden.
+	u8sAuthPassword		UTF8String,
+	-- um die rufnummer bis zum CreateLine durchzuschleifen. Ist bei manchen Anlagen nicht der UserName.
+	u8sManualNumber		UTF8String,
+	-- PROCALL-2289: SIP-Trunk flag for the User that holds the Register, optional wegen kompatibilitaet
+	bMainTrunkUser 		[0] BOOLEAN OPTIONAL,
+	...
+}
+AsnSIPGatewaySettingsRegisteredUserList ::= SEQUENCE OF AsnSIPGatewaySettingsRegisteredUser
+
+AsnSIPGatewayUASettings ::= SEQUENCE
+{
+	-- Gateway-Model
+	-- @linked AsnGatewayModelEnum
+	iGatewayModel         	INTEGER,
+	-- Gateway-Typ
+	-- @linked AsnGatewayTypesEnum
+	iGatewayType     		INTEGER,
+	-- Map der registrierten Benutzer. Der Schlüssel ist typischerweise der Username.
+	-- wird ignoriert, wenn diese Struktur mit asnMgmtSetSIPGatewaySettingsV2 gesendet wird
+	registeredUsers    		AsnSIPGatewaySettingsRegisteredUserList,
+	-- TRUNK-Registrierung
+	-- Wenn gesetzt, wird nur ein Register für alle Leitungen durchgeführt.
+	-- Als AuthUserName und AuthPasswort wird das des "MainTrunkUser" verwendet.
+	bTrunkRegistration 		BOOLEAN,
+	-- Registrar oder Proxy.
+	u8sRegistrar			UTF8String,
+	-- Registrar- oder Proxy-Port.
+	iRegistrarPort     		INTEGER,
+	-- Angabe des STUN-/TURN-Servers. Wird momentan nicht verwendet.
+	u8sSTUNServer			UTF8String,
+	-- Domain-Part der Anmeldeadresse (entspricht i.d.R. der Registrar-Adresse).
+	u8sDomainRealm			UTF8String,
+	-- Zeitdauer bis zum nächsten Reregister.
+	iRegisterInterval     	INTEGER,
+	-- Verbindungstyp, i.d.R. ESIP_UDP.
+	-- @linked AsnSIPConnectionTypeEnum
+	iConnectionType     	INTEGER,
+	-- Die GUID der zu verwendenden Netzwerkschnittstelle.
+	u8sLocalInterfaceGUID	UTF8String,
+	-- Leitungsgruppenname der Konfiguration (Klartextname), wird zur Bildung der Leitungsadresse benutzt.
+	u8sLineGroupName		UTF8String,
+	-- muss auf true gesetzt sein, sonst registriert sich nicht der User
+	bDoRegister    			BOOLEAN,
+	-- Eindeutiger Name des Gateways. Erscheint so in der UI.
+	u8sMediaGatewayName		UTF8String,
+	-- Media Mode
+	-- Im Zusammenhang mit Kurento wird zunächst immer webrtc gesprochen
+	iMediaMode     			INTEGER,
+	-- Unterstützte Audio-Codecs
+	-- @linked AsnAudioCodesEnum
+	ilistAudioCodecs     	SEQInteger,
+	-- PBX Eigenschaften 
+	iPBXProperties     		INTEGER,
+	-- Gateway Trace global 
+	iPCAPTrace				INTEGER,
+	-- Gateway Trace lines 
+	u8slistPCAPTraceLines	UTF8StringList,
+	-- Vom Admin definierte Feature Codes, die im ME Bereich der SipAV-line gezeigt werden.  
+	objFeatureCodes			AsnMgmtCtiFeatureCodeList,
+	-- Custom Properties for individual Line groups
+	-- Property strings are defined as ELINEPROP_XXX ies */
+	customProps					AsnStringPairList,
+	-- average delay between SIP Registrations
+	iRegisterDelay     			INTEGER,
+	-- PBX Transfer Eigenschaften
+	iPBXTransferProperties     		INTEGER,
+	-- Zeitdauer bis zum naechsten NAT Refresh.
+	iRegisterNatRefreshInterval		INTEGER,
+	-- Handelt es sich um einen SIP-Provider?
+	iProvider					INTEGER,
+	-- min Media Ports (e.g. Softphone)
+	iMinPorts					INTEGER,
+	-- max Media Ports (e.g. Softphone)
+	iMaxPorts					INTEGER,
+	-- Wurde Early Media deaktiviert?
+	iNoEarlyMedia				INTEGER,
+	-- true: Geaenderte User in registeredUsersAdded, registeredUsersChanged, registeredUsersRemoved.
+	-- false: Alle vorhandenen User in registeredUser
+	-- default beim Empfaenger (falls Wert nicht gesetzt): false
+	bRegisteredUsersSendChanges [0] BOOLEAN OPTIONAL,
+	-- Liste der hinzugefuegten registeredUser. Der Schlüssel ist typischerweise der Username.
+	registeredUsersAdded		[1] AsnSIPGatewaySettingsRegisteredUserList OPTIONAL,
+	-- Liste der geaenderten registeredUser. Der Schlüssel ist typischerweise der Username.
+	registeredUsersChanged		[2] AsnSIPGatewaySettingsRegisteredUserList OPTIONAL,
+	-- Liste der entfernten registeredUser. Aufgelistet sind die Usernamen.
+	registeredUsersRemoved		[3] UTF8StringList OPTIONAL,
+	-- @added 27.05.2024
+	-- Leitungsgruppenname vor dem Umbenennen der Leitungsgruppe.
+	-- Falls u8sLineGroupName geändert wurde, muss hier der alte Name (derjenige vor der Umbenennung) der Leitungsgruppe angegeben werden.
+	u8sLineGroupNameOld			[4] UTF8String OPTIONAL,
+	...
+}
+AsnSIPGatewayUASettingsList ::= SEQUENCE OF AsnSIPGatewayUASettings
+
+AsnMgmtGetSIPGatewaySettingsResult ::= SEQUENCE
+{
+	settings 		AsnSIPGatewayUASettingsList,
+	-- Network listen Interfaces enabled
+	iNetworkInterfacesEnabled		[0] INTEGER OPTIONAL,
+	-- Network listen Interfaces
+	networkInterfaces          		[1] AsnListenInterfaceDescriptionList OPTIONAL,
+	-- Public IP enabled
+	iUsePublicIP					[2] INTEGER OPTIONAL,
+	-- Public Port
+	iPublicPort						[3] INTEGER OPTIONAL,
+	-- Public IP
+	u8sPublicIP						[4] UTF8String OPTIONAL,
+	-- Registrar enabled
+	iRegistrarEnabled				[5] INTEGER OPTIONAL,
+	-- Auswahl Zertifikat/Hash
+	u8sSipServerCertHash			[6] UTF8String OPTIONAL,
+	...
+}
+
+asnMgmtGetSIPGatewaySettings OPERATION
+	ARGUMENT	arg AsnMgmtEmpty
+	RESULT		res AsnMgmtGetSIPGatewaySettingsResult
+	ERRORS		{AsnRequestError}
+::= 2599
+
+-- falls settingsOld gesetzt ist, wird das Delta von settingsNew gegenueber settingsOld in die im Server aktuellen settings uebernommen.
+-- sonst werden die aktuellen settings durch settingsNew komplett ersetzt.
+AsnMgmtSetSIPGatewaySettingsArgument ::= SEQUENCE
+{
+	-- die Liste nach den Aenderungen
+	settingsNew						AsnSIPGatewayUASettingsList,
+	-- die Liste vor den Aenderungen
+	settingsOld 					[0] AsnSIPGatewayUASettingsList OPTIONAL,
+	-- Network listen Interfaces enabled
+	iNetworkInterfacesEnabled		[1] INTEGER OPTIONAL,
+	-- Network listen Interfaces
+	networkInterfaces          		[2] AsnListenInterfaceDescriptionList OPTIONAL,
+	-- Public IP enabled
+	iUsePublicIP					[3] INTEGER OPTIONAL,
+	-- Public Port
+	iPublicPort						[4] INTEGER OPTIONAL,
+	-- Public IP
+	u8sPublicIP						[5] UTF8String OPTIONAL,
+	-- Registrar enabled
+	iRegistrarEnabled				[6] INTEGER OPTIONAL,
+	-- Auswahl Zertifikat/Hash
+	u8sSipServerCertHash			[7] UTF8String OPTIONAL,
+	...
+}
+
+asnMgmtSetSIPGatewaySettings OPERATION
+	ARGUMENT	arg AsnMgmtSetSIPGatewaySettingsArgument
+	RESULT		res AsnMgmtEmpty
+	ERRORS		{AsnRequestError}
+::= 2600
+
+asnMgmtGetSIPGatewayNetState OPERATION
+	ARGUMENT	arg AsnMgmtEmpty
+	-- its the same structure as for SIPFED
+	RESULT		res AsnMgmtGetSIPFEDNetStateResult
+	ERRORS		{AsnRequestError}
+::= 2814
+
+-- in contrast to AsnMgmtSetSIPGatewaySettingsArgument only the changes are sent
+AsnMgmtSetSIPGatewaySettingsV2Argument ::= SEQUENCE
+{
+	-- Liste der hinzugeügten SIP Gateways inkl. Registered User
+	uaSettingsAdded					[0] AsnSIPGatewayUASettingsList OPTIONAL,
+	-- Liste der geänderten SIP Gateways inkl. Änderungen an Registered Users
+	uaSettingsChanged      			[1] AsnSIPGatewayUASettingsList OPTIONAL,
+	-- Liste der Namen (u8sLineGroupName) der gelöschten SIP Gateways
+	uaSettingsRemoved				[2] UTF8StringList OPTIONAL,
+	-- Network listen Interfaces enabled
+	iNetworkInterfacesEnabled		[3] INTEGER OPTIONAL,
+	-- Network listen Interfaces
+	networkInterfaces          		[4] AsnListenInterfaceDescriptionList OPTIONAL,
+	-- Public IP enabled
+	iUsePublicIP					[5] INTEGER OPTIONAL,
+	-- Public Port
+	iPublicPort						[6] INTEGER OPTIONAL,
+	-- Public IP
+	u8sPublicIP						[7] UTF8String OPTIONAL,
+	-- Registrar enabled
+	iRegistrarEnabled				[8] INTEGER OPTIONAL,
+	-- Auswahl Zertifikat/Hash
+	u8sSipServerCertHash			[9] UTF8String OPTIONAL,
+	...
+}
+
+AsnMgmtSetSIPGatewaySettingsV2Result ::= SEQUENCE
+{
+	...
+}
+
+asnMgmtSetSIPGatewaySettingsV2 OPERATION
+	ARGUMENT	arg AsnMgmtSetSIPGatewaySettingsV2Argument
+	RESULT		res AsnMgmtSetSIPGatewaySettingsV2Result
+	ERRORS		{AsnRequestError}
+::= 2832
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~ CallRecorderSettings
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+AsnCallRecorderSettings ::= SEQUENCE
+{
+	iEnabled 				INTEGER,				
+	iUseAudioCompression 	INTEGER,	
+	iMaxConn 				INTEGER,				
+	u8sMSNList 				UTF8String,				
+	u8sLocationID 			UTF8String,			
+	iDoNOTValidateCalledMSN INTEGER,
+	u8sEncoderPath 			UTF8String,			
+	u8sEncoderParams 		UTF8String,		
+	u8sEncoderOutSuffix 	UTF8String,		
+	u8sManagedMailbox 		UTF8String,		
+	...
+}
+
+AsnMgmtSetCallRecorderSettingsArgument ::= SEQUENCE
+{
+	settings 	AsnCallRecorderSettings,
+	...
+}
+
+asnMgmtSetCallRecorderSettings OPERATION
+	ARGUMENT	arg AsnMgmtSetCallRecorderSettingsArgument
+	RESULT		res AsnMgmtEmpty
+	ERRORS		{AsnRequestError}
+::= 2601
+
+AsnMgmtGetCallRecorderSettingsResult ::= SEQUENCE
+{
+	settings 	AsnCallRecorderSettings,
+	...
+}
+
+asnMgmtGetCallRecorderSettings OPERATION
+	ARGUMENT	arg AsnMgmtEmpty
+	RESULT		res AsnMgmtGetCallRecorderSettingsResult
+	ERRORS		{AsnRequestError}
+::= 2602
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~ Login
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+AsnMgmtLoginArgument ::= SEQUENCE
+{
+	-- user login daten
+	u8sUsername		UTF8String,
+	u8sPassword		UTF8String,
+	iVersion		INTEGER,
+	iDuplicate		INTEGER,
+	iSIPAVLines		INTEGER,
+	...
+}
+
+AsnMgmtLoginResult ::= SEQUENCE
+{
+	iOpenState				INTEGER,	-- @linked AsnCtiLineOpenStatus
+	...
+}
+
+--bei nicht erfogreicher authentisierung kommt in errors was noch zu tun ist
+AsnMgmtLoginError ::= ENUMERATED
+{
+	eNETLOGININTERNALSERVERERROR(100),
+	eNETLOGININVALUSERNAME(101),
+	eNETLOGININVALIDPASS(102),
+	eNETLOGINNOMOREUSERS(103),
+	eNETLOGININVALIDVERSION(104),
+	eNETLOGINNEGOTIATIONREQUIRED(105),
+	eNETLOGININVALIDAUTHENTICATIONMETHOD(106),
+	eNETLOGINUSERNOTENABLED(107),
+	eNETLOGININVALIDCOMPUTERNAME(108),
+	eNETLOGINDOMAINAUTHFAILED(109),
+	eNETLOGINMISSINGRIGHTS(110),
+	eNETLOGINMISSINGRIGHTSTS(111),
+	eNETLOGINSERVERNOTCOMPATIBLE(112),
+	eNETLOGINALREADYAUTHENTICATED(113),
+	eNETLOGINTLSREQUIRED(114),
+	-- eNETLOGINACCOUNTPASSWORDLOCKED(129),
+	eNETLOGINTOKENEXIRED(130)
+	-- eNETLOGINTOOMANYATTEMPTS(131)
+}
+
+-- @brief CtiServer Administrator login
+asnMgmtLogin OPERATION
+	ARGUMENT	arg AsnMgmtLoginArgument
+	RESULT		res AsnMgmtLoginResult
+	ERRORS		{AsnRequestError}
+::= 2629
+
+AsnMgmtChangeLoginArgument ::= SEQUENCE
+{
+	u8sNewUserName		UTF8String,
+	u8sNewPasswd		UTF8String,
+	...
+}
+
+asnMgmtChangeLogin OPERATION
+	ARGUMENT	arg AsnMgmtChangeLoginArgument
+	RESULT		res AsnMgmtEmpty 
+	ERRORS		{AsnRequestError}
+::= 2532
+
+asnMgmtLoginV2 OPERATION
+	ARGUMENT	arg AsnLoginV2Argument 
+	RESULT		res AsnLoginV2Result
+	ERRORS		{AsnRequestError}
+::= 2826
+
+asnMgmtNegotiateInterfaceVersion OPERATION
+	ARGUMENT	arg AsnNegotiateInterfaceVersionArgument 
+	RESULT		res AsnNegotiateInterfaceVersionResult
+	ERRORS		{AsnRequestError}
+::= 2831
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~ Diverse
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- Server Status/Statistic to Admin/ServerMonitor
+-- Licenses/ActiveCalls/Interfaces 
+AsnMgmtServerStatistics4Admin ::= SEQUENCE
+{
+	-- Statistics Categories (STATCAT_PROCALLUSERS, ...)
+	u8sService 			UTF8String,
+	-- Service UI Name
+	u8sServiceUIName 	UTF8String,
+	-- Stat (ESERVERSTATSTATE_UNKNOWN, ...)
+	iServiceState 		INTEGER,
+	-- active/consumed/used Licenses/Calls/Interfaces
+	u8sActive 			UTF8String,
+	-- Diverse of Interfaces Status/IP/Port (eg 'Port:7222', 'active')
+	u8sCount 			UTF8String,
+	-- Number of available licenses
+	u8sLicenses 		UTF8String,
+	...
+}
+AsnMgmtServerStatistics4AdminList ::= SEQUENCE OF AsnMgmtServerStatistics4Admin
+
+AsnMgmtMonGetServerStatisticsResult ::= SEQUENCE
+{
+	serverStatistics 	AsnMgmtServerStatistics4AdminList,
+	...
+}
+
+asnMgmtMonGetServerStatistics OPERATION
+	ARGUMENT	arg AsnMgmtEmpty
+	RESULT		res AsnMgmtMonGetServerStatisticsResult 
+	ERRORS		{AsnRequestError}
+::= 2528
+
+AsnMgmtSaveSettingsArgument ::= SEQUENCE
+{
+	iSaveFlags		INTEGER,
+	...
+}
+
+asnMgmtSaveSettings OPERATION
+	ARGUMENT	arg AsnMgmtSaveSettingsArgument
+	RESULT		res AsnMgmtEmpty 
+	ERRORS		{AsnRequestError}
+::= 2531
+
+AsnMgmtStartTLSArgument ::= SEQUENCE
+{
+	...
+}
+
+AsnMgmtStartTLSResult ::= SEQUENCE
+{
+	...
+}
+
+-- @brief Request to start TLS
+-- @long After calling this function, the server switches to TLS mode. The server now expects that client to start a TLS handshake.
+asnMgmtStartTLS OPERATION
+	ARGUMENT	arg AsnMgmtStartTLSArgument
+	RESULT		res AsnMgmtStartTLSResult
+	ERRORS		{AsnRequestError}
+::= 2546
+
+AsnMgmtGetServerVersionArgument ::= SEQUENCE
+{
+	...
+}
+
+AsnMgmtGetServerVersionResult ::= SEQUENCE
+{
+	u8sInterfaceVersion		UTF8String,
+	u8sBuildVersion			UTF8String,
+	u8sOSVersionString		UTF8String,
+	...
+}
+
+-- @brief Request server version
+-- @long Request Interface and server versions.
+asnMgmtGetServerVersion OPERATION
+	ARGUMENT	arg AsnMgmtGetServerVersionArgument
+	RESULT		res AsnMgmtGetServerVersionResult
+	ERRORS		{AsnRequestError}
+::= 2547
+
+
+-- Uses the same values as in global\include\pcoemids.h aben
+-- If you change or add values here you need to modify the pcoem.h accordingly
+AsnMgmtUCServerType ::= ENUMERATED
+{
+	enterprise(0),
+	one(1),
+	business(2),
+	datacenter(3),
+	ucaas(4)
+}
+
+-- Uses the same values as in EUserProfile.h
+-- If you change or add values here you need to modify the EUserProfile.h accordingly
+AsnMgmtUCServerFeatures ::= ENUMERATED
+{
+	-- no features at all
+	none(0),
+	-- server is built with federation and federation is enabled (no matter if it is properly configured)
+	federation(1),
+	-- server is built with xmpp federation and federation (not necessarily xmpp) is enabled (no matter if it is properly configured)
+	xmpp-federation(2),
+	-- server is built with csta server support and the server is active
+	cstaserver(4),
+	-- there is a EUCWEb.exe next to the ucserver, no matter if the webserver is actually running
+	webserver(8),
+	-- server is build with ucoonnect, no matter if ucconnect is enabled properly configured or connected
+	ucconnect(16),
+	-- the server holds a voice service license (no matter if voiceservices is configured)
+	voiceservices(32)
+}
+
+AsnMgmtGetCtiServerTypeArgument ::= SEQUENCE
+{
+	...
+}
+
+AsnMgmtGetCtiServerTypeResult ::= SEQUENCE
+{
+	-- The type of server we are connected to
+	iServerType			AsnMgmtUCServerType,
+	-- The features this server is offering as bitmask
+	-- @linked AsnMgmtUCServerFeatures
+	iServerFeatures		INTEGER,
+	...
+}
+
+-- @brief Request server Type and Features.
+-- @long This function is used to determin what kind of server type is running and what features the server has.
+-- There are several kinds of similar server types and different features (OEM versions).
+asnMgmtGetCtiServerType OPERATION
+	ARGUMENT	arg AsnMgmtGetCtiServerTypeArgument
+	RESULT		res AsnMgmtGetCtiServerTypeResult
+	ERRORS		{AsnRequestError}
+::= 2548
+
+asnMgmtFederationServerStatusChanged OPERATION
+	ARGUMENT	arg AsnMgmtEmpty
+::= 2711
+
+asnMgmtFederationServerDiagnosticComplete OPERATION
+	ARGUMENT	arg AsnMgmtEmpty
+::= 2712
+
+AsnMgmtGetIPInterfaceListResult ::= SEQUENCE
+{
+	u8slistIPInterfaces 	UTF8StringList,
+	...
+}
+
+asnMgmtGetIPInterfaceList OPERATION
+	ARGUMENT	arg AsnMgmtEmpty
+	RESULT		res AsnMgmtGetIPInterfaceListResult
+	ERRORS		{AsnRequestError}
+::= 2572
+
+asnMgmtCleanupJournal OPERATION
+	ARGUMENT	arg AsnMgmtEmpty
+	RESULT		res AsnMgmtEmpty
+	ERRORS		{AsnRequestError}
+::= 2566
+
+asnMgmtRestartServer OPERATION
+	ARGUMENT	arg AsnMgmtEmpty
+	RESULT		res AsnMgmtEmpty
+	ERRORS		{AsnRequestError}
+::= 2567
+
+asnMgmtRestartServerAndInstallDatabaseUpdates OPERATION
+	ARGUMENT	arg AsnMgmtEmpty
+	RESULT		res AsnMgmtEmpty
+	ERRORS		{AsnRequestError}
+::= 2800
+
+asnMgmtFullSyncContactCache OPERATION
+	ARGUMENT	arg AsnMgmtEmpty
+	RESULT		res AsnMgmtEmpty
+	ERRORS		{AsnRequestError}
+::= 2568
+
+AsnMgmtSendPushCheckResult ::= SEQUENCE
+{
+	u8sErrorString 	UTF8String,
+	...
+}
+
+asnMgmtSendPushCheck OPERATION
+	ARGUMENT	arg AsnMgmtEmpty
+	RESULT		res AsnMgmtSendPushCheckResult
+	ERRORS		{AsnRequestError}
+::= 2573
+
+AsnMgmtSetUCCheckServerCookieArgument ::= SEQUENCE
+{
+	u8sCookie 	UTF8String,
+	...
+}
+
+asnMgmtSetUCCheckServerCookie OPERATION
+	ARGUMENT	arg AsnMgmtSetUCCheckServerCookieArgument
+	RESULT		res AsnMgmtEmpty
+	ERRORS		{AsnRequestError}
+::= 2574
+
+asnMgmtCommitSaveSettings OPERATION
+	ARGUMENT	arg AsnMgmtEmpty
+	RESULT		res AsnMgmtEmpty
+	ERRORS		{AsnRequestError}
+::= 2575
+
+AsnMgmtNotificationSettingsExclusions ::= SEQUENCE
+{
+	bNotForInternalCalls                	BOOLEAN,
+	bNotForCallsWithoutNumber              	BOOLEAN,
+	bNotForCallsWithoutContactDetails     	BOOLEAN,
+	bNotForRecurrentCallsWhileOffline    	BOOLEAN,
+	bNotForRecurrentCallsForTimeSpan        BOOLEAN,
+	iNotForRecurrentCallsTimeSpan           INTEGER,
+	bNotForShortRingingCall                 BOOLEAN,
+	iNotForShortRingingCallTimeSpan         INTEGER,
+	bNotForLongRingingCall                  BOOLEAN,
+	iNotForLongRingingCallTimeSpan          INTEGER,
+	bNotForCallsFromSpecificExtensions      BOOLEAN,
+	u8sNotForCallsFromSpecificExtensions    UTF8String,
+	...
+}
+
+AsnMgmtNotificationSettings ::= SEQUENCE
+{
+	-- Optionen für unbeantwortete Rufe als E-Mail verschicken
+	iUnansweredCallEMailNotification   				INTEGER,
+	bEMailNotificationUseCallerMailAddress      	BOOLEAN,
+	bEMailNotificationSendEMailsClientSide      	BOOLEAN,
+	bEMailNotificationAttacheVCard      			BOOLEAN,
+	--PCE-2378
+	bEMailNotificationSendEMailsThirdPartyPickup  	BOOLEAN,
+	bEMailNotificationUseTelephonyLinkPrefix      	BOOLEAN,
+	emailNotificationExclusions         			AsnMgmtNotificationSettingsExclusions,
+	-- Optionen für unbeantwortete Rufe als SMS verschicken
+	iUnansweredCallSMSNotification   				INTEGER,
+	bSMSNotificationUseCallerNumberAsOriginator   	BOOLEAN,
+	objSMSNotificationExclusions 					AsnMgmtNotificationSettingsExclusions,
+	-- Sprache für die Nachrichten
+	iLanguage   									INTEGER,
+	--PCE-2378
+	u8sUserDefinedTelephonyLinkPrefix        		UTF8String,
+	...
+}
+
+AsnMgmtGetNotificationSettingsResult ::= SEQUENCE
+{
+	settings	AsnMgmtNotificationSettings,
+	...
+}
+
+asnMgmtGetNotificationSettings OPERATION
+	ARGUMENT	arg AsnMgmtEmpty
+	RESULT		res AsnMgmtGetNotificationSettingsResult 
+	ERRORS		{AsnRequestError}
+::= 2604
+
+AsnMgmtSetNotificationSettingsArgument ::= SEQUENCE
+{
+	settings	AsnMgmtNotificationSettings,
+	...
+}
+
+asnMgmtSetNotificationSettings OPERATION
+	ARGUMENT	arg AsnMgmtSetNotificationSettingsArgument
+	RESULT		res AsnMgmtEmpty 
+	ERRORS		{AsnRequestError}
+::= 2603
+
+AsnMgmtFetchMetaDNsArgument ::= SEQUENCE
+{
+	u8sMetaServer		UTF8String,
+	iPort				INTEGER,
+	iForceSSL			INTEGER,
+	...
+}
+
+AsnMgmtFetchMetaDNsResult ::= SEQUENCE
+{
+	u8slistDnsList		UTF8StringList,
+	...
+}
+
+asnMgmtFetchMetaDNs OPERATION
+	ARGUMENT	arg AsnMgmtFetchMetaDNsArgument
+	RESULT		res AsnMgmtFetchMetaDNsResult
+	ERRORS		{AsnRequestError}
+::= 2612
+
+asnMgmtSetMetaSettings OPERATION
+	ARGUMENT	arg AsnSetMetaSettingsArgument
+	RESULT		res AsnSetMetaSettingsResult
+	ERRORS		{AsnRequestError}
+::= 2636
+
+asnMgmtSetMetaPhoneBooksSettings OPERATION
+	ARGUMENT	arg AsnSetMetaSettingsArgument
+	RESULT		res AsnSetMetaSettingsResult
+	ERRORS		{AsnRequestError}
+::= 2637
+
+asnMgmtGetMetaSettings OPERATION
+	ARGUMENT	arg AsnGetMetaSettingsArgument
+	RESULT		res AsnGetMetaSettingsResult
+	ERRORS		{AsnRequestError}
+::= 2638
+
+asnMgmtGetMetaPhoneBooksSettings OPERATION
+	ARGUMENT	arg AsnGetMetaSettingsArgument
+	RESULT		res AsnGetMetaSettingsResult
+	ERRORS		{AsnRequestError}
+::= 2639
+
+AsnSSLCertificateDetails ::= SEQUENCE
+{
+	u8sCertHash				UTF8String,
+	u8sIssuedTo				UTF8String,
+	u8sIssuer				UTF8String,
+	timValidFrom			AsnSystemTime,
+	timValidTo				AsnSystemTime,
+	u8sListAlternateNames	UTF8StringList,
+	bPrivateKeyAvail		BOOLEAN,
+	...
+}
+AsnSSLCertificateDetailsList ::= SEQUENCE OF AsnSSLCertificateDetails
+
+AsnMgmtGetAvailableCertificatesResult ::= SEQUENCE
+{
+	certificateDetailsList		AsnSSLCertificateDetailsList,
+	...
+}
+
+asnMgmtGetAvailableCertificates OPERATION
+	ARGUMENT	arg AsnMgmtEmpty
+	RESULT		res AsnMgmtGetAvailableCertificatesResult
+	ERRORS		{AsnRequestError}
+::= 2614
+
+AsnMgmtGetSoftwareProfilesResult ::= SEQUENCE
+{
+	u8slistSoftwareProfilesAsXML		UTF8StringList,
+	...
+}
+
+asnMgmtGetSoftwareProfiles OPERATION
+	ARGUMENT	arg AsnMgmtEmpty
+	RESULT		res AsnMgmtGetSoftwareProfilesResult
+	ERRORS		{AsnRequestError}
+::= 2616
+
+AsnMgmtSetSoftwareProfilesArgument ::= SEQUENCE
+{
+	u8slistSoftwareProfilesAsXML		UTF8StringList,
+	...
+}
+
+asnMgmtSetSoftwareProfiles OPERATION
+	ARGUMENT	res AsnMgmtSetSoftwareProfilesArgument
+	RESULT		res AsnMgmtEmpty
+	ERRORS		{AsnRequestError}
+::= 2615
+
+AsnMgmtGetGlobalGroupingAttributesResult ::= SEQUENCE
+{
+	u8sGroupingAttributeSetGlobal					UTF8String,
+	...
+}
+
+asnMgmtGetGlobalGroupingAttributes OPERATION
+	ARGUMENT	arg AsnMgmtEmpty
+	RESULT		res AsnMgmtGetGlobalGroupingAttributesResult
+	ERRORS		{AsnRequestError}
+::= 2668
+
+AsnMgmtSetGlobalGroupingAttributesArgument ::= SEQUENCE
+{
+	u8sGroupingAttributeSetGlobal					UTF8String,
+	...
+}
+
+asnMgmtSetGlobalGroupingAttributes OPERATION
+	ARGUMENT	res AsnMgmtSetGlobalGroupingAttributesArgument
+	RESULT		res AsnMgmtEmpty
+	ERRORS		{AsnRequestError}
+::= 2667
+	
+AsnMgmtGetUserXmlClientContentArgument ::= SEQUENCE
+{
+	u8sUserID				UTF8String,
+	...
+}
+
+AsnMgmtGetUserXmlClientContentResult ::= SEQUENCE
+{
+	u8sClientContentAsXML		UTF8String,
+	...
+}
+
+asnMgmtGetUserXmlClientContent OPERATION
+	ARGUMENT	arg AsnMgmtGetUserXmlClientContentArgument
+	RESULT		res AsnMgmtGetUserXmlClientContentResult
+	ERRORS		{AsnRequestError}
+::= 2618
+
+AsnMgmtSetUserXmlClientContentArgument ::= SEQUENCE
+{
+	u8sUserID				UTF8String,
+	u8sClientContentAsXML	UTF8String,
+	...
+}
+
+asnMgmtSetUserXmlClientContent OPERATION
+	ARGUMENT	res AsnMgmtSetUserXmlClientContentArgument
+	RESULT		res AsnMgmtEmpty
+	ERRORS		{AsnRequestError}
+::= 2617
+
+AsnMgmtGetUserDefinedCustomFieldsResult ::= SEQUENCE
+{
+	mapCustomFields		AsnStringPairList,
+	...
+}
+
+asnMgmtGetUserDefinedCustomFields OPERATION
+	ARGUMENT	arg AsnMgmtEmpty
+	RESULT		res AsnMgmtGetUserDefinedCustomFieldsResult
+	ERRORS		{AsnRequestError}
+::= 2620
+
+AsnMgmtSetUserDefinedCustomFieldsArgument ::= SEQUENCE
+{
+	mapCustomFields		AsnStringPairList,
+	...
+}
+
+asnMgmtSetUserDefinedCustomFields OPERATION
+	ARGUMENT	res AsnMgmtSetUserDefinedCustomFieldsArgument
+	RESULT		res AsnMgmtEmpty
+	ERRORS		{AsnRequestError}
+::= 2619
+
+AsnMgmtGetSIPFEDXmppDiagnosticResult ::= SEQUENCE
+{
+	u8slistResults		UTF8StringList,
+	...
+}
+
+asnMgmtGetSIPFEDXmppDiagnostic OPERATION
+	ARGUMENT	res AsnMgmtEmpty
+	RESULT		res AsnMgmtGetSIPFEDXmppDiagnosticResult
+	ERRORS		{AsnRequestError}
+::= 2621
+
+AsnMgmtLineForwardModeEnum ::= ENUMERATED
+{
+	eLINEFORWARDMODEUNCOND(1),
+	eLINEFORWARDMODEUNCONDINTERNAL(2),
+	eLINEFORWARDMODEUNCONDEXTERNAL(4),
+	eLINEFORWARDMODEUNCONDSPECIFIC(8),
+	eLINEFORWARDMODEBUSY(16),
+	eLINEFORWARDMODEBUSYINTERNAL(32),
+	eLINEFORWARDMODEBUSYEXTERNAL(64),
+	eLINEFORWARDMODEBUSYSPECIFIC(128),
+	eLINEFORWARDMODENOANSW(256),
+	eLINEFORWARDMODENOANSWINTERNAL(512),
+	eLINEFORWARDMODENOANSWEXTERNAL(1024),
+	eLINEFORWARDMODENOANSWSPECIFIC(2048),
+	eLINEFORWARDMODEBUSYNA(4096),
+	eLINEFORWARDMODEBUSYNAINTERNAL(8192),
+	eLINEFORWARDMODEBUSYNAEXTERNAL(16384),
+	eLINEFORWARDMODEBUSYNASPECIFIC(32768),
+	eLINEFORWARDMODEUNKNOWN(65536),      -- TAPI v1.4
+	eLINEFORWARDMODEUNAVAIL(131072)      -- TAPI v1.4
+}
+
+AsnMgmtForwardControllerEnum ::= ENUMERATED
+{
+	-- ForwardController Konstanten
+	-- Die Rufumleitung wird in der PBX gesetzt
+	eCTIFORWARDCONTROLLERPBX(1),
+	-- Die Rufumleitung wird im TapiServer gesetzt (Administrative Umleitung)
+	eCTIFORWARDCONTROLLERTAPISERVERADMIN(2),
+	-- Die Rufumleitung wird im TapiServer gesetzt (User Umleitung)
+	eCTIFORWARDCONTROLLERTAPISERVERUSER(4)
+}
+
+-- Forward Mode constants (mode)
+AsnMgmtForwardMode ::= ENUMERATED
+{
+	-- Forward unknown
+	eCTIFORWARDUNKNWON(0),
+	-- Forward Immediate
+	eCTIFORWARDIMMEDIATE(1),
+	-- Forward on Busy
+	eCTIFORWARDBUSY(2),
+	-- Forward on No Answer
+	eCTIFORWARDNOANSW(4),
+	-- Forward on Busy for internal callers
+	eCTIFORWARDBUSYINT(8),
+	-- Forward on Busy for external callers
+	eCTIFORWARDBUSYEXT(16),
+	-- Forward on No answer for internal callers
+	eCTIFORWARDNOANSINT(32),
+	-- Forward on No answer for external callers
+	eCTIFORWARDNOANSEXT(64),
+	-- Forward immediate for internal callers
+	eCTIFORWARDIMMINT(128),
+	-- Forward immediate for external callers
+	eCTIFORWARDIMMEXT(256),
+	-- Backend specific forwarding entry
+	eCTIBACKENDSPECIFIC(32768),				-- Vormals 2147483648 0x80000000
+	-- Alle Weiterleitungsmethoden
+	eCTIFORWARDALLMODES(524799)				-- Vormals 2147484159 0x800001FF
+}
+
+AsnMgmtCtiForwardEntry ::= SEQUENCE
+{
+	-- Identifier dieses Eintrags in der Liste
+	iInternalID				INTEGER,
+	-- Ist es eine Rufumleitung in der PBX oder im TapiServer
+	--@linked AsnMgmtForwardControllerEnum
+	iForwardController		INTEGER,
+	-- Forward Mode
+	-- @linked AsnMgmtForwardMode
+	iForwardMode			INTEGER, 
+	-- Backend specific Forwarding (used if m_dwForwardMode = ICTI_BACKENDSPECIFIC)
+	-- Bei Tapi enthält das die eLINEFORWARDMODE_ konstanten
+	-- @linked AsnMgmtLineForwardModeEnum
+	iBackEndSpecific		INTEGER,
+	-- Zeit (Sekunden) für Umleitung bei NoAnswer (Wenn 0 wird die default Zeit verwendet)
+	iNoAnswerTime			INTEGER,
+	-- Destination Rufnummer
+	u8sDestinationSC		UTF8String,
+	-- Liste der Anrufer CallerIDs (superkanonisch, lang), falls es sich um eine spezifische Umleitung handelt
+	u8slistCallerIDs		UTF8StringList,
+	...
+}
+AsnMgmtCtiForwardEntryList ::= SEQUENCE OF AsnMgmtCtiForwardEntry 
+
+AsnMgmtGetLineForwardingArgument ::= SEQUENCE
+{
+	iFWController		INTEGER,
+	u8sLineID			UTF8String,
+	...
+}
+
+AsnMgmtGetLineForwardingResult ::= SEQUENCE
+{
+	iEnabled		INTEGER,
+	entryList		AsnMgmtCtiForwardEntryList,
+	...
+}
+
+asnMgmtGetLineForwarding OPERATION
+	ARGUMENT	arg AsnMgmtGetLineForwardingArgument
+	RESULT		res AsnMgmtGetLineForwardingResult
+	ERRORS		{AsnRequestError}
+::= 2622
+
+AsnMgmtSetLineForwardingArgument ::= SEQUENCE
+{
+	iFWController		INTEGER,
+	u8sLineID			UTF8String,
+	iEnabled			INTEGER,
+	entryList			AsnMgmtCtiForwardEntryList,
+	...
+}
+
+asnMgmtSetLineForwarding OPERATION
+	ARGUMENT	arg AsnMgmtSetLineForwardingArgument
+	RESULT		res AsnMgmtEmpty
+	ERRORS		{AsnRequestError}
+::= 2623
+
+AsnMgmtAvailableLanguage ::= SEQUENCE
+{
+	iLanguage					INTEGER,
+	mapTranslatedStrings		AsnStringIntegerPairList,
+	mapTranslatedStringToString	AsnStringPairList,
+	...
+}
+AsnMgmtAvailableLanguageList ::= SEQUENCE OF AsnMgmtAvailableLanguage
+
+AsnMgmtGetXMLAvailableLanguagesResult ::= SEQUENCE
+{
+	availLanguages		AsnMgmtAvailableLanguageList,
+	...
+}
+
+asnMgmtGetXMLAvailableLanguages OPERATION
+	ARGUMENT	arg AsnMgmtEmpty
+	RESULT		res AsnMgmtGetXMLAvailableLanguagesResult
+	ERRORS		{AsnRequestError}
+::= 2624
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- Database Upgrade
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+AsnMgmtUpgradeProgressArgument ::= SEQUENCE
+{
+	iProgressMax	INTEGER,
+	iProgressCur	INTEGER,
+	...
+}
+
+--@brief Progress Event for Upgrade
+--@long This event is sent periodically during Upgrade. Receiver can update a progress bar in the UI with this information.
+asnMgmtUpgradeProgress OPERATION
+	ARGUMENT	arg AsnMgmtUpgradeProgressArgument
+::= 2722
+
+AsnMgmtUpgradeStartArgument ::= SEQUENCE
+{
+	...
+}
+
+AsnMgmtUpgradeStartResult ::= SEQUENCE
+{
+	iResult				INTEGER,
+	...
+}
+
+AsnMgmtUpgradeStartResultEnum ::= ENUMERATED
+{
+	eUPGRADESTARTOK(0),
+	eUPGRADESTARTNOTADMIN(1),						-- Server is not running adminstrative
+	eUPGRADESTARTDBALREADYCONVERTED(2),				-- Database Conversion already done
+	eUPGRADESTARTDBNOTEMPTY(3)						-- V6 Database is not empty -> Conversion not possible
+}
+
+-- @brief Start Upgrade on Server running in administrative Mode. 
+-- @long This function is used to start the chat database conversion when server is ugraded from version 5 to 6.
+-- Progress is reported back to Admin with OPID_asnMgmtUpgradeProgress Events
+asnMgmtUpgradeStart OPERATION
+	ARGUMENT	arg AsnMgmtUpgradeStartArgument
+	RESULT		res AsnMgmtUpgradeStartResult
+	ERRORS		{AsnRequestError}
+::= 2626
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~ PushService
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- @brief Push Service Device Properties
+-- @long This struct contains the properties of a device that has an active Push Service registration.
+AsnMgmtPushServiceDeviceProps ::= SEQUENCE
+{
+	-- DeviceID (vom Client generiert muss eindeutig sein)
+	u8sDeviceID		UTF8String,
+	-- DeviceName (vom Client übermittelt, Freitext - Normalerweise Gerätename)
+	u8sDeviceName	UTF8String,
+	-- UserName (Login Name)
+	u8sContactID	UTF8String,
+	-- Push Device Token
+	u8sPushID		UTF8String,
+	-- Push Channel (z.b. ios.estos.procall.6)
+	u8sPushChannel	UTF8String,
+	-- Ist dieses Device gerade online?
+	iOnlineState	INTEGER,
+	-- Letzter Register Aufruf (windows utc)
+	timlastRegisterTime	AsnSystemTime,
+	-- Für welche Arten von Messages ist dieses Device angemeldet
+	-- Dieser Member wird normalerweise über SetNewMessageTypes gesetzt, dann werden die Handler auch aktualisiert
+	iMessageTypes	INTEGER,
+	-- Encryption Mode for push messages
+	iEncryptionMode	INTEGER,
+	...
+}
+AsnMgmtPushServiceDevicePropsList ::= SEQUENCE OF AsnMgmtPushServiceDeviceProps
+
+AsnMgmtGetPushServiceDevicesArgument ::= SEQUENCE
+{
+	...
+}
+
+AsnMgmtGetPushServiceDevicesResult ::= SEQUENCE
+{
+	-- CrossrefID for the Events that contain the requested data.
+	u8sCrossRefID				UTF8String,
+
+	...
+}
+
+-- @brief Get the List of Push Service Device Registrations
+-- @long This function initiates the Transfer of the currently active Push Service Devices.
+-- The Events, that send the result content are sent before this operation returns.
+asnMgmtGetPushServiceDevices OPERATION
+	ARGUMENT	arg AsnMgmtGetPushServiceDevicesArgument
+	RESULT		res AsnMgmtGetPushServiceDevicesResult
+	ERRORS		{AsnRequestError}
+::= 2627
+
+
+AsnMgmtDeletePushServiceDeviceArgument ::= SEQUENCE
+{
+	-- DeviceID of the Push Receiver
+	u8sDeviceID		UTF8String,
+	...
+}
+
+AsnMgmtDeletePushServiceDeviceResult ::= SEQUENCE
+{
+	...
+}
+
+-- @brief Delete an active Push Service Device Registration
+-- @long This function deletes the Device Registration.
+asnMgmtDeletePushServiceDevice OPERATION
+	ARGUMENT	arg AsnMgmtDeletePushServiceDeviceArgument
+	RESULT		res AsnMgmtDeletePushServiceDeviceResult
+	ERRORS		{AsnRequestError}
+::= 2628
+
+AsnMgmtPushServiceDevicesResultArgument ::= SEQUENCE
+{
+	-- List of Devices (max 50 in one segment)
+	listPushDevices				AsnMgmtPushServiceDevicePropsList,
+
+	-- CrossrefID from AsnMgmtGetPushServiceDevicesResult.
+	u8sCrossRefID				UTF8String,
+	-- last Segment for this u8sCrossRefID, TRUE, wenn dieses Segment das Ende der Liste ist.
+	bLastSegment				BOOLEAN,
+
+	...
+}
+
+-- @brief Event that contains the results of asnMgmtGetPushServiceDevices
+-- @long This event contains the data requested by asnMgmtGetPushServiceDevices.
+-- This event is fired multiple times, until bLastSegment is TRUE.
+-- The u8sCrossRefID matches the u8sCrossRefID from the asnMgmtGetPushServiceDevicesResult
+asnMgmtPushServiceDevicesResult OPERATION
+	ARGUMENT	arg AsnMgmtPushServiceDevicesResultArgument
+::= 2723
+
+AsnMgmtPushServiceDevicesChangedArgumentEnum ::= ENUMERATED
+{
+	eAdded(0),
+	eChanged(1),
+	eDeleted(2)
+}
+
+AsnMgmtPushServiceDeviceChangedArgument ::= SEQUENCE
+{
+	-- What about the list
+	-- @linked AsnMgmtPushServiceDeviceChangedArgumentEnum
+	iWhat			INTEGER,
+	-- List of Devices (max 50 in one segment)
+	deviceProps		AsnMgmtPushServiceDeviceProps,
+	...
+}
+
+-- @brief Event that contains changed Push Service Devices
+-- @long
+-- This event is fired when a Push Service Device Property Changes.
+
+asnMgmtPushServiceDeviceChanged OPERATION
+	ARGUMENT	arg AsnMgmtPushServiceDeviceChangedArgument
+::= 2724
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~ PhoneJournal
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- Unbeantwortete Anrufe, Einstellungen abholen
+AsnMgmtPhoneJournalUnansweredEnum ::= ENUMERATED
+{
+	never(0), 
+	all(1),
+	first(2),
+	last(3)
+}
+
+-- Unbeantwortete Anrufe, Einstellungen abholen
+AsnMgmtPhoneJournalPrivateCallOptionsEnum ::= ENUMERATED
+{
+	enPrivateCallsNormal(0),
+	enPrivateCallsShortenNumbers(1),
+	enPrivateCallsNoNumber(2)
+}
+
+-- Einstelloption für die unbearbeiteten Anrufe (gilt sowohl für das Journal als auch für die E-Mails)
+AsnMgmtUnansweredOptionEnum ::= ENUMERATED
+{
+	eUnansweredOptionNever(0),
+	eUnansweredOptionAll(1),
+	eUnansweredOptionFirst(2),
+	eUnansweredOptionLast(3)
+}
+
+AsnMgmtPhoneJournalSettings ::= SEQUENCE
+{
+	-- Optionen für PrivatGespräche 
+	iPrivateCallOptions 					INTEGER, -- @linked AsnMgmtPhoneJournalPrivateCallOptionsEnum
+	iUseOfflineJournal						INTEGER, -- Offline Journal Verwenden 1 / 0
+	iOfflineDeleteOldEntries				INTEGER, -- Werden veraltete Offline Einträge gelöscht 1 / 0
+	iOfflineDaysNoDelete					INTEGER, -- Anzahl der Tage, die im Offline Journal behalten werden
+	bDeleteInternalJournalEntries			BOOLEAN, -- Löschen der internen Journaleinträge
+	iDeleteInternalJournalEntriesAfterDays	INTEGER,
+	bDeleteExternalJournalEntries			BOOLEAN, -- Löschen der externen Journaleinträge
+	iDeleteExternalJournalEntriesAfterDays	INTEGER,
+	bDeleteNoteJournalEntries				BOOLEAN, -- Löschen der Journaleinträge mit Notitz
+	iDeleteNoteJournalEntriesAfterDays		INTEGER,
+	iUnansweredCallJournalOption			INTEGER,	-- @linked AsnMgmtPhoneJournalUnansweredEnum
+	iAnsweredRedirectedCallJournalOption	INTEGER,	-- @linked AsnMgmtPhoneJournalUnansweredEnum
+	-- Gruppenrufe die von einem Teilnehmer der Gruppe beantwortet wurden werden für alle Teilnehmer als beantwortet maskiert
+	bAutoMarkReadGroupCallsOnCallback		BOOLEAN,	-- Automatically mark journal entries as read, if one member of the group answered the call
+	-- Was wird mit veralteten Einträgen gemacht?
+	iHandlingMode							INTEGER, -- @linked AsnMgmtUnansweredOptionEnum
+	iArchiveJournalEntriesAfterDays			INTEGER,
+	-- m_dwDailyDeleteAllReadEntries 07.10.2013: wird nicht über den Admin gesteuert sondern nur über PCOEM bzw. PROCALL_OEMCTIiDailyDeleteAllReadEntries				INTEGER, 	
+	...
+}
+
+AsnMgmtGetPhoneJournalSettingsArgument ::= SEQUENCE
+{
+	...
+}
+
+AsnMgmtGetPhoneJournalSettingsResult ::= SEQUENCE
+{
+	phoneJournalSettings	AsnMgmtPhoneJournalSettings,
+	...
+}
+
+AsnMgmtGetPhoneJournalSettingsErrorEnum ::= ENUMERATED	
+{
+	success(0),
+	accessdenied(1)
+}
+
+AsnMgmtSetPhoneJournalSettingsArgument ::= SEQUENCE
+{
+	phoneJournalSettings	AsnMgmtPhoneJournalSettings,
+	...
+}
+
+AsnMgmtSetPhoneJournalSettingsResult ::= SEQUENCE
+{
+	...
+}
+
+AsnMgmtSetPhoneJournalSettingsErrorEnum ::= ENUMERATED
+{
+	success(0),
+	accessdenied(1)
+}
+
+asnMgmtSetPhoneJournalSettings OPERATION
+	ARGUMENT	arg AsnMgmtSetPhoneJournalSettingsArgument
+	RESULT		res AsnMgmtSetPhoneJournalSettingsResult
+	ERRORS		{AsnRequestError}
+::= 2641
+
+asnMgmtGetPhoneJournalSettings OPERATION
+	ARGUMENT	arg AsnMgmtGetPhoneJournalSettingsArgument
+	RESULT		res AsnMgmtGetPhoneJournalSettingsResult
+	ERRORS		{AsnRequestError}
+::= 2642
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~ Profiles (User Group Computer)
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+asnMgmtAddComputerProfile OPERATION
+	ARGUMENT	arg AsnAdminAddComputerProfileArgument
+	RESULT		res AsnAdminAddComputerProfileResult
+	ERRORS		{AsnRequestError}
+::= 2643
+
+asnMgmtGetComputerProfile OPERATION
+	ARGUMENT	arg AsnAdminGetComputerProfileArgument
+	RESULT		res AsnAdminGetComputerProfileResult
+	ERRORS		{AsnRequestError}
+::= 2644
+
+asnMgmtSetComputerProfile OPERATION
+	ARGUMENT	arg AsnAdminSetComputerProfileArgument
+	RESULT		res AsnAdminSetComputerProfileResult
+	ERRORS		{AsnRequestError}
+::= 2645
+
+asnMgmtRemoveComputerProfileEvent OPERATION
+	ARGUMENT	arg AsnMgmtRemoveComputerProfileEventArgument
+::= 2736
+
+asnMgmtAddGroupProfile OPERATION
+	ARGUMENT	arg AsnAdminAddGroupProfileArgument
+	RESULT		res AsnAdminAddGroupProfileResult
+	ERRORS		{AsnRequestError}
+::= 2646
+
+asnMgmtRemoveGroupProfile OPERATION
+	ARGUMENT	arg AsnAdminRemoveGroupProfileArgument
+	RESULT		res AsnAdminRemoveGroupProfileResult
+	ERRORS		{AsnRequestError}
+::= 2647
+
+asnMgmtRemoveGroupProfileEvent OPERATION
+	ARGUMENT	arg AsnMgmtRemoveGroupProfileEventArgument
+::= 2735
+
+asnMgmtFindGroupProfiles OPERATION
+	ARGUMENT	arg AsnAdminFindGroupProfilesArgument
+	RESULT		res AsnAdminFindGroupProfilesResult
+	ERRORS		{AsnRequestError}
+::= 2648
+
+-- Groupprofile speichern
+-- Die Gruppe wird im Server modifiziert; die Gruppe wird dabei durch die GUID referenziert (stimmt diese nicht, schlägt der Aufruf fehl).
+-- Die Daten, die Übernommen werden hängen vom Backend ab.
+-- Änderungen von Datenfeldern, die vom AD verwaltet werden (ObjectSID, GUID, DNPath, Member-Liste, Gruppenname) werden NICHT übernommen.
+-- iGroupProfileVersion kann auch nicht geändert werden, da dies von der UCServer Version abhängig ist.
+AsnMgmtSetGroupProfileFilter ::= ENUMERATED
+{
+	groupName(0),   -- Spezifischer Gruppenname
+	objectGUID(1)	-- Spezifische  ObjectGUID
+}
+
+AsnMgmtSetGroupProfileArgument ::= SEQUENCE
+{
+	iSearchFilter							INTEGER,	-- @linked AsnMgmtSetGroupProfileFilter
+	groupProfile							AsnGroupProfile,   
+	oldMemberListForDeltaChangeCalculation	[0] AsnStringPairList OPTIONAL,
+	...
+}
+
+AsnMgmtSetGroupProfileResult ::= SEQUENCE
+{
+	bSuccess							BOOLEAN,
+	...
+}
+
+AsnMgmtSetGroupProfileErrorEnum ::= ENUMERATED 
+{
+	success(0),
+	accessdenied(1),
+	groupnotfound(2),
+	wrongprofileversion(3),
+	errorsavingprofile(4),
+	nosearchparameter(5)
+}
+
+AsnMgmtRemoveUserProfileEventArgument ::= SEQUENCE
+{
+	u8sUserName 			UTF8String,
+	...
+}
+
+AsnMgmtRemoveGroupProfileEventArgument ::= SEQUENCE
+{
+	u8sGroupName 			UTF8String,
+	...
+}
+
+AsnMgmtRemoveComputerProfileEventArgument ::= SEQUENCE
+{
+	u8sComputerName 		UTF8String,
+	...
+}
+
+asnMgmtSetGroupProfile OPERATION
+	ARGUMENT	arg AsnMgmtSetGroupProfileArgument
+	RESULT		res AsnMgmtSetGroupProfileResult
+	ERRORS		{AsnRequestError}
+::= 2649
+
+asnMgmtAddUserProfile OPERATION
+	ARGUMENT	arg AsnAdminAddUserProfileArgument
+	RESULT		res AsnAdminAddUserProfileResult
+	ERRORS		{AsnRequestError}
+::= 2650
+
+asnMgmtRemoveUserProfile OPERATION
+	ARGUMENT	arg AsnAdminRemoveUserProfileArgument
+	RESULT		res AsnAdminRemoveUserProfileResult
+	ERRORS		{AsnRequestError}
+::= 2651
+
+asnMgmtRemoveUserProfileEvent OPERATION
+	ARGUMENT	arg AsnMgmtRemoveUserProfileEventArgument
+::= 2734
+
+asnMgmtGetUserProfile OPERATION
+	ARGUMENT	arg AsnAdminGetUserProfileArgument
+	RESULT		res AsnAdminGetUserProfileResult
+	ERRORS		{AsnRequestError}
+::= 2652
+
+asnMgmtGetUserManagerSettings OPERATION
+	ARGUMENT	arg AsnGetUserManagerSettingsArgument
+	RESULT		res AsnGetUserManagerSettingsResult
+	ERRORS		{AsnRequestError}
+::= 2653
+
+asnMgmtGetAvailableLines OPERATION
+	ARGUMENT	arg AsnGetAvailableLinesArgument
+	RESULT		res AsnGetAvailableLinesResult
+	ERRORS		{AsnRequestError}
+::= 2654
+
+asnMgmtGetNetworkInterfacePorts OPERATION
+	ARGUMENT	arg AsnGetNetworkInterfacePortsArgument
+	RESULT		res AsnGetNetworkInterfacePortsResult
+	ERRORS		{AsnRequestError}
+::= 2655
+
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~ Chat Settings
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+AsnMgmtChatSettings ::= SEQUENCE
+{
+	bDeleteChatEntries				BOOLEAN,    -- 
+	iDeleteChatEntriesAfterDays		INTEGER,    -- 
+	...
+}
+
+AsnMgmtChatSettingsErrorEnum ::= ENUMERATED
+{
+	success(0),
+	accessdenied(1)
+}
+
+-- operations
+
+asnMgmtSetChatSettings OPERATION 
+	ARGUMENT	arg AsnMgmtChatSettings
+	RESULT		res AsnMgmtEmpty
+	ERRORS		{AsnRequestError}
+::= 2660
+
+asnMgmtGetChatSettings OPERATION
+	ARGUMENT	arg AsnMgmtEmpty
+	RESULT		res AsnMgmtChatSettings
+	ERRORS		{AsnRequestError}
+::= 2661
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~ Mesh Settings
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+AsnMgmtMeshControllerSettings ::= SEQUENCE
+{
+	bMeshEnabled				BOOLEAN,    -- Mesh operations enabled
+	bAutoAddMeshNodes			BOOLEAN,	-- Auto add new mesh nodes automatically
+	bAutoAddUseTLS				BOOLEAN,	-- Auto add new mesh nodes using TLS 
+	u8sMeshID					UTF8String, -- ID of the mesh the server wants to be part of
+	u8sMeshPassword				UTF8String, -- Password the server is using to authenticate against other mesh nodes and the server requires others to provide when the is contacted.
+	u8sMeshNodeID				UTF8String, -- The own mesh node id
+	...
+}
+
+asnMgmtSetMeshSettings OPERATION 
+	ARGUMENT	arg AsnMgmtMeshControllerSettings
+	RESULT		res AsnMgmtEmpty
+	ERRORS		{AsnRequestError}
+::= 2662
+
+asnMgmtGetMeshSettings OPERATION
+	ARGUMENT	arg AsnMgmtEmpty
+	RESULT		res AsnMgmtMeshControllerSettings
+	ERRORS		{AsnRequestError}
+::= 2663
+
+-- Settings of a node
+AsnMgmtMeshNodeConfig ::= SEQUENCE
+{
+	u8sComputerNameFQDN			UTF8String, -- The nodes FQDN DNS name
+	iPort						INTEGER,	-- the node port
+	bForceTLS					BOOLEAN,  	-- force TLS?
+	u8sMeshNodeID				UTF8String, -- The mesh node id
+	bIsDynamicMode				BOOLEAN, 	-- is not configured but dynamically found?
+	bNodeEnabled				BOOLEAN,    -- This node is enabled (we try to contact the node, the node is allowed to contact us)
+	...
+}
+
+-- A List of mesh nodes
+AsnMgmtMeshNodeConfigs ::= SEQUENCE OF AsnMgmtMeshNodeConfig
+
+AsnMgmtSetMeshNodeConfigsArgument ::= SEQUENCE {
+	configs						AsnMgmtMeshNodeConfigs,
+	...
+}
+
+asnMgmtSetMeshNodeConfigs OPERATION 
+	ARGUMENT	arg AsnMgmtSetMeshNodeConfigsArgument
+	RESULT		res AsnMgmtEmpty
+	ERRORS		{AsnRequestError}
+::= 2664
+
+AsnMgmtGetMeshNodeConfigsResult ::= SEQUENCE {
+	configs						AsnMgmtMeshNodeConfigs,
+	...
+}
+
+asnMgmtGetMeshNodeConfigs OPERATION
+	ARGUMENT	arg AsnMgmtEmpty
+	RESULT		res AsnMgmtGetMeshNodeConfigsResult
+	ERRORS		{AsnRequestError}
+::= 2665
+
+-- The different stati a node can have
+AsnMgmtMeshNodeConnectionStatusEnum ::= ENUMERATED
+{
+	unknown(0),								-- Status unknown
+	connected(1),							-- We are connected
+	connectiondropped(2),					-- Connection was dropped
+	connectfailedunknown(3),				-- Connect failed, reason unkonwn
+	connectfailedunreachable(4),			-- Connect failed, unreachable
+	connectfailedinvalidmeshid(5),			-- Connect failed, differeten mesh id
+	connectfailedinvalidpassword(6),		-- Connect failed, invalid password
+	
+	connectfailednomorelicensesonserver(7),	-- Connect failed, no licenses on the server side
+	connectfaileddisabledonserver(8),		-- Connect failed, mesh disabled on the server side
+	connectfailednomeshidonserver(9),		-- Connect failed, no meshid on the server side
+	connectfailednoautoaddonserver(10),		-- Connect failed, partner node not known and autoadd is disabled on the server side
+	connectfailednodedisabledonserver(11),	-- Connect failed, partner node is known, but disabled
+	connectfailednodetlsforcedonserver(12),	-- Connect failed, partner node is known, but requires TLS
+
+	connectfailednolicensesonclient(20),	-- Connect failed, no licenses on our side
+	connectfaileddisabledonclient(21),		-- Connect failed, mesh disabled on our side
+	connectfailednomeshidonclient(22),		-- Connect failed, no meshid on our side
+	connectfailednodedisabledonclient(23),	-- Connect failed, node disabled on our side
+	connectfailedtlsforcedonclient(24),		-- Connect failed, no TLS on the server side network interface
+	
+	connectfailedalreadyconnected(29),		-- Connect failed, another node already connected with same remote ip address
+	connectfailedtlscerterror(30)			-- Connect failed, some error in certificate chain
+}
+
+-- TLS status of a node
+AsnMgmtMeshNodeStatusTLS ::= SEQUENCE
+{
+	bTLS						BOOLEAN,		-- true if connection is TLS encrypted
+	iTLSProtocol				INTEGER, 		-- Protocol used (if no TLS: 0) google SecPkgContext_ConnectionInfo structure
+	iCertChainVerifyReturn		INTEGER, 		-- certificate chain error (success: 0); only valid if connection outbound and bTls = true 
+	u8sIssuedTo					UTF8String,		-- server certificate issuedTo; only valid if connection outbound and bTls = true 
+	u8sIssuer					UTF8String,		-- server certificate issuer; only valid if connection outbound and bTls = true
+	timValidFrom				AsnSystemTime,	-- server certificate valid from; only valid if connection outbound and bTls = true
+	timValidTo					AsnSystemTime,	-- server certificate valid to; only valid if connection outbound and bTls = true
+	u8sListAlternateNames		UTF8StringList,	-- server certificate alternate names; only valid if connection outbound and bTls = true
+	...
+}
+
+-- Status of a node
+AsnMgmtMeshNodeStatus ::= SEQUENCE
+{
+	u8sMeshNodeID				UTF8String,		-- The mesh node id
+	iStatus						INTEGER,		-- @linked AsnMgmtMeshNodeConnectionStatusEnum
+	timeLastConnected			AsnSystemTime,	-- time_t last successful connect
+	timeLastStatusUpdate		AsnSystemTime,	-- time_t last status change
+	u8sServerVersion			UTF8String,		-- ucserver version of the node 
+	u8sIPAddress				UTF8String,		-- IP Adress of the server
+	bOutbound					BOOLEAN,		-- true if connection outbound
+	tlsStatus 					AsnMgmtMeshNodeStatusTLS, -- details of the tls status of the connection
+	...
+}
+
+-- A List of mesh satatues
+AsnMgmtMeshNodeStatuses ::= SEQUENCE OF AsnMgmtMeshNodeStatus
+
+AsnMgmtGetMeshNodeStatusesResult ::= SEQUENCE
+{
+	statuses					AsnMgmtMeshNodeStatuses,
+	...
+}
+
+asnMgmtGetMeshNodeStatuses OPERATION
+	ARGUMENT	arg AsnMgmtEmpty
+	RESULT		res AsnMgmtGetMeshNodeStatusesResult
+	ERRORS		{AsnRequestError}
+::= 2666
+
+asnMgmtMeshNodeStatusChanged OPERATION
+	ARGUMENT	arg AsnMgmtMeshNodeStatus
+::= 2731
+
+asnMgmtMeshUpdateConnections OPERATION
+	ARGUMENT	arg AsnMgmtEmpty
+::= 2732
+
+-- Subscribe to capability changes
+AsnMgmtSubscribeConnectionInformationChangesArgument ::= SEQUENCE
+{
+	-- ContactID we want to subscribe Events for.
+	-- If no contact id (sip:jan@estos.de) is provided all contact capability changes are reported
+	u8sContactID				UTF8String,
+	...
+}
+
+AsnMgmtSubscribeConnectionInformationChangesResult ::= SEQUENCE
+{
+	...
+}
+
+-- Subscribe ConnectionInformationChanges
+asnMgmtSubscribeConnectionInformationChanges OPERATION
+	ARGUMENT	arg AsnMgmtSubscribeConnectionInformationChangesArgument
+	RESULT		res AsnMgmtSubscribeConnectionInformationChangesResult
+	ERRORS		{AsnRequestError}
+::= 2669
+
+
+AsnMgmtUnSubscribeConnectionInformationChangesArgument ::= SEQUENCE
+{
+	-- ContactID we want to unsubscribe Events for.
+	-- If no contact id (sip:jan@estos.de) is provided all contact capability changes are reported
+	u8sContactID				UTF8String,
+	...
+}
+
+AsnMgmtUnSubscribeConnectionInformationChangesResult ::= SEQUENCE
+{
+	...
+}
+
+-- UnSubscribe from capability changes
+asnMgmtUnSubscribeConnectionInformationChanges OPERATION
+	ARGUMENT	arg AsnMgmtUnSubscribeConnectionInformationChangesArgument
+	RESULT		res AsnMgmtUnSubscribeConnectionInformationChangesResult
+	ERRORS		{AsnRequestError}
+::= 2670
+
+
+AsnMgmtConnectionInformationChangedArgument ::= SEQUENCE
+{
+	-- ContactID this information belongs to
+	u8sContactID						UTF8String,
+	-- Connection info (always contains the full list of connections, (no dedicated add remove notify)
+	conInfo								AsnMgmtClientConnectionInformation,
+	...
+}
+
+asnMgmtConnectionInformationChanged OPERATION
+	ARGUMENT	arg AsnMgmtConnectionInformationChangedArgument
+::= 2733
+
+-- Disconnect a spcific client connection
+AsnMgmtDisconnectClientArgument ::= SEQUENCE
+{
+	-- ContactID of the user the connection belongs to
+	u8sContactID				UTF8String,
+	-- The id of the connection to disconnect
+	u8sConnectionID				UTF8String,
+	...
+}
+
+AsnMgmtDisconnectClientResult ::= SEQUENCE
+{
+	-- success or fail
+	bResult						BOOLEAN,
+	...
+}
+
+-- UnSubscribe from capability changes
+asnMgmtDisconnectClient OPERATION
+	ARGUMENT	arg AsnMgmtDisconnectClientArgument
+	RESULT		res AsnMgmtDisconnectClientResult
+	ERRORS		{AsnRequestError}
+::= 2808
+
+
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~ General Data Protection Regulation
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- - OPID_asnMgmtGDPRFindContacts							2676
+-- - OPID_asnMgmtGDPRGetData								2675
+-- - OPID_asnMgmtGDPRRectify								2674
+-- - OPID_asnMgmtGDPRErase									2673
+AsnMgmtGDPREraseArgument ::= SEQUENCE
+{
+	u8sSIPAddress			UTF8String,
+	...
+}
+
+AsnMgmtGDPREraseErrorEnum ::= ENUMERATED
+{
+	success(0),
+	accessdenied(1)
+}
+
+AsnMgmtGDPREraseResult ::= SEQUENCE
+{
+	...
+}
+
+asnMgmtGDPRErase OPERATION
+	ARGUMENT	arg AsnMgmtGDPREraseArgument
+	RESULT		res AsnMgmtGDPREraseResult
+	ERRORS		{AsnRequestError}
+::= 2673
+
+AsnMgmtGDPRFindContactsArgument ::= SEQUENCE
+{
+	-- Free text which will be found in the contact name, company name, phone number or memo field.
+	u8sFilterText						UTF8String,			
+	...
+}
+
+AsnMgmtGDPRFindContactsResult ::= SEQUENCE
+{
+	contactList							AsnNetDatabaseContactList,
+	...
+}
+
+-- @brief GDPR function for finding more specific GDPR contact entries.
+asnMgmtGDPRFindContacts OPERATION
+	ARGUMENT	arg AsnMgmtGDPRFindContactsArgument
+	RESULT		res AsnMgmtGDPRFindContactsResult
+	ERRORS		{AsnRequestError}
+::= 2676
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- Database Update
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+AsnMgmtUpdateDatabaseProgressArgument ::= SEQUENCE
+{
+	iProgressMax	INTEGER,
+	iProgressCur	INTEGER,
+	...
+}
+
+--@brief Progress Event for Database Update
+--@long This event is sent periodically during Databse Update. Receiver can update a progress bar in the UI with this information.
+asnMgmtUpdateDatabaseProgress OPERATION
+	ARGUMENT	arg AsnMgmtUpdateDatabaseProgressArgument
+::= 2737
+
+AsnMgmtDatabaseUpdateInProgressArgument ::= SEQUENCE
+{
+	...
+}
+
+AsnMgmtDatabaseUpdateInProgressResult ::= SEQUENCE
+{
+	bResult				BOOLEAN,
+	...
+}
+
+-- @brief Check if Database Update is Running
+-- @long This function is used to check if a Database Update is running in background after Server Start
+-- Progress is reported back to Admin with OPID_asnMgmtUpdateDatabaseProgress Events
+
+asnMgmtDatabaseUpdateInProgress	 OPERATION
+	ARGUMENT	arg AsnMgmtDatabaseUpdateInProgressArgument
+	RESULT		res AsnMgmtDatabaseUpdateInProgressResult
+	ERRORS		{AsnRequestError}
+::= 2677
+
+AsnMgmtGetBinaryTransferSettingsArgument ::= SEQUENCE
+{
+	...
+}
+
+AsnMgmtGetBinaryTransferSettingsResult ::= SEQUENCE
+{
+	storageSettings				AsnBinaryTransferStorageSettings,
+	...
+}
+
+-- @brief Retrieve the Settings of the BinaryTransferManager
+asnMgmtGetBinaryTransferSettings	 OPERATION
+	ARGUMENT	arg AsnMgmtGetBinaryTransferSettingsArgument
+	RESULT		res AsnMgmtGetBinaryTransferSettingsResult
+	ERRORS		{AsnRequestError}
+::= 2679
+
+AsnMgmtSetBinaryTransferSettingsArgument ::= SEQUENCE
+{
+	storageSettings				AsnBinaryTransferStorageSettings,
+	...
+}
+
+AsnMgmtSetBinaryTransferSettingsResult ::= SEQUENCE
+{
+	u8slistComputers		UTF8StringList,
+	...
+}
+
+-- @brief Set the Settings of the BinaryTransferManager
+asnMgmtSetBinaryTransferSettings	 OPERATION
+	ARGUMENT	arg AsnMgmtSetBinaryTransferSettingsArgument
+	RESULT		res AsnMgmtSetBinaryTransferSettingsResult
+	ERRORS		{AsnRequestError}
+::= 2678
+
+-- Connection option 
+AsnMgmtConnectionOption ::= SEQUENCE
+{
+	-- Konfigurierte Serveradresse, dies kann ein Name oder eine Adresse sein
+	u8sHostOrIP					UTF8String,
+	-- Zielport
+	iPort						INTEGER,
+	-- Diese Option wurde aus dem DNS System gelesen
+	bIsFromDNSRecords			BOOLEAN,
+	-- Wenn der Eintrag aus dem DNS Kommt ein mögliches Gewicht dieses Eintrages
+	iDNSWeight					INTEGER,
+	...
+}
+
+AsnMgmtConnectionOptions ::= SEQUENCE OF AsnMgmtConnectionOption
+
+-- Get all ctiserver dns srv records 
+AsnMgmtGetConnectionOptionsDNSArgument ::= SEQUENCE
+{
+	...
+}
+
+AsnMgmtGetConnectionOptionsDNSResult ::= SEQUENCE
+{
+	listConnectionOptions		AsnMgmtConnectionOptions,
+	...
+}
+
+-- Subscribe ConnectionInformationChanges
+asnMgmtGetConnectionOptionsDNS OPERATION
+	ARGUMENT	arg AsnMgmtGetConnectionOptionsDNSArgument
+	RESULT		res AsnMgmtGetConnectionOptionsDNSResult
+	ERRORS		{AsnRequestError}
+::= 2680
+
+AsnMgmtConfigurationManagerSettings ::= SEQUENCE
+{
+	-- Wird die Konfigurations-Datenbank verwendet?
+	bRemoteDBUse					BOOLEAN,
+	-- Liste der Properties für die Konfigurations-Datenbank
+	mapRemoteDBProperties			AsnStringPairList,
+	-- HomeServerName: identifies the UCServer with its name in the remote db
+	u8sHomeServerName				UTF8String,
+	-- HomeServerVersion: the UCServer version for the remote db
+	u8sHomeServerVersion			UTF8String,
+	...
+}
+
+AsnMgmtGetConfigurationManagerSettingsArgument ::= SEQUENCE
+{
+	...
+}
+
+AsnMgmtGetConfigurationManagerSettingsResult ::= SEQUENCE
+{
+	settings 			AsnMgmtConfigurationManagerSettings,
+	...
+}
+
+-- @brief Retrieve the Settings of the ConfigurationManager
+asnMgmtGetConfigurationManagerSettings	 OPERATION
+	ARGUMENT	arg AsnMgmtGetConfigurationManagerSettingsArgument
+	RESULT		res AsnMgmtGetConfigurationManagerSettingsResult
+	ERRORS		{AsnRequestError}
+::= 2696
+
+AsnMgmtSetConfigurationManagerSettingsArgument ::= SEQUENCE
+{
+	settings 			AsnMgmtConfigurationManagerSettings,
+	...
+}
+
+AsnMgmtSetConfigurationManagerSettingsResult ::= SEQUENCE
+{
+	...
+}
+
+-- @brief Set the Settings of the ConfigurationManager
+asnMgmtSetConfigurationManagerSettings	 OPERATION
+	ARGUMENT	arg AsnMgmtSetConfigurationManagerSettingsArgument
+	RESULT		res AsnMgmtSetConfigurationManagerSettingsResult
+	ERRORS		{AsnRequestError}
+::= 2697
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+AsnMgmtDirectPersistDeleteSettingArgument ::= SEQUENCE
+{
+	-- The key of the setting to delete
+	key								UTF8String,
+	-- The object name of the setting to delete (empty, if setting does not have an object name)
+	objectName						UTF8String,
+	...
+}
+
+-- @brief Delete the given configuration setting from storage (i.e. from xml or remote db)
+asnMgmtDirectPersistDeleteSetting OPERATION
+	ARGUMENT	arg AsnMgmtDirectPersistDeleteSettingArgument
+	RESULT		res AsnMgmtEmpty
+	ERRORS		{AsnRequestError}
+::= 2742
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+AsnMgmtTestConfigurationManagerDBArgument ::= SEQUENCE
+{
+	-- Liste der Properties für die Konfigurations-Datenbank
+	-- falls nicht angegeben, werden die im UCServer hinterlegten Settings verwendet
+	mapRemoteDBProperties			[0] AsnStringPairList OPTIONAL,
+	...
+}
+
+AsnMgmtTestConfigurationManagerDBResult ::= SEQUENCE
+{
+	-- Ist die DB gefuellt mit Configuration Settings?
+	bFilledWithConfigurationSettings			BOOLEAN,
+	...
+}
+
+-- Test if configuration manager can connect with the database (via web service)
+asnMgmtTestConfigurationManagerDB OPERATION
+	ARGUMENT	arg AsnMgmtTestConfigurationManagerDBArgument
+	RESULT		res AsnMgmtTestConfigurationManagerDBResult
+	ERRORS		{AsnRequestError}
+::= 2698
+
+-- UserManager Connection status 
+AsnMgmtUserManagerConnectionStatus ::= SEQUENCE
+{
+	bADConnected				BOOLEAN,
+	...
+}
+
+AsnMgmtUserManagerConnectionStatusList ::= SEQUENCE OF AsnMgmtUserManagerConnectionStatus
+
+AsnMgmtGetUserManagerConnectionStatusArgument ::= SEQUENCE
+{
+	...
+}
+
+AsnMgmtGetUserManagerConnectionStatusResult ::= SEQUENCE
+{
+	status		AsnMgmtUserManagerConnectionStatus,
+	...
+}
+
+-- Get UserManager Connection status
+asnMgmtGetUserManagerConnectionStatus OPERATION
+	ARGUMENT	arg AsnMgmtGetUserManagerConnectionStatusArgument
+	RESULT		res AsnMgmtGetUserManagerConnectionStatusResult
+	ERRORS		{AsnRequestError}
+::= 2809
+
+AsnMgmtUserManagerConnectionStatusChangedArgument ::= SEQUENCE
+{
+	status		AsnMgmtUserManagerConnectionStatus,
+	...
+}
+
+AsnMgmtClientPersistenceDeleteArgument ::= SEQUENCE
+{
+	u8sItemStore 		UTF8String, -- ItemStore des Elements
+	u8sItemStoreID		UTF8String, -- wenn eine StoreID angegeben ist, darf diese noch nicht existieren
+	...
+}
+
+AsnMgmtClientPersistenceDeleteResult ::= SEQUENCE
+{
+	iResult				INTEGER, -- @linked AsnClientPersistenceResultDetailsEnum
+	...
+}
+
+asnMgmtClientPersistenceDelete OPERATION
+	ARGUMENT	arg AsnMgmtClientPersistenceDeleteArgument
+	RESULT		res AsnMgmtClientPersistenceDeleteResult
+	ERRORS		{AsnRequestError}
+::= 2811
+
+AsnMgmtClientPersistenceCreateArgument ::= SEQUENCE
+{
+	u8sItemStore 		UTF8String, -- ItemStore des Elements
+	u8sItemStoreID		[0] UTF8String OPTIONAL, -- wenn eine StoreID angegeben ist, darf diese noch nicht existieren
+	data				UTF8String,            -- Nutzdaten des Elements
+	...
+}
+
+AsnMgmtClientPersistenceCreateResult ::= SEQUENCE
+{
+	iResult				INTEGER, -- @linked AsnClientPersistenceResultDetailsEnum
+	...
+}
+
+asnMgmtClientPersistenceCreate OPERATION
+	ARGUMENT	arg AsnMgmtClientPersistenceCreateArgument
+	RESULT		res AsnMgmtClientPersistenceCreateResult
+	ERRORS		{AsnRequestError}
+::= 2810
+
+-- Event to send AD Connection status
+-- This event will be sent to ucadmin if the status changes
+asnMgmtUserManagerConnectionStatusChanged OPERATION
+	ARGUMENT	arg AsnMgmtUserManagerConnectionStatusChangedArgument
+::= 2745
+
+-- Configuration manager status 
+AsnMgmtConfigurationManagerStatus ::= SEQUENCE
+{
+	bRemoteDBEnabled				BOOLEAN,
+	bRemoteDBConnected				BOOLEAN,
+	bRemoteDBInitiallyFullSynced	BOOLEAN,
+	bRemoteDBEmpty					BOOLEAN,
+	u8sRemoteDBLastError			UTF8String,
+	...
+}
+
+AsnMgmtConfigurationManagerStatusList ::= SEQUENCE OF AsnMgmtConfigurationManagerStatus
+
+AsnMgmtGetConfigurationManagerStatusArgument ::= SEQUENCE
+{
+	...
+}
+
+AsnMgmtGetConfigurationManagerStatusResult ::= SEQUENCE
+{
+	status		AsnMgmtConfigurationManagerStatus,
+	...
+}
+
+-- Get configuration manager status (i.e. multi server status)
+asnMgmtGetConfigurationManagerStatus OPERATION
+	ARGUMENT	arg AsnMgmtGetConfigurationManagerStatusArgument
+	RESULT		res AsnMgmtGetConfigurationManagerStatusResult
+	ERRORS		{AsnRequestError}
+::= 2699
+
+AsnMgmtConfigurationManagerStatusChangedArgument ::= SEQUENCE
+{
+	status		AsnMgmtConfigurationManagerStatus,
+	...
+}
+
+-- Event to send configuration manager status
+-- This event will be sent to ucadmin if the status changes
+asnMgmtConfigurationManagerStatusChanged OPERATION
+	ARGUMENT	arg AsnMgmtConfigurationManagerStatusChangedArgument
+::= 2739
+
+-- Configuration server list 
+AsnMgmtConfigurationManagerServerListItem ::= SEQUENCE
+{
+	-- Name of server
+	serverListItem					UTF8String,
+	-- Heartbeat in Redis? (i.e. connected to Redis?)
+	bRedisHeartbeat 				BOOLEAN,
+	...
+}
+
+AsnMgmtConfigurationManagerServerList ::= SEQUENCE OF AsnMgmtConfigurationManagerServerListItem
+
+AsnMgmtGetConfigurationManagerServerListResult ::= SEQUENCE
+{
+	serverList		AsnMgmtConfigurationManagerServerList,
+	...
+}
+
+-- Get configuration manager server list (all servers participating in multiserver verbund)
+-- If a ucserver connects to a remote database ist is automatically added to this server list
+asnMgmtGetConfigurationManagerServerList OPERATION
+	ARGUMENT	arg AsnMgmtEmpty
+	RESULT		res AsnMgmtGetConfigurationManagerServerListResult
+	ERRORS		{AsnRequestError}
+::= 2801
+
+
+AsnMgmtConfigurationManagerServerListChangedArgument ::= SEQUENCE
+{
+	serverList		AsnMgmtConfigurationManagerServerList,
+	...
+}
+
+-- Event to send configuration manager server list (all servers participating in multiserver verbund)
+-- If a ucserver connects to a remote database ist is automatically added to this server list
+-- This event will be sent to ucadmin if the server list is changed
+asnMgmtConfigurationManagerServerListChanged OPERATION
+	ARGUMENT	arg AsnMgmtConfigurationManagerServerListChangedArgument
+::= 2738
+
+
+-- cleanup binarytransfer files
+AsnMgmtCleanupBinaryTransferFilesArgument ::= SEQUENCE
+{
+	-- fileage for removal
+	iFileAgeDays		INTEGER,	
+	...
+}
+
+AsnMgmtCleanupBinaryTransferFilesResult ::= SEQUENCE
+{
+	-- bool value if succeeded
+	bSuccess		BOOLEAN,
+	
+	-- count of removed files
+	iCountRemoved	INTEGER,
+	
+	...
+}
+
+asnMgmtCleanupBinaryTransferFiles OPERATION
+	ARGUMENT	arg AsnMgmtCleanupBinaryTransferFilesArgument
+	RESULT		res AsnMgmtCleanupBinaryTransferFilesResult
+	ERRORS		{AsnRequestError}
+::= 2681
+
+
+AsnMgmtSetPresenceDomainArgument ::= SEQUENCE
+{
+	-- string with the new presence domain(s)
+	-- format of string is like the input in ucserver server setup and as shown in ucadmin  
+	-- operation is only carried out in datacenter ucserver
+	-- sip addresses of users will not be adapted	
+	u8sPresenceDomain		UTF8String,
+	...
+}
+
+AsnMgmtSetPresenceDomainResultEnum ::= ENUMERATED
+{
+	eDone(0),
+	eNotDoneCauseOtherDatacenterServersRunning(1),
+	eNotDoneCauseConfigDBNotConnected(2)
+}
+
+AsnMgmtSetPresenceDomainResult ::= SEQUENCE
+{
+	iResult 	INTEGER, -- @linked AsnMgmtSetPresenceDomainResultEnum
+	-- if iResult is eOtherDatacenterServersRunning then this list contains all datacenter servers running aside of the one that handles this op 
+	u8slistOtherDatacenterServersRunning		UTF8StringList, 
+	...
+}
+
+asnMgmtSetPresenceDomain OPERATION
+	ARGUMENT	arg AsnMgmtSetPresenceDomainArgument
+	RESULT		res AsnMgmtSetPresenceDomainResult
+	ERRORS		{AsnRequestError}
+::= 2812
+
+--
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-- AdminUserManager type
+AsnMgmtAdminUserManagerType ::= ENUMERATED
+{ 
+	eNONE(0),
+	eACTIVEDIRECTORY(1)
+}
+
+AsnMgmtAdminUserManagerSettings ::= SEQUENCE
+{
+	-- type of AdminUserManager
+	iAdminUserManagerType		INTEGER,  -- @linked AsnMgmtAdminUserManagerType
+	-- if true the ldap settings of usermanagement are used 
+	-- (only relevant if type is eACTIVEDIRECTORY)
+	bUseUserManagerLDAPSettings	BOOLEAN,
+	-- Active Directory Server 
+	-- (only relevant if iAdminUserManagerType = eACTIVEDIRECTORY and bUseUserManagerLDAPSettings = false)
+	u8sHost						UTF8String,
+	-- Active Directory Server LDAP Port 
+	-- (only relevant if iAdminUserManagerType = eACTIVEDIRECTORY and bUseUserManagerLDAPSettings = false)
+	iPort						INTEGER,
+	-- Username for AD access (Administrator@estos.de) 
+	-- (only relevant if iAdminUserManagerType = eACTIVEDIRECTORY and bUseUserManagerLDAPSettings = false)
+	u8sUsername					UTF8String,
+	-- Password for AD access 
+	-- (only relevant if iAdminUserManagerType = eACTIVEDIRECTORY and bUseUserManagerLDAPSettings = false)
+	u8sPassword					UTF8String,
+	-- LDAPS erzwingen 
+	-- (only relevant if iAdminUserManagerType = eACTIVEDIRECTORY and bUseUserManagerLDAPSettings = false)
+	iForceLDAPS					INTEGER,
+	-- User BaseDN in the AD 
+	-- If empty it will be automatically defined by the defaultNamingContext 
+	-- (only relevant if iAdminUserManagerType = eACTIVEDIRECTORY and bUseUserManagerLDAPSettings = false)
+	u8sBaseDNUsers				UTF8String,
+	...
+}
+
+
+AsnMgmtGetAdminUserManagerSettingsArgument ::= SEQUENCE
+{
+	...
+}
+
+AsnMgmtGetAdminUserManagerSettingsResult ::= SEQUENCE
+{
+	settings			AsnMgmtAdminUserManagerSettings,
+	iLastErrorCode		INTEGER,
+	...
+}
+
+asnMgmtGetAdminUserManagerSettings OPERATION
+	ARGUMENT	arg AsnMgmtGetAdminUserManagerSettingsArgument
+	RESULT		res AsnMgmtGetAdminUserManagerSettingsResult
+	ERRORS		{AsnRequestError}
+::= 2824
+
+AsnMgmtSetAdminUserManagerSettingsArgument ::= SEQUENCE
+{
+	settings			AsnMgmtAdminUserManagerSettings,
+	...
+}
+
+AsnMgmtSetAdminUserManagerSettingsResult ::= SEQUENCE
+{
+	iLastErrorCode		INTEGER,
+	...
+}
+
+asnMgmtSetAdminUserManagerSettings OPERATION
+	ARGUMENT	arg AsnMgmtSetAdminUserManagerSettingsArgument
+	RESULT		res AsnMgmtSetAdminUserManagerSettingsResult
+	ERRORS		{AsnRequestError}
+::= 2825
+
+-- The different rights in groups with own id blocks
+AsnMgmtAdminUserRightEnum ::= ENUMERATED
+{
+	-- AsnMgmtAdminUserRightExecute rights:
+	common-DataImport(1),
+	common-DataExport(2),
+	common-RestartServer(3),
+	common-NetworkInterfaces(4),
+	common-CoreServices(5),
+	common-SynchronizeContactData(6),
+	common-ChangePassword(7),
+	
+	-- AsnMgmtAdminUserRightReadWrite rights:
+	general-Licenses(100),
+	general-PresenceDomain(101),
+	general-UserDatabase(102),
+	general-UserAuthentication(103),
+	general-UserAdminAccess(104),
+	general-Database(105),
+	general-MultiServerDatabase(106),		
+	general-Events(107),
+	general-Redis(108),
+	
+	telephony-Lines(200),
+	telephony-LinesDetails-LineGroups(201),
+	telephony-Location(210),
+	telephony-Journal(211),
+	telephony-UnansweredCalls(212),
+	telephony-Problems(213),
+	
+	usermgmt-User(300),
+	usermgmt-Groups(301),		
+	usermgmt-Computer(302),		
+	usermgmt-Profiles(303),
+	usermgmt-GlobalSettings(304),
+	
+	services-UpdateServer(400),	
+	services-ExternalServer(401),
+	services-EmailDelivery(402),
+	services-Notifications(403),
+	services-SMSDispatch(404),	
+	services-CallRecording(405),			
+	services-ShareContents(406),			
+	services-OnlineServices(407),			
+	services-StunTurn(408),				
+	services-PushNotifications(409),		
+	services-TeamsIntegration(410),
+
+	federation-SIPFederation(500),			
+	federation-SIPServer(501),				
+	federation-SIPStaticRouting(502),		
+	federation-XMPPFederation(503),			
+	federation-DomainsAuthorization(504),	
+	federation-BlockDomain(505),				
+	federation-Diagnostics(506),				
+
+	database-MetaDirectory(600),			
+	database-Google(601),					
+	
+	allsettings-ServerSettings(700),			
+	
+	status-StatusMonitor(800),			
+	status-ServerEvents(801)			
+}
+
+-- A simple read write flag
+AsnMgmtAdminUserRightStateReadWrite ::= SEQUENCE
+{
+	bWrite	BOOLEAN,
+	...
+}
+
+-- Executing is allowed
+AsnMgmtAdminUserRightStateExecute ::= SEQUENCE
+{
+	...
+}
+
+AsnMgmtAdminUserRightChoice ::= CHOICE
+{
+	readwrite	[0] AsnMgmtAdminUserRightStateReadWrite,
+	execute		[1] AsnMgmtAdminUserRightStateExecute
+}
+
+-- The mapping right enum to details what i am allowed to do
+AsnMgmtAdminUserRight ::= SEQUENCE{
+	right		AsnMgmtAdminUserRightEnum,
+	state		AsnMgmtAdminUserRightChoice,
+	...
+}
+
+AsnMgmtAdminUserRights ::= SEQUENCE OF AsnMgmtAdminUserRight
+
+AsnMgmtGetAdminUserRightsArgument ::= SEQUENCE
+{
+	...
+}
+
+AsnMgmtGetAdminUserRightsResult ::= SEQUENCE
+{
+	rights					AsnMgmtAdminUserRights,
+	...
+}
+
+asnMgmtGetAdminUserRights OPERATION
+	ARGUMENT	arg AsnMgmtGetAdminUserRightsArgument
+	RESULT		res AsnMgmtGetAdminUserRightsResult
+	ERRORS		{AsnRequestError}
+::= 2827
+
+-- @added 01.07.2024
+-- @brief Set the settings for the entra id replicator
+asnMgmtGetEntraIdSettings OPERATION
+	ARGUMENT	arg AsnMgmtEmpty
+	RESULT		res AsnMgmtEntraIdSettings
+	ERRORS		{AsnRequestError}
+::= 2835
+
+-- @added 01.07.2024
+-- @brief Get the current settings from the entra id replicator
+asnMgmtSetEntraIdSettings OPERATION
+	ARGUMENT	arg AsnMgmtEntraIdSettings
+	RESULT		res AsnMgmtEmpty
+	ERRORS		{AsnRequestError}
+::= 2836
+
+-- @added 01.07.2024
+-- @brief Represents the internal entra id replicator settings
+AsnMgmtEntraIdSettings ::= SEQUENCE
+{
+	-- The client id from the entra id app
+	u8sClientId								UTF8String,
+	-- The client secret generated for the entra id app
+	u8sClientSecret							UTF8String,
+	-- The tenant id
+	u8sTenantId							UTF8String,
+	...
+}
+
+END

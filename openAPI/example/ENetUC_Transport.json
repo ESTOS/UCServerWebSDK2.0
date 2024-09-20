@@ -1,0 +1,421 @@
+{
+	"openapi": "3.1.0",
+	"info": {
+		"title": "ENetUC_Transport",
+		"version": "0.0.1",
+		"summary": "Transport layer interface\n\n",
+		"description": "## Module description\n\nThe module defines operations on the transport layer of the business logic.\n\nThis includes asnStartTLS which activates TLS on a already existing TCP connection and additional operations for\n\nrunning multiplexed connections to the UCServer (several sessions of different users on one TCP connection; creating, deleting them and user authentication).\n\n"
+	},
+	"paths": {
+		"/asnStartTLS": {
+			"post": {
+				"tags": ["Transport"],
+				"summary": "Start TLS Handschake on existing connection\n\n",
+				"description": "Client should use this function immediately after establishing the connection.\n\nAfter calling this function, the UCServer switches to TLS mode and expects a regular TLS handshahe from the client.\n\n",
+				"deprecated": false,
+				"operationId": "1103",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnStartTLSArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnStartTLSResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnTransportKeepAlive": {
+			"post": {
+				"tags": ["Transport"],
+				"deprecated": false,
+				"operationId": "1706",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnTransportKeepAliveArgument"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnTokenVerifyV2": {
+			"post": {
+				"tags": ["Transport"],
+				"description": "This function allows an external Server to check if a User token is valid\n\n",
+				"deprecated": false,
+				"operationId": "1719",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnTokenVerifyV2Argument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnTokenVerifyResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnCheckConnection": {
+			"post": {
+				"tags": ["Transport"],
+				"description": "This function allows to check if the connection to the server is functional (Mobiler Zugang überprüfung)\n\n",
+				"deprecated": false,
+				"operationId": "1714",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnCheckConnectionArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnCheckConnectionResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnCreateAuthToken": {
+			"post": {
+				"tags": ["Transport"],
+				"summary": "Create a auth token in the UCServer\n\n",
+				"deprecated": false,
+				"operationId": "1724",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnCreateAuthTokenArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnCreateAuthTokenResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"schemas": {
+			"AsnUserPropertyBag": {
+				"$ref": "ENetUC_Common.json#/components/schemas/AsnUserPropertyBag"
+			},
+			"AsnNetDatabaseContact": {
+				"$ref": "ENetUC_Common.json#/components/schemas/AsnNetDatabaseContact"
+			},
+			"AsnSystemTime": {
+				"$ref": "ENetUC_Common.json#/components/schemas/AsnSystemTime"
+			},
+			"AsnRequestError": {
+				"$ref": "ENetUC_Common.json#/components/schemas/AsnRequestError"
+			},
+			"UTF8StringList": {
+				"$ref": "ENetUC_Common.json#/components/schemas/UTF8StringList"
+			},
+			"AsnNegotiateServerConnectionV2Argument": {
+				"$ref": "ENetUC_Auth.json#/components/schemas/AsnNegotiateServerConnectionV2Argument"
+			},
+			"AsnNegotiateServerConnectionV2ResultChoice": {
+				"$ref": "ENetUC_Auth.json#/components/schemas/AsnNegotiateServerConnectionV2ResultChoice"
+			},
+			"AsnLoginV2Argument": {
+				"$ref": "ENetUC_Common_Auth.json#/components/schemas/AsnLoginV2Argument"
+			},
+			"AsnLoginV2Result": {
+				"$ref": "ENetUC_Common_Auth.json#/components/schemas/AsnLoginV2Result"
+			},
+			"EAsnAuthRoles": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "user",
+						"const": 0
+					},
+					{
+						"title": "mgmt",
+						"const": 1
+					}]},
+			"AsnStartTLSArgument": {
+				"type": "object",
+				"description": "### Category \nTransport\n### Private \n0"
+			},
+			"AsnStartTLSResult": {
+				"type": "object",
+				"description": "### Category \nTransport\n### Private \n0"
+			},
+			"AsnTransportKeepAliveArgument": {
+				"type": "object",
+				"description": "### Category \nTransport\n### Private \n0",
+				"properties": {
+					"dummy": {
+						"nullable": "true"
+					}
+				},
+				"required": [
+					"dummy"
+				]
+			},
+			"AsnTokenVerifyResult": {
+				"type": "object",
+				"description": "### Category \nTransport\n### Private \n0",
+				"properties": {
+					"stValidTo": {
+						"$ref": "#/components/schemas/AsnSystemTime"
+					},
+					"iType": {
+						"type": "integer"
+					},
+					"u8sDNPath": {
+						"type": "string"
+					},
+					"u8sUserName": {
+						"type": "string"
+					},
+					"u8sSIPURI": {
+						"type": "string"
+					},
+					"u8sobjectGUID": {
+						"type": "string"
+					},
+					"u8sPhoneNumber": {
+						"type": "string"
+					},
+					"u8sPhoneSecondary": {
+						"type": "string"
+					},
+					"u8sCallRecordingNumber": {
+						"type": "string"
+					},
+					"u8sMailboxNumber": {
+						"type": "string"
+					},
+					"u8sHomeServer": {
+						"type": "string"
+					},
+					"iUserStaticRights": {
+						"type": "integer"
+					},
+					"asnUserContact": {
+						"$ref": "#/components/schemas/AsnNetDatabaseContact"
+					},
+					"asnUserPropertyBag": {
+						"$ref": "#/components/schemas/AsnUserPropertyBag"
+					}
+				},
+				"required": [
+					"stValidTo",
+					"iType",
+					"u8sDNPath",
+					"u8sUserName",
+					"u8sSIPURI",
+					"u8sobjectGUID",
+					"u8sPhoneNumber",
+					"u8sPhoneSecondary",
+					"u8sCallRecordingNumber",
+					"u8sMailboxNumber",
+					"u8sHomeServer",
+					"iUserStaticRights",
+					"asnUserContact",
+					"asnUserPropertyBag"
+				]
+			},
+			"AsnTokenVerifyV2Argument": {
+				"type": "object",
+				"description": "### Category \nTransport\n### Private \n0",
+				"properties": {
+					"u8sToken": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"u8sToken"
+				]
+			},
+			"AsnCheckConnectionArgument": {
+				"type": "object",
+				"description": "### Category \nTransport\n### Private \n0"
+			},
+			"AsnCheckConnectionResult": {
+				"type": "object",
+				"description": "### Category \nTransport\n### Private \n0",
+				"properties": {
+					"u8sServerVersion": {
+						"type": "string"
+					},
+					"u8sProductVersion": {
+						"type": "string"
+					},
+					"iProtocolVersion": {
+						"type": "integer"
+					},
+					"iOEMID": {
+						"type": "integer"
+					},
+					"u8sCookie": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"u8sServerVersion",
+					"u8sProductVersion",
+					"iProtocolVersion",
+					"iOEMID",
+					"u8sCookie"
+				]
+			},
+			"AsnCreateAuthTokenResult": {
+				"type": "object",
+				"description": "### Category \nTransport\n### Private \n0",
+				"properties": {
+					"loginResult": {
+						"$ref": "#/components/schemas/AsnLoginV2Result"
+					},
+					"u8sAuthSessionID": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"loginResult",
+					"u8sAuthSessionID"
+				]
+			},
+			"AsnCreateAuthTokenArgument": {
+				"type": "object",
+				"description": "### Category \nTransport\n### Private \n0",
+				"properties": {
+					"login": {
+						"$ref": "#/components/schemas/AsnLoginV2Argument"
+					},
+					"u8sUCSID": {
+						"type": "string"
+					},
+					"role": {
+						"$ref": "#/components/schemas/EAsnAuthRoles"
+					}
+				},
+				"required": [
+					"login",
+					"u8sUCSID"
+				]
+			},
+			"AsnNegotiateInterfaceVersionArgument": {
+				"type": "object",
+				"description": "### Category \nTransport\n### Private \n0",
+				"properties": {
+					"u8sMinInterfaceVer": {
+						"type": "string"
+					},
+					"u8sMaxInterfaceVer": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"u8sMinInterfaceVer",
+					"u8sMaxInterfaceVer"
+				]
+			},
+			"AsnNegotiateInterfaceVersionResult": {
+				"type": "object",
+				"description": "### Category \nTransport\n### Private \n0",
+				"properties": {
+					"bSuccess": {
+						"type": "boolean"
+					},
+					"u8sServerInterfaceVer": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"bSuccess",
+					"u8sServerInterfaceVer"
+				]
+			}
+		}
+	}
+}

@@ -1,0 +1,993 @@
+{
+	"openapi": "3.1.0",
+	"info": {
+		"title": "ENetUC_ClientContent",
+		"version": "0.0.1",
+		"summary": "Client content interface (Favorite\/Monitor contacts) aka \"ClientContent\"\n\n",
+		"description": "## Module description\n\nThis module describes the interface for the client content, which are the contacts in the \"Favorites\" tab in the main window and the contacts in the contact monitor.\n\n\n\n\n\n## Client content data model\n\nThe client content consists of contact data (the data shown to the user, mainly AsnNetDatabaseContact objects) and the arragment of the contacts in the favorites\/monitor, the data structure.\n\n\n\nThe data is devided in a list of contacts and a tree structure of groupclusters, groups and items.&lt;br \/&gt;\n\nThe root is the \"contentstruture\" which contains a list of groupclusters (AsnClientContentGroupCluster).&lt;br \/&gt;\n\nEach groupcluster contains groups (AsnClientContentGroup) and each group contains items (AsnClientContentItem).&lt;br \/&gt;\n\nFinally the item contains the reference to the contact data in the contactlist.\n\n\n\n&lt;pre&gt;\n\ncontactlist\n\ncontentstructure\n\n|+- listGroupClusters\n\n|   +- listGroups\n\n|   |   +- listItems\n\n|   |   |   +- item (== only a reference to the contact in the contactlist; normally its ENetDatabaseContactID.\n\n|   |   |   +- item\n\n|   |   |   +- item\n\n|   |   .\n\n|   .\n\n.\n\n&lt;\/pre&gt;\n\n\n\n## How to use the API\n\nThis API is highly flexible - it can be used to get client content with contact data and\/or content structure and with\/without eventing for updates.\n\n&lt;br \/&gt;\n\n### Synchronoously without any events:\n\nExample for a new client, getting all the content (incl. photos) for the first time without any eventing. It is using asnGetClientContent, which is always sending\n\nback all the contacts und structure. Onyl the pictures can be left out to save bandwidth.&lt;br \/&gt;\n\n\n\n@startuml\n\n\"UCClient\" -&gt; \"UCServer\": asnGetClientContent(eNOFILTER)\n\n\"UCClient\" &lt;- \"UCServer\": AsnGetClientContentResult(revision, contacts, structure)\n\n@enduml\n\n\n\n### Asynchronously and with eventing:\n\nExample for a client, getting all the content and subscribe for events using asnSubscribeClientContent.&lt;br \/&gt;\n\nThis Call subscribes to all Events and is asynchronous. The client content will be sent from the server by the change event asnClientContentChanged.\n\nThe event will then always occure if there are changes to the client content data or structure. What has changed is described in asnClientContentChanged.\n\n\n\n@startuml\n\n\"UCClient\" -&gt; \"UCServer\": asnSubscribeClientContent(revision=0, flags=eALL)\n\n\"UCClient\" &lt;- \"UCServer\": AsnSubscribeClientContentResult(actual revision)\n\n...\n\n\"UCClient\" &lt;- \"UCServer\": asnClientContentChanged(actual revision, complete content)\n\n@enduml\n\n\n\n### Subscibe for events with differential update:\n\nIf a client has already a cached version of the client content, it can request a differential update from the server by sending his last known revision.\n\nThe resulting event contains only the changed entries (see AsnClientContentChangedArgument for Details) and the client has to update its state\/cache accordingly.&lt;br \/&gt;\n\n\n\n@startuml\n\n\"UCClient\" -&gt; \"UCServer\": asnSubscribeClientContent(revision=12345678, flags=eALL)\n\n\"UCClient\" &lt;- \"UCServer\": AsnSubscribeClientContentResult(actual revision)\n\n...\n\n\"UCClient\" &lt;- \"UCServer\": asnClientContentChanged(revision=12346000, diff content)\n\n@enduml\n\n\n\n&lt;br \/&gt;\n\nThe synchronous and asynchronous can be used together, e.g. if it makes sense to fetch the complete content at first and then subscribe to the events later on.&lt;br \/&gt;\n\n\n\n#### Remarks:\n\n\"Changecounter\" or \"Revision\" of the client content, a 64 Bit Integer.\n\n\n\n* For historical reasons the same data ist stored sometimes in strings \"u8sContentRevision\" or \"u8sRevision\" and mostly as a 64 bit integer in \"iRevision\".\n\nIt is the same value, just transported with a different representation.\n\n* The revision is a timestamp and will be defined by the server; the client cannot alter this value on the server directly, only by changing parts of the client content.\n\n* A new revision from the server is alwyays higher than an old one.\n\n\n\nSetting the iEventFlagsToSubscribe parameter to\n\n\n\n* eCONTACTS will only result in contact data events\n\n* eSTRUCTURE will only result in structure events\n\n* eJPEGPHOTO will include the jpeg photos directly in the events; if not set, the contact data will only contain hash values kor the pictures and the client gan request the pictures via asnRequestContactImage if needed.\n\n\n\n## Details on GroupCluster- and Group-IDs\n\n\n\n- GroupCluster IDs\n\n- The GroupCluster ID is a normal number, starting with '100' and counting up.\n\n- Reserved numbers are between 0-199:\n\n- \"0\" to \"99\" -&gt; Reserved\n\n- \"100\" -&gt; The favorites tab in the Windows client main window.\n\n- \"101\" -&gt; First group cluster of the Windoes client which will be shown in the monitor window.\n\n- \"150\" to \"199\" -&gt; Reserved for possible adminstrative purposes.\n\n- \"200\" -&gt; First group the user can define by himself, so make sure new groupclusters has an id greater or euqals than that.\n\n- Group IDs\n\n- A Group ID is formatted like this \"g:G[number]\", but with the exception of the following reserved IDs they can be any unique string inside a group cluster.\n\nIt is recommended to follow the naming convention and make the IDs unique over the whole structure.\n\n- Following the standard formatting of the Group ids, new ones should start at \"g:G800\" and upwards.\n\n- GroupID \"g:G770\" - \"g:G778\": reserved for special groups.\n\n- \"g:G770\" - Group with additional phone line items of the user; only visisble in the windows client if enabled in the client settings.\n\n- \"g:G771\" - Group for the administrative \"Jeder sieht jeden im Monitor\" setting in the windows client monitor window.\n\n- \"g:G772\" - Reserved.\n\n- GroupID \"g:G779\" is the first freely usable group ID inside a group cluster.\n\nFor historical reasons the Windows client is always starting with \"g:G779\" in every group cluster, which is possible, but makes it a bit harder to distinct between the groups over the whole structure.\n\n\n\n## Client Content Tagging\n\nA client can \"tag\" contacts if changes on these contacts (presence, data etc.) are of special interest for the user.\n\nTechnically the \"tags\" are just the contact IDs in a list. The API provided here makes it possible to change the list on the UCServer and get events, if another client of the same user makes changes to the list.\n\nIn the Windows client it is used to inform the user of specific presence state changes of the contacts the user tagged in the UI (e.g. available again, has a call to pickup etc.).\n\n"
+	},
+	"paths": {
+		"/asnGetClientContent": {
+			"post": {
+				"tags": ["ClientContactsList"],
+				"summary": "Get the client content data and structure with a single request without any event subscriptions.\n\n",
+				"description": "For some use cases only the transfer of the client content and structure is needed. In this case one can use this request and get the content synchronously.\n\n",
+				"deprecated": false,
+				"operationId": "1126",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnGetClientContentArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnGetClientContentResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnSubscribeClientContent": {
+			"post": {
+				"tags": ["ClientContactsList"],
+				"summary": "Subscribe to the client content of the current user.\n\n",
+				"description": "Client can get the client content asynchronously with this request and the client will be registered for change events (asnClientContentChanged) of the content.\n\n",
+				"deprecated": false,
+				"operationId": "4600",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnSubscribeClientContentArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnSubscribeClientContentResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnUnsubscribeClientContent": {
+			"post": {
+				"tags": ["ClientContactsList"],
+				"summary": "Unsubscribe from the change events for the client content.\n\n",
+				"description": "Unsubscribing from the events cannot be parameterized so the call will always unregister all events.\n\n",
+				"deprecated": false,
+				"operationId": "4601",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnUnsubscribeClientContentArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnUnsubscribeClientContentResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnChangeClientContent": {
+			"post": {
+				"tags": ["ClientContactsList"],
+				"summary": "Change the client content of the user.\n\n",
+				"description": "A client can use this request to change the client content. It can change the contact informations and the structure of the content.\n\n",
+				"deprecated": false,
+				"operationId": "4606",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnChangeClientContentArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnChangeClientContentResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnClientContentChanged": {
+			"post": {
+				"tags": ["ClientContactsList"],
+				"summary": "Event from the server to the client if the client content was changed.\n\n",
+				"description": "The server send an event to all connected client for this user to update the client content if one of the clients has changed it.\n\n",
+				"deprecated": false,
+				"operationId": "4607",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnClientContentChangedArgument"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnClientContentSubscribeToTags": {
+			"post": {
+				"tags": ["ClientContactsList"],
+				"summary": "Subscribe to changes of the tagging status of a contact\n\n",
+				"description": "A user can set \"tags\" on a contact, for getting notifies if the presence state of that contact is changing.\n\nThis is called here \"tagging\". These tags are saved as a list on the UCServer and with this subscribtion the client will be\n\nevented if the list changes on the server.\n\n\n\nThere is no dedicated unsibscribe mechanism implemented yet; the client will be automatically unsibscribed by logging of or at loosing the connection.\n\n",
+				"deprecated": false,
+				"operationId": "4608",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnClientContentSubscribeToTagsArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnClientContentSubscribeToTagsResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnClientContentTaggedIDsChanged": {
+			"post": {
+				"tags": ["ClientContactsList"],
+				"summary": "Event from server to client if tags on contacts have changed.\n\n",
+				"description": "If another client changes the tag list, this event will be fired to all clients with the new list.\n\n",
+				"deprecated": false,
+				"operationId": "4609",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnClientContentTaggedIDsChangedArgument"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnClientContentSaveTags": {
+			"post": {
+				"tags": ["ClientContactsList"],
+				"summary": "Change tags on contacts.\n\n",
+				"description": "To change the list of tagged contacts, this request will be send to the server with the new list of contact IDs.\n\nTo clear the tags just send an empty list.\n\n",
+				"deprecated": false,
+				"operationId": "4610",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnClientContentSaveTagsArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnClientContentSaveTagsResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnGetAndSubscribeAdministrativeMonitorContent": {
+			"post": {
+				"tags": ["ClientContactsList"],
+				"summary": "Client gets the contacts especial for a attendant console and can subscribe to events if the groups are changing.\n\n",
+				"description": "For fast call transfer or agent consulting it must be possible to get contact for this purpose, because that\n\nenables additional, specialized features for them in the UI for this use case.\n\n\n\nThe UCServer will gather the groups and the user IDs according the configuration set by the admin.\n\n",
+				"deprecated": false,
+				"operationId": "4620",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnGetAndSubscribeAdministrativeMonitorContentArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnGetAndSubscribeAdministrativeMonitorContentResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnUnsubscribeAdministrativeMonitorContent": {
+			"post": {
+				"tags": ["ClientContactsList"],
+				"summary": "Unsubscribe from events about the Administrative Monitor Content.\n\n",
+				"description": "To stop eventing of changes about the AdministrativeMonitorContent call this function.\n\n",
+				"deprecated": false,
+				"operationId": "4621",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnUnsubscribeAdministrativeMonitorContentArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnUnsubscribeAdministrativeMonitorContentResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnAdministrativeMonitorContentGroupAdded": {
+			"post": {
+				"tags": ["ClientContactsList"],
+				"summary": "Event from server to client if a Administrative Monitor Content Groups has been added.\n\n",
+				"description": "If the administrator changed something in the configuration of the groups which are part of the administrative Groups, these changes\n\nwill be provided to the clients with this event.\n\n\n\nThe argument contains the AsnAdministrativeMonitorGroups if it was added.\n\n",
+				"deprecated": false,
+				"operationId": "4622",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnAdministrativeMonitorContentGroupAddedArgument"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnAdministrativeMonitorContentGroupChanged": {
+			"post": {
+				"tags": ["ClientContactsList"],
+				"summary": "Event from server to client if changes to the Administrative Monitor Content Groups were made.\n\n",
+				"description": "If the administrator changed something in the configuration of the groups which are part of the Administrative Groups, these changes\n\nwill be provided to the clients with this event.\n\n\n\nThe argument contains a AsnAdministrativeMonitorGroup if it was changed.\n\nThe changed group will contain the updated list of users, so the client must probably detect if there were users added or removed.\n\n",
+				"deprecated": false,
+				"operationId": "4623",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnAdministrativeMonitorContentGroupChangedArgument"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnAdministrativeMonitorContentGroupRemoved": {
+			"post": {
+				"tags": ["ClientContactsList"],
+				"summary": "Event from server to client if the Administrative Monitor Content Groups were removed.\n\n",
+				"description": "If the administrator changed something in the configuration of the groups which are part of the administrative Groups, these changes\n\nwill be provided to the clients with this event.\n\n\n\nThe argument contains the AsnAdministrativeMonitorGroup if it was removed.\n\n",
+				"deprecated": false,
+				"operationId": "4624",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnAdministrativeMonitorContentGroupRemovedArgument"
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"schemas": {
+			"AsnOptionalParameters": {
+				"$ref": "ENetUC_Common.json#/components/schemas/AsnOptionalParameters"
+			},
+			"AsnNetDatabaseContact": {
+				"$ref": "ENetUC_Common.json#/components/schemas/AsnNetDatabaseContact"
+			},
+			"AsnNetDatabaseContactList": {
+				"$ref": "ENetUC_Common.json#/components/schemas/AsnNetDatabaseContactList"
+			},
+			"AsnNetDatabaseContactID": {
+				"$ref": "ENetUC_Common.json#/components/schemas/AsnNetDatabaseContactID"
+			},
+			"AsnNetDatabaseContactIDList": {
+				"$ref": "ENetUC_Common.json#/components/schemas/AsnNetDatabaseContactIDList"
+			},
+			"UTF8StringList": {
+				"$ref": "ENetUC_Common.json#/components/schemas/UTF8StringList"
+			},
+			"AsnRequestError": {
+				"$ref": "ENetUC_Common.json#/components/schemas/AsnRequestError"
+			},
+			"AsnClientContentContactFilter": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "eNOFILTER",
+						"const": 0
+					},
+					{
+						"title": "eNOPICTURES",
+						"const": 1
+					}]},
+			"AsnSubscribeClientContentFlags": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "eALL",
+						"const": 0
+					},
+					{
+						"title": "eCONTACTS",
+						"const": 1
+					},
+					{
+						"title": "eSTRUCTURE",
+						"const": 2
+					},
+					{
+						"title": "eJPEGPHOTO",
+						"const": 4
+					}]},
+			"AsnChangeClientContentFlags": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "eUPDATEORIGINATOR",
+						"const": 0
+					},
+					{
+						"title": "eFULLUPDATE",
+						"const": 1
+					}]},
+			"AsnClientContentChangedFlags": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "eFULLUPDATE",
+						"const": 0
+					}]},
+			"AsnAdministrativeFunctionKeyTypes": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "eAdministrativeFunctionKeyDial",
+						"const": 0
+					}]},
+			"AsnAdministrativeMonitorContentSubscriptionFlags": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "eAdministrativeMonitorContentGroupNoEvents",
+						"const": 0
+					},
+					{
+						"title": "eAdministrativeMonitorContentGroupChanges",
+						"const": 1
+					}]},
+			"AsnGetClientContentArgument": {
+				"type": "object",
+				"description": "### Category \nClientContactsList\n### Short \nArgument for asnGetClientContent.\n\n### Private \n0",
+				"properties": {
+					"iContactFilter": {
+						"type": "integer"
+					}
+				},
+				"required": [
+					"iContactFilter"
+				]
+			},
+			"AsnSubscribeClientContentArgument": {
+				"type": "object",
+				"description": "### Category \nClientContactsList\n### Short \nArgument for asnSubscribeClientContent.\n\n### Private \n0",
+				"properties": {
+					"iRevision": {
+						"type": "integer"
+					},
+					"iEventFlagsToSubscribe": {
+						"type": "integer"
+					},
+					"u8sGroupClusterIDRestriction": {
+						"$ref": "#/components/schemas/UTF8StringList"
+					}
+				}
+			},
+			"AsnSubscribeClientContentResult": {
+				"type": "object",
+				"description": "### Category \nClientContactsList\n### Short \nResult of asnSubscribeClientContent\n\n### Private \n0",
+				"properties": {
+					"iRevision": {
+						"type": "integer"
+					}
+				},
+				"required": [
+					"iRevision"
+				]
+			},
+			"AsnUnsubscribeClientContentArgument": {
+				"type": "object",
+				"description": "### Category \nClientContactsList\n### Short \nArgument for asnUnsubscribeClientContent.\n\n### Private \n0"
+			},
+			"AsnUnsubscribeClientContentResult": {
+				"type": "object",
+				"description": "### Category \nClientContactsList\n### Short \nResult of asnUnsubscribeClientContent.\n\n### Private \n0"
+			},
+			"AsnChangeClientContentResult": {
+				"type": "object",
+				"description": "### Category \nClientContactsList\n### Short \nResult of asnChangeClientContent.\nEvent vom Client zum Server, dass sich die ClientDaten geaendert haben\n\n### Private \n0",
+				"properties": {
+					"iRevision": {
+						"type": "integer"
+					}
+				},
+				"required": [
+					"iRevision"
+				]
+			},
+			"AsnClientContentItem": {
+				"type": "object",
+				"description": "### Category \nClientContactsList\n### Short \nAsnClientContentItem describes the item which will be displayed in the UI.\n\n### Long \nThese items are the structural placeholder for the contact data which should be displayed.\nIt contains a 'pointer' to the data in form of the presence ID which should match a contact entry in the contacts list of the client content.\n\nNoteable is, that the AsnNetDatabaseContactIDList can contain more than one reference to a contact (AsnNetDatabaseContactID)\n- this makes it possible in the future, that contacts with more than one dataset from different databases can be \"merged\" in the UI.\nThis feature ist not implemented yet.\n\n### Private \n0",
+				"properties": {
+					"u8sID": {
+						"type": "string"
+					},
+					"u8sPresenceID": {
+						"type": "string"
+					},
+					"iIsEditable": {
+						"type": "integer"
+					},
+					"listNetDatabaseContactIDs": {
+						"$ref": "#/components/schemas/AsnNetDatabaseContactIDList"
+					},
+					"selectedNetDatabaseContactID": {
+						"$ref": "#/components/schemas/AsnNetDatabaseContactID"
+					}
+				},
+				"required": [
+					"u8sID",
+					"u8sPresenceID",
+					"iIsEditable",
+					"listNetDatabaseContactIDs",
+					"selectedNetDatabaseContactID"
+				]
+			},
+			"AsnClientContentSubscribeToTagsArgument": {
+				"type": "object",
+				"description": "### Category \nClientContactsList\n### Short \nArgument for asnClientContentSubscribeToTags\n\n### Private \n0",
+				"properties": {
+					"iSubscribe": {
+						"type": "integer"
+					}
+				},
+				"required": [
+					"iSubscribe"
+				]
+			},
+			"AsnClientContentSubscribeToTagsResult": {
+				"type": "object",
+				"description": "### Category \nClientContactsList\n### Short \nRsult of asnClientContentSubscribeToTags\n\n### Private \n0"
+			},
+			"AsnClientContentTaggedIDsChangedArgument": {
+				"type": "object",
+				"description": "### Category \nClientContactsList\n### Short \nArgument for event asnClientContentTaggedIDsChanged.\n\n### Private \n0",
+				"properties": {
+					"u8sTaggedIDs": {
+						"$ref": "#/components/schemas/UTF8StringList"
+					},
+					"iRevision": {
+						"type": "integer"
+					}
+				},
+				"required": [
+					"u8sTaggedIDs",
+					"iRevision"
+				]
+			},
+			"AsnClientContentSaveTagsArgument": {
+				"type": "object",
+				"description": "### Category \nClientContactsList\n### Short \nArgument for asnClientContentSaveTags.\n\n### Private \n0",
+				"properties": {
+					"u8sTaggedIDs": {
+						"$ref": "#/components/schemas/UTF8StringList"
+					},
+					"iRevision": {
+						"type": "integer"
+					}
+				},
+				"required": [
+					"u8sTaggedIDs",
+					"iRevision"
+				]
+			},
+			"AsnClientContentSaveTagsResult": {
+				"type": "object",
+				"description": "### Category \nClientContactsList\n### Short \nResult of asnClientContentSaveTags.\n\n### Private \n0",
+				"properties": {
+					"iRevision": {
+						"type": "integer"
+					}
+				},
+				"required": [
+					"iRevision"
+				]
+			},
+			"AsnAdministrativeFunctionKey": {
+				"type": "object",
+				"description": "### Category \nClientContactsList\n### Short \nDefines a function key: type (e.g. dialing) and type-dependant value\n\n### Private \n0",
+				"properties": {
+					"iType": {
+						"type": "integer"
+					},
+					"u8sValue": {
+						"type": "string"
+					},
+					"u8sName": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"iType",
+					"u8sValue",
+					"u8sName"
+				]
+			},
+			"AsnGetAndSubscribeAdministrativeMonitorContentArgument": {
+				"type": "object",
+				"description": "### Category \nClientContactsList\n### Short \nArguments for asnGetAndSubscribeAdministrativeMonitorContent. The content will be generated by the UCServer using the logged in user.\n\n### Private \n0",
+				"properties": {
+					"iEventFlagsToSubscribe": {
+						"type": "integer"
+					}
+				}
+			},
+			"AsnUnsubscribeAdministrativeMonitorContentArgument": {
+				"type": "object",
+				"description": "### Category \nClientContactsList\n### Short \nArgumment for asnUnsubscribeAdministrativeMonitorContent\n\n### Private \n0"
+			},
+			"AsnUnsubscribeAdministrativeMonitorContentResult": {
+				"type": "object",
+				"description": "### Category \nClientContactsList\n### Short \nResult of asnUnsubscribeAdministrativeMonitorContent\n\n### Private \n0",
+				"properties": {
+					"bSuccess": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"bSuccess"
+				]
+			},
+			"AsnClientContentItemList": {
+				"type": "array",
+				"items": {
+					"$ref": "#/components/schemas/AsnClientContentItem"
+				}
+			},
+			"AsnAdministrativeFunctionKeyList": {
+				"type": "array",
+				"items": {
+					"$ref": "#/components/schemas/AsnAdministrativeFunctionKey"
+				}
+			},
+			"AsnClientContentGroup": {
+				"type": "object",
+				"description": "### Category \nClientContactsList\n### Short \nAsnClientContentGroup object contains the list of AsnClientContentItem objects and some meta data for displaying groups in the UI.\n\n### Long \nGroups structure contains a list of AsnClientContentItem objects so they can be managed\/displayed in the UI.\nA group contains also an unique id (unique in the client content of the user), a display name, a sort order,\nif the group is expanded or collapsed in the UI, editable or persistet on the server.\n\n### Private \n0",
+				"properties": {
+					"u8sID": {
+						"type": "string"
+					},
+					"u8sName": {
+						"type": "string"
+					},
+					"u8sOrderBy": {
+						"type": "string"
+					},
+					"iAutorefresh": {
+						"type": "integer"
+					},
+					"iExpanded": {
+						"type": "integer"
+					},
+					"iIsEditable": {
+						"type": "integer"
+					},
+					"iIsPersistent": {
+						"type": "integer"
+					},
+					"listItems": {
+						"$ref": "#/components/schemas/AsnClientContentItemList"
+					}
+				},
+				"required": [
+					"u8sID",
+					"u8sName",
+					"u8sOrderBy",
+					"iAutorefresh",
+					"iExpanded",
+					"iIsEditable",
+					"iIsPersistent",
+					"listItems"
+				]
+			},
+			"AsnClientContentGroupList": {
+				"type": "array",
+				"items": {
+					"$ref": "#/components/schemas/AsnClientContentGroup"
+				}
+			},
+			"AsnAdministrativeMonitorGroup": {
+				"type": "object",
+				"description": "### Category \nClientContactsList\n### Short \nA group of contact IDs to display as a contact group of a administrative Monitor\n\n### Long \nThis structure describes a group of UCServer users (identified by SIP-Adresses) and the group itself.\n\n### Private \n0",
+				"properties": {
+					"u8sGroupURI": {
+						"type": "string"
+					},
+					"u8sGroupName": {
+						"type": "string"
+					},
+					"listContactIDs": {
+						"$ref": "#/components/schemas/UTF8StringList"
+					},
+					"listFunctionKeys": {
+						"$ref": "#/components/schemas/AsnAdministrativeFunctionKeyList"
+					},
+					"optionalParams": {
+						"$ref": "#/components/schemas/AsnOptionalParameters"
+					}
+				},
+				"required": [
+					"u8sGroupURI",
+					"u8sGroupName",
+					"listContactIDs"
+				]
+			},
+			"AsnAdministrativeMonitorGroupList": {
+				"type": "array",
+				"items": {
+					"$ref": "#/components/schemas/AsnAdministrativeMonitorGroup"
+				}
+			},
+			"AsnGetAndSubscribeAdministrativeMonitorContentResult": {
+				"type": "object",
+				"description": "### Category \nClientContactsList\n### Short \nResults of asnGetAndSubscribeAdministrativeMonitorContent\n\n### Private \n0",
+				"properties": {
+					"listAdministrativeMonitorGroups": {
+						"$ref": "#/components/schemas/AsnAdministrativeMonitorGroupList"
+					}
+				},
+				"required": [
+					"listAdministrativeMonitorGroups"
+				]
+			},
+			"AsnAdministrativeMonitorContentGroupAddedArgument": {
+				"type": "object",
+				"description": "### Category \nClientContactsList\n### Short \nArgument for event asnAdministrativeMonitorContentGroupAdded.\n\n### Private \n0",
+				"properties": {
+					"adminMonitorGroupAdded": {
+						"$ref": "#/components/schemas/AsnAdministrativeMonitorGroup"
+					}
+				},
+				"required": [
+					"adminMonitorGroupAdded"
+				]
+			},
+			"AsnAdministrativeMonitorContentGroupChangedArgument": {
+				"type": "object",
+				"description": "### Category \nClientContactsList\n### Short \nArgument for event asnAdministrativeMonitorContentGroupChanged.\n\n### Private \n0",
+				"properties": {
+					"adminMonitorGroupChanged": {
+						"$ref": "#/components/schemas/AsnAdministrativeMonitorGroup"
+					}
+				},
+				"required": [
+					"adminMonitorGroupChanged"
+				]
+			},
+			"AsnAdministrativeMonitorContentGroupRemovedArgument": {
+				"type": "object",
+				"description": "### Category \nClientContactsList\n### Short \nArgument for event asnAdministrativeMonitorContentGroupRemoved.\n\n### Private \n0",
+				"properties": {
+					"adminMonitorGroupRemoved": {
+						"$ref": "#/components/schemas/AsnAdministrativeMonitorGroup"
+					}
+				},
+				"required": [
+					"adminMonitorGroupRemoved"
+				]
+			},
+			"AsnClientContentGroupCluster": {
+				"type": "object",
+				"description": "### Category \nClientContactsList\n### Short \nAsnClientContentGroupCluster object contains a list of AsnClientContentGroup objects and some meta data for displaying groups in the UI.\n\n### Long \nGroupCluster structure contains the list of groups so they can be managed\/displayed in the UI.\nThe original design needed this, to give the user the ability to arrange their contacts in groups AND in \"groups of groups\" (= clusters).\nIn the desktop clients main window the favorites tab is a group cluster with visible groups named \"Favorites\".\nIn the Monitor window the user can per default manage only groupclusters with exact one group inside.\nIt is possible to activate the groups in the monitor too, but this feature is very seldom used by users.&lt;br \/&gt;\nGroupClusters contains also an unique id (unique in the client content of the user), a display name and some flags.\n\n### Private \n0",
+				"properties": {
+					"u8sID": {
+						"type": "string"
+					},
+					"u8sName": {
+						"type": "string"
+					},
+					"iIsEditable": {
+						"type": "integer"
+					},
+					"iIsPersistent": {
+						"type": "integer"
+					},
+					"iIsTabbed": {
+						"type": "integer"
+					},
+					"u8sNeighbourClusterID": {
+						"type": "string"
+					},
+					"listGroups": {
+						"$ref": "#/components/schemas/AsnClientContentGroupList"
+					}
+				},
+				"required": [
+					"u8sID",
+					"u8sName",
+					"iIsEditable",
+					"iIsPersistent",
+					"iIsTabbed",
+					"u8sNeighbourClusterID",
+					"listGroups"
+				]
+			},
+			"AsnClientContentGroupClusterList": {
+				"type": "array",
+				"items": {
+					"$ref": "#/components/schemas/AsnClientContentGroupCluster"
+				}
+			},
+			"AsnClientContentStructure": {
+				"type": "object",
+				"description": "### Category \nClientContactsList\n### Short \nAsnClientContentStructure is the root of the client content structure object.\n\n### Long \nWhen calling asnGetClientContent or asnSubscribeClientContent, the result contains an instance of this object.\nIt is the entry point to the structure of the client content which describes which item is in which and which group is in which groupcluster.\n\n### Private \n0",
+				"properties": {
+					"iIsEditable": {
+						"type": "integer"
+					},
+					"u8sVersion": {
+						"type": "string"
+					},
+					"u8sRevision": {
+						"type": "string"
+					},
+					"u8sLastWriter": {
+						"type": "string"
+					},
+					"listGroupClusters": {
+						"$ref": "#/components/schemas/AsnClientContentGroupClusterList"
+					}
+				},
+				"required": [
+					"iIsEditable",
+					"u8sVersion",
+					"u8sRevision",
+					"u8sLastWriter",
+					"listGroupClusters"
+				]
+			},
+			"AsnGetClientContentResult": {
+				"type": "object",
+				"description": "### Category \nClientContactsList\n### Short \nResult of asnGetClientContent.\n\n### Private \n0",
+				"properties": {
+					"u8sContentRevision": {
+						"type": "string"
+					},
+					"contactList": {
+						"$ref": "#/components/schemas/AsnNetDatabaseContactList"
+					},
+					"contentstructure": {
+						"$ref": "#/components/schemas/AsnClientContentStructure"
+					},
+					"optionalParams": {
+						"$ref": "#/components/schemas/AsnOptionalParameters"
+					}
+				},
+				"required": [
+					"u8sContentRevision",
+					"contactList",
+					"contentstructure"
+				]
+			},
+			"AsnChangeClientContentArgument": {
+				"type": "object",
+				"description": "### Category \nClientContactsList\n### Short \nArgument for asnChangeClientContent.\n\n### Private \n0",
+				"properties": {
+					"iRevision": {
+						"type": "integer"
+					},
+					"u8sVersion": {
+						"type": "string"
+					},
+					"iIsEditable": {
+						"type": "integer"
+					},
+					"addedOrChangedContacts": {
+						"$ref": "#/components/schemas/AsnNetDatabaseContactList"
+					},
+					"removedContacts": {
+						"$ref": "#/components/schemas/AsnNetDatabaseContactIDList"
+					},
+					"listContentstructure": {
+						"$ref": "#/components/schemas/AsnClientContentGroupClusterList"
+					},
+					"iFlags": {
+						"type": "integer"
+					}
+				},
+				"required": [
+					"iRevision",
+					"u8sVersion",
+					"iIsEditable",
+					"iFlags"
+				]
+			},
+			"AsnClientContentChangedArgument": {
+				"type": "object",
+				"description": "### Category \nClientContactsList\n### Short \nArgument for asnClientContentChanged event.\n\n### Private \n0",
+				"properties": {
+					"iRevision": {
+						"type": "integer"
+					},
+					"addedOrChangedContacts": {
+						"$ref": "#/components/schemas/AsnNetDatabaseContactList"
+					},
+					"removedContacts": {
+						"$ref": "#/components/schemas/AsnNetDatabaseContactIDList"
+					},
+					"listContentstructure": {
+						"$ref": "#/components/schemas/AsnClientContentGroupClusterList"
+					},
+					"iFlags": {
+						"type": "integer"
+					}
+				},
+				"required": [
+					"iRevision",
+					"iFlags"
+				]
+			}
+		}
+	}
+}

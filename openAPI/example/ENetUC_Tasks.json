@@ -1,0 +1,861 @@
+{
+	"openapi": "3.1.0",
+	"info": {
+		"title": "ENetUC_Tasks",
+		"version": "0.0.1",
+		"summary": "Task management interface\n\n",
+		"description": "## Module description\n\nThis module defines structures and operations for the task managment in the UCServer.\n\n"
+	},
+	"paths": {
+		"/asnTaskGetEntriesV2": {
+			"post": {
+				"tags": ["Tasks"],
+				"deprecated": false,
+				"operationId": "2136",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnTaskGetEntriesV2Argument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnTaskGetEntriesResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnTaskGetEntryCount": {
+			"post": {
+				"tags": ["Tasks"],
+				"deprecated": false,
+				"operationId": "2137",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnTaskGetEntryCountArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnTaskGetEntryCountResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnTaskAddEntry": {
+			"post": {
+				"tags": ["Tasks"],
+				"deprecated": false,
+				"operationId": "2121",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnTaskAddEntryArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnTaskAddEntryResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnTaskRemoveEntries": {
+			"post": {
+				"tags": ["Tasks"],
+				"deprecated": false,
+				"operationId": "2122",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnTaskRemoveEntriesArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnTaskRemoveEntriesResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnTaskModifyEntries": {
+			"post": {
+				"tags": ["Tasks"],
+				"deprecated": false,
+				"operationId": "2123",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnTaskModifyEntriesArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnTaskModifyEntriesResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnTaskSetEntriesState": {
+			"post": {
+				"tags": ["Tasks"],
+				"deprecated": false,
+				"operationId": "2124",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnTaskSetEntriesStateArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnTaskSetEntriesStateResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnTaskDelegateEntries": {
+			"post": {
+				"tags": ["Tasks"],
+				"deprecated": false,
+				"operationId": "2125",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnTaskDelegateEntriesArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnTaskDelegateEntriesResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnTaskSetEntriesReminder": {
+			"post": {
+				"tags": ["Tasks"],
+				"deprecated": false,
+				"operationId": "2126",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnTaskSetEntriesReminderArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnTaskSetEntriesReminderResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnTaskItemsModified": {
+			"post": {
+				"tags": ["Tasks"],
+				"deprecated": false,
+				"operationId": "2130",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnTaskItemsModifiedArgument"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnTaskItemsAdded": {
+			"post": {
+				"tags": ["Tasks"],
+				"deprecated": false,
+				"operationId": "2131",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnTaskItemsAddedArgument"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnTaskItemsRemoved": {
+			"post": {
+				"tags": ["Tasks"],
+				"deprecated": false,
+				"operationId": "2132",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnTaskItemsRemovedArgument"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnTasksReload": {
+			"post": {
+				"tags": ["Tasks"],
+				"deprecated": false,
+				"operationId": "2133",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnTasksReloadArgument"
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"schemas": {
+			"AsnSystemTime": {
+				"$ref": "ENetUC_Common.json#/components/schemas/AsnSystemTime"
+			},
+			"AsnNetDatabaseContact": {
+				"$ref": "ENetUC_Common.json#/components/schemas/AsnNetDatabaseContact"
+			},
+			"AsnOptionalParameters": {
+				"$ref": "ENetUC_Common.json#/components/schemas/AsnOptionalParameters"
+			},
+			"AsnRequestError": {
+				"$ref": "ENetUC_Common.json#/components/schemas/AsnRequestError"
+			},
+			"UTF8StringList": {
+				"$ref": "ENetUC_Common.json#/components/schemas/UTF8StringList"
+			},
+			"AsnProjectPinRule": {
+				"$ref": "ENetUC_Common_SIPCTI.json#/components/schemas/AsnProjectPinRule"
+			},
+			"AsnTaskState": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "notstarted",
+						"const": 0
+					},
+					{
+						"title": "inprogress",
+						"const": 1
+					},
+					{
+						"title": "waitingforothers",
+						"const": 2
+					},
+					{
+						"title": "deferred",
+						"const": 3
+					},
+					{
+						"title": "done",
+						"const": 4
+					}]},
+			"AsnTaskPriority": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "low",
+						"const": 0
+					},
+					{
+						"title": "normal",
+						"const": 1
+					},
+					{
+						"title": "high",
+						"const": 2
+					}]},
+			"AsnTaskPrivacy": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "normal",
+						"const": 0
+					},
+					{
+						"title": "personal",
+						"const": 1
+					},
+					{
+						"title": "private1",
+						"const": 2
+					},
+					{
+						"title": "confidential",
+						"const": 3
+					}]},
+			"AsnTaskDelegationState": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "accepted",
+						"const": 0
+					},
+					{
+						"title": "waiting",
+						"const": 1
+					},
+					{
+						"title": "declined",
+						"const": 2
+					}]},
+			"AsnNetDatabaseTaskFindFlagsV2": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "onlywithstartdate",
+						"const": 1
+					},
+					{
+						"title": "onlywithoutstartdate",
+						"const": 2
+					},
+					{
+						"title": "onlynotfinished",
+						"const": 4
+					},
+					{
+						"title": "onlynotstarted",
+						"const": 8
+					},
+					{
+						"title": "allnormal",
+						"const": 16
+					},
+					{
+						"title": "delegateaccepted",
+						"const": 32
+					},
+					{
+						"title": "delegatedeclined",
+						"const": 64
+					},
+					{
+						"title": "delegatewaiting",
+						"const": 128
+					}]},
+			"AsnNetDatabaseTaskFindOptionsV2": {
+				"type": "object",
+				"description": "### Category \nTasks\n### Private \n0",
+				"properties": {
+					"eFlags": {
+						"type": "integer"
+					},
+					"iMaxNumEntries": {
+						"type": "integer"
+					},
+					"stUTCStartDateFrom": {
+						"$ref": "#/components/schemas/AsnSystemTime"
+					},
+					"stUTCStartDateTo": {
+						"$ref": "#/components/schemas/AsnSystemTime"
+					},
+					"u8slistOwnerNames": {
+						"$ref": "#/components/schemas/UTF8StringList"
+					}
+				},
+				"required": [
+					"eFlags",
+					"iMaxNumEntries",
+					"stUTCStartDateFrom",
+					"stUTCStartDateTo",
+					"u8slistOwnerNames"
+				]
+			},
+			"AsnTaskGetEntryCountResult": {
+				"type": "object",
+				"description": "### Category \nTasks\n### Long \nResult of the asnGetTaskEntryCount and asnTaskGetEntryCount operation\n\n### Private \n0",
+				"properties": {
+					"iCount": {
+						"type": "integer"
+					}
+				},
+				"required": [
+					"iCount"
+				]
+			},
+			"AsnTaskAddEntryResult": {
+				"type": "object",
+				"description": "### Category \nTasks\n### Private \n0",
+				"properties": {
+					"iResult": {
+						"type": "integer"
+					},
+					"u8sAddedTaskID": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"iResult",
+					"u8sAddedTaskID"
+				]
+			},
+			"AsnTaskRemoveEntriesArgument": {
+				"type": "object",
+				"description": "### Category \nTasks\n### Private \n0",
+				"properties": {
+					"u8slistTaskID": {
+						"$ref": "#/components/schemas/UTF8StringList"
+					}
+				},
+				"required": [
+					"u8slistTaskID"
+				]
+			},
+			"AsnTaskRemoveEntriesResult": {
+				"type": "object",
+				"description": "### Category \nTasks\n### Private \n0",
+				"properties": {
+					"dummy": {
+						"nullable": "true"
+					}
+				},
+				"required": [
+					"dummy"
+				]
+			},
+			"AsnTaskModifyEntriesResult": {
+				"type": "object",
+				"description": "### Category \nTasks\n### Private \n0",
+				"properties": {
+					"dummy": {
+						"nullable": "true"
+					}
+				},
+				"required": [
+					"dummy"
+				]
+			},
+			"AsnTaskSetEntriesStateResult": {
+				"type": "object",
+				"description": "### Category \nTasks\n### Private \n0"
+			},
+			"AsnTaskDelegateEntriesArgument": {
+				"type": "object",
+				"description": "### Category \nTasks\n### Long \nNICHT IMPLEMENTIERT\n\n### Private \n0",
+				"properties": {
+					"u8slistTaskIDs": {
+						"$ref": "#/components/schemas/UTF8StringList"
+					},
+					"u8slistOwners": {
+						"$ref": "#/components/schemas/UTF8StringList"
+					}
+				},
+				"required": [
+					"u8slistTaskIDs",
+					"u8slistOwners"
+				]
+			},
+			"AsnTaskDelegateEntriesResult": {
+				"type": "object",
+				"description": "### Category \nTasks\n### Private \n0"
+			},
+			"AsnTaskSetEntriesReminderArgument": {
+				"type": "object",
+				"description": "### Category \nTasks\n### Private \n0",
+				"properties": {
+					"u8slistTaskIDs": {
+						"$ref": "#/components/schemas/UTF8StringList"
+					},
+					"bReminderActive": {
+						"type": "boolean"
+					},
+					"stReminderTime": {
+						"$ref": "#/components/schemas/AsnSystemTime"
+					}
+				},
+				"required": [
+					"u8slistTaskIDs",
+					"bReminderActive",
+					"stReminderTime"
+				]
+			},
+			"AsnTaskSetEntriesReminderResult": {
+				"type": "object",
+				"description": "### Category \nTasks\n### Private \n0"
+			},
+			"AsnTaskItemsRemovedArgument": {
+				"type": "object",
+				"description": "### Category \nTasks\n### Private \n0",
+				"properties": {
+					"u8slistTaskIDs": {
+						"$ref": "#/components/schemas/UTF8StringList"
+					}
+				},
+				"required": [
+					"u8slistTaskIDs"
+				]
+			},
+			"AsnTasksReloadArgument": {
+				"type": "object",
+				"description": "### Category \nTasks\n### Private \n0"
+			},
+			"AsnNetDatabaseTask": {
+				"type": "object",
+				"description": "### Category \nTasks\n### Private \n0",
+				"properties": {
+					"u8sTaskID": {
+						"type": "string"
+					},
+					"u8sSubject": {
+						"type": "string"
+					},
+					"contactData": {
+						"$ref": "#/components/schemas/AsnNetDatabaseContact"
+					},
+					"u8sCallNumber": {
+						"type": "string"
+					},
+					"projectPinRule": {
+						"$ref": "#/components/schemas/AsnProjectPinRule"
+					},
+					"stUTCStartDate": {
+						"$ref": "#/components/schemas/AsnSystemTime"
+					},
+					"stUTCDueDate": {
+						"$ref": "#/components/schemas/AsnSystemTime"
+					},
+					"eState": {
+						"$ref": "#/components/schemas/AsnTaskState"
+					},
+					"ePriority": {
+						"$ref": "#/components/schemas/AsnTaskPriority"
+					},
+					"eDelegationState": {
+						"$ref": "#/components/schemas/AsnTaskDelegationState"
+					},
+					"bReminderActive": {
+						"type": "boolean"
+					},
+					"stUTCReminderTime": {
+						"$ref": "#/components/schemas/AsnSystemTime"
+					},
+					"u8sReminderFile": {
+						"type": "string"
+					},
+					"u8sListOwners": {
+						"$ref": "#/components/schemas/UTF8StringList"
+					},
+					"u8sCreator": {
+						"type": "string"
+					},
+					"stUTCCreationTime": {
+						"$ref": "#/components/schemas/AsnSystemTime"
+					},
+					"u8sBody": {
+						"type": "string"
+					},
+					"stUTCDateCompleted": {
+						"$ref": "#/components/schemas/AsnSystemTime"
+					},
+					"u8sCompletedFrom": {
+						"type": "string"
+					},
+					"ePrivacy": {
+						"$ref": "#/components/schemas/AsnTaskPrivacy"
+					},
+					"optionalParams": {
+						"$ref": "#/components/schemas/AsnOptionalParameters"
+					}
+				},
+				"required": [
+					"u8sTaskID",
+					"u8sSubject",
+					"contactData",
+					"u8sCallNumber",
+					"projectPinRule",
+					"stUTCStartDate",
+					"stUTCDueDate",
+					"eState",
+					"ePriority",
+					"eDelegationState",
+					"bReminderActive",
+					"stUTCReminderTime",
+					"u8sReminderFile",
+					"u8sListOwners",
+					"u8sCreator",
+					"stUTCCreationTime",
+					"u8sBody",
+					"stUTCDateCompleted",
+					"u8sCompletedFrom",
+					"ePrivacy"
+				]
+			},
+			"AsnNetDatabaseTaskList": {
+				"type": "array",
+				"items": {
+					"$ref": "#/components/schemas/AsnNetDatabaseTask"
+				}
+			},
+			"AsnTaskGetEntriesResult": {
+				"type": "object",
+				"description": "### Category \nTasks\n### Long \nResult of the asnTaskGetEntries and asnTaskGetEntriesV2 operation\n\n### Private \n0",
+				"properties": {
+					"listTasks": {
+						"$ref": "#/components/schemas/AsnNetDatabaseTaskList"
+					}
+				},
+				"required": [
+					"listTasks"
+				]
+			},
+			"AsnTaskGetEntriesV2Argument": {
+				"type": "object",
+				"description": "### Category \nTasks\n### Private \n0",
+				"properties": {
+					"findOptions": {
+						"$ref": "#/components/schemas/AsnNetDatabaseTaskFindOptionsV2"
+					}
+				},
+				"required": [
+					"findOptions"
+				]
+			},
+			"AsnTaskGetEntryCountArgument": {
+				"type": "object",
+				"description": "### Category \nTasks\n### Private \n0",
+				"properties": {
+					"findOptions": {
+						"$ref": "#/components/schemas/AsnNetDatabaseTaskFindOptionsV2"
+					}
+				},
+				"required": [
+					"findOptions"
+				]
+			},
+			"AsnTaskAddEntryArgument": {
+				"type": "object",
+				"description": "### Category \nTasks\n### Private \n0",
+				"properties": {
+					"taskEntry": {
+						"$ref": "#/components/schemas/AsnNetDatabaseTask"
+					}
+				},
+				"required": [
+					"taskEntry"
+				]
+			},
+			"AsnTaskModifyEntriesArgument": {
+				"type": "object",
+				"description": "### Category \nTasks\n### Private \n0",
+				"properties": {
+					"listTasks": {
+						"$ref": "#/components/schemas/AsnNetDatabaseTaskList"
+					}
+				},
+				"required": [
+					"listTasks"
+				]
+			},
+			"AsnTaskSetEntriesStateArgument": {
+				"type": "object",
+				"description": "### Category \nTasks\n### Private \n0",
+				"properties": {
+					"eState": {
+						"$ref": "#/components/schemas/AsnTaskState"
+					},
+					"u8slistTaskIDs": {
+						"$ref": "#/components/schemas/UTF8StringList"
+					}
+				},
+				"required": [
+					"eState",
+					"u8slistTaskIDs"
+				]
+			},
+			"AsnTaskItemsModifiedArgument": {
+				"type": "object",
+				"description": "### Category \nTasks\n### Private \n0",
+				"properties": {
+					"listTasks": {
+						"$ref": "#/components/schemas/AsnNetDatabaseTaskList"
+					}
+				},
+				"required": [
+					"listTasks"
+				]
+			},
+			"AsnTaskItemsAddedArgument": {
+				"type": "object",
+				"description": "### Category \nTasks\n### Private \n0",
+				"properties": {
+					"listTasks": {
+						"$ref": "#/components/schemas/AsnNetDatabaseTaskList"
+					}
+				},
+				"required": [
+					"listTasks"
+				]
+			}
+		}
+	}
+}

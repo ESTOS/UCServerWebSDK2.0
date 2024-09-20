@@ -1,0 +1,635 @@
+﻿UC-Server-Access-Protocol-BinaryTransfer
+  { iso(1) identified-organization(3) dod(6) internet(1) private(4) enterprise(1) estos(10924) uc-server-access-protocol-v2(2) binarytransfer(27) }
+
+-- @category BinaryTransfer
+-- @brief Data structures and methods to transport binary data between clients and the server
+-- @long
+-- The binary transfer can be used to transport any binary data blob between clients. It´s primary targeting to transfer 
+-- files within the chat but may be used to implement file sharing in remote desktop sessions as well as to implement a new procall function:
+-- Provinding files for customers.
+-- The interface is simple and has no other dependencies.
+-- Primary target is to be able to transport the file contents inband in the asn.1 connection.
+-- Later the implementation will also target 3rd party file shares like onedrive, awss3, dropbox or ucweb.
+
+--~ Operation IDs: 3400 - 3499
+--~ 3400 asnGetBinaryTransferSettings		 - Retrieves the configuration settings for the binary transfer
+
+--~ 3410 asnInitBinaryTransferUpload		 - Client requests persmission and target for binary upload
+--~ 3411 asnSendBinaryChunk					 - Uploads a chunk to the server
+--~ 3412 asnBinaryTransferUploadCompleted	 - Informs the server about having completed the binary upload to a 3rd party destination
+
+--~ 3420 asnInitBinaryTransferDownload		 - Client requests persmission and target for binary download
+--~ 3421 asnReceiveBinaryChunk				 - Downloads a chunk from the server
+--~ 3422 asnBinaryTransferDownloadCompleted	 - Informs the server about having completed the binary download from a 3rd party destination
+--~ 3423 asnGetBinaryTransferMetaData		 - Retrieves the metadata for a transfer id
+--~ 3424 asnBinaryTransferRemoveElement		 - remove file from the binary database and flag item as deleted
+--~ 3425 asnBinaryTransferForwardElement	 - forward existing file from the binary database and give a new id
+
+
+DEFINITIONS
+IMPLICIT TAGS ::=
+BEGIN
+
+IMPORTS
+AsnRequestError, AsnStringPairList, UTF8StringList, SEQInteger FROM UC-Server-Access-Protocol-Common
+;
+
+-- @brief embedded metadata types
+-- @long These are well known metadata types which are embedded in theAsnBinaryTransferMetaData osMetaData
+AsnBinaryTransferMetaDataTypeEnum ::= ENUMERATED
+{
+	-- Binary data is empty 
+	-- mimetype:
+	empty(0),
+
+	-- preview jpg picture (take care about the limits in AsnBinaryTransferSettings),
+	-- mimetype: image/jpeg
+	picture(1),
+	
+	-- a vcf in version 2.1 or 3 (https://de.wikipedia.org/wiki/VCard)
+	-- mimetype: text/vcard
+	vcard(2),
+	
+	-- Location information as Keyhole Markup Language (https://de.wikipedia.org/wiki/Keyhole_Markup_Language)
+	-- mimetype: application/vnd.google-earth.kml+xml
+	geodata(3),
+	
+	-- Voice Message as ogg/opus file
+	-- mimetype: text/stringtable (https://www.xiph.org/vorbis/doc/v-comment.html)
+	voicemessage(4)	
+}
+
+-- @brief eror values of binarytransfer
+-- @long These are the possible error values in AsnRequestError
+AsnBinaryTransferRequestErrorEnum ::= ENUMERATED
+{
+	-- no error
+	noerror(0),
+	
+	-- server is currently serving to many downloads, please try again later
+	serverBusy(1),
+	
+	-- the file type (extension) is not allowed for file transfer
+	extensionNotAllowed(2),
+	
+	-- the file size is too big
+	fileTooBig(3),
+	
+	-- the server does not know this transferID (may occur in upload and download)
+	unknownTransferID(4),
+	
+	-- the server terminated the transfer (e.g. shutting down or denied for user profile)
+	transferTerminated(5),
+	
+	-- the client was requesting a position which is not within the file beeing downloaded
+	invalidPosition(6),
+	
+	-- the file was already deleted
+	filedeleted(7),
+	
+	-- the metaData is not allowed or invalid (may occur when initiating upload)
+	invalidMetaData(8),
+	
+	-- either the connection or read/write from server database failed (see server log for details)
+  	databaseFail(9),
+	
+	-- general error within server request processing (see server log for details)
+	generalServerError(9999)
+}
+
+-- @brief storage service provider
+-- @long These are the possible storage service provider
+AsnBinaryTransferStorageTypeEnum ::= ENUMERATED
+{
+	-- Tranfer via ASN1 functions asnSendBinaryChunk/asnReceiveBinaryChunk
+	ucserver(0),
+
+	-- Tranfer via UCWeb REST API - DETAILS TO FOLLOW
+	ucweb(1),
+
+	-- Tranfer via DropBox API - DETAILS TO FOLLOW
+	dropbox(2),
+
+	-- Tranfer via AWS S3 Storage - DETAILS TO FOLLOW
+	awss3(3),
+
+	-- Tranfer via OneDrive Storage - DETAILS TO FOLLOW
+	onedrive(4)
+}
+
+-- @brief binarytransfer service settings
+-- @long  These are the possible binary transfer services the settings are used for
+AsnBinaryTransferServiceTypeEnum ::= ENUMERATED
+{
+	-- Settings are for chat
+	chat(0),
+	
+	-- Settings are for screensharing file transfer
+	screensharing(1),
+	
+	-- Settings are for providing files to external (customers, uploading them to a public available storage where customers may download the content)
+	toexternal(2)
+}
+
+-- @brief Data structure describing binary transfer settings
+-- @long This data structure is used to inform the clients about the configuration for binary transfer for the different services (chat, screensharing, etc...).
+AsnBinaryTransferSettings ::= SEQUENCE
+{
+	-- Defines the type of service these settings are for (chat, screensharing, etc)
+	-- @linked AsnBinaryTransferServiceTypeEnum
+	eServiceType					INTEGER,
+	
+	-- The service is enabled, thus available to the client
+	bEnabled						BOOLEAN,
+	
+	-- List of extensions the server will not allow for binary transfer
+	u8sNotAllowedExtensions			UTF8StringList,
+	
+	-- Maximum supported chunk size for download in bytes, -1 defines no limit
+	iMaxChunkSizeDownload			INTEGER,
+	
+	-- Maximum supported chunk size for upload in bytes, -1 defines no limit
+	iMaxChunkSizeUpload				INTEGER,
+	
+	-- Maximum supported preview size in bytes, -1 defines no limit
+	iMaxPreviewSize					INTEGER,
+	
+	-- Maximum Dimension. Width or height must not exceed this value in pixel, -1 defines not limit
+	iMaxPreviewDimension			INTEGER,
+	
+	-- Maximum supported file size in megabytes, -1 defines no limit
+	iMaxFileSizeMB					INTEGER,
+	
+	...
+}
+
+-- @brief list of AsnBinaryTransferSettings
+-- @long 
+AsnBinaryTransferSettingsList ::= SEQUENCE OF AsnBinaryTransferSettings
+
+
+-- @brief binary transfer storage settings
+-- @long This data structure is used for admin Data structure describing binary transfer storage settings - used by admin
+AsnBinaryTransferStorageSettings ::= SEQUENCE
+{
+	-- Defines the type of storage these settings are for
+	-- @linked AsnBinaryTransferStorageTypeEnum
+	eStorageType					INTEGER,
+	
+	-- The service is enabled, thus available to the client
+	bEnabled						BOOLEAN,
+	
+	-- Maximum supported file size in megabytes, -1 defines no limit
+	iMaxFileSizeMB					INTEGER,
+
+	-- Maximum supported storage size in megabytes, -1 defines no limit
+	iMaxStorageSizeMB				INTEGER,
+
+	-- List of allowed mimetypes for binary transfer
+	u8sAllowedMimeTypes				UTF8StringList,
+	
+	-- List of extensions the server will not allow for binary transfer
+	u8sNotAllowedExtensions			UTF8StringList,
+	
+	-- root folder for the storage
+	u8sRootFolder					UTF8String,
+
+	-- age of files (days) before they will be deleted (default: 90)
+	iMaxFileAgeDays					INTEGER,
+	
+	-- if true the files will be removed
+	bRemoveOutdatedFilesEnabled		BOOLEAN,
+	
+	...
+}
+
+-- @brief list of AsnBinaryTransferStorageSettings
+-- @long 
+AsnBinaryTransferStorageSettingsList ::= SEQUENCE OF AsnBinaryTransferStorageSettings
+
+-- @brief Data structure describing binary transfer settings
+-- @long This data structure is used to inform the clients about the configuration for binary transfer.
+AsnBinaryTransferMetaData ::= SEQUENCE
+{
+	-- The original filename with extension
+	-- (not available if data is only transported within the osMetaData)
+	u8sFileNameWithExtension		[0] UTF8String OPTIONAL,
+	
+	-- Mime-Type
+	-- (always available, even if data is only transported within the osMetaData)
+	u8sMimeType						[1] UTF8String OPTIONAL,
+	
+	-- Binary data size in bytes (may contain a 64bit value)
+	-- (only available, if a file is existing / not filled if data is only transported within osMetaData)
+	iDataSize						[2] INTEGER OPTIONAL,
+	
+	-- Sha256 Checksum of the file
+	-- (only available, if a file is existing / not filled if data is only transported within osMetaData)
+	u8sChecksum						[3] UTF8String OPTIONAL,
+	
+	-- Playtime audio, video in milliseconds
+	-- (only available, if a media content which has a duration is transported (e.g. voice or video recording)
+	iMediaDuration					[4] INTEGER OPTIONAL,
+
+	-- Defines which kind of embedded meta data is stored in osMetaData
+	-- available if osMetaData is filled
+	-- @linked AsnBinaryTransferMetaDataTypeEnum
+	eMetaDataType					[5] INTEGER OPTIONAL,
+	
+	-- the binary meta data (content described by the eMetaDataType value)
+	-- available if eMetaDataType is filled
+	osMetaData						[6] OCTET STRING OPTIONAL,
+
+	-- Description text for the file
+	u8sDescriptionText				[7] UTF8String OPTIONAL,
+
+	-- TransferID für binarymessage (wird vom Server bei asnInitBinaryTransferUpload erzeugt)
+	-- @linked AsnInitBinaryTransferUploadResult
+	u8sBinaryTransferID				[8] UTF8String OPTIONAL,					
+
+	...
+}
+
+-- @brief list of AsnBinaryTransferMetaData
+-- @long 
+AsnBinaryTransferMetaDataList ::= SEQUENCE OF AsnBinaryTransferMetaData
+
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~ asnGetBinaryTransferSettings ~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-- @brief Argument for the AsnGetBinaryTransferSettings
+-- @long 
+AsnGetBinaryTransferSettingsArgument ::= SEQUENCE
+{
+	...
+}
+
+-- @brief Result for the AsnGetBinaryTransferSettings
+-- @long 
+AsnGetBinaryTransferSettingsResult ::= SEQUENCE
+{
+	-- BinaryTransfer settings for the different services (chat, screensharing, etc.)
+	asnBinaryTransferSettingsList	AsnBinaryTransferSettingsList,
+	
+	...
+}
+
+-- @brief Getting file transfer settings from the server
+-- @long 
+asnGetBinaryTransferSettings OPERATION
+	ARGUMENT	arg AsnGetBinaryTransferSettingsArgument
+	RESULT		res AsnGetBinaryTransferSettingsResult
+	ERRORS		{AsnRequestError}
+::= 3400
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~ asnInitBinaryTransferUpload ~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-- @brief Argument for the asnInitBinaryTransferUpload
+-- @long 
+AsnInitBinaryTransferUploadArgument ::= SEQUENCE
+{
+	-- The client filled meta data for the binary transfer
+	asnMetaData				 		AsnBinaryTransferMetaData,
+
+	-- Defines the type of service this transfer is for (chat, screensharing, etc)
+	-- The service will then decide which AsnBinaryTransferStorageypeEnum the transfer is sent to
+	-- @linked AsnBinaryTransferServiceTypeEnum
+	eServiceType					INTEGER,
+	
+	...
+}
+
+-- @brief Result for the asnInitBinaryTransferUpload
+-- @long 
+AsnInitBinaryTransferUploadResult ::= SEQUENCE
+{
+	-- Tells the client which storage provider it shall use for the binary transfer
+	-- Server will set itself if no further transfer is necessary (e.g. vcf or location sent to the server)
+	-- @linked AsnBinaryTransferStorageypeEnum
+	eTargetType				   		INTEGER,
+	
+	-- The server provided id identifying the transfer
+	u8sTransferID				 	UTF8String,
+	
+	-- Service/Target specific configuration, members see AsnBinaryTransferStorageypeEnum (only for 3rd party storage providers)
+	u8sTargetServiceDetails	   		[0] AsnStringPairList OPTIONAL,
+	
+	...
+}
+
+-- @brief request a transferid for uploading a file towards the server
+-- @long 
+asnInitBinaryTransferUpload OPERATION
+	ARGUMENT	arg AsnInitBinaryTransferUploadArgument
+	RESULT		res AsnInitBinaryTransferUploadResult
+	ERRORS		{AsnRequestError}
+::= 3410
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~ asnSendBinaryChunk ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-- @brief Argument for the asnSendBinaryChunk
+-- @long 
+AsnSendBinaryChunkArgument ::= SEQUENCE
+{
+	-- The server provided id identifying the transfer
+	u8sTransferID				 	UTF8String,
+	
+	-- Data Offset in the file (0 based)
+	iDataOffset						INTEGER,
+	
+	-- the binary data
+	-- when using json encoding the sender has to base64 encode this chunkdata 
+	osChunkData				 		OCTET STRING,
+	
+	...
+}
+
+-- @brief Result for the asnSendBinaryChunk
+-- @long 
+AsnSendBinaryChunkResult ::= SEQUENCE
+{
+	-- Tells the client the new position to write for the file.
+	-- The client has to examine this value in order to be aware of missing chunks on the server
+	-- the iDataOffset of the Function calling argument together with the length of the osChunkData should match this value
+	-- if the value matches the client can continue (or the file transfer is completed)
+	-- if the value differs the client must send a new chunk beginning with iWritingPosition next.
+	iNewPosition					INTEGER,
+	
+	...
+}
+
+-- @brief Sending a file chunk to the server via asn.1
+-- @long 
+asnSendBinaryChunk OPERATION
+	ARGUMENT	arg AsnSendBinaryChunkArgument
+	RESULT		res AsnSendBinaryChunkResult
+	ERRORS		{AsnRequestError}
+::= 3411
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~ asnBinaryTransferUploadCompleted ~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-- @brief Argument for the UploadCompleted
+-- @long 
+AsnBinaryTransferUploadCompletedArgument ::= SEQUENCE
+{
+	-- The id identifying the transfer (provided by the server in AsnInitBinaryTransferUploadArgument)
+	u8sTransferID				 	UTF8String,
+
+	-- File upload was successfully completed (true) or failed (false)
+	bUploadCompleted				BOOLEAN,
+
+	-- Contains information to download the binary from 3rd party storage services
+	u8s3rdPartyFileReference		[0] UTF8String OPTIONAL,
+
+	-- Custom error information from a 3rd party backend for logging purposes (in case of bUploadCompleted = false)
+	u8sUploadError					[1] UTF8String OPTIONAL,
+
+	...
+}
+
+-- @brief Result for the UploadCompleted
+-- @long 
+AsnBinaryTransferUploadCompletedResult ::= SEQUENCE
+{
+	...
+}
+
+-- @brief binarytransfer upload completed
+-- @long Telling the server that a file upload to a 3rd party target was completed (or failed)
+asnBinaryTransferUploadCompleted OPERATION
+	ARGUMENT	arg AsnBinaryTransferUploadCompletedArgument
+	RESULT		res AsnBinaryTransferUploadCompletedResult
+	ERRORS		{AsnRequestError}
+::= 3412
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~ asnInitBinaryTransferDownload ~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-- @brief Argument for the asnInitBinaryTransferDownload
+-- @long 
+AsnInitBinaryTransferDownloadArgument ::= SEQUENCE
+{
+	-- ID of the binary we want to download
+	u8sTransferID				 	UTF8String,
+
+	-- If the client wants to have the meta data for the download (e.g. wants to know the file size or mime type and has not yet been able to get those)
+	bProvideMetaData				BOOLEAN,
+	
+	...
+}
+
+-- @brief Result for the asnInitBinaryTransferDownload
+-- @long 
+AsnInitBinaryTransferDownloadResult ::= SEQUENCE
+{
+	-- @linked AsnBinaryTransferStorageypeEnum
+	eSourceType				 		INTEGER,
+
+	-- The meta data for the binary transfer (if they were requested in the argument)
+	asnMetaData				 		[0] AsnBinaryTransferMetaData OPTIONAL,
+	
+	-- Service/Target specific configuration, members see AsnBinaryTransferStorageypeEnum
+	u8sTargetServiceDetails	 		[1] AsnStringPairList OPTIONAL,
+
+	-- Contains information to download the binary from 3rd party storage services
+	u8s3rdPartyFileReference		[2] UTF8String OPTIONAL,
+
+	...
+}
+
+-- @brief Initializing fileDownload (getting Download source for the file with u8sTransferID)
+-- @long 
+asnInitBinaryTransferDownload OPERATION
+	ARGUMENT	arg AsnInitBinaryTransferDownloadArgument
+	RESULT		res AsnInitBinaryTransferDownloadResult
+	ERRORS		{AsnRequestError}
+::= 3420
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~ asnReceiveBinaryChunk ~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-- @brief Argument for the asnReceiveBinaryChunk
+-- @long 
+AsnReceiveBinaryChunkArgument ::= SEQUENCE
+{
+	-- The id identifying the transfer
+	u8sTransferID				 	UTF8String,
+
+	-- Data Offset in the file (0 based)
+	iDataOffset						INTEGER,
+
+	-- Chunk size the client wants to receive
+	iChunkSize						INTEGER,
+
+	...
+}
+
+-- @brief Result for the asnReceiveBinaryChunk
+-- @long 
+AsnReceiveBinaryChunkResult ::= SEQUENCE
+{
+	-- the chunk binary data
+	-- when using json encoding the data will be base64 encoded
+	osChunkData				 		OCTET STRING,
+	
+	-- tells the client that there is no more data on the server
+	bCompleted						BOOLEAN,
+	
+	...
+}
+
+-- @brief Sending a file chunk from the server via asn.1
+-- @long 
+asnReceiveBinaryChunk OPERATION
+	ARGUMENT	arg AsnReceiveBinaryChunkArgument
+	RESULT		res AsnReceiveBinaryChunkResult
+	ERRORS		{AsnRequestError}
+::= 3421
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~ asnBinaryTransferDownloadCompleted ~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-- @brief Argument for the asnBinaryTransferDownloadCompleted
+-- @long 
+AsnBinaryTransferDownloadCompletedArgument ::= SEQUENCE
+{
+	-- The id identifying the transfer (provided by the server in AsnInitBinaryTransferDownloadArgument)
+	u8sTransferID				 	UTF8String,
+	
+	-- File Download was successfully completed
+	bDownloadCompleted				BOOLEAN,
+	
+	-- Custom error information from a 3rd party backend for logging purposes (in case of bDownloadCompleted = false)
+	u8sDownloadError				UTF8String OPTIONAL,
+	
+	...
+}
+
+-- @brief Result for the asnBinaryTransferDownloadCompleted
+-- @long 
+AsnBinaryTransferDownloadCompletedResult ::= SEQUENCE
+{
+	...
+}
+
+-- @brief Telling the server that a file download
+-- @long Telling the server that a file download from  a 3rd party target was completed (or failed)
+asnBinaryTransferDownloadCompleted OPERATION
+	ARGUMENT	arg AsnBinaryTransferDownloadCompletedArgument
+	RESULT		res AsnBinaryTransferDownloadCompletedResult
+	ERRORS		{AsnRequestError}
+::= 3422
+
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~ asnGetBinaryTransferMetaData ~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-- @brief Argument for the asnGetBinaryTransferMetaData
+-- @long 
+AsnGetBinaryTransferMetaDataArgument ::= SEQUENCE
+{
+	-- The id identifying the transfer (provided by the server in AsnInitBinaryTransferDownloadArgument)
+	u8sTransferID				 	UTF8String,
+	
+	...
+}
+
+-- @brief Result for the asnGetBinaryTransferMetaData
+-- @long 
+AsnGetBinaryTransferMetaDataResult ::= SEQUENCE
+{
+	-- The meta data for the binary transfer
+	asnMetaData				 		AsnBinaryTransferMetaData,
+
+	...
+}
+
+-- @brief Retrieves MetaData for a transfer id from the server
+-- @long 
+asnGetBinaryTransferMetaData OPERATION
+	ARGUMENT	arg AsnGetBinaryTransferMetaDataArgument
+	RESULT		res AsnGetBinaryTransferMetaDataResult
+	ERRORS		{AsnRequestError}
+::= 3423
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~ asnBinaryTransferRemoveElement ~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-- @brief Argument for the asnBinaryTransferRemoveElement
+-- @long 
+AsnBinaryTransferRemoveElementArgument ::= SEQUENCE
+{
+	-- The id identifying the transfer (provided by the server in AsnInitBinaryTransferDownloadArgument)
+	u8sTransferID				 	UTF8String,
+	
+	...
+}
+
+-- @brief Result for the asnBinaryTransferRemoveElement
+-- @long 
+AsnBinaryTransferRemoveElementResult ::= SEQUENCE
+{
+	-- entry removed
+	bRemoved				BOOLEAN,
+
+	...
+}
+
+-- @brief remove file for a transfer id from the server - also the state inside the metadata base will be set
+-- @long removal of file and metadata will only be allowed for the origin sender of the file
+asnBinaryTransferRemoveElement OPERATION
+	ARGUMENT	arg AsnBinaryTransferRemoveElementArgument
+	RESULT		res AsnBinaryTransferRemoveElementResult
+	ERRORS		{AsnRequestError}
+::= 3424
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~ asnBinaryTransferForwardElement ~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-- @brief Argument for the asnBinaryTransferForwardElement
+-- @long 
+AsnBinaryTransferForwardElementArgument ::= SEQUENCE
+{
+	-- The id identifying the transfer (provided by the server in AsnInitBinaryTransferDownloadArgument)
+	u8sTransferID				 	UTF8String,
+	
+	...
+}
+
+-- @brief Result for the asnBinaryTransferForwardElement
+-- @long 
+AsnBinaryTransferForwardElementResult ::= SEQUENCE
+{
+	-- original transferID
+	u8sOrigTransferID		UTF8String,
+
+	-- transferID for forwarding the file
+	u8sForwardTransferID	UTF8String,
+
+	...
+}
+
+-- @brief not yet implemented - reserved for future use
+-- @long not yet implemented - reserved for future use
+asnBinaryTransferForwardElement OPERATION
+	ARGUMENT	arg AsnBinaryTransferForwardElementArgument
+	RESULT		res AsnBinaryTransferForwardElementResult
+	ERRORS		{AsnRequestError}
+::= 3425
+
+END
+

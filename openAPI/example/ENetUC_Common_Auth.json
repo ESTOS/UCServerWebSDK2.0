@@ -1,0 +1,261 @@
+{
+	"openapi": "3.1.0",
+	"info": {
+		"title": "ENetUC_Common_Auth",
+		"version": "0.0.1",
+		"summary": "Common types used for authentication\n\n",
+		"description": "## Module description\n\nThis module contains structures that are mainly used in combination with the logon\n\nThere should not be any function\/operation defintions in this module.\n\n\n\nTHERE SHOULD NOT BE ANY FUNCTION\/OPERATION DEFINTIONS IN THIS MODULE.\n\n"
+	},
+	"paths": {
+	},
+	"components": {
+		"schemas": {
+			"AsnLoginV2SupportedAuthMethod": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "noneOrUnknown",
+						"const": 0
+					},
+					{
+						"title": "basic",
+						"const": 1
+					},
+					{
+						"title": "digest",
+						"const": 2
+					},
+					{
+						"title": "ntlm",
+						"const": 3
+					},
+					{
+						"title": "kerberos",
+						"const": 4
+					},
+					{
+						"title": "bearer",
+						"const": 5
+					},
+					{
+						"title": "openidc",
+						"const": 6
+					}]},
+			"AsnAuthBasicCredential": {
+				"type": "object",
+				"description": "### Category \nCommon\n### Private \n0",
+				"properties": {
+					"credential": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"credential"
+				]
+			},
+			"AsnAuthNTLMCredential": {
+				"type": "object",
+				"description": "### Category \nCommon\n### Private \n0",
+				"properties": {
+					"authdata": {
+						"type": "string",
+						"format": "byte"
+					}
+				},
+				"required": [
+					"authdata"
+				]
+			},
+			"AsnAuthKerberosCredential": {
+				"type": "object",
+				"description": "### Category \nCommon\n### Private \n0",
+				"properties": {
+					"authdata": {
+						"type": "string",
+						"format": "byte"
+					}
+				},
+				"required": [
+					"authdata"
+				]
+			},
+			"AsnAuthBearer": {
+				"type": "object",
+				"description": "### Category \nCommon\n### Short \nThe information for a bearer auth request\n\n### added_timestamp \n1726099200\n### Private \n0",
+				"properties": {
+					"u8sJWT": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"u8sJWT"
+				]
+			},
+			"AsnAuthOpenIDC": {
+				"type": "object",
+				"description": "### Category \nCommon\n### Short \nThe information for an openidc auth request\n\n### added_timestamp \n1726099200\n### Private \n0",
+				"properties": {
+					"u8sScope": {
+						"type": "string"
+					},
+					"u8sIDToken": {
+						"type": "string"
+					}
+				}
+			},
+			"AsnAuthDigestParams": {
+				"type": "object",
+				"description": "### Category \nCommon\n### Long \nAuthentication method negotiation - parameters\/challenge for digest authentication\n\n### Private \n0",
+				"properties": {
+					"nonce": {
+						"type": "string"
+					},
+					"opaque": {
+						"type": "string"
+					},
+					"qop": {
+						"type": "string"
+					},
+					"algorithm": {
+						"type": "string"
+					},
+					"realm": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"nonce",
+					"opaque",
+					"qop"
+				]
+			},
+			"AsnLoginV2Token": {
+				"oneOf": [
+					{
+						"type": "string"
+					},
+					{
+						"type": "string"
+					}
+				]
+			},
+			"AsnLoginV2ResultServerRedirect": {
+				"type": "object",
+				"description": "### Category \nCommon\n### Long \nReturn value when redirecting to another Server (i.e. another UCServer is responsible for these credentials)\n\n### Private \n0",
+				"properties": {
+					"u8sRedirectTo": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"u8sRedirectTo"
+				]
+			},
+			"AsnLoginV2ResultServerBusy": {
+				"type": "object",
+				"description": "### Category \nCommon\n### Long \nReturn value when the UCServer currently does not process login requests on this connection\n\n### Private \n0",
+				"properties": {
+					"iRetryInSeconds": {
+						"type": "integer"
+					}
+				},
+				"required": [
+					"iRetryInSeconds"
+				]
+			},
+			"AsnLoginV2ResultRenegotiateNTLM": {
+				"type": "object",
+				"description": "### Category \nCommon\n### Private \n0",
+				"properties": {
+					"authdata": {
+						"type": "string",
+						"format": "byte"
+					}
+				},
+				"required": [
+					"authdata"
+				]
+			},
+			"AsnLoginV2ChoiceArgument": {
+				"oneOf": [
+					{
+						"$ref": "#/components/schemas/AsnAuthBasicCredential"
+					},
+					{
+						"$ref": "#/components/schemas/AsnAuthNTLMCredential"
+					},
+					{
+						"$ref": "#/components/schemas/AsnAuthKerberosCredential"
+					},
+					{
+						"$ref": "#/components/schemas/AsnAuthBearer"
+					},
+					{
+						"$ref": "#/components/schemas/AsnAuthOpenIDC"
+					}
+				]
+			},
+			"AsnLoginV2SupportedAuthMethods": {
+				"type": "array",
+				"items": {
+					"$ref": "#/components/schemas/AsnLoginV2SupportedAuthMethod"
+				}
+			},
+			"AsnLoginV2ResultSupportedAuthMethods": {
+				"type": "object",
+				"description": "### Category \nCommon\n### Long \nAuthentication method negotiation - ordered list of available auth methods and parameters to these auth methods\n\n### Private \n0",
+				"properties": {
+					"authMethodsOrdered": {
+						"$ref": "#/components/schemas/AsnLoginV2SupportedAuthMethods"
+					},
+					"authDigest": {
+						"$ref": "#/components/schemas/AsnAuthDigestParams"
+					}
+				},
+				"required": [
+					"authMethodsOrdered"
+				]
+			},
+			"AsnLoginV2ResultSuccess": {
+				"type": "object",
+				"description": "### Category \nCommon\n### Long \nReturn value for a successful login\n\n### Private \n0",
+				"properties": {
+					"u8sLoggedInUser": {
+						"type": "string"
+					},
+					"token": {
+						"$ref": "#/components/schemas/AsnLoginV2Token"
+					}
+				}
+			},
+			"AsnLoginV2Argument": {
+				"type": "object",
+				"description": "### Category \nCommon\n### Long \nThis type is used as parameter for the asn*Login methods\n\n### Private \n0",
+				"properties": {
+					"auth": {
+						"$ref": "#/components/schemas/AsnLoginV2ChoiceArgument"
+					}
+				}
+			},
+			"AsnLoginV2Result": {
+				"oneOf": [
+					{
+						"$ref": "#/components/schemas/AsnLoginV2ResultSupportedAuthMethods"
+					},
+					{
+						"$ref": "#/components/schemas/AsnLoginV2ResultSuccess"
+					},
+					{
+						"$ref": "#/components/schemas/AsnLoginV2ResultServerRedirect"
+					},
+					{
+						"$ref": "#/components/schemas/AsnLoginV2ResultServerBusy"
+					},
+					{
+						"$ref": "#/components/schemas/AsnLoginV2ResultRenegotiateNTLM"
+					}
+				]
+			}
+		}
+	}
+}

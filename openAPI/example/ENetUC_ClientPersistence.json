@@ -1,0 +1,566 @@
+{
+	"openapi": "3.1.0",
+	"info": {
+		"title": "ENetUC_ClientPersistence",
+		"version": "0.0.1",
+		"summary": "Client persistence interface\n\n",
+		"description": "## Module description\n\nThis module defines structures and operations for a CRUD item store and its eventing.\n\nWith these operations, each client can persist client specific data on the UCServer and can attach to the according change notify interface.\n\n"
+	},
+	"paths": {
+		"/asnClientPersistenceCreate": {
+			"post": {
+				"tags": ["ClientPersistence"],
+				"summary": "Adding a new item\n\n",
+				"description": "A new item is added to the ItemStore.\n\nThe client must be subscribed to this ItemStore and pass a unique (for the client session) u8sCrossRefID.\n\nIf the client does not provide a StoreID, the server generates a key itself.\n\nConfirmation from the server is via the asnClientPersistenceEvent event with the corresponding u8sCrossRefID.\n\nThe configured access permissions are taken into account and acknowledged with an error if necessary.\n\n",
+				"deprecated": false,
+				"operationId": "4301",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnClientPersistenceCreateArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnClientPersistenceCreateResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnClientPersistenceRead": {
+			"post": {
+				"tags": ["ClientPersistence"],
+				"summary": "Abruf von Elementen eines ItemStore\n\n",
+				"description": "The client retrieves one or more items from the passed ItemStore.\n\nThe client must be subscribed to this ItemStore and pass a unique (for the client session) u8sCrossRefID.\n\nIf the client does not provide a StoreID, all available items in the ItemStore will be returned.\n\nThe server's response is via the asnClientPersistenceEvent event with the corresponding u8sCrossRefID.\n\nThe configured access permissions are taken into account and acknowledged with an error if necessary.\n\n",
+				"deprecated": false,
+				"operationId": "4302",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnClientPersistenceReadArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnClientPersistenceReadResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnClientPersistenceUpdate": {
+			"post": {
+				"tags": ["ClientPersistence"],
+				"summary": "Updating an existing element\n\n",
+				"description": "The client wants to update an existing item in the passed ItemStore.&lt;br \/&gt;\n\nThe client must be subscribed to this ItemStore and pass a unique (for the client session) u8sCrossRefID.\n\nIf the client does not provide a StoreID, all available items in the ItemStore will be returned.\n\nThe server's response is via the asnClientPersistenceEvent event with the corresponding u8sCrossRefID.\n\nThe configured access permissions are taken into account and acknowledged with an error if necessary.\n\n",
+				"deprecated": false,
+				"operationId": "4303",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnClientPersistenceUpdateArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnClientPersistenceUpdateResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnClientPersistenceDelete": {
+			"post": {
+				"tags": ["ClientPersistence"],
+				"summary": "Delete an existing item.\n\n",
+				"description": "The client wants to delete an existing item in the passed ItemStore.&lt;br \/&gt;\n\nThe client must be subscribed to this ItemStore and pass a unique (for the client session) u8sCrossRefID.\n\nIf the client does not provide a StoreID, all available items in the ItemStore will be returned.\n\nThe server's response is via the asnClientPersistenceEvent event with the corresponding u8sCrossRefID.\n\nThe configured access permissions are taken into account and acknowledged with an error if necessary.\n\n",
+				"deprecated": false,
+				"operationId": "4304",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnClientPersistenceDeleteArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnClientPersistenceDeleteResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnClientPersistenceSubscribe": {
+			"post": {
+				"tags": ["ClientPersistence"],
+				"summary": "Subscribe for changes in the item store.\n\n",
+				"description": "The client registers for event on changes of items within the passed ItemStore.&lt;br \/&gt;\n\nSubscribe can be called multiple times and is additive in this case.\n\nThe client must pass a unique (for the client session) u8sCrossRefID.\n\nThe server's response is via the asnClientPersistenceEvent event with the corresponding u8sCrossRefID.\n\nThe configured access permissions are taken into account and acknowledged with an error if necessary.\n\n",
+				"deprecated": false,
+				"operationId": "4305",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnClientPersistenceSubscribeArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnClientPersistenceSubscribeResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnClientPersistenceEvent": {
+			"post": {
+				"tags": ["ClientPersistence"],
+				"summary": "Event from the UCServer for signalling changes in an item store.\n\n",
+				"description": "The server responds via the asnClientPersistenceEvent with the corresponding u8sCrossRefID.&lt;br \/&gt;\n\nThe configured access permissions are taken into account and acknowledged with an error if necessary.\n\nThe server event is also delivered if the unique ID of the server database has changed.\n\nThe client should then discard its (locally cached) data and request new initial data from the server.\n\n",
+				"deprecated": false,
+				"operationId": "4306",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnClientPersistenceEventArgument"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnClientPersistenceGetDatabaseID": {
+			"post": {
+				"tags": ["ClientPersistence"],
+				"summary": "Abfrage der Datenbank ID\n\n",
+				"description": "Returns a unique ID of the database, which clients can use to determine whether the server is using a new database.&lt;br \/&gt;\n\nThis may be the case, for example, if the server database has been deleted.\n\nThis method is the only synchronous method of the client persistence interface.\n\n",
+				"deprecated": false,
+				"operationId": "4307",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnClientPersistenceGetDatabaseIDArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnClientPersistenceGetDatabaseIDResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"schemas": {
+			"AsnRequestError": {
+				"$ref": "ENetUC_Common.json#/components/schemas/AsnRequestError"
+			},
+			"UTF8StringList": {
+				"$ref": "ENetUC_Common.json#/components/schemas/UTF8StringList"
+			},
+			"AsnClientPersistenceResultDetailsEnum": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "noerror",
+						"const": 0
+					},
+					{
+						"title": "itemstoreaccessdenied",
+						"const": 1
+					},
+					{
+						"title": "dataaccessdenied",
+						"const": 2
+					},
+					{
+						"title": "invalidsubscription",
+						"const": 3
+					},
+					{
+						"title": "invalidcrossrefid",
+						"const": 4
+					},
+					{
+						"title": "invalidkey",
+						"const": 5
+					},
+					{
+						"title": "invaliddata",
+						"const": 6
+					},
+					{
+						"title": "clientpersistenceoverload",
+						"const": 7
+					},
+					{
+						"title": "databasefail",
+						"const": 8
+					},
+					{
+						"title": "revisionoutdated",
+						"const": 9
+					},
+					{
+						"title": "clientpersistencedisabled",
+						"const": 99
+					}]},
+			"AsnClientPersistenceReadWildcardTypeEnum": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "noWildcard",
+						"const": 0
+					},
+					{
+						"title": "prefixKey",
+						"const": 1
+					},
+					{
+						"title": "postfixKey",
+						"const": 2
+					}]},
+			"AsnClientPersistenceSubscribeTypeEnum": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "subscribe",
+						"const": 1
+					},
+					{
+						"title": "unsubscribe",
+						"const": 2
+					}]},
+			"AsnClientPersistenceItem": {
+				"type": "object",
+				"description": "### Category \nClientPersistence\n### Short \nDefinition of persistence items\n\n### Long \nAn ItemStore can hold any persistence items. A persistence item always belongs to exactly one ItemStore.\nThe key of a persistence item (u8sItemStoreID) must be unique within the ItemStore.\nIf the client does not specify a u8sItemStoreID when creating an item, the server generates this key itself.\nThe client itself is responsible for managing the payload in an appropriate way.\n\n### Private \n0",
+				"properties": {
+					"u8sItemStore": {
+						"type": "string"
+					},
+					"u8sItemStoreID": {
+						"type": "string"
+					},
+					"data": {
+						"type": "string"
+					},
+					"iRevision": {
+						"type": "integer"
+					}
+				},
+				"required": [
+					"u8sItemStore",
+					"u8sItemStoreID",
+					"data"
+				]
+			},
+			"AsnClientPersistenceCreateArgument": {
+				"type": "object",
+				"description": "### Category \nClientPersistence\n### Short \nArgument for asnClientPersistenceCreate\n\n### Private \n0",
+				"properties": {
+					"u8sCrossRefID": {
+						"type": "string"
+					},
+					"u8sItemStore": {
+						"type": "string"
+					},
+					"u8sItemStoreID": {
+						"type": "string"
+					},
+					"data": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"u8sCrossRefID",
+					"u8sItemStore",
+					"data"
+				]
+			},
+			"AsnClientPersistenceCreateResult": {
+				"type": "object",
+				"description": "### Category \nClientPersistence\n### Short \nResult of asnClientPersistenceCreate\n\n### Private \n0"
+			},
+			"AsnClientPersistenceReadArgument": {
+				"type": "object",
+				"description": "### Category \nClientPersistence\n### Short \nArgument for asnClientPersistenceRead\n\n### Private \n0",
+				"properties": {
+					"u8sCrossRefID": {
+						"type": "string"
+					},
+					"u8sItemStore": {
+						"type": "string"
+					},
+					"u8sItemStoreID": {
+						"type": "string"
+					},
+					"iLastKnownGlobalRevision": {
+						"type": "integer"
+					},
+					"iItemKeyWildcardType": {
+						"type": "integer"
+					},
+					"bCountAvailableItemsOnly": {
+						"type": "boolean"
+					},
+					"iItemLimit": {
+						"type": "integer"
+					}
+				},
+				"required": [
+					"u8sCrossRefID",
+					"u8sItemStore"
+				]
+			},
+			"AsnClientPersistenceReadResult": {
+				"type": "object",
+				"description": "### Category \nClientPersistence\n### Short \nResult of asnClientPersistenceRead\n\n### Private \n0"
+			},
+			"AsnClientPersistenceUpdateArgument": {
+				"type": "object",
+				"description": "### Category \nClientPersistence\n### Short \nArgument for asnClientPersistenceUpdate\n\n### Private \n0",
+				"properties": {
+					"u8sCrossRefID": {
+						"type": "string"
+					},
+					"u8sItemStore": {
+						"type": "string"
+					},
+					"u8sItemStoreID": {
+						"type": "string"
+					},
+					"data": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"u8sCrossRefID",
+					"u8sItemStore",
+					"u8sItemStoreID",
+					"data"
+				]
+			},
+			"AsnClientPersistenceUpdateResult": {
+				"type": "object",
+				"description": "### Category \nClientPersistence\n### Short \nResult of asnClientPersistenceUpdate\n\n### Private \n0"
+			},
+			"AsnClientPersistenceDeleteArgument": {
+				"type": "object",
+				"description": "### Category \nClientPersistence\n### Short \nArgument for asnClientPersistenceDelete\n\n### Private \n0",
+				"properties": {
+					"u8sCrossRefID": {
+						"type": "string"
+					},
+					"u8sItemStore": {
+						"type": "string"
+					},
+					"u8sItemStoreID": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"u8sCrossRefID",
+					"u8sItemStore",
+					"u8sItemStoreID"
+				]
+			},
+			"AsnClientPersistenceDeleteResult": {
+				"type": "object",
+				"description": "### Category \nClientPersistence\n### Short \nResult of asnClientPersistenceDelete\n\n### Private \n0"
+			},
+			"AsnClientPersistenceSubscribeArgument": {
+				"type": "object",
+				"description": "### Category \nClientPersistence\n### Short \nArgument for asnClientPersistenceSubscribe\n\n### Private \n0",
+				"properties": {
+					"u8sCrossRefID": {
+						"type": "string"
+					},
+					"iSubscribeType": {
+						"type": "integer"
+					},
+					"u8sItemStore": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"u8sCrossRefID",
+					"iSubscribeType",
+					"u8sItemStore"
+				]
+			},
+			"AsnClientPersistenceSubscribeResult": {
+				"type": "object",
+				"description": "### Category \nClientPersistence\n### Short \nResult of asnClientPersistenceSubscribe\n\n### Private \n0"
+			},
+			"AsnClientPersistenceGetDatabaseIDArgument": {
+				"type": "object",
+				"description": "### Category \nClientPersistence\n### Short \nArgument for asnClientPersistenceGetDatabaseID\n\n### Private \n0"
+			},
+			"AsnClientPersistenceGetDatabaseIDResult": {
+				"type": "object",
+				"description": "### Category \nClientPersistence\n### Short \nResult of asnClientPersistenceGetDatabaseID\n\n### Private \n0",
+				"properties": {
+					"u8sDatabaseID": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"u8sDatabaseID"
+				]
+			},
+			"AsnClientPersistenceItemList": {
+				"type": "array",
+				"items": {
+					"$ref": "#/components/schemas/AsnClientPersistenceItem"
+				}
+			},
+			"AsnClientPersistenceEventArgument": {
+				"type": "object",
+				"description": "### Category \nClientPersistence\n### Short \nArgument for asnClientPersistenceEvent\n\n### Private \n0",
+				"properties": {
+					"iResult": {
+						"type": "integer"
+					},
+					"u8sCrossRefID": {
+						"type": "string"
+					},
+					"iGlobalRevision": {
+						"type": "integer"
+					},
+					"changedItems": {
+						"$ref": "#/components/schemas/AsnClientPersistenceItemList"
+					},
+					"deletedItems": {
+						"$ref": "#/components/schemas/AsnClientPersistenceItemList"
+					},
+					"u8sDatabaseID": {
+						"type": "string"
+					},
+					"iAvailableItemsCount": {
+						"type": "integer"
+					}
+				},
+				"required": [
+					"iResult",
+					"u8sCrossRefID"
+				]
+			}
+		}
+	}
+}

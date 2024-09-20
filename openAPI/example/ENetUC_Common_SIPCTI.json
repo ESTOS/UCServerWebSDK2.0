@@ -1,0 +1,322 @@
+{
+	"openapi": "3.1.0",
+	"info": {
+		"title": "ENetUC_Common_SIPCTI",
+		"version": "0.0.1",
+		"summary": "Common interface definitions for SIP and CTI functionality\n\n",
+		"description": "## Module description\n\nThis module contains common usable strutures for the sip and cti interfaces.\n\n\n\nTHERE SHOULD NOT BE ANY FUNCTION\/OPERATION DEFINTIONS IN THIS MODULE.\n\n"
+	},
+	"paths": {
+	},
+	"components": {
+		"schemas": {
+			"AsnOptionalParameters": {
+				"$ref": "ENetUC_Common.json#/components/schemas/AsnOptionalParameters"
+			},
+			"AsnNetDatabaseContact": {
+				"$ref": "ENetUC_Common.json#/components/schemas/AsnNetDatabaseContact"
+			},
+			"AsnSystemTime": {
+				"$ref": "ENetUC_Common.json#/components/schemas/AsnSystemTime"
+			},
+			"UTF8StringList": {
+				"$ref": "ENetUC_Common.json#/components/schemas/UTF8StringList"
+			},
+			"EnumProjectType": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "ePROJECTTYPEUNKNOWN",
+						"const": 0
+					},
+					{
+						"title": "ePROJECTTYPEPBX",
+						"const": 1
+					},
+					{
+						"title": "ePROJECTTYPEJOURNAL",
+						"const": 2
+					},
+					{
+						"title": "ePROJECTTYPEJOURNALPBX",
+						"const": 3
+					},
+					{
+						"title": "ePROJECTTYPEPBXPRIVATE",
+						"const": 4
+					}]},
+			"EAsnJournalCallType": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "eCTICall",
+						"const": 0
+					},
+					{
+						"title": "eVideoChat",
+						"const": 1
+					},
+					{
+						"title": "eAudioChat",
+						"const": 2
+					},
+					{
+						"title": "eAudioVideoChat",
+						"const": 3
+					},
+					{
+						"title": "eIM",
+						"const": 4
+					},
+					{
+						"title": "eBluetoothMobile",
+						"const": 5
+					},
+					{
+						"title": "eBluetoothMobileUnknownDuration",
+						"const": 6
+					},
+					{
+						"title": "eSipAVCall",
+						"const": 7
+					},
+					{
+						"title": "eSMS",
+						"const": 8
+					},
+					{
+						"title": "eScreenSharing",
+						"const": 9
+					},
+					{
+						"title": "eRequestedScreenSharing",
+						"const": 10
+					}]},
+			"EAsnCallState": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "unknown",
+						"const": 0
+					},
+					{
+						"title": "destroyed",
+						"const": 1
+					},
+					{
+						"title": "offering",
+						"const": 2
+					},
+					{
+						"title": "dialing",
+						"const": 4
+					},
+					{
+						"title": "ringback",
+						"const": 8
+					},
+					{
+						"title": "busy",
+						"const": 16
+					},
+					{
+						"title": "connected",
+						"const": 32
+					},
+					{
+						"title": "conferenced",
+						"const": 64
+					},
+					{
+						"title": "hold",
+						"const": 128
+					},
+					{
+						"title": "disconnected",
+						"const": 256
+					},
+					{
+						"title": "preparecall",
+						"const": 512
+					}]},
+			"AsnContactPhoneLineType": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "iPHONENUMBERTYPEALL",
+						"const": -1
+					},
+					{
+						"title": "iPHONENUMBERTYPEUNKNOWN",
+						"const": 0
+					},
+					{
+						"title": "iPHONENUMBERTYPEPRIMARY",
+						"const": 1
+					},
+					{
+						"title": "iPHONENUMBERTYPESECONDARY",
+						"const": 2
+					},
+					{
+						"title": "iPHONENUMBERTYPEOTHEROWNNUMBER",
+						"const": 3
+					}]},
+			"EnumSTUNandTURNType": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "eSTUN",
+						"const": 1
+					},
+					{
+						"title": "eTURN",
+						"const": 2
+					}]},
+			"AsnProjectPinRule": {
+				"type": "object",
+				"description": "### Category \nCommonSIPCTI\n### Short \nDescription of a project or pin used in the PBX.\n\n### Long \nSome PBX support the use of special numbers as prefix\/postfix to dialing numbers to implement project\nfeatures. This sequence\/object conatins the neccassary information to complete or format phone numbers according these rules.\n\n### Private \n0",
+				"properties": {
+					"u8sProjectName": {
+						"type": "string"
+					},
+					"u8sProjectPin": {
+						"type": "string"
+					},
+					"iProjectType": {
+						"type": "integer"
+					},
+					"bAssociatedCallIsPrivateCall": {
+						"type": "boolean"
+					},
+					"u8sLocationID": {
+						"type": "string"
+					},
+					"u8sUserEnteredPin": {
+						"type": "string"
+					},
+					"u8sUserEnteredUserID": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"u8sProjectName",
+					"u8sProjectPin",
+					"iProjectType",
+					"bAssociatedCallIsPrivateCall",
+					"u8sLocationID",
+					"u8sUserEnteredPin",
+					"u8sUserEnteredUserID"
+				]
+			},
+			"AsnConfigSTUNandTURN": {
+				"type": "object",
+				"description": "### Category \nCommonSIPCTI\n### Short \nSequence describes credentials and\/or addresses of STUN\/TURN Servers.\n\n### Long \nSee http:\/\/tools.ietf.org\/html\/draft-uberti-behave-turn-rest-00, mainly section 2.2 Response.\nThis sequence is used for both, STUN and TURN configurations.\n\n### Private \n0",
+				"properties": {
+					"iType": {
+						"type": "integer"
+					},
+					"u8sUsername": {
+						"type": "string"
+					},
+					"u8sPassword": {
+						"type": "string"
+					},
+					"stValidTo": {
+						"$ref": "#/components/schemas/AsnSystemTime"
+					},
+					"listURIs": {
+						"$ref": "#/components/schemas/UTF8StringList"
+					},
+					"iTTL": {
+						"type": "integer"
+					}
+				},
+				"required": [
+					"iType",
+					"u8sUsername",
+					"u8sPassword",
+					"stValidTo",
+					"listURIs",
+					"iTTL"
+				]
+			},
+			"AsnLineForward": {
+				"type": "object",
+				"description": "### Category \nCommonSIPCTI\n### Short \nLine forward information object\n\n### Private \n0",
+				"properties": {
+					"iInternalID": {
+						"type": "integer"
+					},
+					"iForwardController": {
+						"type": "integer"
+					},
+					"iForwardMode": {
+						"type": "integer"
+					},
+					"iBackEndSpecific": {
+						"type": "integer"
+					},
+					"iNoAnswerTime": {
+						"type": "integer"
+					},
+					"u8sDestination": {
+						"type": "string"
+					},
+					"u8sCallerIDList": {
+						"$ref": "#/components/schemas/UTF8StringList"
+					}
+				},
+				"required": [
+					"iInternalID",
+					"iForwardController",
+					"iForwardMode",
+					"iBackEndSpecific",
+					"iNoAnswerTime",
+					"u8sDestination",
+					"u8sCallerIDList"
+				]
+			},
+			"AsnProjectPinRuleList": {
+				"type": "array",
+				"items": {
+					"$ref": "#/components/schemas/AsnProjectPinRule"
+				}
+			},
+			"AsnCtiNewCallParams": {
+				"type": "object",
+				"description": "### Category \nCommonSIPCTI\n### Short \nAdditional information about a call, especial for initiate a call.\n\n### Long \nasnCtiMakeCall can be used to give the UCServer more information\/hints about how to handle a make call with AsnCtiNewCallParams.\nIt is possible to give data of a project or pin to use to dial the number, hide the own callerid, attach contact data to the call a.s.o.\n\n### Private \n0",
+				"properties": {
+					"projectPinRule": {
+						"$ref": "#/components/schemas/AsnProjectPinRule"
+					},
+					"bHideMyCallerID": {
+						"type": "boolean"
+					},
+					"asnRemoteContact": {
+						"$ref": "#/components/schemas/AsnNetDatabaseContact"
+					},
+					"optionalParams": {
+						"$ref": "#/components/schemas/AsnOptionalParameters"
+					}
+				},
+				"required": [
+					"projectPinRule",
+					"bHideMyCallerID"
+				]
+			},
+			"AsnConfigSTUNandTURNList": {
+				"type": "array",
+				"items": {
+					"$ref": "#/components/schemas/AsnConfigSTUNandTURN"
+				}
+			},
+			"AsnLineForwards": {
+				"type": "array",
+				"items": {
+					"$ref": "#/components/schemas/AsnLineForward"
+				}
+			}
+		}
+	}
+}

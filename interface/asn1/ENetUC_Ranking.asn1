@@ -1,0 +1,33 @@
+﻿UC-Server-Access-Protocol-Ranking
+	{ iso(1) identified-organization(3) dod(6) internet(1) private(4) enterprise(1) estos(10924) uc-server-access-protocol-v2(2) ranking(22) }
+
+-- @category Ranking
+-- @brief Ranking interface
+-- @long
+-- ## Module description
+-- This module defines structures and operations for the ranking of agents of a group.
+--
+-- ~Allowed Operation IDs: 4200 - 4299
+--
+-- ~In diesem Modul werden die Funktionen für das Ranking einzelner Agenten innerhalb ihrer Gruppen definiert
+
+DEFINITIONS
+IMPLICIT TAGS ::=
+BEGIN
+
+IMPORTS
+AsnRequestError, UTF8StringList FROM UC-Server-Access-Protocol-Common
+;
+
+-- @brief öffentliche Präsenz eines Agenten
+-- @long
+-- Die öffentliche Präsenz eines Agenten ermittelt sich aus der aktuellen Präsenz des ActiveContact sowie dem jeweiligen Agentenstatus innerhalb der Agenten-Gruppe.
+AsnRankingAgentPublicPresenceEnum ::= ENUMERATED
+{
+	offline(0),			-- Agent ist offline / abgemeldet
+	uncontrolled(1),	-- ggf. kein Agent?
+	available(2),		-- Agent ist angemeldet und verfügbar
+	notavailable(3)		-- Agent ist angemeldet aber beschäftigt
+}
+
+END

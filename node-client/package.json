@@ -1,0 +1,70 @@
+{
+	"name": "ucserver-webservicesdk2.0-node-client",
+	"version": "0.0.0",
+	"engines": {
+		"npm": ">=10",
+		"node": ">=20"
+	},
+	"engineStrict": true,
+	"description": "estos ucserver webservicesdk2 example node client",
+	"scripts": {
+		"check": "npx --yes madge --circular --extensions ts --exclude globals ./src/",
+		"unused": "npx --yes ts-unused-exports tsconfig.json --excludePathsFromReport=stub;routes;loggerdecorators.ts;ILogBase.ts;__mocks__",
+		"clean": "npx --yes rimraf dist",
+		"test": "npx --yes jest",
+		"lint": "eslint --cache --fix -c .eslintrc.precommit.cjs src/**/*.{js,ts}",
+		"lintclear": "del /s .eslintcache",
+		"relint": "run-s clean lintclear lint",
+		"lintnocache": "eslint --fix -c .eslintrc.precommit.cjs src/**/*.{js,ts}",
+		"precommit": "run-p lint check unused test",
+		"start": "node --trace-warnings index.js",
+		"start:debug": "node --inspect index.js --runInBand",
+		"start:watch": "tsc-watch --onSuccess \"node index.js\"",
+		"start:debugwatch": "tsc-watch --onSuccess \"node --inspect index.js --runInBand\"",
+		"build": "tsc -p .",
+		"depcheck": "npx --yes depcheck"
+	},
+	"repository": {
+		"type": "git",
+		"url": ""
+	},
+	"lint-staged": {
+		"src/**/*.{ts,tsx}": [
+			"eslint --cache --fix -c .eslintrc.precommit.cjs"
+		]
+	},
+	"license": "MIT",
+	"dependencies": {
+		"@estos/asn1ts": "^3.2.2",
+		"micromatch": "^4.0.8",
+		"node-fetch": "^2.7.0",
+		"typescript": "^5.6.2",
+		"ucconfig": "github:ESTOS/ucconfig#0.0/0.0.7",
+		"uclogger": "github:ESTOS/uclogger#0.0/0.0.26",
+		"uuid": "^10.0.0",
+		"ws": "^8.18.0"
+	},
+	"devDependencies": {
+		"@types/micromatch": "^4.0.9",
+		"@types/node": "^20.16.5",
+		"@types/node-fetch": "^2.6.11",
+		"@types/uuid": "^9.0.8",
+		"@types/ws": "^8.5.12",
+		"@typescript-eslint/eslint-plugin": "^6.21.0",
+		"@typescript-eslint/parser": "^6.21.0",
+		"dotenv": "^16.4.5",
+		"eslint": "^8.57.0",
+		"eslint-config-standard": "^17.1.0",
+		"eslint-plugin-deprecation": "^2.0.0",
+		"eslint-plugin-github": "^4.10.2",
+		"eslint-plugin-import": "^2.30.0",
+		"eslint-plugin-jsdoc": "^48.11.0",
+		"eslint-plugin-node": "^11.1.0",
+		"eslint-plugin-promise": "^6.6.0",
+		"eslint-plugin-tsdoc": "^0.2.17",
+		"lint-staged": "^15.2.10",
+		"npm-run-all": "^4.1.5",
+		"ts-node": "^10.9.2",
+		"tsc-watch": "^6.2.0"
+	}
+}

@@ -1,0 +1,1626 @@
+UC-Server-Access-Protocol-CTI
+	{ iso(1) identified-organization(3) dod(6) internet(1) private(4) enterprise(1) estos(10924) uc-server-access-protocol-v2(2) cti(8) }
+
+-- @category CTI
+-- @brief CTI interface
+-- @long
+-- ## CTI Modul
+--
+--
+-- ## Module description
+-- This module contains structures and operations for CTI (remote call control) on TAPI or Bluetooth phone lines in the server.
+--
+-- A client program has access to all lines owned by the logged in user and to additional lines it has dedicated access.<br />
+-- It is possible to monitor all actions on these lines and to call operations to initiate new calls, set forwards, change states and so on.
+--
+-- ## Prerequisites
+-- In order to use the operations described in this document you have to make sure:
+-- - The server has lines configured and activated. (Install an appropriate TAPI-driver for your PBX system.)
+-- - There is at least one user activated on the server, who has lines configured to use.
+-- - The client program is connected to the server via UCServer Web Services using a websocket or directly to the server on the client port (default port 7222).
+-- - The client program encodes the data structures as estos JSON or ASN.1 BER.
+-- - The client program is logged in to the server with a user who has access to lines.
+--
+-- Additional prerequisites for a operation on the PBX and or the TAPI driver may be necessary.
+--
+-- ### Description of the Line-Call-Model ###
+-- The remote call control and monitoring of the server is based on a line-call-model. This means, that users, lines and calls are organized in a tree like hierarchy. 
+-- Each node in this tree contains configuration data and dynamic data, which can be accessed and observed.
+--
+-- The Nodes are:
+-- - The user. This a more a kind of "meta" node, it just holds the list of lines, a client has access to if it is logged in as this user.
+-- - The line(s). Defined with the logged in user, a client can retrieve a list of lines, the user has access to. With these lines, the client can (one time) pull information or can attach itself on to get initial data and events if these data changes over time (get-and-subscribe mechanism).
+--   The line information contains configuration information and dynamic data about the lines status, including current calls.
+--   *Note:* A line is identified by its URI tel:number@pbxsystem. The parameter is often named as "u8sLinePhoneNumber".<br />The "u8sPhoneNumber" is the phone number of a line, but for technical reasons that is not a distinct property of a line. It is possible to have multiple lines with the same phone number! 
+-- - The call(s). A line has a list of current calls, which are currently "on" the line. If the client is attached to a line for events, new calls will be announced via events. Changes to these calls are also announced via events.
+--   There is no need to attach to calls explicitly, this is already done by attaching to the line. Call changing events are then sent to the client too.
+--   *Note:* A call is identified by its connection identifier often named as "ConnectionID".
+--
+-- ### Remarks ###
+-- Some operations return an empty result object if they are executed successfully. So in this cases, the business logic should wait for result/error before do additional actions.
+-- Phone numbers are normally used and provided in a so called supercanonic notation containing a full qualified number including country, city, main and extension number: +49815136856177
+-- For operations affecting multiple calls be sure to check that all calls affected have the corresponding feature set. To merge two calls both calls have to have the feature eCFEATUREMERGECALLS set.
+--
+-- ### Example: Monitoring lines ###
+-- 1. Get the lines the client has access to with asnCtiEnumPhoneLines. If you wish to get events if the line list changes afterwards, set the parameter "attachChangeNotify" to 1.
+-- 2. Use the lines URI to start monitoring for initial data and events on it. asnCtiLineMonitorStart will result in a monitor cross reference id to distinguish between events for different line monitors easier.
+--    This is useful, if the client has the requirement to monitor the same line multiple times for different use cases.
+-- 3. With the line URI you can call functions e.g. asnCtiMakeCall, asnCtiAnswerCall a.s.o. With the line monitoring on, you will get the according changes on the line and its calls as events back.
+-- 4. To stop monitoring a line, call asnCtiLineMonitorStop with the corresponding monitor cross reference id.
+--
+-- ### Example: Call data transfer ###
+-- 
+-- ### Phone number formats ###
+-- The whole system tries to use supercanonic numbers (+country city main and extension number / +49815136856177) whereever possible.
+-- As long as the number is used in supercanonic notation all components can format the number as required (for dialing, for display, etc.)
+-- You likely won´t need to format numbers as the system always provides supercanonic numbers.
+--
+
+
+DEFINITIONS
+IMPLICIT TAGS ::=
+BEGIN
+
+IMPORTS
+AsnOptionalParameters, AsnRequestError, AsnSystemTime, AsnNetDatabaseContact, UTF8StringList FROM UC-Server-Access-Protocol-Common
+AsnProjectPinRuleList, AsnCtiNewCallParams, AsnProjectPinRule, AsnLineForward, AsnLineForwards FROM UC-Server-Access-Protocol-SIPCTICommon
+;
+
+-- @brief List of AsnCtiCallData objects
+AsnCtiCallDataList ::= SEQUENCE OF AsnCtiCallData
+
+-- @brief Data structure (key value pair) to associate additional information with call objects.
+-- @long 
+-- Data structure to associate additional information with call objects, which can be 
+-- transferred together with a call to another client.<br />
+-- The data consists of key/value pairs. The keys can be used for different use cases and should be named in such a way,
+-- so that they do not conflict with other uses.<br />
+--
+-- The AsnCtiCallDataList is part of the following OptionalParams of these data structs:
+-- - AsnCtiCallInformation
+-- - AsnCtiNewCallParams
+-- The Key of the AsnCtiCallDataList is "calldata".
+
+AsnCtiCallData ::= SEQUENCE
+{
+	key UTF8String,
+	
+	-- the string length of 'value' should be limited to a reasonable number because callData is a part of the call information and 
+	-- is delivered from server to the clients with every call status change. If the data is big in size it is recommended 
+	-- to only store sort of a reference  in 'value' 
+	value UTF8String,
+	...
+}
+
+-- @brief Line Open State (identical to ECTILineStatusEnum)
+-- @long
+-- In order to get line and call states or to use remote call control you have to "open" a line with asnCtiLineMonitorStart. 
+AsnCtiLineOpenStatus ::= ENUMERATED
+{
+	lineStatusDisconnected					(0), -- line ready
+	lineStatusClosed						(1), -- line is closed
+	lineStatusOpen							(2), -- line is opened and ready for usage
+	lineStatusOpenNoPhoneConnected			(3), -- line is opened but out of service; e.g. no phone connected
+	lineStatusOpenNoPBXConnection			(4), -- line is opened but the connection to the PBX is broken
+	lineStatusOpenPBXLoginFailed			(5), -- line is opened but the login on the PBX has failed
+	lineStatusOpenPBXNoLicense				(6), -- line is opened but there is a license missing on the PBX
+	lineStatusOpenPBXSessionCountExceeded	(7), -- line is opened but the CSTA session counter on the PBX exceeded
+	lineStatusFailedNoLicense				(8), -- line cannot be opened because of missing license on the UCServer
+	lineStatusFailedNoECSTALicense			(9)	 -- line cannot be opened because of missing license on the ECSTA driver
+}
+	
+-- @brief Bitfield of features/functions which can be executed on a call.
+-- @long
+-- These bit flags describe the features/functions which can be executed on a line/call.
+-- These flags are set by the UCServer.
+EnumCallFeatures ::= ENUMERATED 
+{
+	eCFEATURENONE							(0), -- no features/function possible
+	eCFEATUREANSWER							(1), -- Answer a call (state eCALLSTATEOFFERING)
+	eCFEATUREMAKECALL						(2), -- Make call is allowed. You can call MakeCall also while having a call to setup a consultation.
+	eCFEATURECOMPLETECALL					(4), -- Complete a busy or an unanswered call for automated callback (if supported by PBX system)
+	eCFEATUREMERGECALLS						(16), -- Merge the active call (state eCALLSTATECONNECTED) with an on hold call (state eCALLSTATEHOLD). This will disconnect the executing client from the call.
+	eCFEATUREHANGUP							(32), -- Terminate an active call (state eCALLSTATECONNECTED) or reject an incoming offering call (state eCALLSTATEOFFERING).
+	eCFEATUREBLINDTRANSFER					(256), -- Blind transfer an active call (state eCALLSTATECONNECTED) to another extension.
+	eCFEATUREREDIRECT						(512), -- Redirect an incoming offering call (state eCALLSTATEOFFERING) to another extension.
+	eCFEATUREMAYBEPICKUPED					(1024), -- The call may be picked by another line (state eCALLSTATEOFFERING).
+	eCFEATURESWAPHOLD						(4096), -- The active call will be swapped with a call on hold on the same line. Both calls must have set this feature in order to be able to swaphold.
+	eCFEATUREHOLD							(8192), -- Put the active call (state eCALLSTATECONNECTED) on hold (state eCALLSTATEHOLD).
+	eCFEATUREUNHOLD							(16384), -- Retrieve the call currently on hold (state eCALLSTATEHOLD).
+	eCFEATURECONFERENCESTARTEU				(65536), -- Start a conference (european model; you have an active call (state eCALLSTATECONNECTED) and a hold call (state eCALLSTATEHOLD)).
+	eCFEATURECONFERENCEADDPARTY				(131072), -- Call can be added to an existing conference.
+	eCFEATURECONFERENCESTARTUSA	 			(262144), -- Start a conference (american model; you have an active call and you decide you want to setup a conference)
+	eCFEATUREGENERATETONE					(1048576), -- A way of generating tones on the call (currently not supported by UCServer)
+	eCFEATUREDIALDIGITS						(2097152), -- Dial DTMF tones is possible
+	eCFEATURESTARTCALLRECORD				(16777216), -- Start call recording (see UCServer Administration for details how the UCServer is supporting call recording).
+	eCFEATURESTOPCALLRECORD					(33554432)  -- Stop call recording (see UCServer Administration for details how the UCServer is supporting call recording).
+}
+
+-- @brief Bitfield describing which features/function can be executed on a line
+-- @long Some of these bit flags indicate that certain functions may be called on the line. For example, if eCTILINEFEATUREMAKECALL is set, the client may call "MakeCall".
+-- Other bits are indicators of a status, like eCTILINEFEATUREINVALIDPASSWORD, for example, tells the client, that the line will not work as expected, because the password validation on the PBX failed.
+
+EnumLineFeatures ::= ENUMERATED
+{
+	eCTILINEFEATURENONE						(0), -- No actions are available. The client can only show the call states, but no other actions will be completed successfully.
+	eCTILINEFEATUREMAKECALL					(1), -- Call can be initiated.
+	eCTILINEFEATUREDONOTDISTURB				(2), -- "Do not disturb" can be set/modified.
+	eCTILINEFEATUREPICKUP					(4), -- Calls from this line can be picked to other lines.
+	eCTILINEFEATUREBLOCKID					(8), -- While "MakeCall" the CALLERID may be suppressed.
+	eCTILINEFEATURENOIMMEDIATEINQUIRY		(16), -- This flag is set, if it is not possible to execute "MakeCall" while another call is already in active state (no automatic "put on hold" available).
+	eCTILINEFEATUREREMOTEOFFICE				(32), -- Remote Office - Nomadic Mode - is possible
+	eCTILINEFEATUREINVALIDPASSWORD			(64), -- Invalid Password (currently only for BroadWorks lines)
+	eCTILINEFEATUREREMOTEOFFICEEMULATION	(128) -- This flag can be set additionally with ECTILINEFEATURE_REMOTEOFFICE, if the remote office feature will be emulated by the UCServer (call association).
+}
+
+-- @brief Different forward modes the API supports
+-- @long
+-- These are the different forward modes the UCServer supports for forwarding.
+-- The highest value is eFORWARDBACKENDSPECIFIC	(2147483648; 0x80000000) - A backend specific forwarding entry
+EnumForwardModes ::= ENUMERATED 
+{
+    eFORWARDMODEUNKNOWN                        (0),  -- 0x0000_0000 Forward unknown
+    eFORWARDMODEIMMEDIATE                      (1),  -- 0x0000_0001 Forward Immediate
+    eFORWARDMODEBUSY                           (2),  -- 0x0000_0002 Forward on Busy
+    eFORWARDMODENOANSW                         (4),  -- 0x0000_0004 Forward on No Answer
+    eFORWARDMODEBUSYINT                        (8),  -- 0x0000_0008 Forward on Busy for internal callers
+    eFORWARDMODEBUSYEXT                       (16),  -- 0x0000_0010 Forward on Busy for external callers
+    eFORWARDMODENOANSINT                      (32),  -- 0x0000_0020 Forward on No answer for internal callers
+    eFORWARDMODENOANSEXT                      (64),  -- 0x0000_0040 Forward on No answer for external callers
+    eFORWARDMODEIMMINT                       (128),  -- 0x0000_0080 Forward immediate for internal callers
+    eFORWARDMODEIMMEXT                       (256),  -- 0x0000_0100 Forward immediate for external callers
+    eFORWARDDISC                             (512),  -- @added 19.06.2024
+                                                     -- 0x0000_0200 Forward on No client connected for internal callers (SIP)
+    eFORWARDDISCINT                         (1024),  -- @added 19.06.2024
+                                                     -- 0x0000_0400 Forward on No client connected for external callers (SIP)
+    eFORWARDDISCEXT                         (2048),  -- @added 19.06.2024
+                                                     -- 0x0000_0800 Admin Forward on No client connected (SIP)
+    eFORWARDADMINDISC                       (4096),  -- @added 19.06.2024
+                                                     -- 0x0000_1000 Admin Forward on No client connected for internal callers (SIP)
+    eFORWARDADMINDISCINT                    (8192),  -- @added 19.06.2024
+                                                     -- 0x0000_2000 Admin Forward on No client connected for external callers (SIP)
+    eFORWARDADMINDISCEXT                    (16384), -- @added 19.06.2024
+                                                     -- 0x0000_4000 Backend specific forwarding entry
+    eFORWARDALLMODESMASK                    (32767)  -- @added 19.06.2024
+                                                     -- 0x0000_7FFF All modes
+
+    -- the following are not used as c# implementation of the snacc compiler we are using does not support them
+	-- eFORWARDBACKENDSPECIFIC              (2147483648) - 0x8000_0000 Backend specific forwarding entry
+}
+
+-- @brief Different forward controllers the API supports
+-- @long
+-- These are the different forward controllers the UCServer supports for forwarding
+EnumForwardController ::= ENUMERATED 
+{
+	eFORWARDCONTROLLERPBX					(1), -- Forwardings take place in the PBX
+	eFORWARDCONTROLLERTAPISERVERADMIN		(2), -- Forwardings take place in the UCServer on an administrative basis
+	eFORWARDCONTROLLERTAPISERVERUSER		(4) -- Forwardings take place in the UCServer on an user basis
+}
+
+-- @brief Description of a line with its state, phone number etc.
+-- @long
+-- This structure contains the complete description of a line. With this information a client can determine the current state of the line,
+-- its callable number (u8sPhoneNumber), its unique identification number (u8sLinePhoneNumber, not necessary callable), its current available features and so on.
+-- 
+-- A client can obtain this information with asnCtiEnumPhoneLines, asnCtiSnapshotPhoneLine and asnCtiLineMonitorStart.
+-- 
+-- For visualization of phone numbers in various formats, it is necessary to get the location information of a line.
+-- The contents of the u8sLineLocationID field is used to fetch the necessary data from the server. At the moment there is no
+-- JavaScript implementation of the needed business logic to execute the complete call number formatting rules.
+AsnCtiLineInfo ::= SEQUENCE
+{
+	-- Indicates if this is the primary (first) line of the user or not.
+	-- @linked AsnContactPhoneLineType
+	iType							INTEGER,
+
+	-- The line open status of the line. 
+	-- @linked AsnCtiLineOpenStatus
+	iLineOpenStatus					INTEGER,
+
+	-- Contains the line identifier. This can be a phone number or (if the line is monitored by the UCServer) a LineURI beginning with 'tel:'.
+	-- This identifier will be used throughout the API for referencing a line. Exceptions are described if needed.
+	u8sLinePhoneNumber				UTF8String,
+
+	-- Descriptive text if available.
+	u8sDescriptor					UTF8String,
+
+	-- This is the phone number of the line in a dialable format, if possible beginning with "+", e.g. "+49815136856177"
+	u8sPhoneNumber					UTF8String,
+
+	-- ID of the PBX/Line location information to fetch it from the server. With this information, it is possible to
+	-- transform phone numbers.
+	u8sLineLocationID				UTF8String,
+
+	-- Current features/function available on the line.
+	-- @linked EnumLineFeatures
+	iLineFeatures					INTEGER,
+
+	-- Available line forwarding PBX features/modes on this line
+	-- @linked AsnForwardMode
+	iForwardFeaturesPBX				INTEGER,
+		
+	-- Available line forwarding UCServer features/modes on this line.<br />
+	-- At the moment the UCServer can only set a time based redirect on the lines.
+	-- @linked AsnForwardMode
+	iForwardFeaturesSERVER			INTEGER,
+	
+	-- Available user defined line forwarding features/modes on this line.<br />
+	-- Currently not used.
+	iForwardFeaturesUSER			INTEGER,
+
+	-- Additionally line fields added later in the key-value-field for backward compatibility.
+	-- - key "AddressNames", Type AsnString, ';' separated strings with the address names of the line.
+	-- - key "CTIFeatureCodes", Type AsnString, List of features codes available on the line. These can be configured in the UCServer. 
+	-- - key "PrivateLine", Type AsnBool, Indicates, that this line is flagged as "private".
+	optionalParams					AsnOptionalParameters OPTIONAL,
+	...
+}
+
+-- List of AsnCtiLineInfo
+AsnCtiLineInfoList ::= SEQUENCE OF AsnCtiLineInfo
+
+-- @brief In depth information about a call
+-- @long
+-- 
+AsnCtiCallInformation ::= SEQUENCE
+{
+	-- Contains the line identifier of the line the call is attached to.
+	u8sLinePhoneNumber				UTF8String,
+
+	-- A GUID of the connection the call is assigned to. This is used to identify the call throughout the API (Journal, Search etc.).
+	u8sConnectionID					UTF8String,
+
+	-- The call state described in EnumCallState.
+	-- @linked EnumCallState
+	iCallState						INTEGER,
+	
+	-- Type of the call described in EAsnCallType (normal, consult, callback etc.).
+	-- @linked EAsnCallType 
+	iCallType						INTEGER,
+	
+	-- Disconnect reason described in EnumCallDisconnectedReason.
+	-- @linked EnumCallDisconnectedReason
+	iDisconnectedReason				INTEGER,
+	
+	-- The call features available, described in EnumCallFeatures. These features are dynamic and will change with the call state.
+	-- @linked EnumCallFeatures
+	iFeatures						INTEGER,
+	
+	-- The call is outbound (1, true) or inbound (0, false)
+	bOutbound						BOOLEAN,
+
+	-- The call is an internal call (1, true) or an external call (0, false).
+	-- Internal calls are calls within the same location.
+	bInternal						BOOLEAN,
+	
+	-- The caller id is blocked on this call.
+	bCallerIDBlocked				BOOLEAN,
+
+	-- The recording state of this call described in EnumCallRecordingState.
+	-- @linked EnumCallRecordingState
+	iCallRecordingState				INTEGER,
+		
+	-- If this is true, this call is the conference controller call
+	bConferenceCtlr					BOOLEAN,
+
+	-- If the call is part of a conference, this field contains the conference controller ID
+	u8sConferenceCtlrID				UTF8String,
+
+	-- Number of local line
+	-- In case of an incoming call, it is the called number.
+	-- In case of an outgoing call, it is the number of the line.
+	u8sLocalNumberSC				UTF8String,
+
+	-- Number of remote party
+	u8sRemoteNumberSC				UTF8String,
+
+	-- The contact data source as described in EnumRemoteContactSource. Only valid if the optional field pRemoteContact is set.
+	iRemoteContactSource			INTEGER,
+
+	-- Description of the current project/pin rules applied to the call
+	projectPinRule					AsnProjectPinRule,
+
+	-- Free text field (memo) for the call
+	u8sNote							UTF8String,
+	
+	-- The ID of the CallTracker, this call is part of. CallTracker gathers all calls which belong to the same call scenario. (e.g. All calls in a group call carry the same TrackerID)
+	u8sTrackerID					UTF8String,
+	
+	-- Creation time stamp of the call.
+	utcCallCreated					AsnSystemTime,	
+	
+	-- Time stamp of the call when it is connected. (0 if it was never connected)
+	utcCallConnected				AsnSystemTime,
+	
+	-- Time stamp of the call when it is disconnected. (0 if the call is not yet discsonnected)
+	utcCallDisconnected				AsnSystemTime,	
+
+	-- This is true, if a hold contact has no known number.
+	bIsUnknownHoldContact			BOOLEAN,
+	
+	-- The contact data of the owner of the call. 
+	-- In case of an incoming call, it is the contact of the called number.
+	-- In case of an outgoing call, it is the contact of the line owner.
+	pLocalContact					[0] AsnNetDatabaseContact	OPTIONAL,
+	
+	-- If it is available, this contains the contact data of the remote party. 
+	pRemoteContact					[1] AsnNetDatabaseContact	OPTIONAL,
+	
+	-- If there is a call on hold, this contains its number (if the number is unknown bIsUnknownHoldContact is set)
+	pu8sHoldNumberSC				[2] UTF8String				OPTIONAL,
+	
+	-- If there is a call on hold and if data is available, this contains contact data of the contact on hold.
+	pHoldContact					[3] AsnNetDatabaseContact	OPTIONAL,
+	
+	-- If the call was redirected, this number indicate who has redirected it.
+	pu8sRedirectingNumber			[5] UTF8String				OPTIONAL,
+	
+	-- If available and applicable, this contains the contact data of the redirecting party.
+	pRedirectingContact				[6] AsnNetDatabaseContact	OPTIONAL,
+
+	-- Additional information which were added later (for backward compatibility):
+	-- - Key "PBXCallID" Value AsnString - CallID of the call in the PBX
+	-- - Key "AddressID" Value int - The AddressID the call is currently processed on the TAPI line. 
+	-- - Key "CallLinkageID" Value AsnString - CallLinkageID of the Call from the ECSTA (only available on PBX systems supporting it).
+	optionalParams					[7] AsnOptionalParameters	OPTIONAL,
+	
+	-- If available this is the list of key/value pairs with additional information provided by clients for special use cases (so called CallData).
+	-- (New optional with PCE 6.1)
+	callDataList					[8] AsnCtiCallDataList		OPTIONAL,
+	...
+	
+}
+
+-- List of AsnCtiCallInformation
+AsnCtiCallInformationList ::= SEQUENCE OF AsnCtiCallInformation
+
+-- @brief Remove office information object
+-- @long
+-- 
+AsnRemoteOfficeState ::= SEQUENCE
+{
+	-- Remote Office Controller (currently not used)
+	u8sController          UTF8String,
+
+	-- remote office enabled (1) / disabled (0)
+	iEnabled               INTEGER,
+
+	-- Destination number
+	u8sDestination         UTF8String,
+  
+	...
+}
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~ asnCtiEnumPhoneLines ~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-- @brief Arguments for asnCtiEnumPhoneLines.
+AsnCtiEnumPhoneLinesArgument ::= SEQUENCE
+{
+	typeofLines ENUMERATED        -- @brief Which lines shall be listed for the user (own, additional lines, all).
+	{
+		userOwnLines(0),          -- Own lines which the logged in user is owner of.
+		userMonitorLines(1),      -- Own lines plus the lines, the user has special access rights for.
+		systemLocalLines(2),      -- All lines that are local on the system.
+		systemGlobalLines(3)      -- All local lines plus all global known lines; for future use, current its the same as systemLocalLines.
+	},							  
+	attachChangeNotify				INTEGER, -- Request events for line add/remove changes (1) or not (0).
+	...
+}
+
+-- If successful this result will be returned by asnCtiEnumPhoneLines.
+AsnCtiEnumPhoneLinesResult ::= SEQUENCE
+{
+	seqLines						AsnCtiLineInfoList,  -- The list with line information requested.
+	u8sLineMonitorCrossRefID		UTF8String OPTIONAL, -- LineMonitorCrossrefID for add/remove event from the server.
+	...
+}
+
+
+-- @brief Error codes in case AsnRequestError is returned.
+AsnCtiEnumPhoneLinesErrorEnum ::= ENUMERATED
+{
+	success(0),			-- There was no error; for completeness only. If the call was successful, AsnCtiEnumPhoneLinesResult will be returned.
+	generalerror(1),    -- The monitor point for getting events couldn't been set.
+	accessdenied(2)     -- The logged in user has no access rights to enumerate the lines requested.
+}
+
+-- @brief Retrieve line information from the server.
+-- @long
+-- To get information about the lines a user has access to on the server.<br />
+-- There are four possible line types, which can be requested:
+-- - userOwnLines: Own lines which the logged in user is owner of.
+-- - userMonitorLines: Own lines plus the lines, the user has special access rights for.
+-- - systemLocalLines: All lines that are local on the system.
+-- - systemGlobalLines: All local lines plus all global known lines; for future use, current its the same as systemLocalLines.
+--
+-- If attachChangeNotify is set to 1, the server will send asnCtiNotifyLineAddRemove events, if lines were added or removed for the given scope (or line type).
+--
+-- The monitoring of the line lists can only be stopped by disconnecting from the server. 
+asnCtiEnumPhoneLines OPERATION
+	ARGUMENT	arg AsnCtiEnumPhoneLinesArgument
+	RESULT		res AsnCtiEnumPhoneLinesResult
+	ERRORS		{AsnRequestError}
+::= 1260
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~ asnCtiSnapshotPhoneLine ~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-- @brief Argument for asnCtiSnapshotPhoneLine
+AsnCtiSnapshotPhoneLineArgument ::= SEQUENCE
+{
+	u8sLinePhoneNumber				UTF8String, -- Identifier of the line
+	...
+}
+
+-- @brief If asnCtiSnapshotPhoneLine is executed successful, AsnCtiSnapshotPhoneLineResult will be returned.
+AsnCtiSnapshotPhoneLineResult ::= SEQUENCE
+{
+	-- Current line information
+	lineInfo						AsnCtiLineInfo,
+
+	-- Current calls on the line
+	seqCalls						AsnCtiCallInformationList,
+
+	-- Do Not disturb is set (1) oder not (0)
+	iDoNotDisturb					INTEGER,
+
+	-- Current list of forwardings set on the line
+	seqLineForwards					AsnLineForwards,
+
+	-- Current state of remote office feature
+	remoteOfficeState       		AsnRemoteOfficeState,
+
+	-- Optionals
+	-- - Key "InvalidPasswordState" Value AsnInt (1) oder (0)
+	-- - Key "InvalidPasswordUser" Value String
+	-- - Key "BusyOnBusy" Value AsnInt (1) oder (0)
+	optionalParams					AsnOptionalParameters OPTIONAL,
+	...
+	
+}
+
+-- @brief Error codes in case AsnRequestError is returned by asnCtiSnapshotPhoneLine
+AsnCtiSnapshotPhoneLineErrorEnum ::= ENUMERATED
+{
+	success(0),			-- There was no error; for completeness only. If the call was successful, AsnCtiEnumPhoneLinesResult will be returned.
+	generalerror(1),	-- General error; not used in this case.
+	accessdenied(2),	-- The user has no access rights to perform asnCtiSnapshotPhoneLine.
+	invalidline(3)		-- The line given in the argument is not known.
+}
+
+-- @brief Call this function to get the current status of a line.
+-- @long
+-- With asnCtiSnapshotPhoneLine a client can retrieve the current status of a line inclusive calls, forwardings, DnD and remote office states.<br />
+--
+-- Attention: Do not poll with this function get changes of the line state. Use asnCtiLineMonitorStart instead, to be notified if something on the is changing.
+-- asnCtiEnumPhoneLines is not necessary be called before asnCtiLineMonitorStart.
+asnCtiSnapshotPhoneLine OPERATION
+	ARGUMENT	arg AsnCtiSnapshotPhoneLineArgument
+	RESULT		res AsnCtiSnapshotPhoneLineResult
+
+	-- @linked AsnCtiSnapshotPhoneLineErrorEnum
+	ERRORS		{AsnRequestError} 
+::= 1261
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~ asnCtiLineMonitorStart ~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-- @brief Arguments for asnCtiLineMonitorStart
+AsnCtiLineMonitorStartArgument ::= SEQUENCE
+{
+	u8sLinePhoneNumber				UTF8String, -- Identifier of the line
+	...
+}
+
+-- If asnCtiLineMonitorStart is executed successful, AsnCtiLineMonitorStartResult will be returned.
+AsnCtiLineMonitorStartResult ::= SEQUENCE
+{
+	u8sMonitorCrossRefID			UTF8String,					-- CrossrefID to identify the corresponding events after calling asnCtiLineMonitorStart.
+	lineInfo						AsnCtiLineInfo, 			-- Current line state.
+	seqCalls						AsnCtiCallInformationList,	-- Current calls on the line.
+	iDoNotDisturb					INTEGER, 					-- Current state of DoNotDisturb is set (1) or not (0).
+	seqLineForwards					AsnLineForwards,			-- Current list of forwarding settings on the line.
+	remoteOfficeState         		AsnRemoteOfficeState,		-- Current state of remote office feature.
+  
+	-- Optionals
+	-- - Key "InvalidPasswordState" Value AsnInt (1) oder (0)
+	-- - Key "InvalidPasswordUser" Value String
+	-- - Key "BusyOnBusy" Value AsnInt (1) oder (0)
+	optionalParams					AsnOptionalParameters OPTIONAL,
+	...
+}
+
+-- @brief Error codes in case AsnRequestError is returned by asnCtiLineMonitorStart
+AsnCtiLineMonitorStartErrorEnum ::= ENUMERATED
+{
+	success(0),			-- There was no error; for completeness only. If the call was successful, AsnCtiLineMonitorStartResult will be returned.
+	generalerror(1),	-- General error; not used in this case.
+	accessdenied(2),	-- The user has no access rights to perform asnCtiLineMonitorStart.
+	invalidline(3)		-- The line given in the argument is not known.
+}
+
+-- @brief Gets the current state of a line and attach for call and change notifies on this line.
+-- @long
+-- In order receive events about calls and line state changes a client can call asnCtiLineMonitorStart. The result will contain a current snapshot of the line, the calls and additional information.
+-- To stop these events call asnCtiLineMonitorStop.
+--
+-- Attention: To get this information just once without further events, call asnCtiSnapshotPhoneLine instead.
+asnCtiLineMonitorStart OPERATION
+	ARGUMENT	arg AsnCtiLineMonitorStartArgument
+	RESULT		res AsnCtiLineMonitorStartResult
+
+	-- @linked AsnCtiLineMonitorStartErrorEnum
+	ERRORS		{AsnRequestError} 
+::= 1262
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~ asnCtiLineMonitorStop ~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-- @brief Arguments for asnCtiLineMonitorStop
+AsnCtiLineMonitorStopArgument ::= SEQUENCE
+{
+	u8sMonitorCrossRefID			UTF8String, -- CrossRefID the client got from the corresponding asnCtiLineMonitorStart.
+	...
+}
+
+-- @brief Result of asnCtiLineMonitorStop
+AsnCtiLineMonitorStopResult ::= SEQUENCE
+{
+	...
+}
+
+-- @brief Error codes in case AsnRequestError is returned by asnCtiLineMonitorStop
+AsnCtiLineMonitorStopErrorEnum ::= ENUMERATED
+{
+	success(0),			-- There was no error; for completeness only. If the call was successful, AsnCtiLineMonitorStopResult will be returned.
+	generalerror(1),	-- General error; not used in this case.
+	accessdenied(2),	-- The user has no access rights to perform asnCtiLineMonitorStop.
+	invalidline(3)		-- The line given in the argument is not known.
+}
+
+-- @brief Stops the call and state change events on a line.
+-- @long
+-- A client can stop events for state changes and calls on a line with a call to asnCtiLineMonitorStop with the corresponding monitor cross reference ID.
+asnCtiLineMonitorStop OPERATION
+	ARGUMENT	arg AsnCtiLineMonitorStopArgument
+	RESULT		res AsnCtiLineMonitorStopResult
+
+	-- @linked AsnCtiLineMonitorStopErrorEnum
+	ERRORS		{AsnRequestError} 
+::= 1263
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~ asnCtiLineSetDoNotDisturb ~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-- Argument for asnCtiLineSetDoNotDisturb (DnD)
+AsnCtiLineSetDoNotDisturbArgument ::= SEQUENCE
+{
+	u8sLinePhoneNumber				UTF8String, 					-- Identifier of the line
+	bDoNotDisturb					BOOLEAN,						-- Set DnD (1, true) or remove it (0, false)
+	...
+}
+
+-- @brief Result of asnCtiLineSetDoNotDisturb
+AsnCtiLineSetDoNotDisturbResult ::= SEQUENCE
+{
+	...
+}
+
+-- @brief Error codes in case AsnRequestError is returned by asnCtiLineSetDoNotDisturb
+AsnCtiLineSetDoNotDisturbErrorEnum ::= ENUMERATED
+{
+	success(0),			-- There was no error; for completeness only. If the call was successful, AsnCtiLineSetDoNotDisturbResult will be returned.
+	generalerror(1),	-- General error; not used in this case.
+	accessdenied(2),	-- The user has no access rights to perform asnCtiLineSetDoNotDisturb.
+	invalidline(3)		-- The line given in the argument is not known.
+}
+
+-- @brief Set or remove "Do not Disturb" feature on the a line.
+-- @long
+-- Most PBX support "Do not Disturb" (DnD) on phone lines, so the user can prevent being disturbed by phone calls by setting this feature on his phone line.<br />
+-- A Client can call this function to set or remove this feature from the line. See AsnCtiLineSetDoNotDisturbArgument for the arguments needed.
+asnCtiLineSetDoNotDisturb OPERATION
+	ARGUMENT	arg AsnCtiLineSetDoNotDisturbArgument
+	RESULT		res AsnCtiLineSetDoNotDisturbResult
+	ERRORS		{AsnRequestError}
+::= 1264
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~ asnCtiLineSetRemoteOffice ~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-- Argument for asnCtiLineSetRemoteOffice
+AsnCtiLineSetRemoteOfficeArgument ::= SEQUENCE
+{
+	u8sLinePhoneNumber				UTF8String, 					-- Identifier of the line
+	remoteOfficeState				AsnRemoteOfficeState,			-- The state to set. See AsnRemoteOfficeState for more details.
+	...
+}
+
+-- @brief Result of asnCtiLineSetRemoteOffice<br />
+-- If the client receives the Result, the operation was successful.
+AsnCtiLineSetRemoteOfficeResult ::= SEQUENCE
+{
+	...
+}
+
+-- @brief Error codes in case AsnRequestError is returned by asnCtiLineSetRemoteOffice
+AsnCtiLineSetRemoteOfficeErrorEnum ::= ENUMERATED
+{
+	success(0),			-- There was no error; for completeness only. If the call was successful, AsnCtiLineSetRemoteOfficeResult will be returned.
+	generalerror(1),	-- General error; not used in this case.
+	accessdenied(2),	-- The user has no access rights to perform asnCtiLineSetRemoteOffice.
+	invalidline(3)		-- The line given in the argument is not known.
+}
+
+-- @brief Changes the state of the "Remote Office" feature on a line.
+-- @long
+-- "Remote office" is a feature, where a user can virtually attach his mobile phone to his line on the PBX. So every incoming call to the line on the PBX will be automatically forwarded to the mobile phone. 
+-- Additionally the outgoing calls will be forwarded to the mobile too, if either the PBX itself supports this feature or the UCServer can emulate it.
+asnCtiLineSetRemoteOffice OPERATION
+	ARGUMENT	arg AsnCtiLineSetRemoteOfficeArgument
+	RESULT		res AsnCtiLineSetRemoteOfficeResult
+	ERRORS		{AsnRequestError}
+::= 1273
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~ asnCtiNotifyLineInfoChanged ~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-- @brief Event arguments of asnCtiNotifyLineInfoChanged.
+AsnCtiNotifyLineInfoChangedArgument ::= SEQUENCE
+{
+	u8sMonitorCrossRefID	UTF8String, 					-- CrossrefID for the corresponding asnCtiLineMonitorStart.
+	u8sLinePhoneNumber		UTF8String, 					-- Line identifier for the line where the changes happened.	
+	lineInfo				AsnCtiLineInfo,					-- The new line information.
+	...
+}
+
+-- @brief Event from the server if a line changed its status or has been added or removed.
+-- In order to get these events the line must be monitored with asnCtiLineMonitorStart.
+asnCtiNotifyLineInfoChanged OPERATION
+	ARGUMENT	arg AsnCtiNotifyLineInfoChangedArgument
+::= 1280
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~ asnCtiNotifyLineDoNotDisturbChanged ~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-- @brief Event arguments of asnCtiNotifyLineDoNotDisturbChanged
+AsnCtiNotifyLineDoNotDisturbChangedArgument ::= SEQUENCE
+{
+	u8sMonitorCrossRefID		UTF8String, 					-- CrossrefID for the corresponding asnCtiLineMonitorStart.
+	u8sLinePhoneNumber			UTF8String, 					-- Line identifier for the line where the changes happened.	
+	iDoNotDisturb				INTEGER,						-- Current status of DnD - (1) set, (0) not set.
+	-- - Key "BusyOnBusy" Value AsnInt (1) oder (0)
+	optionalParams				AsnOptionalParameters OPTIONAL,
+	...
+}
+
+-- @brief Event from the server if a line changed its DnD status.
+-- In order to get these events the line must be monitored with asnCtiLineMonitorStart.
+asnCtiNotifyLineDoNotDisturbChanged OPERATION
+	ARGUMENT	arg AsnCtiNotifyLineDoNotDisturbChangedArgument
+::= 1281
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~ asnCtiNotifyLineRemoteOfficeChanged ~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-- @brief Event arguments of asnCtiNotifyLineRemoteOfficeChanged
+AsnCtiNotifyLineRemoteOfficeChangedArgument ::= SEQUENCE
+{
+	u8sMonitorCrossRefID		UTF8String, 					-- CrossrefID for the corresponding asnCtiLineMonitorStart.
+	u8sLinePhoneNumber			UTF8String, 					-- Line identifier for the line where the changes happened.	
+	remoteOfficeState			AsnRemoteOfficeState,			-- The new remote office state of the line.
+	...
+}
+
+-- @brief Event from the server if a line changed its remote office state.
+-- In order to get these events the line must be monitored with asnCtiLineMonitorStart.
+asnCtiNotifyLineRemoteOfficeChanged OPERATION
+	ARGUMENT	arg AsnCtiNotifyLineRemoteOfficeChangedArgument
+::= 1292
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~ asnCtiNotifyMonitorStopped ~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-- @brief Event arguments of asnCtiNotifyMonitorStopped
+AsnCtiNotifyMonitorStoppedArgument ::= SEQUENCE
+{
+	u8sMonitorCrossRefID		UTF8String, 					-- CrossrefID for the corresponding asnCtiLineMonitorStart.
+	...
+}
+
+-- @brief Event from the server that a monitoring point was closed due to a configuration change
+-- In order to get these events the line must be monitored with asnCtiLineMonitorStart.
+-- This event is send to the client if a monitor was closed due to a configuation change on the server
+-- The client shall remove the monitor point with u8sMonitorCrossRefID on the client side.
+asnCtiNotifyMonitorStopped OPERATION
+	ARGUMENT	arg AsnCtiNotifyMonitorStoppedArgument
+::= 1294
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~ asnCtiNotifyLineSortOrderChanged ~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-- @brief Event arguments of asnCtiNotifyLineSortOrderChanged
+AsnCtiNotifyLineSortOrderChangedArgument ::= SEQUENCE
+{
+	u8sMonitorCrossRefID		UTF8String, 					-- CrossrefID for the corresponding asnCtiLineMonitorStart.
+	u8sLineURISortOrder			UTF8StringList,					-- Line sort order based on the user configuration, CTI/SIP LineURIs, AV LineURI, additional lines (not server configured line uris like mobile lines)
+	...
+}
+
+-- @brief Event from the server that a monitoring point has changed position from the configurative view
+-- In order to get these events the line must be monitored with asnCtiLineMonitorStart.
+-- This event is send to the client if the sort order of the lines has changed (line added, config lines have swapped positions, (no event is dispatched if a line was removed))
+-- This event is only dispatched for the userOwnLines (see AsnCtiEnumPhoneLinesArgument)
+asnCtiNotifyLineSortOrderChanged OPERATION
+	ARGUMENT	arg AsnCtiNotifyLineSortOrderChangedArgument
+::= 1295
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~ asnCtiNotifyLineForwardingChanged ~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-- @brief Event arguments of asnCtiNotifyLineForwardingChanged
+AsnCtiNotifyLineForwardingChangedArgument ::= SEQUENCE
+{
+	u8sMonitorCrossRefID		UTF8String, 					-- CrossrefID for the corresponding asnCtiLineMonitorStart.
+	u8sLinePhoneNumber			UTF8String, 					-- Line identifier for the line where the changes happened.	
+	seqLineForwards				AsnLineForwards, 				-- New forwarding settings on the line.
+	...
+}
+
+-- @brief Event from the server if a line changed its forwardings.
+-- In order to get these events the line must be monitored with asnCtiLineMonitorStart.
+asnCtiNotifyLineForwardingChanged OPERATION
+	ARGUMENT	arg AsnCtiNotifyLineForwardingChangedArgument
+::= 1282
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~ asnCtiNotifyLineCallInformationChanged ~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-- @brief Possible reasons for a call information changed event.
+AsnCtiCallInfoChangedReason ::= ENUMERATED
+{
+	reasonCallOffering(0), 					-- New incoming call.
+	reasonCallDialing(1),					-- New outgoing call, dialing.
+	reasonCallRingback(2),					-- Outgoing call is now ringing.
+	reasonCallConnected(3),					-- Call is now connected.
+	reasonCallConferenced(4),				-- Call is now member of a conference.
+	reasonCallHold(5),						-- Call is now on hold.
+	reasonRemotePartyChanged(6),			-- The call's remote party has changed.
+	reasonRemoteContactChanged(7),			-- The call's remote party contact data has changed.
+	reasonProjectOrPrivateChanged(8),		-- The call's project settings or private state has changed.
+	reasonCallMemoChanged(9),				-- The call's note has changed.
+	reasonCallBusy(10),						-- The remote party of an outgoing call is busy.
+	reasonCallDisconnect(11),				-- The call has been disconnected on the other side.
+	reasonCallDestroyed(12),				-- The call has been destroyed - local line is now idle.
+	reasonHoldContactChanged(13),			-- The call's hold contact data has been changed.
+	reasonOther(14),						-- Other reasons, not specified.
+	reasonCallDataChanged(15),				-- The call information has been updated as a whole. No specified reason.
+	reasonConnectionToPhoneDestroyed(16)	-- The connection to the phone has been destroyed, therefore the active call has been updated. (Bluetooth disconnected)
+}
+
+-- @brief Event arguments of asnCtiNotifyLineCallInformationChanged.
+AsnCtiNotifyLineCallInformationChangedArgument ::= SEQUENCE
+{
+	u8sMonitorCrossRefID		UTF8String,						-- CrossrefID for the corresponding asnCtiLineMonitorStart.
+	u8sLinePhoneNumber			UTF8String,						-- Line identifier for the line where the changes happened.
+
+	-- Reason for the event. See AsnCtiCallInfoChangedReason fro details.
+	-- @linked AsnCtiCallInfoChangedReason
+	reason						INTEGER,						
+	callinformation				AsnCtiCallInformation,			-- (Possible) reduced version a call information according to the reason.
+	...
+}
+
+-- @brief Event from the server if a call changed its state.
+-- In order to get this event the line must be monitored with asnCtiLineMonitorStart.
+-- @long
+-- Calls are changing their state and additional information during their live time. This event reflects the new status<br />
+asnCtiNotifyLineCallInformationChanged OPERATION
+	ARGUMENT	arg AsnCtiNotifyLineCallInformationChangedArgument
+::= 1283
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~ asnCtiNotifyLineAddRemove ~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-- @brief Event arguments of asnCtiNotifyLineAddRemove.
+AsnCtiNotifyLineAddRemoveArgument ::= SEQUENCE
+{
+	u8sLineMonitorCrossRefID	UTF8String, 					-- CrossRefID the client got from the corresponding asnCtiLineMonitorStart.
+	u8sLinePhoneNumber			UTF8String,						-- Line identifier for the line where the changes happened.	
+	addremove ENUMERATED										-- @brief Line was added (0) or removed (1).
+	{
+		added(0),		-- Line was added.
+		removed(1)		-- Line was removed.
+	},
+	
+	lineInfo					AsnCtiLineInfo,					-- The current line information set.
+	...
+}
+
+-- @brief Event from the server if asnCtiEnumPhoneLines was called to monitor the lines of the user.
+-- In order to get this event the line must be monitored via asnCtiEnumPhoneLines.
+-- @long
+-- With asnCtiEnumPhoneLines the client defined, which sort of lines it wants to monitor. 
+-- If there are changes to the corresponding line list, this event will reflect the changes to the client.<br />
+asnCtiNotifyLineAddRemove OPERATION
+	ARGUMENT	arg AsnCtiNotifyLineAddRemoveArgument
+::= 1284
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~ asnCtiNotifyMakeCallResult ~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-- @brief Event arguments of asnCtiNotifyMakeCallResult
+AsnCtiNotifyMakeCallResultArgument ::= SEQUENCE
+{	
+	u8sLinePhoneNumber		UTF8String,						-- Line identifier on which the make call was performed.
+	u8sConnectionID			UTF8String,						-- Unique identifier of the call (ConnectionID).
+	success					INTEGER, 						-- If make call was successfully executed on TAPI, this is (1), (0) otherwise.
+	...
+}
+
+-- @brief Event from the server with the result of an asynchronous make call operation on the server.
+-- In order to get this event the client must have called asnCtiMakeCall first.
+-- @long
+-- Make call is a asynchronous process in the UCServer. So the final result will be send as an event from the server.
+-- This event contains the result the PBX provided.<br />
+asnCtiNotifyMakeCallResult OPERATION
+	ARGUMENT	arg AsnCtiNotifyMakeCallResultArgument
+::= 1285
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~ asnCtiNotifyConferenceCreated ~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-- @brief Event arguments of asnCtiNotifyConferenceCreated
+AsnCtiNotifyConferenceCreatedArgument ::= SEQUENCE
+{
+	u8sLineMonitorCrossRefID		UTF8String,						-- CrossrefID for the corresponding asnCtiLineMonitorStart
+	u8sLinePhoneNumber				UTF8String,						-- Line identifier for the line where the changes happened.	
+	conferenceControllerCallInfo	AsnCtiCallInformation,			-- Information about the conference controller call. See AsnCtiCallInformation for details.
+	conferenceMemberCallInfoList	AsnCtiCallInformationList,		-- Information about the current participating calls in this conference.
+	...
+}
+
+-- @brief Event from the server if there is a conference established on a line.
+-- In order to get these events the line must be monitored via asnCtiLineMonitorStart.
+-- @long
+-- This event will inform the client, if a conference was established and with whom.<br />
+-- In this way, the client gets detailed information about the participants and the conference controller.<br />
+asnCtiNotifyConferenceCreated OPERATION
+	ARGUMENT	arg AsnCtiNotifyConferenceCreatedArgument
+::= 1286
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~ asnCtiNotifyConferenceDestroyed ~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-- @brief Event arguments of asnCtiNotifyConferenceDestroyed
+AsnCtiNotifyConferenceDestroyedArgument ::= SEQUENCE
+{
+	u8sLineMonitorCrossRefID		UTF8String,						-- CrossrefID for the corresponding asnCtiLineMonitorStart
+	u8sLinePhoneNumber				UTF8String,						-- Line identifier for the line where the changes happened.	
+	conferenceControllerCallInfo	AsnCtiCallInformation,			-- The call information of the conference controller.
+	conferenceMemberCallInfoList	AsnCtiCallInformationList,		-- The call information of the other participants.
+	...
+}
+
+-- @brief Event from the server if a conference is closed/destroyed.
+-- In order to get these events the line must be monitored via asnCtiLineMonitorStart.
+asnCtiNotifyConferenceDestroyed OPERATION
+	ARGUMENT	arg AsnCtiNotifyConferenceDestroyedArgument
+::= 1287
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~ asnCtiNotifyConferencePartyAdded ~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-- @brief Event arguments of asnCtiNotifyConferencePartyAdded
+AsnCtiNotifyConferencePartyAddedArgument ::= SEQUENCE
+{
+	u8sLineMonitorCrossRefID		UTF8String,						-- CrossrefID for the corresponding asnCtiLineMonitorStart.
+	u8sLinePhoneNumber				UTF8String,						-- Line identifier for the line where the changes happened.		
+	conferenceControllerCallInfo	AsnCtiCallInformation,			-- Call information of the conference controller.
+	conferenceMemberCallInfo		AsnCtiCallInformation,			-- Call information of the added new conference participant.
+	...
+}
+
+-- @brief Event from the server when a new participant was added to a conference.
+-- In order to get these events the line must be monitored via asnCtiLineMonitorStart.
+asnCtiNotifyConferencePartyAdded OPERATION
+	ARGUMENT	arg AsnCtiNotifyConferencePartyAddedArgument
+::= 1288
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~ asnCtiNotifyConferencePartyRemoved ~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-- @brief Event arguments of asnCtiNotifyConferencePartyRemoved
+AsnCtiNotifyConferencePartyRemovedArgument ::= SEQUENCE
+{
+	u8sLineMonitorCrossRefID		UTF8String,						-- CrossrefID for the corresponding asnCtiLineMonitorStart.
+	u8sLinePhoneNumber				UTF8String,						-- Line identifier for the line where the changes happened.		
+	conferenceControllerCallInfo	AsnCtiCallInformation,			-- Call information of the conference controller.
+	conferenceMemberCallInfo		AsnCtiCallInformation,			-- Call information of the removed conference participant.
+	...
+}
+
+-- @brief Event from the server when a conference participant was removed.
+-- In order to get these events the line must be monitored via asnCtiLineMonitorStart.
+asnCtiNotifyConferencePartyRemoved OPERATION
+	ARGUMENT	arg AsnCtiNotifyConferencePartyRemovedArgument
+::= 1289
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~ asnCtiNotifyLineCallFeaturesChanged ~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-- @brief Helper to combine ConnectionID and call features of a call. See asnCtiNotifyLineCallFeaturesChanged.
+AsnCtiCallFeature ::= SEQUENCE
+{
+	u8sConnectionID					UTF8String, 					-- Call identifier of the call which features have changed.
+
+	-- Bit field of the current features of the call.
+	-- @linked EnumCallFeatures
+	iFeatures						INTEGER,						
+	...
+}
+
+-- @brief List of AsnCtiCallFeature objects.
+AsnCtiCallFeaturesList ::= SEQUENCE OF AsnCtiCallFeature
+
+-- @brief Event arguments of asnCtiNotifyLineCallFeaturesChanged.
+AsnCtiNotifyLineCallFeaturesChangedArgument ::= SEQUENCE
+{
+	u8sLineMonitorCrossRefID		UTF8String,						-- CrossrefID for the corresponding asnCtiLineMonitorStart.
+	u8sLinePhoneNumber				UTF8String,						-- Line identifier for the line where the changes happened.		
+	callFeaturesList				AsnCtiCallFeaturesList,			-- List of call with their current features which have changed. 
+	...
+}
+
+-- @brief Event from the server when call features have changed.
+-- In order to get these events the line must be monitored via asnCtiLineMonitorStart.
+-- @long
+-- If the state of a call changes or other events on a call happened its features are most likely change too.
+-- Some changes does not change the call state itself, so there will be no call information change event for that call.
+-- In this case asnCtiNotifyLineCallFeaturesChanged will be sent if only the call features have changed.
+asnCtiNotifyLineCallFeaturesChanged OPERATION
+	ARGUMENT	arg AsnCtiNotifyLineCallFeaturesChangedArgument
+::= 1290
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~ asnCtiNotifyProjectSettingsChanged ~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-- @brief Event arguments for asnCtiNotifyLineProjectSettingsChanged
+AsnCtiNotifyLineProjectSettingsChangedArgument ::= SEQUENCE
+{
+	u8sMonitorCrossRefID			UTF8String, 					-- CrossRefID the client got from the corresponding asnCtiLineMonitorStart.
+	u8sLinePhoneNumber				UTF8String,						-- Line identifier for the line where the changes happened.		
+	u8sLocationID					UTF8String,						-- The identifier for the current line location settings.
+	projectList						AsnProjectPinRuleList,			-- The current list of project settings of the line.
+	...
+}
+
+-- @brief Event from the server when the project settings or the location of a line has changed.
+-- In order to get these events the line must be monitored via asnCtiLineMonitorStart.
+-- @long
+-- The project settings are part of the location settings of a line. If the location settings were changed, this event will be sent.
+asnCtiNotifyLineProjectSettingsChanged OPERATION
+	ARGUMENT	arg AsnCtiNotifyLineProjectSettingsChangedArgument
+::= 1291
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~ asnCtiMakeCall ~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-- @brief Arguments for asnCtiMakeCall
+AsnCtiMakeCallArgument ::= SEQUENCE 
+{
+	u8sPhoneNumberFrom				UTF8String, -- Phone number (supercanonic notation, starts with '+', e.g. '+49815136856177') or line URI of the line where the call will be initiated.
+	u8sPhoneNumberTo				UTF8String, -- Number to dial.
+	
+	-- The u8sPhoneNumberTo is the number to dial and normally the server would reformat the number into a dialable form. This behavior can be altered:
+	-- - 0: Server should not format the number for dialing, it shall use it like it is.
+	-- - Other values: Server should format the number before dialing (set prefix and area code etc.).
+	-- Hint: If you are not sure, the number should always be formatted (-> use '1')
+	-- @linked AsnETAPIDialNumberFormat
+	iNumberFormat					INTEGER,
+	newCallParams					AsnCtiNewCallParams OPTIONAL,	-- Allows to set additional information (Project/Pin rules, hide caller id, set remote contact details etc.). These information are completely optional and in the most cases you can omit this parameter.
+	...
+}
+-- @brief Result of asnCtiMakeCall.
+-- @long
+-- Remark: The result will be sent if asnCtiMakeCall was successfully accepted by the server. It does NOT reflect, if the call was successfully made on the PBX! The result is sent as asnCtiNotifyMakeCallResult event asynchronously.
+AsnCtiMakeCallResult ::= SEQUENCE 
+{
+	u8sConnectionID					UTF8String, 					-- Connection identifier of the call
+	
+	-- Additional parameters for asnCtiSetCallData added here for backward compatibility.
+	-- - Key "WasProjectFound", Value bool, optional. Only initiate the call if the project (parameter in newCallParams of AsnCtiMakeCallArgument) was found.
+	optionalParams					AsnOptionalParameters OPTIONAL,
+	...	
+}
+
+-- @brief Error codes in case AsnRequestError is returned by asnCtiMakeCall
+AsnCtiMakeCallErrorEnum ::= ENUMERATED
+{
+	success(0),			-- There was no error; for completeness only. If the call was successful, AsnCtiLineSetRemoteOfficeResult will be returned.
+	generalerror(1),	-- General error; this error code will be sent of the call cannot be made on the line or the project settings in newCallParams are wrong (if given).
+	accessdenied(2),	-- The user has no access rights to perform asnCtiLineSetRemoteOffice.
+	invalidline(3)		-- The line given in the argument is not known.
+}
+
+-- @brief Initiates a new call on a line.
+-- @long
+-- In most cases the operation is simple. Just provide the line number (e.g. '+49815136856177') to dial from and the number to dial to, let the server format the dialing number.
+-- This is it.<br />
+-- It will get a bit more complex, if you want to use additional features like project/pin rules, hide caller id, provide the contact data and so on.
+-- In this cases you have to add AsnCtiNewCallParams to your arguments. See AsnCtiNewCallParams for more details.
+-- 
+-- Remark: The result of this operation does not necessarily reflect, that a call has been dialed successfully. It just confirms the successful execution of the operation.
+-- The corresponding result of the dial command itself (to the PBX for example) will be sent as an asnCtiNotifyMakeCallResult event.  
+asnCtiMakeCall OPERATION
+	ARGUMENT	arg AsnCtiMakeCallArgument
+	RESULT		res AsnCtiMakeCallResult
+	ERRORS		{AsnRequestError}
+::= 1202
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~ asnCtiDropCall ~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-- @brief Drop a call identified by its connection identifier.
+-- @long
+-- A call can be dropped by its connection identifier if it is necessary to identify the exact call, e.g. in a conference or one of the held calls on a line.
+-- If you just want to drop the active call on a line you can call asnCtiLineDropCall instead.
+asnCtiDropCall OPERATION
+	ARGUMENT	arg AsnCtiDropCallArgument
+	RESULT		res AsnCtiDropCallResult
+	ERRORS		{AsnRequestError}
+::= 1203
+
+-- @brief Arguments for asnCtiDropCall.
+AsnCtiDropCallArgument ::= SEQUENCE
+{
+	u8sConnectionID		UTF8String, 					-- The connection identifier of the call to drop.
+	...
+}
+
+-- @brief Result of asnCtiDropCall.
+-- If an error occured, AsnRequestError will be set.
+AsnCtiDropCallResult ::= SEQUENCE
+{
+	bSuccess			BOOLEAN, 						-- true/1 if the call was dropped, false/0 otherwise.
+	...
+}
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~ asnCtiLineDropCall ~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-- @brief Drop the cative call on a line.
+-- @long
+-- To simply drop the active call on a line, call this operation.<br />
+-- If there are more than one call on the line, it is recommended to call asnCtiDropCall and specify the exact call to drop by it connection identifier.
+asnCtiLineDropCall OPERATION
+	ARGUMENT	arg AsnCtiLineDropCallArgument
+	RESULT		res AsnCtiLineDropCallResult
+	ERRORS		{AsnRequestError}
+::= 1224
+
+-- @brief Arguments for asnCtiLineDropCall.
+AsnCtiLineDropCallArgument ::= SEQUENCE
+{
+	u8sLineDescriptor	UTF8String,						-- The line number (e.g. +498151368562177) or the line URI of the line.
+	...
+}
+
+-- @brief Result of asnCtiLineDropCall.
+-- If an error occured, AsnRequestError will be set.
+AsnCtiLineDropCallResult ::= SEQUENCE
+{
+	bSuccess			BOOLEAN, 						-- true/1 if the call was dropped, false/0 otherwise.
+	...
+}
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~ asnCtiAnswerCall ~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-- @brief Accept a call on a line.
+-- @long 
+-- If a call is in state OFFERING (see EnumCallState, incoming call ringing) the call can be accepted with this operation.
+asnCtiAnswerCall OPERATION
+	ARGUMENT	arg AsnCtiAnswerCallArgument
+	RESULT		res AsnCtiAnswerCallResult
+	ERRORS		{AsnRequestError}
+::= 1207
+
+-- @brief Arguments for asnCtiAnswerCall
+AsnCtiAnswerCallArgument ::= SEQUENCE 
+{
+	u8sConnectionID		UTF8String, 					-- Call identifier of the call to accept. 
+	...
+}
+
+-- @brief Result of asnCtiAnswerCall.
+-- If an error occured, AsnRequestError will be set.
+AsnCtiAnswerCallResult ::= SEQUENCE 
+{
+	bSuccess			BOOLEAN,						-- true/1 if the call was accepted, false/0 otherwise.
+	...
+}
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~ asnCtiRedirectCall ~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-- @brief Redirect an incoming call to another line.
+-- @long
+-- To redirect an incoming, ringing call (call state OFFERING) to another line, execute this operation.
+-- This operation works also for lines, where the user has corresponding access rights to.<br />
+-- Additionally this operation can be executed on a contact of the favorite list where the caller has the access rights to control the lines of the contact.
+--
+-- Remark: If you want to pickup a call (picking an offering call to an own line), use asnCtiPickupCall.
+asnCtiRedirectCall OPERATION
+	ARGUMENT	arg AsnCtiRedirectCallArgument
+	RESULT		res AsnCtiRedirectCallResult
+	ERRORS		{AsnRequestError}
+::= 1208
+
+-- @brief Arguments for asnCtiRedirectCall.
+AsnCtiRedirectCallArgument ::= SEQUENCE 
+{
+	u8sContactID		UTF8String,	-- ContactID of the contact to redirect a call from his line. Leave it empty if you just want to redirect a call by its identifier.
+	u8sConnectionID		UTF8String,	-- Connection identifier of the call to redirect.
+	u8sPhoneNumber		UTF8String,	-- The line number to redirect to. This number can be in short or long format if you set iNumberFormat to 1.
+	
+	-- The u8sPhoneNumber is the number to redirect to and normally the server would reformat the number into a dialable form. This behavior can be altered:
+	-- - 0: Server should not format the number for redirecting, it shall use it like it is.
+	-- - Other values: Server should format the number (set prefix and area code etc.).
+	-- Hint: If you are not sure, the number should always be formatted (-> use '1')
+	-- @linked AsnETAPIDialNumberFormat
+	iNumberFormat		INTEGER, 
+	...
+}
+
+-- @brief Result of asnCtiRedirectCall.
+-- If an error occured, AsnRequestError will be set.
+AsnCtiRedirectCallResult ::= SEQUENCE 
+{
+	bSuccess						BOOLEAN,						-- true/1 if the call was redirectd, false/0 otherwise.
+	...
+}
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~ asnCtiPickupCall ~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-- @brief Pickup a ringing call from another line on an own line.
+-- @long
+-- Getting an ringing call from another line to an own line execute this operation.<br />
+-- Picking up calls requires an appropriate configuration (rights) on the PBX.
+-- Thus it is recommended to use asnCtiRedirectCall if you are not aware if the configuration has been set properly.
+-- Picking a call leads to a connected call on the extension picking the call while redirecting leads to an offering call on the new extension.
+asnCtiPickupCall OPERATION
+	ARGUMENT	arg AsnCtiPickupCallArgument
+	RESULT		res AsnCtiPickupCallResult
+	ERRORS		{AsnRequestError}
+::= 1222
+
+-- @brief Arguments for asnCtiPickupCall.
+AsnCtiPickupCallArgument ::= SEQUENCE 
+{
+	u8sContactID		UTF8String,						-- ContactID of the contact to pickup a call from his line. Leave it empty if you just want to pickup a call by its identifier.
+	u8sConnectionID		UTF8String,						-- Connection identifier of the call to redirect.
+	u8sPhoneNumber		UTF8String,						-- The line number to pickup to. This number can be in short or long format if you set iNumberFormat to 1.
+
+	-- The u8sPhoneNumber is the number to pickup to and normally the server would reformat the number into a dialable form. This behavior can be altered:
+	-- - 0: Server should not format the number for pickup, it shall use it like it is.
+	-- - Other values: Server should format the number (set prefix and area code etc.).
+	-- Hint: If you are not sure, the number should always be formatted (-> use '1')
+	-- @linked AsnETAPIDialNumberFormat
+	iNumberFormat		INTEGER,
+	...
+}
+
+-- @brief Result of asnCtiPickupCall
+-- If an error occured, AsnRequestError will be set.
+AsnCtiPickupCallResult ::= SEQUENCE 
+{
+	bSuccess		BOOLEAN,						-- true/1 if the call was picked, false/0 otherwise.
+	-- optionalParams Name "RemoteInvokeID" Value String - Some dirty internal UCServer logic Simon added and should get reworked, the interface does NOT need this property here
+	optionalParams						AsnOptionalParameters OPTIONAL,
+	...
+}
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~ asnCtiStartCallRecording ~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-- @brief Start recording of a call.
+-- @long
+-- If the call recorder is configured on the server, calls can be recorded if the feature eCFEATURESTARTCALLRECORD is set on the call.<br />
+-- If executed successfully, the server will created a conference with the connected party and the call recorder.
+-- If the caller or called party disconnects, the conference will be terminated and the server will dispatch the recording (wav or mp3 file) to the initiator of the recording.
+asnCtiStartCallRecording OPERATION
+	ARGUMENT	arg AsnCtiStartCallRecordingArgument
+	RESULT		res AsnCtiStartCallRecordingResult
+	ERRORS		{AsnRequestError}
+::= 1230
+
+-- @brief Arguments for asnCtiStartCallRecording.
+AsnCtiStartCallRecordingArgument ::= SEQUENCE 
+{
+	u8sConnectionID		UTF8String,						-- Connection identifier of the call to record.
+	...
+}
+
+-- @brief Result of asnCtiStartCallRecording
+-- If an error occured, AsnRequestError will be set.
+AsnCtiStartCallRecordingResult ::= SEQUENCE 
+{
+	bSuccess			BOOLEAN,						-- true/1 if the record starts successful, false/0 otherwise.
+	...
+}
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~ asnCtiStopCallRecording ~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-- @brief Stop recording of a call.
+-- @long
+-- To stop recording a call without destroying the connection this operation is executed. 
+-- This will terminate the conference with the call recorder line without disconnecting the other calls.
+-- To execute this operation successfully, the feature eCFEATURESTOPCALLRECORD must be set on the call.<br />
+-- The record will be sent to the initiator of the recording.
+asnCtiStopCallRecording OPERATION
+	ARGUMENT	arg AsnCtiStopCallRecordingArgument
+	RESULT		res AsnCtiStopCallRecordingResult
+	ERRORS		{AsnRequestError}
+::= 1231
+
+-- @brief Arguments for asnCtiStopCallRecording.
+AsnCtiStopCallRecordingArgument ::= SEQUENCE 
+{
+	u8sConnectionID		UTF8String,						-- Connection identifier of the call to stop recording on.
+	...
+}
+
+-- @brief Result of asnCtiStopCallRecording.
+-- If there was no error executing this operation, the result will be returned; otherwise AsnRequestError is set.
+AsnCtiStopCallRecordingResult ::= SEQUENCE 
+{
+	...
+}
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~ asnCtiSetCallData ~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-- @brief Add some data to the call which will be transferred to other clients.
+-- @long
+-- For some use cases it will be necessary to transfer business data attached to a call to other clients with the call, e.g. while transferring it.<br />
+-- With this operation this data can be added to the call information of a call without setting the whole information structure again.<br />
+-- This operation only executes successfully if the user is the line owner.<br />
+-- [TODO: MORE DETAILS NEEDED! Especial for CallDataAnnouncement (ConnectionID unknown)]
+asnCtiSetCallData OPERATION
+	ARGUMENT	arg AsnCtiSetCallDataArgument
+	RESULT		res AsnCtiSetCallDataResult
+	ERRORS		{AsnRequestError}
+::= 1225
+
+-- @brief Arguments for asnCtiSetCallData
+AsnCtiSetCallDataArgument ::= SEQUENCE 
+{	
+	u8sConnectionID			UTF8String,			-- Connection identifier of the call to set data for. If this is unknown (empty), the additional parameters in optionalParams are needed.
+	callDataList			AsnCtiCallDataList,	-- Call data key value map
+
+	-- Additional parameters for asnCtiSetCallData added here for backward compatibility.
+	-- These parameters are only needed, if the connection identifier is unknown.
+	-- - Key "calledNumber", Value String
+	-- - Key "transferringNumber", Value String
+	-- - Key "callStateMask", Value double
+	-- - Key "hostCallID", Value double
+	optionalParams					AsnOptionalParameters OPTIONAL,
+	...
+}
+
+-- @brief Ergebnis für asnCtiSetCallData
+AsnCtiSetCallDataResult ::= SEQUENCE 
+{
+	-- Data was accepted
+	bSuccess			BOOLEAN, 						-- true/1 if successful set, false/0 otherwise
+	...
+}
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~ asnCtiMergeCalls ~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-- @brief Merge two calls on a line together.
+-- @long
+-- It is possible to connect two parties with each other. It does not result in a conference, the line is not member of that call any longer after executing the function.
+-- To execute this successfully, the connection identifier of the calls must be known and the calls must be in the call list of the same line (e.g. one active, one on hold).
+-- Both calls must have the call feature eCFEATUREMERGECALLS set.
+asnCtiMergeCalls OPERATION
+	ARGUMENT	arg AsnCtiMergeCallsArgument
+	RESULT		res AsnCtiMergeCallsResult
+	ERRORS		{AsnRequestError}
+::= 1209
+
+-- @brief Arguments for asnCtiMergeCalls.
+AsnCtiMergeCallsArgument ::= SEQUENCE 
+{
+	u8sConnectionID1	UTF8String, 					-- Connection identifier of the first call to merge.
+	u8sConnectionID2	UTF8String, 					-- Connection identifier of the second call to merge.
+	...
+}
+
+-- @brief Result of asnCtiMergeCalls.
+-- If an error occured, AsnRequestError will be set.
+AsnCtiMergeCallsResult ::= SEQUENCE 
+{
+	bSuccess			BOOLEAN,						-- true/1 if the merge was successful, false/0 otherwise.
+	...
+}
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~ asnCtiSwapHold ~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-- @brief Swap puts the active call on hold and retrieves the hold call
+-- @long 
+-- You can swap between a held call and an active call with this function.<br />
+-- This operation needs two calls on the same line (one active, one held) to execute successfully.
+-- Both calls must have the call feature eCFEATURESWAPHOLD set.
+asnCtiSwapHold OPERATION
+	ARGUMENT	arg AsnCtiSwapHoldArgument
+	RESULT		res AsnCtiSwapHoldResult
+	ERRORS		{AsnRequestError}
+::= 1210
+
+
+-- @brief Arguments for asnCtiSwapHold.
+AsnCtiSwapHoldArgument ::= SEQUENCE 
+{
+	u8sConnectionID					UTF8String,						-- Connection identifier of the held call.
+	...
+}
+
+-- @brief Result of asnCtiSwapHold.
+-- If an error occured, AsnRequestError will be set.
+AsnCtiSwapHoldResult ::= SEQUENCE 
+{
+	bSuccess						BOOLEAN, 						-- true/1 if swap was successful, false/0 otherwise.
+	...
+}
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~~ asnCtiHold ~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-- @brief Set the call on hold, so another another call in the same line will be possible to make.
+-- @long 
+-- For some reasons it is possible to set a call on hold. This can be used to a call back to another line, setup a conference, set a transfer etc.<br />
+-- A call on hold isn't disconnect, but the call partner cannot hear what is spoken while on hold and is waiting for further actions.
+asnCtiHold OPERATION
+	ARGUMENT	arg AsnCtiHoldArgument
+	RESULT		res AsnCtiHoldResult
+	ERRORS		{AsnRequestError}
+::= 1211
+
+-- @brief Arguments for asnCtiHold.
+AsnCtiHoldArgument ::= SEQUENCE 
+{
+	bHold							BOOLEAN, 						-- true/1 if the call shall be set on hold, false/0 otherwise.
+	u8sConnectionID					UTF8String, 					-- Connection identifier of the call to change hold state.
+	...
+}
+
+-- @brief Result of asnCtiHold.
+-- If an error occured, AsnRequestError will be set.
+AsnCtiHoldResult ::= SEQUENCE 
+{
+	bSuccess						BOOLEAN,						-- true/1 if execution was successful, false/0 otherwise. If an error occured, AsnRequestError will be set.
+	...
+}
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~ asnCtiSetForward ~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-- @brief Set simple call forwards.
+-- @long
+-- Set a call forward on a line (optionally with conditions). Default is a unconditional forward from one line to another.<br />
+-- To set multiple forwards on a line (if it is supported by the PBX system), call this function again on the same line.
+asnCtiSetForward OPERATION
+	ARGUMENT	arg AsnCtiSetForwardArgument
+	RESULT		res AsnCtiSetForwardResult
+	ERRORS		{AsnRequestError}
+::= 1218
+
+-- @brief Arguments for asnCtiSetForward.
+AsnCtiSetForwardArgument ::= SEQUENCE 
+{
+	u8sPhoneNumberFrom		UTF8String,  -- Number of the line to forward from. Format should be like '+49815136856177' or it can be a line URI.
+	u8sPhoneNumberTo		UTF8String,  -- Number of the line to forward to. Format must be long format, like '+49815136856177'.
+
+	-- Additional parameter added for backward compatibility here.
+	-- - Key "ForwardMode", Type AsnInt, optional. Specifies the condition for the forward. If left out, the forward will be unconditional (all calls get forwarded).
+	-- @linked AsnForwardMode
+	optionalParams					AsnOptionalParameters OPTIONAL,
+	...
+}
+
+-- @brief Result of asnCtiSetForward.
+-- If an error occured, AsnRequestError will be set.
+AsnCtiSetForwardResult ::= SEQUENCE 
+{
+	bSuccess						BOOLEAN,	-- true/1 if the forward is set, false/0 otherwise.
+	bExistingForwardingChanged		BOOLEAN,	-- true/1 if this is the very first forward or if your PBX does not support multiple forwards. A preexisting forward was replaced in this case. false/0 if your forward is added to the list of forwards.
+	-- optionalParams Name "RemoteInvokeID" Value String - Some dirty internal UCServer logic Simon added and should get reworked, the interface does NOT need this property here
+	optionalParams					AsnOptionalParameters OPTIONAL,
+	...
+}
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~ asnCtiRemoveForward ~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-- @brief Remove a forward from a line.
+-- @long
+-- This operation removes all forwards from a line<br />
+-- To remove one forward form the list of forwards on the line, the optional parameters "ForwardMode" and "ForwardDestination" must be set to match exactly in the list.<br />
+-- This information can be read from the current line information sent to the client by the event "asnCtiNotifyLineInfoChanged" or by calling asnCtiSnapshotPhoneLine.
+asnCtiRemoveForward OPERATION
+	ARGUMENT	arg AsnCtiRemoveForwardArgument
+	RESULT		res AsnCtiRemoveForwardResult
+	ERRORS		{AsnRequestError}
+::= 1219
+
+-- @brief Arguments for asnCtiRemoveForward.
+AsnCtiRemoveForwardArgument ::= SEQUENCE 
+{
+	u8sPhoneNumberFrom				UTF8String, -- Number of the line to remove the forward from. Format should be like '+49815136856177' or it can be a line URI.
+
+	-- Additional parameters added for backward compatibility here.
+	-- To remove exact one forward from the forward list of the line, these optional parameters must be set accordingly.
+	-- - Key "ForwardMode", Type AsnInt, optional. 
+	-- - Key "ForwardDestination", Type AsnString, optional.
+	-- @linked AsnForwardMode
+	optionalParams					AsnOptionalParameters OPTIONAL,
+	...
+}
+
+-- @brief Result of asnCtiRemoveForward
+-- If an error occured, AsnRequestError will be set.
+AsnCtiRemoveForwardResult ::= SEQUENCE 
+{
+	bSuccess			BOOLEAN, 						-- true/1 if the forward(s) has been removed, false/0 otherwise. If an error occured  AsnRequestError will be set.
+	-- optionalParams Name "RemoteInvokeID" Value String - Some dirty internal UCServer logic Simon added and should get reworked, the interface does NOT need this property here
+	optionalParams					AsnOptionalParameters OPTIONAL,
+	...
+}
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~ asnCtiDialDigits ~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-- @brief Line dial digit modes for asnCtiDialDigits
+EnumCtiDigitMode ::= ENUMERATED
+{
+	eLINEDIGITMODESERVERDECIDE(0),	-- Server decides which dialing mode is used.
+	eLINEDIGITMODEPULSE(1),			-- Uses rotary pulse sequences to signal digits. Valid digits are 0 through 9.
+	eLINEDIGITMODEDTMF(2), 			-- Uses DTMF tones to signal digits. Valid digits are 0 through 9, '*', '#', 'A', 'B', 'C', and 'D'.
+	eLINEDIGITMODEDTMFEND(4)		-- Uses DTMF tones to signal digits and detect the down edges. Valid digits are 0 through 9, '*', '#', 'A', 'B', 'C', and 'D'.
+}
+
+-- @brief Dial DTMF tones on an active call.
+-- @long
+-- For call menus or other use cases it is possible to generate dial tones on an active call.<br />
+-- There are different digit modes possible: LINEDIGITMODE_DTMF, LINEDIGITMODE_DTMFEND and LINEDIGITMODE_PULSE
+asnCtiDialDigits OPERATION
+	ARGUMENT	arg AsnCtiDialDigitsArgument
+	RESULT		res AsnCtiDialDigitsResult
+	ERRORS		{AsnRequestError}
+::= 1221
+
+-- @brief Arguments for asnCtiDialDigits.
+AsnCtiDialDigitsArgument ::= SEQUENCE 
+{
+	u8sConnectionID		UTF8String,
+	-- Dialing mode for the digits.
+	-- @linked EnumCtiDigitMode
+	iDigitMode			INTEGER,						
+	iDigitDuration		INTEGER,						-- Both the duration in milliseconds of DTMF digits and pulse and DTMF inter-digit spacing. A value of 0 uses a default value. 
+	u8sDigitsToDial		UTF8String,						-- The digits to dial. See EnumCtiDigitMode for valid characters.
+	...
+}
+
+-- @brief Result of asnCtiDialDigits.
+-- If an error occured, AsnRequestError will be set.
+AsnCtiDialDigitsResult ::= SEQUENCE 
+{
+	bSuccess			BOOLEAN,						-- true/1 if operation was successful, false/0 otherwise. If an error occured AsnRequestError will be set.
+	...
+}
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~ asnCtiCompleteCall ~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-- @brief Set a automatic call back if the call was not accepted or busy.
+-- @long
+-- If a call was unsuccessful because the remote party was busy or the call was not answered, this operation sets the the complete call function of the PBX system to call back the caller automatically if the called party / line is free / back again. 
+asnCtiCompleteCall OPERATION
+	ARGUMENT	arg AsnCtiCompleteCallArgument
+	RESULT		res AsnCtiCompleteCallResult
+	ERRORS		{AsnRequestError}
+::= 1223
+
+-- @brief Arguments for asnCtiCompleteCall.
+AsnCtiCompleteCallArgument ::= SEQUENCE 
+{
+	u8sConnectionID		UTF8String,						-- Connection identifier of the call to be completed automatically.
+	...
+}
+
+-- @brief Result of asnCtiCompleteCall.
+-- If an error occured, AsnRequestError will be set.
+AsnCtiCompleteCallResult ::= SEQUENCE 
+{
+	bSuccess			BOOLEAN,						-- true/1 if the call completion was set successful, false/0 otherwise.
+	...
+}
+
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~ asnCtiConference ~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-- @brief Initiate a conference call with two already existing calls of a line.
+-- @long
+-- To initiate a conference, setup two calls via a call back (asnCtiMakeCall => get this call establish => asnCtiMakeCall), 
+-- so you have one call on hold and one active. Now execute this operation with the two connection identifiers.
+-- As result, you should now have a conference with 3 attendants (you and the other two call parties).
+asnCtiConference OPERATION
+	ARGUMENT	arg AsnCtiConferenceArgument
+	RESULT		res AsnCtiConferenceResult
+	ERRORS		{AsnRequestError}
+::= 1250
+
+-- @brief Arguments for asnCtiConference.
+AsnCtiConferenceArgument ::= SEQUENCE 
+{
+	u8sConnectionID1	UTF8String,						-- Connection identifier of the active call.
+	u8sConnectionID2	UTF8String,						-- Connection identifier of the held call.
+	...
+}
+
+-- @brief Result of asnCtiConference.
+-- If an error occured, AsnRequestError will be set.
+AsnCtiConferenceResult ::= SEQUENCE 
+{
+	bSuccess			BOOLEAN, 						-- true/1 if the conference was initiated successful, false/0 otherwise.
+	...
+}
+
+END

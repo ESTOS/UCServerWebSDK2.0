@@ -1,0 +1,415 @@
+﻿UC-Server-Access-Protocol-AgentServices
+	{ iso(1) identified-organization(3) dod(6) internet(1) private(4) enterprise(1) estos(10924) uc-server-access-protocol-v2(2) agent-services(31) }
+
+-- @category AgentServices
+-- @brief API for Server to Server Agents functionality
+-- @long
+-- ~Erlaubte Operation IDs: 4900-4099
+-- 
+--
+--
+
+-- 
+--
+-- ## Module description
+-- This module defines structures and operations for a agent functionality backend other than UCServer or PBX.
+--
+-- ## Prerequisite for using the interface
+-- - The other service needs a socket for secure data Transmission between client-server and vise versa.
+-- - Installation of ProCall Software in advance at the client side
+-- - Login the other service at the UCServer
+-- - Provide IDs (full canonical telephone numbers or user IDs) of the User, which should use the agnet functionality
+-- - Attach to Events for the user commands (like logon or logoff)
+-- - Provide state changes of the agent with its IDas event to the UCServer
+-- - While closing the connection, detach from events first, unregister IDs and close socket connection to the UCServer.
+--
+--
+-- ## Functionalities
+-- - If the user can be recognized as agnet user oft the other server it will gain the client UI for agnet state changes
+-- - User commands according state changes of the user will be provided to the other service
+-- - State changes from the other service will be provided to the corresponding clients
+--
+-- ## Sequence diagram
+-- "Call": Like a RPC Call, expect results or errors as an answer.
+--
+-- "Event": Behaviour is like an event it is named, this call will not have any results sent back.
+--
+-- 
+--
+-- 
+--
+-- 
+--
+-- 
+--
+-- @startuml
+-- == Connection loss between agent service and UCService ==
+-- 
+-- "Agent Service" ->x "UCService"
+-- "UCService" <- "UCService": Wait for reconnect, do nothing,\nUser actions are ignored.
+-- "UCService" <- "UCService": Disable all agents, so it is visible to the users,\n that something happend to the agent service,\nwait for reconnect.
+-- "UCService" <- "UCService": Remove the agents from memory\nand from the UI of the users. Stop waiting.
+-- |||
+-- "Agent Service" -> "UCService": Reconnecting to the UCService always with\nreregistration of the agents again.\n**See "Register Agents".**
+-- 
+-- @enduml
+-- 
+
+DEFINITIONS
+IMPLICIT TAGS ::=
+BEGIN
+
+IMPORTS
+AsnNetDatabaseContact, AsnUserPropertyBag, UTF8StringList, AsnRequestError, AsnNetDatabaseContactID, AsnStringIntegerPairList FROM UC-Server-Access-Protocol-Common
+;
+
+-- @brief Error return codes used in the API
+AsnNetServicesAgentsErrors ::= ENUMERATED
+{
+	noerror(0),						-- all went fine
+	accessdenied(1),				-- access to interface denied, maybe not logged in or with wrong account
+	agentidmissing(2),				-- missing agent id where it is needed
+	groupidmissing(3),				-- missing group id where it is needed
+	agentstatemissing(4),			-- missing agent state where it is needed
+	agentcapabilitiesmissing(5),	-- capabilities missing where needed
+	serviceidmissing(6),			-- service id missing where it is needed
+	wrongserviceid(7),				-- the service id given was not correct
+	servicealreadyconnected(8),		-- the service given has already a running connection
+	serviceallocationfailed(9),		-- the service cannot be allocated in the ucserver
+	noagentsregistered(10),			-- the service has no registered agents
+	noagentsgiven(11)				-- the agent list expected was empty
+}
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~ asnAgentLogin ~~~~~~~~~~~~~~~~~~~~~~~
+
+-- Additional data that may be required to login/monitor ACD groups of a PBX.
+AsnAgentACDLoginData ::= SEQUENCE
+{
+	-- The agent ID on the PBX (PIN); this probably has to be requested by the user
+	u8sAgentID	UTF8String,
+
+	-- The group ID on the PBX
+	u8sGroupID	UTF8String,
+
+	-- A password may also be required to log in
+	u8sPassword	UTF8String, 
+
+	-- [TODO: what is "DeviceID" for? It is possible as a parameter in the system]
+	u8sDeviceID	UTF8String, 
+
+	...
+}
+
+
+-- @brief register agents to the service
+-- @long
+-- @startuml
+-- == Register Agents ==
+-- 
+-- "Agent Service" -> "UCService" : **Call:** asnRegisterServiceAgent\n(AsnRegisterServiceAgentsArgument)
+-- activate "UCService"
+-- "UCService" <- "UCService": Checks access rights and syntax\nof the arguments
+-- "Agent Service" <- "UCService" : **Normal Result:** AsnRegisterServiceAgentsResult,\nif the service accepted the registration list
+-- "Agent Service" <- "UCService" : **Error Result:** AsnRequestError,\nif the service can't accept the registration list
+-- deactivate "UCService"
+-- "UCService" <- "UCService": Processing the registration list of agents
+-- @enduml
+-- 
+asnRegisterServiceAgents OPERATION
+	ARGUMENT	arg AsnRegisterServiceAgentsArgument
+	RESULT		res AsnRegisterServiceAgentsResult
+	ERRORS		{AsnRequestError}
+::= 4900
+
+-- @brief Structure with the agent information needed whcih is exchanegd between the agent service and the UCServer.
+AsnServiceAgent ::= SEQUENCE
+{
+	-- ID of the agent group the agent or line number is member of. The combination of AgentID and GroupID is treated as unique for a service.  
+	-- Groups are used to combine different Agents into one controlling UI component.  
+	-- So it is possible to combine different phone lines of a user into one Agent-UI component for this user.  
+	-- If different Agents should have an "own" Button in the UCClient, they should have different GroupIDs or vice versa.
+	u8sGroupID 			UTF8String,						
+
+	-- ID of the Agent; should be a phone number like +498151368560 or a UserID like sip:sam.test@estos.de, which corresponds with the identity of the UCServer User.
+	-- Internally the Agent will be idetified with <agendid>/<groupid>@<serviceid>, so this combination has to be unique on the UCService.
+	u8sAgentID 			UTF8String,						
+
+	-- A displayable name of the Agent to show in the UI of the UCClient. If not given, the above AgnentID will be shown.
+	-- This field is used while registration to give the agent a more readable name for the user interface.
+	--
+	-- For deregistering the agent, you can leave this field unset;
+	u8sAgentDisplayName 		[0] UTF8String OPTIONAL,
+
+	-- While registration of the agent this field contains the initial agent state. Should be 0 if not known. Value can be one of AsnAgentStateEnum.  
+	-- This field is also used for changing the state of the agent.
+	--
+	-- For deregistering the agent, you can leave this field unset;
+	iAgentState					[1] INTEGER OPTIONAL,   
+
+	-- The service defines in this bitfield, which agent states are supported/can be requested using the Bit enumeration AsnSupportedAgentStatesEnum.  
+	-- eAGENTSTATELOGGEDOUT(1)					- "log out"  
+	-- eAGENTSTATELOGGEDINNOTREADY(2),			- "not ready"  
+	-- eAGENTSTATELOGGEDINREADY(4),				- "ready"  
+	-- eAGENTSTATELOGGEDINBUSY(8),				- "busy"  
+	-- eAGENTSTATELOGGEDINWORKINGAFTERCALL(16)	- "working after call"  
+	--
+	-- For deregistering the agent, you can leave this field unset;
+	iPossibleAgentStates 		[2] INTEGER OPTIONAL, 	
+
+	-- The Bitfield is set while registration of the agent and supports the following values from AsnAgentLoginRequiredParametersEnum:  
+	-- eAGENTLOGINREQUIRESAGENTID(1),	 - AgentID Required (for example, the PIN)
+	-- eAGENTLOGINREQUIRESGROUPID(2),	 - GroupID Required			- not yet supported by ucclient
+	-- eAGENTLOGINREQUIRESPASSWORD(4),   - Password Required		- not yet supported by ucclient
+	-- eAGENTLOGINREQUIRESDEVICEID(8)	 - DeviceID Required		- not yet supported by ucclient
+	-- eAGENTLOGOUTREQUIRESPASSWORD(256) - Logout requires password	- not yet supported by ucclient
+	--
+	-- For deregistering the agent, you can leave this field unset;
+	iRequiredLoginLogoutParams 	[3] INTEGER OPTIONAL,
+	...
+}
+
+-- @brief List of AsnServiceAgent strutures
+--  
+AsnServiceAgentList ::= SEQUENCE OF AsnServiceAgent
+
+-- @brief Argument for asnRegisterServiceAgents
+--  
+AsnRegisterServiceAgentsArgument ::= SEQUENCE
+{
+	-- ID of the Service to distinguish the agents from different services. To us a unique string like GUID 
+	-- is recommended.
+	-- The ID is used to attach to the right Agents after a connection loss to the UCServer for example.
+	u8sServiceID 			UTF8String,				
+
+	listAgents				AsnServiceAgentList,	-- List of agents with the needed information to register and  the inital agent state.
+
+	-- If given and set to true, pre-existing Agents of this Service will be removed 
+	-- from UCServer memory and replaced with the given list of agents.
+	bClearExistingAgents	[0] BOOLEAN OPTIONAL,
+	...
+}
+
+-- @brief Result of asnRegisterAgents
+--  
+AsnRegisterServiceAgentsResult ::= SEQUENCE
+{
+	u8sServiceID			UTF8String, 	-- The unique ID of the Service the agents will be registered to on the UCServer.
+	bSuccess				BOOLEAN,		-- true if the call was successful. If the call fails, the AsnRequestError structure will contain the details.
+	...
+}
+
+
+-- @brief unregister agents from the service
+-- @long
+-- @startuml
+-- == Unregister Agents ==
+-- 
+-- "Agent Service" -> "UCService" : **Call:** asnUnregisterServiceAgents\n(AsnUnregisterServiceAgentsArgument)
+-- activate "UCService"
+-- "UCService" <- "UCService": Checks access rights and syntax\nof the arguments
+-- "Agent Service" <- "UCService" : **Normal Result:** AsnUnregisterServiceAgentsResult,\n if the service accepted the deregistration list
+-- "Agent Service" <- "UCService" : **Error Result:** AsnRequestError,\n if the service can't accept the deregistration list
+-- deactivate "UCService"
+-- 
+-- @enduml
+--  
+asnUnregisterServiceAgents OPERATION
+	ARGUMENT	arg AsnUnregisterServiceAgentsArgument
+	RESULT		res AsnUnregisterServiceAgentsResult
+	ERRORS		{AsnRequestError}
+::= 4901
+
+-- @brief Argument for asnUnregisterServiceAgents
+--  
+AsnUnregisterServiceAgentsArgument ::= SEQUENCE
+{
+	u8sServiceID			UTF8String, 			-- The unique ID of the Service the agents will be unregistered from the UCService.
+	listAgents				AsnServiceAgentList,	-- List of agents with the needed information to unregister from the UCService.
+	bClearExistingAgents	[0] BOOLEAN OPTIONAL,	-- If given and set to true, all agents will be removed, the AsnServiceAgentList can be left empty then.
+	...
+}
+
+-- @brief Result of asnUnregisterServiceAgents
+--  
+AsnUnregisterServiceAgentsResult ::= SEQUENCE
+{
+	bSuccess				BOOLEAN,	-- true if the call was successful. If the call fails, the AsnRequestError structure will contain the details.
+	...
+}
+
+
+
+-- @brief Event to set the state of agent(s). There is no answer to this event.
+-- @long
+-- @startuml
+-- == Changing agent state initiated by the agent service ==
+-- 
+-- "Agent Service" -> "UCService" : **Event:** asnSetServiceAgentStates\n(AsnSetServiceAgentStatesArgument)
+-- "UCService" <- "UCService" : Changing the internal state of the agent\nand dispathcing it to the clients
+-- |||
+-- ... If there where errors while processing the state\nchange list an event will be sent back to the agent service ...
+-- "Agent Service" <- "UCService" : **Event:** asnResponseSetServiceAgentStatesFailed\n (AsnResponseSetServiceAgentStatesFailedArgument)
+-- 
+-- @enduml
+--  
+asnSetServiceAgentStates OPERATION
+	ARGUMENT	arg AsnSetServiceAgentStatesArgument
+::= 4902
+
+-- @brief Argument for asnSetAgentStates
+--  
+AsnSetServiceAgentStatesArgument ::= SEQUENCE
+{
+	listServiceAgentStates	AsnServiceAgentList,	-- List of service agents with their new state.
+	...
+}
+
+
+-- @brief Event to for agent states that the UCServer was unable to set
+-- @long
+-- If the UCServer was unable to set agent states while processing asnSetServiceAgentStates, it will
+-- send back this event with the failed agent states.
+--  
+asnResponseSetServiceAgentStatesFailed OPERATION
+	ARGUMENT	arg AsnResponseSetServiceAgentStatesFailedArgument
+::= 4903
+
+--  
+AsnServiceAgentStateFailedReasonEnum ::= ENUMERATED
+{
+	eUNKNOWNAGENT (0),	-- The AgenID is unknown
+	eUNKNOWNSTATE (1)	-- The state to set is not one of AsnAgentStateEnum
+}
+
+--  
+AsnServiceAgentStateFailedReason ::= SEQUENCE
+{
+	u8sServiceAgentID	UTF8String,	-- ID of the agent to set the state for. It is the same which was given with asnRegisterServiceAgents.
+	iFailedReason		INTEGER,	-- The desired state of the agent as described in AsnServiceAgentStateFailedReasonEnum.
+	...
+}
+
+--  
+AsnServiceAgentStateFailedReasonList ::= SEQUENCE OF AsnServiceAgentStateFailedReason
+
+
+-- @brief Argument for AsnResponseSetServiceAgentStatesFailed
+--  
+AsnResponseSetServiceAgentStatesFailedArgument ::= SEQUENCE
+{
+	listServiceAgentStates	AsnServiceAgentStateFailedReasonList,	-- List of AsnServiceAgentStateFailedReason.
+	...
+}
+
+
+-- @brief The state of a agent should be changed
+-- @long
+-- This event will be sent by the UCServer when the user wants to change his agent state (button in the UI).
+-- The connected service should change the agents satte accordingliy and send an update of the resulting agent state back to the UCServer.
+-- 
+-- The UCServer by itself will not cache or predict the agent state resulting, so it will only change the internal state only the service
+-- send the update.
+--
+--
+-- @startuml
+-- == Change agent state initiated by the UCService ==
+-- 
+-- ... Login of an agent (if its necessary) ...
+-- "Agent Service" <-  "UCService" : **Event:** asnRequestServiceAgentLogin\n(AsnRequestServiceAgentLoginArgument) 
+-- activate "Agent Service"
+-- "Agent Service" -> "Agent Service" : Processing the state change request
+-- "Agent Service" -> "UCService" : **Event:** asnSetServiceAgentStates\n(AsnSetServiceAgentStatesArgument)
+-- deactivate "Agent Service"
+-- 
+-- ... Normal state change triggered by the user on the client ...
+-- "Agent Service" <- "UCService" : **Event:** asnRequestServiceAgentStateChange\n(AsnRequestServiceAgentStateChangeArgument)
+-- activate "Agent Service"
+-- "Agent Service" -> "Agent Service" : Processing the state change request
+-- "Agent Service" -> "UCService" : **Event:** asnSetServiceAgentStates\n(AsnSetServiceAgentStatesArgument)
+-- deactivate "Agent Service"
+-- 
+-- ... Logout of an agent (if it is necessary) ...
+-- "Agent Service" <-  "UCService" : **Event:** asnRequestServiceAgentLogout\n(AsnRequestServiceAgentLogoutArgument)
+-- activate "Agent Service"
+-- "Agent Service" -> "Agent Service" : Processing the state change request
+-- "Agent Service" -> "UCService" : **Event:** asnSetServiceAgentStates\n(AsnSetServiceAgentStatesArgument)
+-- deactivate "Agent Service"
+-- 
+-- @enduml
+--  
+asnRequestServiceAgentStateChange OPERATION
+	ARGUMENT	arg AsnRequestServiceAgentStateChangeArgument
+::= 4904
+
+-- @brief Argument for asnEventServiceAgentStateChanged
+--  
+AsnRequestServiceAgentStateChangeArgument ::= SEQUENCE
+{
+	serviceAgentState		AsnServiceAgent,	-- Agent and its state
+	...
+}
+
+
+-- @brief The agent should be logged in
+-- @long
+-- This event will be sent by the UCServer when the user wants to login.
+-- The connected service should change the agents satte accordingliy and send an update of the resulting agent state back to the UCServer.
+-- 
+-- The UCServer by itself will not cache or predict the agent state resulting, so it will only change the internal state only the service
+-- send the update.
+--
+asnRequestServiceAgentLogin OPERATION
+	ARGUMENT	arg AsnRequestServiceAgentLoginArgument
+::= 4905
+
+-- @brief Argument for asnEventServiceAgentStateChanged
+--  
+AsnRequestServiceAgentLoginArgument ::= SEQUENCE
+{
+	serviceAgentState		AsnServiceAgent,		-- Agent and its state
+	loginParameter			AsnAgentACDLoginData,	-- Required login information
+	...
+}
+
+
+-- @brief The agent request a logout
+-- @long
+-- This event will be sent by the UCServer when the user wants to logout.
+-- The connected service should change the agents state accordingliy and send an update of the resulting agent state () back to the UCServer.
+-- 
+-- The UCServer by itself will not cache or predict the agent state resulting, so it will only change the internal state only the service
+-- send the update.
+--
+asnRequestServiceAgentLogout OPERATION
+	ARGUMENT	arg AsnRequestServiceAgentLogoutArgument
+::= 4906
+
+-- @brief Argument for asnEventServiceAgentStateChanged
+--  
+AsnRequestServiceAgentLogoutArgument ::= SEQUENCE
+{
+	serviceAgentState		AsnServiceAgent,		-- Agent and its state
+	u8sLogoutData			UTF8String,				-- If needed for the service, additional logout password (PIN) is provided here
+	...
+}
+
+
+-- @brief The connected service should update the state of the given agents or all agents
+--  
+asnRequestServiceAgentsStatusUpdate OPERATION
+	ARGUMENT	arg AsnRequestServiceAgentsStatusUpdateArgument
+::= 4910
+
+-- @brief Argument for asnRequestServiceAgentsStatusUpdate
+-- @long
+-- The UCServer needs an update of the current state of the given agents. If the list is empty, the service should 
+-- update all agents which are connected to the agent service.
+--  
+AsnRequestServiceAgentsStatusUpdateArgument ::= SEQUENCE
+{
+	listServiceAgents	AsnServiceAgentList,	-- List of AgentIDs which states should be updated on the UCServer.
+	...
+}
+
+END

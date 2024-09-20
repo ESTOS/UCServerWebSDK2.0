@@ -1,0 +1,167 @@
+﻿UC-Server-Access-Protocol-Transport
+	{ iso(1) identified-organization(3) dod(6) internet(1) private(4) enterprise(1) estos(10924) uc-server-access-protocol-v2(2) transport(2) }
+
+-- @category Transport
+-- @brief Transport layer interface
+-- @long
+-- ## Module description
+-- The module defines operations on the transport layer of the business logic.
+-- This includes asnStartTLS which activates TLS on a already existing TCP connection and additional operations for
+-- running multiplexed connections to the UCServer (several sessions of different users on one TCP connection; creating, deleting them and user authentication). 
+-- 
+
+DEFINITIONS
+IMPLICIT TAGS ::=
+BEGIN
+
+IMPORTS
+AsnUserPropertyBag, AsnNetDatabaseContact, AsnSystemTime, AsnRequestError, UTF8StringList FROM UC-Server-Access-Protocol-Common
+AsnNegotiateServerConnectionV2Argument, AsnNegotiateServerConnectionV2ResultChoice FROM UC-Server-Access-Protocol-Auth
+AsnLoginV2Argument, AsnLoginV2Result FROM UC-Server-Access-Protocol-AuthCommon
+;
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~~ asnStartTLS ~~~~~~~~~~~~~~~~~~~~~~~~
+-- @brief Start TLS Handschake on existing connection
+-- @long Client should use this function immediately after establishing the connection.
+-- After calling this function, the UCServer switches to TLS mode and expects a regular TLS handshahe from the client.
+asnStartTLS OPERATION
+	ARGUMENT	arg AsnStartTLSArgument
+	RESULT		res AsnStartTLSResult
+	ERRORS		{AsnRequestError}
+::= 1103
+
+AsnStartTLSArgument ::= SEQUENCE
+{
+	...
+}
+
+AsnStartTLSResult ::= SEQUENCE
+{
+	...
+}
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~ asn***NegotiateInterfaceVersion ~~~~~~~~~~~~
+
+AsnNegotiateInterfaceVersionArgument ::= SEQUENCE
+{
+	-- Requested minimum interface version, usually this should be a <major>.0.0
+	u8sMinInterfaceVer	UTF8String,
+	-- Requested maximum interface version, usually this will be the interface version the client has been built with
+	u8sMaxInterfaceVer	UTF8String,
+	...
+}
+
+AsnNegotiateInterfaceVersionResult ::= SEQUENCE
+{
+	-- true if the requested version is considered compatible, false otherwise
+	bSuccess			BOOLEAN,
+	-- The interface version the server has been built with
+	u8sServerInterfaceVer	UTF8String,
+	...
+}
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~ asnKeepAlive ~~~~~~~~~~~~~~~~~~~~~~~~~
+
+asnTransportKeepAlive OPERATION 
+	ARGUMENT	arg AsnTransportKeepAliveArgument
+::= 1706
+
+AsnTransportKeepAliveArgument ::= SEQUENCE
+{
+	dummy NULL,
+	...
+}
+
+AsnTokenVerifyResult ::= SEQUENCE
+{
+	stValidTo							AsnSystemTime,		-- valid until
+	iType								INTEGER, 			-- Type of token (AsnUserTokenType: eUserTokenExternal or eUserTokenLogin)
+	u8sDNPath							UTF8String,
+	u8sUserName							UTF8String,
+	u8sSIPURI							UTF8String,
+	u8sobjectGUID						UTF8String,
+	u8sPhoneNumber						UTF8String,
+	u8sPhoneSecondary					UTF8String,
+	u8sCallRecordingNumber				UTF8String,
+	u8sMailboxNumber					UTF8String,
+	u8sHomeServer						UTF8String,
+	iUserStaticRights					INTEGER,
+	asnUserContact						AsnNetDatabaseContact,
+	asnUserPropertyBag					AsnUserPropertyBag,
+	...
+}
+
+AsnTokenVerifyV2Argument ::= SEQUENCE
+{
+	u8sToken							UTF8String,	 		-- JWT Token
+	...
+}
+
+-- This function allows an external Server to check if a User token is valid
+asnTokenVerifyV2 OPERATION
+	ARGUMENT	arg AsnTokenVerifyV2Argument
+	RESULT		res AsnTokenVerifyResult
+	ERRORS		{AsnRequestError}
+::= 1719
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~ asnCheckConnection ~~~~~~~~~~~~~~~~~~~~~
+-- This function allows to check if the connection to the server is functional (Mobiler Zugang überprüfung)
+
+asnCheckConnection OPERATION
+	ARGUMENT	arg AsnCheckConnectionArgument
+	RESULT		res AsnCheckConnectionResult
+	ERRORS		{AsnRequestError}
+::= 1714
+
+AsnCheckConnectionArgument ::= SEQUENCE
+{
+	...
+}
+
+AsnCheckConnectionResult ::= SEQUENCE
+{
+	u8sServerVersion			UTF8String,		-- Server Version "5.1.30.35169"
+	u8sProductVersion			UTF8String,		-- Product Version "5.1.30.35169"
+	iProtocolVersion			INTEGER,		-- Protocol Version (60)
+	iOEMID						INTEGER,		-- estos : 0
+	u8sCookie					UTF8String,		-- Cookie, das der Server vom Admin bekommt, um zu schauen, ob er das ist.
+	...
+}
+
+-- @brief Create a auth token in the UCServer
+asnCreateAuthToken OPERATION
+	ARGUMENT	arg AsnCreateAuthTokenArgument
+	RESULT		res AsnCreateAuthTokenResult
+	ERRORS		{AsnRequestError}
+::= 1724
+
+EAsnAuthRoles ::= ENUMERATED
+{
+	user(0),
+	mgmt(1)
+}
+
+AsnCreateAuthTokenArgument ::= SEQUENCE
+{
+	-- login data
+	login			AsnLoginV2Argument,
+	u8sUCSID		UTF8String,
+	-- the role you want to login with (if not defined than normal user)
+	role			[0]	EAsnAuthRoles OPTIONAL,
+	...
+}
+
+AsnCreateAuthTokenResult ::= SEQUENCE
+{
+	-- Result of the login
+	loginResult			AsnLoginV2Result,
+	-- auth session for subsequent requests (ntlm, digest, ...)
+	u8sAuthSessionID	UTF8String,
+	...
+}
+
+END

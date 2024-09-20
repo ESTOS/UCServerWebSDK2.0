@@ -1,0 +1,357 @@
+﻿UC-Server-Access-Protocol-Auth
+	{ iso(1) identified-organization(3) dod(6) internet(1) private(4) enterprise(1) estos(10924) uc-server-access-protocol-v2(2) auth(9) }
+
+-- @category Authentication
+-- @brief Authentication interface.
+-- @long
+--
+-- ## Module description
+-- This module defines structures and functions for negotiation and authentication on the UCServer.
+--
+-- Clients connecting to the UCServer Webservices don't need to negotiate and login by themselfes, they should use "createsession" instead.
+-- See the "Web Service Overview" section of this documentation for more details.
+-- 
+
+DEFINITIONS
+IMPLICIT TAGS ::=
+BEGIN
+
+IMPORTS
+AsnOptionalParameters, AsnRequestError, UTF8StringList, AsnSystemTime FROM UC-Server-Access-Protocol-Common
+AsnConfigSTUNandTURNList FROM UC-Server-Access-Protocol-SIPCTICommon
+AsnContactV2 FROM UC-Server-Access-Protocol-AsnContactCommon
+AsnLoginV2Argument, AsnLoginV2Result FROM UC-Server-Access-Protocol-AuthCommon
+;
+
+-- The different client application ids
+AsnClientAppID ::= ENUMERATED
+{
+	eCLIENTAPPIDUNKNOWN         (0),   -- Unbekannt
+	eCLIENTAPPIDPROCALL         (1),   -- Der Windows Client
+	eCLIENTAPPIDCLNINST         (2),   -- Das Arbeitsplatzsetup
+	eCLIENTAPPIDENETSN          (3),   -- ENetSN aus der SDK
+	eCLIENTAPPIDENETTSC         (4),   -- ENetTSC aus der SDK
+	eCLIENTAPPIDIVRDLL          (5),   -- IVR DLL
+	eCLIENTAPPIDECTISRVCMD      (6),   -- Kommandozeile (aus der SDK)
+	eCLIENTAPPIDMOBILE          (7),   -- Mobile Phones
+	eCLIENTAPPIDMOBILEPAD       (8),   -- Mobile iPad
+	eCLIENTAPPIDWEBSERVICESDK   (9),   -- Ein anderer Dienst über den WebService
+	eCLIENTAPPIDMAC            (10),   -- MAC-Client
+	-- ~ eCLIENTAPPIDCLNINSTOEMCTI  (11),   Das Arbeitsplatzsetup von OEM CTI
+	-- ~ eCLIENTAPPIDOEMCTICLIENT   (12),   OEM CTI Client
+	-- ~ eCLIENTAPPIDCLNINSTGO      (13),   Das Arbeitsplatzsetup von go
+	-- ~ eCLIENTAPPIDPROCALLGOCLIENT(14),   go Client
+	eCLIENTAPPIDPROCALLWEB     (15),   -- Web Clients - FIVE-1411
+	eCLIENTAPPIDPROCALLSIP     (16),   -- SIP-Clients
+	eCLIENTAPPIDPROCALLXMPP    (17),   -- XMPP-Clients
+	eCLIENTAPPIDPROCALLONE     (18),   -- Der ProCall One Client
+	eCLIENTAPPIDPUSHSERVICE    (19),   -- der PushServiceManager im Server selbst
+	eCLIENTAPPIDPROCALLANALYTICS (20), -- ProCall Analytics
+	eCLIENTAPPIDWEBLIVECHAT    (21),   -- LiveChat WebClient (=Agentenarbeitsplatz LC-288)
+	eCLIENTAPPIDEXCHANGECALENDARREPLICATOR (22), -- Der EWS Calendar Replication Service (vormals enumClientAppID::MOBILE_SDK bzw. enumClientAppID::WEBSERVICE_SDK)
+	eCLIENTAPPIDPROCALLPAC     (23),   -- Der PAC Client (gleiches Executable wie eCLIENTAPPIDPROCALL)
+	eCLIENTAPPIDPROCALLPCB     (24),   -- Der PAC Client (gleiches Executable wie eCLIENTAPPIDPROCALL)
+	eCLIENTAPPIDWEBCONFERENCING	(25),  -- ProCall Meetings Client
+	eCLIENTAPPIDPROCALLWEBAPP	(26),  -- Standalone-WebApp
+	eCLIENTAPPIDWEBVIEW2CLIENT	(27),  -- Client-Connection via WebView2
+	eCLIENTAPPIDMSTEAMSAPP		(28)   -- MS Teams App	
+}
+
+-- The capabilities of a client as (!) BITMASK (!)
+AsnNegotiateServerConnectionClientCapabilities ::= ENUMERATED
+{
+	eNONE									(0), -- 0x0000 client is not offering any special capabilities
+	eSOFTPHONE								(1), -- 0x0001 client is a softphone client and implements the functionalities of ENetUC_AV.asn1
+	eAVLINE									(2), -- 0x0002 client wants to provide an AV line for ProCall to ProCall Audio Video Chats (ENetUC_AV.asn1)
+	eASN1V2EVENTS							(4)  -- 0x0004 client is able to handle the new V2 events the asn1 interface is providing with the 08.2024 refactoring
+	-- next									(8),    0x0008
+}
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~ asnNegotiateServerConnectionV2 ~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-- @brief Negotiate server and client versions (current version)
+-- @long Handshaking the core details for the client and the server
+asnNegotiateServerConnectionV2 OPERATION
+	ARGUMENT	arg AsnNegotiateServerConnectionV2Argument
+	RESULT		res AsnNegotiateServerConnectionV2ResultChoice
+	ERRORS		{AsnRequestError}
+::= 1006
+
+-- In case an anonymous client wants to connect it needs to provides these details in the AsnNegotiateServerConnectionV2Argument
+AsnNegotiateServerConnectionAnonymousDataArgument ::= SEQUENCE
+{
+	-- This is a fingerprint to reidentify the same client
+	u8sHintData								UTF8String,
+	-- This is like a password for the client to authenticate the client
+	u8sToken								UTF8String,
+	...
+}
+
+-- Argument for the asnNegotiateServerConnectionV2 operation
+AsnNegotiateServerConnectionV2Argument ::= SEQUENCE
+{
+	-- the minimum supported protocol version of the client
+	-- this is the oldest semver asn1 interface version the client is able to support
+	u8sMinSupportedInterfaceVersion 		UTF8String,
+
+	-- the maximum supported protocol version of the client
+	-- this is the newest semver asn1 interface version the client is able to support
+	u8sMaxSupportedInterfaceVersion 		UTF8String,
+
+	-- A device id the client provides on his side
+	u8sClientDeviceId 						UTF8String,
+
+	-- The version of the client
+	u8sClientVersion 						UTF8String,
+
+	-- The application id of the client
+	eClientAppID							AsnClientAppID,
+
+	-- A client name to show in the administrative view for this connection
+	u8sClientDeviceName						UTF8String,
+
+	-- The different capabilites the client is able to handle
+	-- @linked AsnNegotiateServerConnectionClientCapabilities
+	iClientCapabilities 					INTEGER,
+
+	-- In case the client is reusing a connection this is the identifier of the former connection to the server
+	u8sConnectionGUID						[0] UTF8String OPTIONAL,
+
+	-- The client wants an anonymous login
+	eAnonymousLogin							[1] AsnNegotiateServerConnectionAnonymousDataArgument OPTIONAL,
+
+	...
+}
+
+-- The different server types
+AsnNegotiateServerConnectionServerTypeV2 ::= ENUMERATED
+{
+	ePROCALLENTERPRISE						(0), -- A standard UCServer
+	eTAPISERVER								(1), -- A TAPI Server UCServer (Accepts no regular ProCall Clients, only TAPI drivers)
+	ePROCALLINFINITY						(2), -- A Infinity Server (former DataCenter)
+	ePROCALLNEX								(3)	 -- A NEX Server (former UC as a service)
+}
+
+-- The different supported authentication methods
+AsnNegotiateServerConnectionAuthenticationMethod ::= ENUMERATED
+{
+	ePASSWORD								(0), -- integrated password authentication
+	eDOMAIN									(1), -- domain authentication
+	eOAUTH									(2)  -- oauth authentication
+}
+
+-- When an anonymous client connects the server provides a username and a token
+AsnNegotiateServerConnectionAnonymousDataResult ::= SEQUENCE
+{
+	-- The username of the anonymous user
+	u8sUsername								UTF8String,
+	-- This is like a password for the client to authenticate the client
+	u8sToken								UTF8String,
+	...
+}
+
+-- Result of the asnNegotiateServerConnectionV2 operation
+AsnNegotiateServerConnectionV2Result ::= SEQUENCE
+{
+	-- The type of server we are connecting to
+	eServerType								AsnNegotiateServerConnectionServerTypeV2,
+	-- The asn1 interface version of the server
+	u8sServerInterfaceVersion				UTF8String,
+	-- Verfügbare Login Option
+	eAuthenticationMethod 					AsnNegotiateServerConnectionAuthenticationMethod,
+	-- A realm the server wants the client to encrypt data with
+	sServerAuthentication 					OCTET STRING,
+	-- The server time so that the client is able to properly display times the server is providing
+	stServerTime 							AsnSystemTime,
+	-- Technical version of the server
+	u8sServerVersion						UTF8String,
+	-- The server side connection id for this connection
+	u8sConnectionGUID						UTF8String,
+	-- The list of presence domains the server is handling
+	u8sPresenceDomains						UTF8StringList,
+	-- The oem of the server (only set if not estos)
+	iOEM									[0] INTEGER OPTIONAL,
+	-- An alternative product version (user shown product version), available if it does not match the technical server version
+	u8sProductVersion						[1] UTF8String OPTIONAL,
+	-- presence services are disable on the server (only set if false)
+	bPresenceServicesDisabled				[2] BOOLEAN OPTIONAL,
+	-- user user rights are disable on the server (only set if false)
+	bUserUserRightsDisabled					[3] BOOLEAN OPTIONAL,
+	-- In case the user logged in anonymous this provides details for the anonymous user
+	eAnonymousDetails						[4] AsnNegotiateServerConnectionAnonymousDataResult OPTIONAL,
+	-- Before adding further details in this structure think if it *really* makes sense to add them here
+	-- From the history the negotiate was blurred with stuff which should be part of other requests!
+	...
+}
+
+-- Server is busy result of the asnNegotiateServerConnectionV2 operation
+AsnNegotiateServerConnectionV2ServerBusy ::= SEQUENCE {
+	-- In case the server is busy we tell the client when to retry again
+	iServerBusyTimeout						INTEGER,
+	...
+}
+
+-- Interface not compatible result of the asnNegotiateServerConnectionV2 operation
+AsnNegotiateServerConnectionV2IncompatibleInterfaceVersion ::= SEQUENCE {
+	-- The asn1 interface version of the server
+	u8sServerInterfaceVersion				UTF8String,
+	...
+}
+
+AsnNegotiateServerConnectionV2ResultChoice ::= CHOICE {
+	-- regular result for the request
+	result									[0] AsnNegotiateServerConnectionV2Result,
+	-- server busy, please try again later
+	busy									[1] AsnNegotiateServerConnectionV2ServerBusy,
+	-- incompatible interface version
+	incompatible							[2] AsnNegotiateServerConnectionV2IncompatibleInterfaceVersion
+}
+
+-- @brief
+-- These are the possible iErrorDetail values as part of the response to /ws/client/createsession.
+AsnLogonErrorEnum ::= ENUMERATED
+{
+	eNETLOGININTERNALSERVERERROR(100),	-- An internal Server error occured.
+	eNETLOGININVALUSERNAME(101),		-- User name not found or password wrong (since V6.3). Description text in error message tells now, that the user cannot be authenticated.
+	eNETLOGINNOMOREUSERS(103),			-- No license free for user.
+	eNETLOGININVALIDVERSION(104),		-- UCServer and UCClient version are not compatible.
+	eNETLOGINNEGOTIATIONREQUIRED(105),	-- This is not really an error, but the server requests the next step in authentication from the client with this "error".
+	eNETLOGININVALIDAUTHENTICATIONMETHOD(106),	-- The requested authntication method is not supported by the usermanager.
+	eNETLOGINUSERNOTENABLED(107),		-- The user is not enabled on this ucserver.
+	eNETLOGININVALIDCOMPUTERNAME(108),	-- Computer login only: the computer name is not found.
+	eNETLOGINDOMAINAUTHFAILED(109),		-- Domain authentication failed.
+	eNETLOGINMISSINGRIGHTS(110),		-- The user has not enough access rights to login on the server. At the moment this occures only with a mobile client without the access right for mobiles.
+	eNETLOGINMISSINGRIGHTSTS(111),		-- Reserved.
+	eNETLOGINSERVERNOTCOMPATIBLE(112),	-- The requested application type (given by negotiate) is not compatible with this server.
+	eNETLOGINALREADYAUTHENTICATED(113),	-- User is already logged in.
+	eNETLOGINTLSREQUIRED(114),			-- The has to use a TLS connection to this server.
+	eNETLOGINACCOUNTPASSWORDLOCKED(129),-- User account has been locked due to too many failed login attempts.
+	eNETLOGINTOKENEXIRED(130),			-- The given token has been expired.
+	eNETLOGINTOOMANYATTEMPTS(131),		-- Too many failed login attempts, the user has to wait some time to try again.
+
+	-- ~ Der Benutzer wurde für/ohne PAC konfiguriert aber der Client startet im falschen Modus.
+	eNETLOGINWRONGPACMODE(133)			-- Reserved.
+}
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~~ asnLogonV2 ~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-- Used to login to the UCServer
+asnLoginV2 OPERATION
+	ARGUMENT	arg AsnLoginV2Argument
+	RESULT		res AsnLoginV2Result
+	ERRORS		{AsnRequestError}
+::= 1005
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~ asnLogoff ~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+asnLogoff OPERATION
+	ARGUMENT	arg AsnLogoffArgument
+::= 1001
+
+AsnLogoffArgument ::= SEQUENCE
+{
+	...
+}
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~ asnGetUserToken ~~~~~~~~~~~~~~~~~~~~~~
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-- @brief UCServer administrator login credentials used as optional by AsnGetUserTokenArgument
+AsnAdminLogin ::= SEQUENCE
+{
+	-- Adminstrator user name
+	u8sAdminUsername					UTF8String,
+
+	-- Administrator password 
+	adminPassword CHOICE
+	{
+		u8sAdminPassword				[0] UTF8String, -- not encrypted
+		u8sAdminPasswordCrypted			[1] UTF8String 	-- encrypted
+	},
+	...
+}
+
+-- @brief Type of AsnUserToken to request.
+AsnUserTokenType ::= ENUMERATED
+{
+	eUserTokenExternal(0),  -- Token for authenticating to an external Server - does not allow to login to UCServer
+	eUserTokenLogin(1)	    -- Token that allows Login To UCServer
+}
+
+-- @brief Argument for asnGetUserToken.
+AsnGetUserTokenArgument ::= SEQUENCE
+{
+	-- Type of token (default eUserTokenExternal)
+	-- @linked AsnUserTokenType
+	iType					[0]		INTEGER						OPTIONAL,
+	iTTL					[1]		INTEGER						OPTIONAL,	-- Desired Time to live in seconds (default 24 hours)
+	lstServiceType			[2]		UTF8StringList				OPTIONAL,	-- List of Service Types e.g. FAQ, RANKING
+	lstProfileAttributes	[3]		AsnProfileAttributeList		OPTIONAL,	-- List from profile values added as public claim as [Service_type]/[Profile elementname] : [Profile elementvalue]
+	adminLogin				[4]		AsnAdminLogin				OPTIONAL,	-- Admin login credentials to create token with admin rights
+	...
+}
+
+-- @brief Result of asnGetUserTokenV2.
+AsnGetUserTokenV2Result ::= SEQUENCE
+{
+	sToken				UTF8String,	 							-- JWT Token
+	...
+}
+
+-- @brief Request a user token to identify the user for other services.
+asnGetUserTokenV2 OPERATION
+	ARGUMENT	arg AsnGetUserTokenArgument
+	RESULT		res AsnGetUserTokenV2Result
+	ERRORS		{AsnRequestError}
+::= 1007
+
+-- @brief Profile values added as public claim as [Service_type]/[Profile elementname] : [Profile elementvalue] used by asnGetUserToken.
+AsnProfileAttribute ::= SEQUENCE
+{
+	u8sServiceType						UTF8String,						-- Service Type used as a namespace for a specific profile attribute
+	u8seName							UTF8String,
+	u8sValue							[0] UTF8String OPTIONAL,			-- Can be used as placeholder is the profile attribute does not exits
+	...
+}
+
+-- @brief List of AsnProfileAttribute.
+AsnProfileAttributeList ::= SEQUENCE OF AsnProfileAttribute;
+
+-- @brief Argument for asnGetLoggedInContact.
+-- @long
+-- This opertaion does not need any parameter since the logged in contact is alread well known on the server.
+AsnGetLoggedInContactArgument ::= SEQUENCE
+{
+	...
+}
+
+-- @brief Get Properties of Loggedin User
+-- @long A Client may use this function to get information about himself.
+-- The User Profile will be returned.
+-- @added 21.08.2024
+asnGetLoggedInContactV2 OPERATION
+	ARGUMENT	arg AsnGetLoggedInContactArgument
+	RESULT		res AsnGetLoggedInContactV2Result
+	ERRORS		{AsnRequestError}
+::= 1008
+
+-- @brief Result of AsnGetLoggedInContactV2.
+-- @added 21.08.2024
+AsnGetLoggedInContactV2Result ::= SEQUENCE
+{
+	-- The Login User Name
+	u8sLoggedInUser						UTF8String,
+	-- Own Contact Data
+	ownContact							AsnContactV2,
+	...
+}
+
+END

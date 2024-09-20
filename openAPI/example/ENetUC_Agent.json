@@ -1,0 +1,581 @@
+{
+	"openapi": "3.1.0",
+	"info": {
+		"title": "ENetUC_Agent",
+		"version": "0.0.1",
+		"summary": "Agent\/AgentGroup\/ACD interface.\n\n",
+		"description": "## Module description\n\nThis module describes the functions for agents for ACD and contact portal functionalities.\n\n\n\nA client represents a user who can be an member in any number of agent groups.&lt;br \/&gt;\n\nAn agent is described by the ContactURI of the user (SIP address incl. \"sip:\" before) or a LineURI (Cti line, format \"tel:xyz@pbx text\").\n\nTo login to a group, for example, you usually need the AgencyURI and the GroupURI. This allows the UCServer to identify exactly which agent should be used in which group.&lt;br \/&gt;\n\nThe client receives the necessary values when it gets them back as a result of asnAgentMonitorStart.\n\n\n\n### Requirements for using the interface\n\nA user gets access to the agent interface:\n\n- If the user has activated the service \"Business card for anonymous users\" via his own or global profile in the UCServer administration.\n\n- If he is a member of one or more groups that have been activated in the UCServer administration as an \"agent group\".\n\n- If (identified by line ID) he has a line known to be part of an ACD group at the corresponding ECSTA.\n\n\n\n### Functions\n\nA user can set the following status on the interface:\n\n- \"login\"\/\"logout\"\n\n- \"Working after call\"\n\n- \"ready\"\/\"not ready\" (still a \"work in progress\")\n\n\n\nProCall 5.1 supports ACD functionality only for Panasonic telephone systems.&lt;br \/&gt;\n\nAs of ProCall 6, the agent interface is used for the contact portal and business card. Further PBX's are in development.\n\n\n\n## Simple procedure if the agent groups are to be used ##\n\n1. The user must only call asnAgentMonitorStart; this registers the agent's events and supplies the list of groups in which the user is agent.\n\n2. From this point on, the UCServer sends events if the status of the user in these groups changes.\n\n3. Change the state of the agent:\n\n3.1. asnAgentLogin - Sets the status of the user to \"login\". Note: replaces asnAgentSetState(not ready).\n\nMore parameters may be required for the login. These can be found in the AgentGroupInfos\n\n3.2. asnAgentLogoff - Sets the status of the user to \"logoff\". Note: replaces asAgentSetState(noagent).\n\n3.3. asnAgentSetState - With this you can set the status to \"ready\", \"not ready\" and \"working after call\". Which states can be set is provided by the server in the result of asnAgentMonitorStart. See also AsnAgentGroupInfo.\n\n4. Log off events with asnAgentMonitorStop.\n\n\n\nWith these five functions it is possible to operate the ACD\/presence groups on the UCServer.\n\n\n\n## AsnAgentGroupInfo\n\nAsnAgentGroupInfo structures are usually exchanged in the analysis and results. This structure contains the description of an agent\/ACD group.&lt;br \/&gt;\n\nAsnAgentGroupInfo contains the data about an agent group. The following are important:\n\n- iGroupCapabilities: This shows which status changes are supported. See also AsnAgentGroupCapabilitiesEnum. If the highest bit is set (0x80000000), this group is a PBX\/ACD group. If the bit is not set, the group is managed by the UCServer.\n\n- iAgentState: The current status of the agent, i.e. the user in this group.\n\n- optionalParams,key \"AgentLoginRequiredParameters\": In the case of a PBX\/ACD group, this integer contains information about which parameters are required for logging on to the ACD group. The values (bit field) are described in AsnAgentLoginRequiredParametersEnum.\n\n\n\n\n\n## Events\n\nFor any changes to the agent groups and agent status, two events are sent by the UCServer to the registered clients:\n\n- asnAgentNotifyGroupsChanged - There have been some changes in the user's available groups\n\n- asnAgentNotifyStateChanged - The user's status in a group has changed.\n\n\n\n## Comment\n\nThe API is user centered. This means if the server is asked for the AgentGroupInfos,\n\nthe server displays the information concerning its group membership in a simple list.\n\nThe most simple for the normal user.\n\n\n\n## Supervisor Interface\n\nNot implemented yet.\n\n\n\n## Anonymous users\n\nAnonymous users can query which groups are available, including users, and then display the corresponding presence and login\/logoff status based on the use case.\n\n"
+	},
+	"paths": {
+		"/asnAgentMonitorStart": {
+			"post": {
+				"tags": ["Agent"],
+				"summary": "Agent Monitor Start\n\n",
+				"description": "This function starts monitoring for all groups of a client.\n\nThe individual lines (for PBX ACD groups) and the individual user and group configurations are taken into account (for business card\/contact portal).\n\n",
+				"deprecated": false,
+				"operationId": "1902",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnAgentMonitorStartArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnAgentMonitorStartResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnAgentMonitorStop": {
+			"post": {
+				"tags": ["Agent"],
+				"summary": "Agent Monitor Stop\n\n",
+				"description": "End monitoring for the specified CrossRefID\n\n",
+				"deprecated": false,
+				"operationId": "1903",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnAgentMonitorStopArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnAgentMonitorStopResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnAgentLogin": {
+			"post": {
+				"tags": ["Agent"],
+				"summary": "Login for the agent\/ACD functionality on a line or group.\n\n",
+				"description": "This function ensures that the user is logged in to the agent or ACD group.\n\n",
+				"deprecated": false,
+				"operationId": "1904",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnAgentLoginArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnAgentLoginResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnAgentLogoff": {
+			"post": {
+				"tags": ["Agent"],
+				"summary": "Logoff agent for ACD(Automatic Call Distribution)\n\n",
+				"deprecated": false,
+				"operationId": "1905",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnAgentLogoffArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnAgentLogoffResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnAgentSetState": {
+			"post": {
+				"tags": ["Agent"],
+				"summary": "Agent for setting the ACD status (call distribution)\n\n",
+				"description": "ACD means Automatic Call Distribution and is a system for the automated control of incoming and outgoing customer interactions,\n\nsuch as calls, faxes and e-mails\n\n",
+				"deprecated": false,
+				"operationId": "1906",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnAgentSetStateArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnAgentSetStateResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnAgentNotifyGroupsChanged": {
+			"post": {
+				"tags": ["Agent"],
+				"summary": "The event for changes to the user's agent groups.\n\n",
+				"description": "The entire list of the user's agent groups is always transmitted.\n\nGroups may have been removed or added, or the properties of a group may have changed.\n\nThis event is not used for AgentState changes\n\n",
+				"deprecated": false,
+				"operationId": "1950",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnAgentNotifyGroupsChangedArgument"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnAgentNotifyStateChanged": {
+			"post": {
+				"tags": ["Agent"],
+				"summary": "Event when the state of the agent in a group has changed.\n\n",
+				"deprecated": false,
+				"operationId": "1951",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnAgentNotifyStateChangedArgument"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnAgentNotifyBlockedRTCChanged": {
+			"post": {
+				"tags": ["Agent"],
+				"summary": "Event dispatched if blocked state was changed for anonymous user\n\nThe argument contains all anonymous user URIs which are currently blocked for the notified agent\n\n",
+				"deprecated": false,
+				"operationId": "1961",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnAgentNotifyBlockedRTCChangedArgument"
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"schemas": {
+			"AsnOptionalParameters": {
+				"$ref": "ENetUC_Common.json#/components/schemas/AsnOptionalParameters"
+			},
+			"AsnRequestError": {
+				"$ref": "ENetUC_Common.json#/components/schemas/AsnRequestError"
+			},
+			"UTF8StringList": {
+				"$ref": "ENetUC_Common.json#/components/schemas/UTF8StringList"
+			},
+			"AsnAgentACDLoginData": {
+				"$ref": "ENetUC_ServicesAgents.json#/components/schemas/AsnAgentACDLoginData"
+			},
+			"AsnAgentLoginRequiredParametersEnum": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "eAGENTLOGINREQUIRESAGENTID",
+						"const": 1
+					},
+					{
+						"title": "eAGENTLOGINREQUIRESGROUPID",
+						"const": 2
+					},
+					{
+						"title": "eAGENTLOGINREQUIRESPASSWORD",
+						"const": 4
+					},
+					{
+						"title": "eAGENTLOGINREQUIRESDEVICEID",
+						"const": 8
+					}]},
+			"AsnSupportedAgentStatesEnum": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "eAGENTSTATELOGGEDOUT",
+						"const": 1
+					},
+					{
+						"title": "eAGENTSTATELOGGEDINNOTREADY",
+						"const": 2
+					},
+					{
+						"title": "eAGENTSTATELOGGEDINREADY",
+						"const": 4
+					},
+					{
+						"title": "eAGENTSTATELOGGEDINBUSY",
+						"const": 8
+					},
+					{
+						"title": "eAGENTSTATELOGGEDINWORKINGAFTERCALL",
+						"const": 16
+					}]},
+			"AsnAgentStateEnum": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "eAGENTSTATENOAGENT",
+						"const": 0
+					},
+					{
+						"title": "eAGENTSTATENOTREADY",
+						"const": 1
+					},
+					{
+						"title": "eAGENTSTATEREADY",
+						"const": 2
+					},
+					{
+						"title": "eAGENTSTATEBUSY",
+						"const": 3
+					},
+					{
+						"title": "eAGENTSTATEWORKINGAFTERCALL",
+						"const": 4
+					}]},
+			"AsnAgentGroupCapabilitiesEnum": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "eAGENTCAPSUPPORTEDAGENTREQUESTSLOGIN",
+						"const": 1
+					},
+					{
+						"title": "eAGENTCAPSUPPORTEDAGENTREQUESTSLOGOUT",
+						"const": 2
+					},
+					{
+						"title": "eAGENTCAPSUPPORTEDAGENTREQUESTSNOTREADY",
+						"const": 4
+					},
+					{
+						"title": "eAGENTCAPSUPPORTEDAGENTREQUESTSREADY",
+						"const": 8
+					},
+					{
+						"title": "eAGENTCAPSUPPORTEDAGENTREQUESTSBUSY",
+						"const": 16
+					},
+					{
+						"title": "eAGENTCAPSUPPORTEDAGENTREQUESTSWORKINGAFTERCALL",
+						"const": 32
+					},
+					{
+						"title": "eAGENTCAPSUPPORTEDAGENTREQUESTSMASK",
+						"const": 255
+					},
+					{
+						"title": "eAGENTCAPISPORTALGROUP",
+						"const": 536870912
+					},
+					{
+						"title": "eAGENTCAPISPUBLICCHATGROUP",
+						"const": 1073741824
+					}]},
+			"AsnAgentGroupInfo": {
+				"type": "object",
+				"description": "### Category \nAgent\n### Short \nAsnAgentGroupInfo encapsulates the data for an agent (ACD) group from the agent's point of view.\n\n### Long \nAn AsnAgentGroupInfo can only be uniquely identified with the combination of u8sAgentURI and u8sGroupURI.\n\n## OptionalParameters - Subsequent Enhancements to the data structure ##\n- \"PhoneNumber\" String phone number to be displayed in the client; only server to client.\n- \"AgentLoginRequiredParameters\" DWORD bit flags that indicate which data the PBX requires for the user\/line logon. Only sent server to client. Not filled for contact portal\/business card. See AsnAgentLoginRequiredParametersEnum.\n- \"SupportedAgentStates\" DWORD bit flags indicating which agents status values can be used in this group. Only sent server to client. See also AsnSupportedAgentStatesEnum.\n\n### Private \n0",
+				"properties": {
+					"u8sAgentURI": {
+						"type": "string"
+					},
+					"u8sGroupURI": {
+						"type": "string"
+					},
+					"u8sDisplayName": {
+						"type": "string"
+					},
+					"iGroupCapabilities": {
+						"type": "integer"
+					},
+					"iAgentState": {
+						"type": "integer"
+					},
+					"optionalParams": {
+						"$ref": "#/components/schemas/AsnOptionalParameters"
+					}
+				},
+				"required": [
+					"u8sAgentURI",
+					"u8sGroupURI",
+					"u8sDisplayName",
+					"iGroupCapabilities",
+					"iAgentState"
+				]
+			},
+			"AsnAgentMonitorStartArgument": {
+				"type": "object",
+				"description": "### Category \nAgent\n### Private \n0",
+				"properties": {
+					"u8sAgentURI": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"u8sAgentURI"
+				]
+			},
+			"AsnAgentMonitorStopArgument": {
+				"type": "object",
+				"description": "### Category \nAgent\n### Long \nThe CrossRefID that was returned by the server at asnAgentMonitorStart.\n\n### Private \n0",
+				"properties": {
+					"u8sMonitorCrossRefID": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"u8sMonitorCrossRefID"
+				]
+			},
+			"AsnAgentMonitorStopResult": {
+				"type": "object",
+				"description": "### Category \nAgent\n### Long \nThis structure is only restored if successful. If the call is unsuccessful, it will return an AsnRequestError.\n\n### Private \n0"
+			},
+			"AsnAgentLoginArgument": {
+				"type": "object",
+				"description": "### Category \nAgent\n### Short \nParameters for Agent Login\n\n### Long \nParameters for logging in to the agent\/ACD functionality of the PC server (business card, contact portal) or the telephone system.\n\n### Private \n0",
+				"properties": {
+					"u8sAgentURI": {
+						"type": "string"
+					},
+					"u8sGroupURI": {
+						"type": "string"
+					},
+					"acdLoginData": {
+						"$ref": "#/components/schemas/AsnAgentACDLoginData"
+					}
+				},
+				"required": [
+					"u8sAgentURI",
+					"u8sGroupURI"
+				]
+			},
+			"AsnAgentLoginResult": {
+				"type": "object",
+				"description": "### Category \nAgent\n### Short \nResult for agent login\n\n### Long \nIf the server returns the result, the login was successful.\nIf the login fails, the AsnRequestError is returned as the result.\nThis contains more details about the error.&lt;br \/&gt;\nThis structure is only returned if successful. If the call is unsuccessful, AsnRequestError is returned.\n\n### Private \n0"
+			},
+			"AsnAgentLogoffArgument": {
+				"type": "object",
+				"description": "### Category \nAgent\n### Short \nArgument for agent logoff(Automatic Call Distribution)\n\n### Private \n0",
+				"properties": {
+					"u8sAgentURI": {
+						"type": "string"
+					},
+					"u8sGroupURI": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"u8sAgentURI",
+					"u8sGroupURI"
+				]
+			},
+			"AsnAgentLogoffResult": {
+				"type": "object",
+				"description": "### Category \nAgent\n### Short \nResult for agent logoff\nThis structure is only returned if successful. If the call is unsuccessful, an AsnRequestError is returned.\n\n### Private \n0"
+			},
+			"AsnAgentSetStateArgument": {
+				"type": "object",
+				"description": "### Category \nAgent\n### Short \nSet new Agent State\n\n### Private \n0",
+				"properties": {
+					"u8sAgentURI": {
+						"type": "string"
+					},
+					"u8sGroupURI": {
+						"type": "string"
+					},
+					"iAgentState": {
+						"type": "integer"
+					}
+				},
+				"required": [
+					"u8sAgentURI",
+					"iAgentState"
+				]
+			},
+			"AsnAgentSetStateResult": {
+				"type": "object",
+				"description": "### Category \nAgent\n### Short \nResult for AsnAgentSetState\nThis structure is only returned if successful. If the call is unsuccessful, an AsnRequestError is returned.\n\n### Private \n0"
+			},
+			"AsnAgentNotifyStateChangedArgument": {
+				"type": "object",
+				"description": "### Category \nAgent\n### Short \nArgument for AgentNotifyStateChanged. Included is the CrossRefID for which the event is transmitted, the AgencyURI and GroupURI (unique agent group assignment) and the new agent state.\n\n### Private \n0",
+				"properties": {
+					"u8sMonitorCrossRefID": {
+						"type": "string"
+					},
+					"u8sAgentURI": {
+						"type": "string"
+					},
+					"u8sGroupURI": {
+						"type": "string"
+					},
+					"iAgentState": {
+						"type": "integer"
+					}
+				},
+				"required": [
+					"u8sMonitorCrossRefID",
+					"u8sAgentURI",
+					"u8sGroupURI",
+					"iAgentState"
+				]
+			},
+			"AsnAgentNotifyBlockedRTCChangedArgument": {
+				"type": "object",
+				"description": "### Category \nAgent\n### Short \nArgument for AgentNotifyAnonymousBlockedChanged.\n\n### Private \n0",
+				"properties": {
+					"listu8sBlockedUserURIs": {
+						"$ref": "#/components/schemas/UTF8StringList"
+					}
+				},
+				"required": [
+					"listu8sBlockedUserURIs"
+				]
+			},
+			"AsnAgentGroupInfoList": {
+				"type": "array",
+				"items": {
+					"$ref": "#/components/schemas/AsnAgentGroupInfo"
+				}
+			},
+			"AsnAgentMonitorStartResult": {
+				"type": "object",
+				"description": "### Category \nAgent\n### Private \n0",
+				"properties": {
+					"u8sMonitorCrossRefID": {
+						"type": "string"
+					},
+					"listGroups": {
+						"$ref": "#/components/schemas/AsnAgentGroupInfoList"
+					}
+				},
+				"required": [
+					"u8sMonitorCrossRefID",
+					"listGroups"
+				]
+			},
+			"AsnAgentNotifyGroupsChangedArgument": {
+				"type": "object",
+				"description": "### Category \nAgent\n### Short \nArgument contains the CrossRefID for which the event is sent and the list of the user's agent groups.\n\n### Private \n0",
+				"properties": {
+					"u8sMonitorCrossRefID": {
+						"type": "string"
+					},
+					"listGroups": {
+						"$ref": "#/components/schemas/AsnAgentGroupInfoList"
+					}
+				},
+				"required": [
+					"u8sMonitorCrossRefID",
+					"listGroups"
+				]
+			}
+		}
+	}
+}

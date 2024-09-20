@@ -1,0 +1,632 @@
+{
+	"openapi": "3.1.0",
+	"info": {
+		"title": "ENetUC_Common_AsnContact",
+		"version": "0.0.1",
+		"summary": "Common interface definitions\n\n",
+		"description": "## Module description\n\nThis module contains structures that are mainly used in combination with the AsnContact\n\nThere should not be any function\/operation defintions in this module.\n\n\n\nTHERE SHOULD NOT BE ANY FUNCTION\/OPERATION DEFINTIONS IN THIS MODULE.\n\n"
+	},
+	"paths": {
+	},
+	"components": {
+		"schemas": {
+			"AsnOptionalParameters": {
+				"$ref": "ENetUC_Common.json#/components/schemas/AsnOptionalParameters"
+			},
+			"AsnNetDatabaseContact": {
+				"$ref": "ENetUC_Common.json#/components/schemas/AsnNetDatabaseContact"
+			},
+			"AsnSystemTime": {
+				"$ref": "ENetUC_Common.json#/components/schemas/AsnSystemTime"
+			},
+			"AsnUserPropertyBag": {
+				"$ref": "ENetUC_Common.json#/components/schemas/AsnUserPropertyBag"
+			},
+			"UTF8StringList": {
+				"$ref": "ENetUC_Common.json#/components/schemas/UTF8StringList"
+			},
+			"SEQInteger": {
+				"$ref": "ENetUC_Common.json#/components/schemas/SEQInteger"
+			},
+			"AsnLineForwards": {
+				"$ref": "ENetUC_Common_SIPCTI.json#/components/schemas/AsnLineForwards"
+			},
+			"SEQAppointmentList": {
+				"$ref": "ENetUC_Common_Appointments.json#/components/schemas/SEQAppointmentList"
+			},
+			"AsnAppointmentEntry": {
+				"$ref": "ENetUC_Common_Appointments.json#/components/schemas/AsnAppointmentEntry"
+			},
+			"AsnUserStaticRights": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "eUSERRIGHTSSENDUSERUSER",
+						"const": 1
+					},
+					{
+						"title": "eUSERRIGHTSSENDSMS",
+						"const": 2
+					},
+					{
+						"title": "eUSERRIGHTSEMPTY",
+						"const": 4
+					},
+					{
+						"title": "eUSERRIGHTSUSEPROCALL",
+						"const": 8
+					},
+					{
+						"title": "eUSERRIGHTSSELFADMIN",
+						"const": 32
+					},
+					{
+						"title": "eUSERRIGHTSUSERCTI",
+						"const": 64
+					},
+					{
+						"title": "eDONOTUSE",
+						"const": 128
+					},
+					{
+						"title": "eUSERRIGHTSOFFLINEMAIL",
+						"const": 256
+					},
+					{
+						"title": "eUSERRIGHTSCALLRECORDING",
+						"const": 512
+					},
+					{
+						"title": "eUSERRIGHTSUSEPHONEBOOK",
+						"const": 1024
+					},
+					{
+						"title": "eUSERRIGHTSUSERPRESENCE",
+						"const": 2048
+					},
+					{
+						"title": "eUSERRIGHTSGROUPALLINMONITOR",
+						"const": 4096
+					},
+					{
+						"title": "eUSERRIGHTSGROUPNOCHANGEMONITOR",
+						"const": 8192
+					},
+					{
+						"title": "eUSERRIGHTSGROUPVIEWJOURNAL",
+						"const": 16384
+					},
+					{
+						"title": "eUSERRIGHTSGROUPVIEWJOURNALLEADER",
+						"const": 32768
+					},
+					{
+						"title": "eUSERRIGHTSGROUPEDITJOURNAL",
+						"const": 65536
+					},
+					{
+						"title": "eDONOTUSE2",
+						"const": 131072
+					},
+					{
+						"title": "eDONOTUSE3",
+						"const": 262144
+					},
+					{
+						"title": "eUSERRIGHTSUSERVIEWJOURNAL",
+						"const": 524288
+					},
+					{
+						"title": "eUSERRIGHTSGLOBALDELETEJOURNAL",
+						"const": 1048576
+					},
+					{
+						"title": "eUSERRIGHTSOFFLINESMS",
+						"const": 2097152
+					},
+					{
+						"title": "eUSERRIGHTSDESKSHAREACCEPT",
+						"const": 4194304
+					},
+					{
+						"title": "eUSERRIGHTSDESKSHAREFULL",
+						"const": 8388608
+					},
+					{
+						"title": "eDONOTUSE4",
+						"const": 16777216
+					},
+					{
+						"title": "eUSERRIGHTSAVAUDIO",
+						"const": 33554432
+					},
+					{
+						"title": "eUSERRIGHTSAVVIDEO",
+						"const": 67108864
+					},
+					{
+						"title": "eUSERRIGHTSFEDDESKSHARE",
+						"const": 134217728
+					}]},
+			"AsnUserStaticRights2": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "eUSERRIGHTS2ENABLEFORANONYMOUSAPI",
+						"const": 1
+					},
+					{
+						"title": "eUSERRIGHTS2LOGINOVERINTERNET",
+						"const": 2
+					},
+					{
+						"title": "eUSERRIGHTS2LOGINBYMOBILE",
+						"const": 4
+					},
+					{
+						"title": "eUSERRIGHTS2ENABLEAGENTMANAGER",
+						"const": 8
+					},
+					{
+						"title": "eUSERRIGHTS2ISAGENTSUPERVISOR",
+						"const": 16
+					},
+					{
+						"title": "eUSERRIGHTS2GROUPFORPUBLICCHAT",
+						"const": 32
+					},
+					{
+						"title": "eUSERRIGHTS2GROUPFORPORTAL",
+						"const": 64
+					},
+					{
+						"title": "eUSERRIGHTS2GROUPFORMONITOR",
+						"const": 128
+					},
+					{
+						"title": "eUSERRIGHTS2ENABLECONTENTSHARINGFILES",
+						"const": 512
+					},
+					{
+						"title": "eUSERRIGHTS2ENABLECONTENTSHARINGLOCATION",
+						"const": 1024
+					},
+					{
+						"title": "eUSERRIGHTS2ENABLECONTENTSHARINGCONTACTS",
+						"const": 2048
+					},
+					{
+						"title": "eUSERRIGHTS2USECONFERENCING",
+						"const": 4096
+					},
+					{
+						"title": "eUSERRIGHTS2USETEAMS",
+						"const": 8192
+					},
+					{
+						"title": "eUSERRIGHTS2ALLOWLOGININTERNETDESKTOP",
+						"const": 16384
+					},
+					{
+						"title": "eUSERRIGHTS2USEWEBAPP",
+						"const": 32768
+					}]},
+			"AsnContactPhoneLineState": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "eLINEOFFLINE",
+						"const": 0
+					},
+					{
+						"title": "eLINEONLINE",
+						"const": 1
+					}]},
+			"AsnAbsentStateEnum": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "eABSENTSTATENOTABSENT",
+						"const": 0
+					},
+					{
+						"title": "eABSENTSTATEOUTOFOFFICE",
+						"const": 1
+					},
+					{
+						"title": "eABSENTSTATEBUSY",
+						"const": 2
+					},
+					{
+						"title": "eABSENTSTATEDONOTDISTURB",
+						"const": 3
+					},
+					{
+						"title": "eABSENTSTATENOTSET",
+						"const": 4
+					}]},
+			"AsnReachabilityEnum": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "eREACHABILITYNORMAL",
+						"const": 0
+					},
+					{
+						"title": "eREACHABILITYPAUSE",
+						"const": 1
+					},
+					{
+						"title": "eREACHABILITYBUSINESSTRIP",
+						"const": 2
+					},
+					{
+						"title": "eREACHABILITYHOMEOFFICE",
+						"const": 3
+					},
+					{
+						"title": "eREACHABILITYVACATION",
+						"const": 4
+					},
+					{
+						"title": "eREACHABILITYUNREACHABLE",
+						"const": 5
+					}]},
+			"AsnExternalPresenceType": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "eMSTeams",
+						"const": 0
+					}]},
+			"AsnUserDynamicRights": {
+				"type": "object",
+				"description": "### Category \nCommon\n### Short \nThe authorizations a user has on another user or gets from him.\n\n### Long \nThe \"dynamic rights\" are the authorizatio a user gives to or receives from another user. These are managed in levels and transported with these structures.\n\n### Private \n0",
+				"properties": {
+					"u8sObjectID": {
+						"type": "string"
+					},
+					"iPresenceRights": {
+						"type": "integer"
+					},
+					"iPhoneControlRightsPrimary": {
+						"type": "integer"
+					},
+					"iPhoneControlRightsSecondary": {
+						"type": "integer"
+					}
+				},
+				"required": [
+					"u8sObjectID",
+					"iPresenceRights",
+					"iPhoneControlRightsPrimary",
+					"iPhoneControlRightsSecondary"
+				]
+			},
+			"AsnContactCallInformationV2": {
+				"type": "object",
+				"description": "### Category \nCommon\n### Private \n0",
+				"properties": {
+					"u8sContactChangedId": {
+						"type": "string"
+					},
+					"iPresenceState": {
+						"type": "integer"
+					},
+					"u8sConnectionID": {
+						"type": "string"
+					},
+					"u8sLinePhoneNumber": {
+						"type": "string"
+					},
+					"iCallState": {
+						"type": "integer"
+					},
+					"iDisconnectedReason": {
+						"type": "integer"
+					},
+					"iFeatures": {
+						"type": "integer"
+					},
+					"bOutbound": {
+						"type": "boolean"
+					},
+					"bInternal": {
+						"type": "boolean"
+					},
+					"bPrivate": {
+						"type": "boolean"
+					},
+					"iCallRecordingState": {
+						"type": "integer"
+					},
+					"bConferenceCtlr": {
+						"type": "boolean"
+					},
+					"u8sCurrentNumberSC": {
+						"type": "string"
+					},
+					"u8sTrackerID": {
+						"type": "string"
+					},
+					"u8sLocalCurrentNumberSC": {
+						"type": "string"
+					},
+					"u8sRedirectingNumber": {
+						"type": "string"
+					},
+					"remoteContact": {
+						"$ref": "#/components/schemas/AsnNetDatabaseContact"
+					}
+				},
+				"required": [
+					"u8sContactChangedId",
+					"iPresenceState",
+					"u8sConnectionID",
+					"u8sLinePhoneNumber",
+					"iCallState",
+					"iDisconnectedReason",
+					"iFeatures",
+					"bOutbound",
+					"bInternal",
+					"bPrivate",
+					"iCallRecordingState",
+					"bConferenceCtlr",
+					"u8sCurrentNumberSC",
+					"u8sTrackerID",
+					"u8sLocalCurrentNumberSC"
+				]
+			},
+			"AsnSIPLineDetails": {
+				"type": "object",
+				"description": "### Category \nCommon\n### Short \nParameter for a SIP line\n\n### Private \n0",
+				"properties": {
+					"iSIPAVMediaMode": {
+						"type": "integer"
+					},
+					"iSIPAVAudioCodecs": {
+						"$ref": "#/components/schemas/SEQInteger"
+					},
+					"iMinPort": {
+						"type": "integer"
+					},
+					"iMaxPort": {
+						"type": "integer"
+					}
+				},
+				"required": [
+					"iSIPAVMediaMode",
+					"iSIPAVAudioCodecs",
+					"iMinPort",
+					"iMaxPort"
+				]
+			},
+			"AsnCustomNote": {
+				"type": "object",
+				"description": "### Category \nCommon\n### Short \nStructure for handling the user defined note.\n\n### Private \n0",
+				"properties": {
+					"u8sContactID": {
+						"type": "string"
+					},
+					"u8sUsername": {
+						"type": "string"
+					},
+					"u8sNote": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"u8sContactID",
+					"u8sUsername",
+					"u8sNote"
+				]
+			},
+			"AsnContactCallInformationsV2": {
+				"type": "array",
+				"items": {
+					"$ref": "#/components/schemas/AsnContactCallInformationV2"
+				}
+			},
+			"AsnContactPhoneLineV2": {
+				"type": "object",
+				"description": "### Category \nCommon\n### Short \nPhone line object which is used in the presence object model.\n\n### Long \nNot every client will have full CTI functionality, but has to display some information baout the\nlines and phone states of users. For this AsnContactPhoneLine represents teh state of a line in the presence model.\n\n### added_timestamp \n1726185600\n### Private \n0",
+				"properties": {
+					"iType": {
+						"type": "integer"
+					},
+					"u8sLinePhoneNumber": {
+						"type": "string"
+					},
+					"u8sDescriptor": {
+						"type": "string"
+					},
+					"u8sNumber": {
+						"type": "string"
+					},
+					"seqCalls": {
+						"$ref": "#/components/schemas/AsnContactCallInformationsV2"
+					},
+					"seqLineForwards": {
+						"$ref": "#/components/schemas/AsnLineForwards"
+					},
+					"iState": {
+						"$ref": "#/components/schemas/AsnContactPhoneLineState"
+					},
+					"bDoNotDisturb": {
+						"type": "boolean"
+					},
+					"iForwardFeaturesPBX": {
+						"type": "integer"
+					},
+					"u8sAddressNames": {
+						"$ref": "#/components/schemas/UTF8StringList"
+					},
+					"u8sAddressCaps": {
+						"type": "string"
+					},
+					"u8sCTIFeatureCodes": {
+						"type": "string"
+					},
+					"bIsPrivateLine": {
+						"type": "boolean"
+					},
+					"bIsVoiceServicesLine": {
+						"type": "boolean"
+					},
+					"sipLineDetails": {
+						"$ref": "#/components/schemas/AsnSIPLineDetails"
+					}
+				},
+				"required": [
+					"iType",
+					"u8sLinePhoneNumber",
+					"u8sDescriptor",
+					"u8sNumber",
+					"seqCalls",
+					"seqLineForwards",
+					"iState",
+					"bDoNotDisturb",
+					"iForwardFeaturesPBX",
+					"u8sAddressNames",
+					"u8sAddressCaps",
+					"u8sCTIFeatureCodes"
+				]
+			},
+			"AsnContactPhoneLinesV2": {
+				"type": "array",
+				"items": {
+					"$ref": "#/components/schemas/AsnContactPhoneLineV2"
+				}
+			},
+			"AsnExternalPresenceState": {
+				"type": "object",
+				"description": "### Category \nCommon\n### Long \nA state of an external presence provider\n\n### Private \n0",
+				"properties": {
+					"u8sUserName": {
+						"type": "string"
+					},
+					"iState": {
+						"type": "integer"
+					},
+					"eType": {
+						"$ref": "#/components/schemas/AsnExternalPresenceType"
+					}
+				},
+				"required": [
+					"u8sUserName",
+					"iState",
+					"eType"
+				]
+			},
+			"AsnExternalPresenceStates": {
+				"type": "array",
+				"items": {
+					"$ref": "#/components/schemas/AsnExternalPresenceState"
+				}
+			},
+			"AsnAbsentStateV2": {
+				"type": "object",
+				"description": "### Category \nCommon\n### Short \nThe absent state of a user\/contact in the ucserver.\n\n### Long \nAsnAbsentSate is used to describe the manual presence of a User.\nThe manual presence is used to override the system calculated presence state of the user until a new system\nstate is calculated or the system calculated one is back to \"available\" again.\nSo the manual presence overrides the actual presence at the moment it is set, but it will be overridden by new system\nevents other than \"available\".\n\n### Private \n0",
+				"properties": {
+					"u8sContactId": {
+						"type": "string"
+					},
+					"eAbsentState": {
+						"$ref": "#/components/schemas/AsnAbsentStateEnum"
+					},
+					"iPresenceState": {
+						"type": "integer"
+					},
+					"stTimeFrom": {
+						"$ref": "#/components/schemas/AsnSystemTime"
+					},
+					"stTimeTo": {
+						"$ref": "#/components/schemas/AsnSystemTime"
+					},
+					"eReachability": {
+						"$ref": "#/components/schemas/AsnReachabilityEnum"
+					},
+					"externalPresenceStates": {
+						"$ref": "#/components/schemas/AsnExternalPresenceStates"
+					}
+				},
+				"required": [
+					"u8sContactId",
+					"eAbsentState"
+				]
+			},
+			"AsnContactV2": {
+				"type": "object",
+				"description": "### Category \nCommon\n### Short \nThe interface representation of an ActveContact (or short \"contact\") of the UCServer with static contact and dynamic presence data.\n\n### Long \nThe UCServer uses a technology called \"ActiveContacts\", which are representing contacts with all its static contact information and all\nits dynamic\/calculated presence information from the different services used by this contact (phone lines, calendar, federation etc.)\n\nAll the data is filtered by the UCServer depending on the permissions of the calling client\/user. So not every client will get all the information.\n\n### Private \n0",
+				"properties": {
+					"u8sContactId": {
+						"type": "string"
+					},
+					"iContactFeatureSet": {
+						"type": "integer"
+					},
+					"iPresenceState": {
+						"type": "integer"
+					},
+					"iStaticRights": {
+						"type": "integer"
+					},
+					"iStaticRights2": {
+						"type": "integer"
+					},
+					"iMonitorAccessRights": {
+						"type": "integer"
+					},
+					"asnRemoteContact": {
+						"$ref": "#/components/schemas/AsnNetDatabaseContact"
+					},
+					"seqPhoneLines": {
+						"$ref": "#/components/schemas/AsnContactPhoneLinesV2"
+					},
+					"asnAbsentState": {
+						"$ref": "#/components/schemas/AsnAbsentStateV2"
+					},
+					"asnCustomNote": {
+						"$ref": "#/components/schemas/AsnCustomNote"
+					},
+					"seqActualAppointments": {
+						"$ref": "#/components/schemas/SEQAppointmentList"
+					},
+					"asnNextAppointment": {
+						"$ref": "#/components/schemas/AsnAppointmentEntry"
+					},
+					"asnUserPropertyBag": {
+						"$ref": "#/components/schemas/AsnUserPropertyBag"
+					}
+				},
+				"required": [
+					"u8sContactId",
+					"iContactFeatureSet",
+					"iPresenceState",
+					"iStaticRights",
+					"iStaticRights2",
+					"iMonitorAccessRights",
+					"asnRemoteContact",
+					"seqPhoneLines",
+					"asnAbsentState",
+					"asnCustomNote",
+					"seqActualAppointments",
+					"asnNextAppointment",
+					"asnUserPropertyBag"
+				]
+			},
+			"AsnUserDynamicRightsList": {
+				"type": "array",
+				"items": {
+					"$ref": "#/components/schemas/AsnUserDynamicRights"
+				}
+			},
+			"AsnContactsV2": {
+				"type": "array",
+				"items": {
+					"$ref": "#/components/schemas/AsnContactV2"
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,76 @@
+﻿UC-Server-Access-Protocol-AppointmentsCommon
+	{ iso(1) identified-organization(3) dod(6) internet(1) private(4) enterprise(1) estos(10924) uc-server-access-protocol-v2(2) appointmentscommon(32) }
+
+-- @category Common
+-- @brief Common interface definitions
+-- @long
+-- ## Module description
+-- This module contains structures that are mainly used in combination with the Appointments
+-- There should not be any function/operation defintions in this module.
+-- 
+-- THERE SHOULD NOT BE ANY FUNCTION/OPERATION DEFINTIONS IN THIS MODULE.
+-- 
+
+DEFINITIONS
+IMPLICIT TAGS ::=
+BEGIN
+
+IMPORTS
+AsnOptionalParameters, AsnSystemTime FROM UC-Server-Access-Protocol-Common
+;
+
+-- @brief Enumeration for the iStatus field values.
+-- @long Enumeration values for the iStatus field values used in AsnAppointmentEntry.
+EnumAppointmentState ::= ENUMERATED
+{
+	eAPPOINTMENTSTATUSFREE(0),
+	eAPPOINTMENTSTATUSTENTATIVE(1),
+	eAPPOINTMENTSTATUSBUSY(2),
+	eAPPOINTMENTSTATUSOUTOFOFFICE(3)
+}
+
+-- @brief Enumeration for the iImportance field values.
+-- @long Enumeration values for the iImportance field values used in AsnAppointmentEntry.
+EnumAppointmentImportance ::= ENUMERATED
+{
+	eAPPOINTMENTIMPORTANCELESS(0),
+	eAPPOINTMENTIMPORTANCENORMAL(1),
+	eAPPOINTMENTIMPORTANCEURGENT(2)
+}
+
+-- @brief Enumeration for the iSensitivity field values.
+-- @long Enumeration values for the iSensitivity field values used in AsnAppointmentEntry.
+EnumAppointmentSensitivity ::= ENUMERATED
+{
+	eAPPOINTMENTSENSITIVITYNORMAL (0),
+	eAPPOINTMENTSENSITIVITYPERSONAL (1),
+	eAPPOINTMENTSENSITIVITYPRIVATE (2),
+	eAPPOINTMENTSENSITIVITYCONFIDENTIAL (3)
+}
+
+-- @brief Datatype for transport of Appointment Data to and from the UCServer.
+AsnAppointmentEntry	::= SEQUENCE
+{	
+	u8sEntryID							UTF8String,		-- Unique EntryID of the data source
+	u8sOwner							UTF8String,		-- Owner of the dataset - will be changed by the ucserver with the loggedin user to enforce ownership for security reasons
+	u8sDataSource						UTF8String,		-- Symbolic name of the data source
+	stStart								AsnSystemTime,	-- Start time of the appointment
+	stEnd								AsnSystemTime,	-- End time of the appointment
+	iDuration							INTEGER,		-- Duration of the appointment
+	u8sSubject							UTF8String,		-- Subject of the appointment
+	u8sText								UTF8String,		-- Message body of the appointment
+	bAllDay								BOOLEAN,		-- Indicates, if it is an allday appointment (true) or not (false)
+	iStatus								INTEGER,		-- (Presence) State of the user while the appointment is active, see EnumAppointmentState
+	u8sCategory							UTF8String,		-- Category of the appointment
+	iImportance							INTEGER,		-- Importance of the appointment, see EnumAppointmentImportance
+	iSensitivity						INTEGER,		-- Sensitivity (private or not), see EnumAppointmentSensitivity
+	bIsValid							BOOLEAN,		-- Is it a valid entry (data set), will be set on the ucserver (e.g. TabIndex of the database entry is not 0)
+	-- optionalParams Name "Location" Value String
+	optionalParams						AsnOptionalParameters OPTIONAL,
+	...
+}
+
+-- @brief List of AsnAppointmentEntry.
+SEQAppointmentList ::= SEQUENCE OF AsnAppointmentEntry
+
+END

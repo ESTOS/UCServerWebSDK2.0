@@ -1,0 +1,1704 @@
+{
+	"openapi": "3.1.0",
+	"info": {
+		"title": "ENetROSEInterface",
+		"version": "0.0.1",
+		"summary": "General interface\n\n",
+		"description": "## Module description\n\nGeneral interfacefunctions not included in any other module.\n\n"
+	},
+	"paths": {
+		"/asnKeepAlive": {
+			"post": {
+				"tags": ["General"],
+				"summary": "Event which can be send to the UCServer regularily to detect connection loss faster.\n\n",
+				"deprecated": false,
+				"operationId": "100",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnKeepAliveArgument"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnGetLocationInformation2": {
+			"post": {
+				"tags": ["General"],
+				"summary": "Get a specific location information (AsnLocationInformation2).\n\n",
+				"description": "This function is replaces asnGetLocationInformation and delivers the new AsnLocationInformation2 for the given location id.\n\n",
+				"deprecated": false,
+				"operationId": "1119",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnGetLocationInformationArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnGetLocationInformation2Result"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnSetLocationInformation2": {
+			"post": {
+				"tags": ["General"],
+				"deprecated": false,
+				"operationId": "1127",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnSetLocationInformation2Argument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnSetLocationInformation2Result"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnGetLocationIDs": {
+			"post": {
+				"tags": ["General"],
+				"deprecated": false,
+				"operationId": "1120",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnGetLocationIDsArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnGetLocationIDsResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnLocationInformationChanged": {
+			"post": {
+				"tags": ["General"],
+				"deprecated": false,
+				"operationId": "1117",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnLocationInformationChangedArgument"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnUpdateMyContactConfigurationV2": {
+			"post": {
+				"tags": ["General"],
+				"description": "Event that my contact configuration has changed\n\n",
+				"deprecated": false,
+				"operationId": "1309",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnUpdateMyContactConfigurationV2Argument"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnSetUserAbsentState": {
+			"post": {
+				"tags": ["General"],
+				"summary": "Operation to set the manual presence state of a user.\n\n",
+				"description": "This operation is used to set the manual presence state of a user. This ist mostly used for the logged in contact, but can be used to set it for others user too.\n\nIn order to do that, access rights have to be granted by the other contact to the current user of the calling client.\n\n\n\nIf the operation was successful, AsnAbsentStateSetUserResult is returned.\n\n\n\nIf an error occured, AsnRequestError is returned.\n\n",
+				"deprecated": false,
+				"operationId": "1128",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnSetUserAbsentStateArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnSetUserAbsentStateResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnGetUserAbsentState": {
+			"post": {
+				"tags": ["General"],
+				"deprecated": false,
+				"operationId": "1129",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnGetUserAbsentStateArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnGetUserAbsentStateResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnResetUserAbsentState": {
+			"post": {
+				"tags": ["General"],
+				"summary": "This operation set the manual presence state of a user back, so the system calculated presence will not be affected by it.\n\n",
+				"description": "The manual presence of a user is a special input to the presence system.\n\nTo set it back to the pure system calculated presence this operation has to be called.\n\n\n\nIf the operation was successful, AsnAbsentStateResetResult is returned.\n\n\n\nIf the operation fails, AsnRequestError is returned.\n\n",
+				"deprecated": false,
+				"operationId": "1130",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnResetUserAbsentStateArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnResetUserAbsentStateResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnUpdateMyAbsentStateV2": {
+			"post": {
+				"tags": ["General"],
+				"deprecated": false,
+				"operationId": "1313",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnUpdateMyAbsentStateV2Argument"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnCustomNoteSet": {
+			"post": {
+				"tags": ["General"],
+				"deprecated": false,
+				"operationId": "1510",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnCustomNoteSetArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnCustomNoteSetResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnUpdateMyCustomNote": {
+			"post": {
+				"tags": ["General"],
+				"deprecated": false,
+				"operationId": "1511",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnUpdateMyCustomNoteArgument"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnGetMetaSettings": {
+			"post": {
+				"tags": ["General"],
+				"deprecated": false,
+				"operationId": "2100",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnGetMetaSettingsArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnGetMetaSettingsResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnGetMetaPhoneBooksSettings": {
+			"post": {
+				"tags": ["General"],
+				"deprecated": false,
+				"operationId": "2101",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnGetMetaSettingsArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnGetMetaSettingsResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnSetMetaSettings": {
+			"post": {
+				"tags": ["General"],
+				"deprecated": false,
+				"operationId": "2026",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnSetMetaSettingsArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnSetMetaSettingsResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnSetMetaPhoneBooksSettings": {
+			"post": {
+				"tags": ["General"],
+				"deprecated": false,
+				"operationId": "2027",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnSetMetaSettingsArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnSetMetaSettingsResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnSubscribeServices": {
+			"post": {
+				"tags": ["General"],
+				"description": "This is an temporary function we use to separate Login from the implicit logic the server is doing with the login\n\nThis function exists while we rework the interface from asnLogon to asnLoginV2\n\nIn the future every service will have it´s own login function telling the server that a client is interested in that service\n\nPlease be aware that we will remove this function any time as it is just a temporary solution to decouple login from subscribing to services\n\n",
+				"deprecated": false,
+				"operationId": "703",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnSubscribeServicesArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnSubscribeServicesResult"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"schemas": {
+			"AsnUserPropertyBag": {
+				"$ref": "ENetUC_Common.json#/components/schemas/AsnUserPropertyBag"
+			},
+			"AsnNetDatabaseContact": {
+				"$ref": "ENetUC_Common.json#/components/schemas/AsnNetDatabaseContact"
+			},
+			"AsnNetDatabaseContactList": {
+				"$ref": "ENetUC_Common.json#/components/schemas/AsnNetDatabaseContactList"
+			},
+			"SEQInteger": {
+				"$ref": "ENetUC_Common.json#/components/schemas/SEQInteger"
+			},
+			"AsnIntegerPairList": {
+				"$ref": "ENetUC_Common.json#/components/schemas/AsnIntegerPairList"
+			},
+			"AsnStringPairList": {
+				"$ref": "ENetUC_Common.json#/components/schemas/AsnStringPairList"
+			},
+			"AsnSystemTime": {
+				"$ref": "ENetUC_Common.json#/components/schemas/AsnSystemTime"
+			},
+			"AsnOptionalParameters": {
+				"$ref": "ENetUC_Common.json#/components/schemas/AsnOptionalParameters"
+			},
+			"UTF8StringList": {
+				"$ref": "ENetUC_Common.json#/components/schemas/UTF8StringList"
+			},
+			"AsnRequestError": {
+				"$ref": "ENetUC_Common.json#/components/schemas/AsnRequestError"
+			},
+			"AsnProjectPinRule": {
+				"$ref": "ENetUC_Common_SIPCTI.json#/components/schemas/AsnProjectPinRule"
+			},
+			"AsnProjectPinRuleList": {
+				"$ref": "ENetUC_Common_SIPCTI.json#/components/schemas/AsnProjectPinRuleList"
+			},
+			"AsnCtiNewCallParams": {
+				"$ref": "ENetUC_Common_SIPCTI.json#/components/schemas/AsnCtiNewCallParams"
+			},
+			"AsnLineForwards": {
+				"$ref": "ENetUC_Common_SIPCTI.json#/components/schemas/AsnLineForwards"
+			},
+			"AsnUserDynamicRights": {
+				"$ref": "ENetUC_Common_AsnContact.json#/components/schemas/AsnUserDynamicRights"
+			},
+			"AsnUserDynamicRightsList": {
+				"$ref": "ENetUC_Common_AsnContact.json#/components/schemas/AsnUserDynamicRightsList"
+			},
+			"AsnUserStaticRights": {
+				"$ref": "ENetUC_Common_AsnContact.json#/components/schemas/AsnUserStaticRights"
+			},
+			"AsnUserStaticRights2": {
+				"$ref": "ENetUC_Common_AsnContact.json#/components/schemas/AsnUserStaticRights2"
+			},
+			"AsnContactV2": {
+				"$ref": "ENetUC_Common_AsnContact.json#/components/schemas/AsnContactV2"
+			},
+			"AsnAbsentStateV2": {
+				"$ref": "ENetUC_Common_AsnContact.json#/components/schemas/AsnAbsentStateV2"
+			},
+			"AsnCustomNote": {
+				"$ref": "ENetUC_Common_AsnContact.json#/components/schemas/AsnCustomNote"
+			},
+			"SEQAppointmentList": {
+				"$ref": "ENetUC_Common_Appointments.json#/components/schemas/SEQAppointmentList"
+			},
+			"AsnAppointmentEntry": {
+				"$ref": "ENetUC_Common_Appointments.json#/components/schemas/AsnAppointmentEntry"
+			},
+			"AsnContactID": {
+				"type": "string"
+			},
+			"AsnETAPIDialNumberFormat": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "eTAPIDIALNUMBERFORMATNORMAL",
+						"const": 0
+					},
+					{
+						"title": "eTAPIDIALNUMBERFORMATSUPERCANONIC",
+						"const": 1
+					},
+					{
+						"title": "eTAPIDIALNUMBERFORMATPLAIN",
+						"const": 2
+					},
+					{
+						"title": "eTAPIDIALNUMBERFORMATDIALABLEPLAIN",
+						"const": 3
+					}]},
+			"AsnERemoteTapiNumberFormat": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "eREMOTETAPINUMBERFORMATPLAIN",
+						"const": 0
+					},
+					{
+						"title": "eREMOTETAPINUMBERFORMATPREFORMAT",
+						"const": 1
+					},
+					{
+						"title": "eREMOTETAPINUMBERFORMATSUPERCANONIC",
+						"const": 2
+					}]},
+			"AsnERemoteTapiDialFormat": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "eREMOTETAPIDIALFORMATPLAIN",
+						"const": 0
+					},
+					{
+						"title": "eREMOTETAPIDIALFORMATALL",
+						"const": 1
+					}]},
+			"AsnERemoteTapiLineNames": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "eREMOTETAPILINENAMESORIGINAL",
+						"const": 0
+					},
+					{
+						"title": "eREMOTETAPILINENAMESLINENUMBER",
+						"const": 1
+					}]},
+			"AsnForwardMode": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "iCTIFORWARDUNKNOWN",
+						"const": 0
+					},
+					{
+						"title": "iCTIFORWARDIMMEDIATE",
+						"const": 1
+					},
+					{
+						"title": "iCTIFORWARDBUSY",
+						"const": 2
+					},
+					{
+						"title": "iCTIFORWARDNOANSW",
+						"const": 3
+					},
+					{
+						"title": "iCTIFORWARDBUSYINT",
+						"const": 4
+					},
+					{
+						"title": "iCTIFORWARDBUSYEXT",
+						"const": 5
+					},
+					{
+						"title": "iCTIFORWARDNOANSINT",
+						"const": 6
+					},
+					{
+						"title": "iCTIFORWARDNOANSEXT",
+						"const": 7
+					},
+					{
+						"title": "iCTIFORWARDIMMINT",
+						"const": 8
+					},
+					{
+						"title": "iCTIFORWARDIMMEXT",
+						"const": 9
+					},
+					{
+						"title": "iCTIBACKENDSPECIFIC",
+						"const": 10
+					}]},
+			"AsnPresenceStateEnum": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "eUNCONTROLLED",
+						"const": 0
+					},
+					{
+						"title": "eAVAILABLE",
+						"const": 1
+					},
+					{
+						"title": "eBUSY",
+						"const": 2
+					},
+					{
+						"title": "eABSENT",
+						"const": 3
+					},
+					{
+						"title": "eDONOTDISTURB",
+						"const": 4
+					},
+					{
+						"title": "eOUTOFORDER",
+						"const": 7
+					}]},
+			"AsnPresenceStateFlags": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "eWORKINGAFTERCALL",
+						"const": 65536
+					},
+					{
+						"title": "eCONFERENCING",
+						"const": 131072
+					},
+					{
+						"title": "eRINGING",
+						"const": 16777216
+					},
+					{
+						"title": "eAPPOINTMENT",
+						"const": 33554432
+					},
+					{
+						"title": "eCALL",
+						"const": 67108864
+					},
+					{
+						"title": "eOFFLINE",
+						"const": 134217728
+					},
+					{
+						"title": "eNOTESET",
+						"const": 268435456
+					},
+					{
+						"title": "eIDLE",
+						"const": 536870912
+					},
+					{
+						"title": "eMOBILEAVAILABLITY",
+						"const": 1073741824
+					}]},
+			"AsnPresenceStateMasks": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "ePresenceStateMask",
+						"const": 255
+					},
+					{
+						"title": "ePresenceStateFlagsMaskAdd",
+						"const": 16711680
+					},
+					{
+						"title": "ePresenceStateFlagsMask",
+						"const": 2130706432
+					}]},
+			"EnumCallState": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "eCALLSTATEUNKNOWN",
+						"const": 0
+					},
+					{
+						"title": "eCALLSTATEDESTROYED",
+						"const": 1
+					},
+					{
+						"title": "eCALLSTATEOFFERING",
+						"const": 2
+					},
+					{
+						"title": "eCALLSTATEDIALING",
+						"const": 4
+					},
+					{
+						"title": "eCALLSTATERINGBACK",
+						"const": 8
+					},
+					{
+						"title": "eCALLSTATEBUSY",
+						"const": 16
+					},
+					{
+						"title": "eCALLSTATECONNECTED",
+						"const": 32
+					},
+					{
+						"title": "eCALLSTATECONFERENCED",
+						"const": 64
+					},
+					{
+						"title": "eCALLSTATEHOLD",
+						"const": 128
+					},
+					{
+						"title": "eCALLSTATEDISCONNECTED",
+						"const": 256
+					},
+					{
+						"title": "eCALLSTATEPREPARECALL",
+						"const": 512
+					}]},
+			"EnumCallDisconnectedReason": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "eDISCONNECTEDREASONUNKNOWN",
+						"const": 0
+					},
+					{
+						"title": "eDISCONNECTEDREASONUNCONNECTED",
+						"const": 1
+					},
+					{
+						"title": "eDISCONNECTEDREASONBUSY",
+						"const": 2
+					},
+					{
+						"title": "eDISCONNECTEDREASONREDIRECTEDUNKNOWN",
+						"const": 3
+					},
+					{
+						"title": "eDISCONNECTEDREASONREDIRECTEDBYLINEOWNER",
+						"const": 4
+					}]},
+			"EnumRemoteContactSource": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "eUNKNOWN",
+						"const": 0
+					},
+					{
+						"title": "eSERVERPROVIDED",
+						"const": 1
+					},
+					{
+						"title": "eCLIENTPROVIDED",
+						"const": 2
+					},
+					{
+						"title": "eOTHERCLIENTPROVIDED",
+						"const": 3
+					}]},
+			"EAsnCallType": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "eCALLTYPENORMAL",
+						"const": 0
+					},
+					{
+						"title": "eCALLTYPECONSULT",
+						"const": 1
+					},
+					{
+						"title": "eCALLTYPECONFERENCECONTROLER",
+						"const": 2
+					},
+					{
+						"title": "eCALLTYPECALLBACK",
+						"const": 3
+					},
+					{
+						"title": "eCALLTYPECONFERENCEMEMBER",
+						"const": 4
+					},
+					{
+						"title": "eCALLTYPECONFERENCECONTROLERPENDING",
+						"const": 5
+					},
+					{
+						"title": "eCALLTYPECONFERENCEMEMBERPENDING",
+						"const": 6
+					}]},
+			"EnumCallRecordingState": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "eNOCALLRECODRING",
+						"const": 0
+					},
+					{
+						"title": "eCALLRECORDERCALL",
+						"const": 1
+					},
+					{
+						"title": "eCALLRECORDINGMEMBER",
+						"const": 2
+					},
+					{
+						"title": "eWASCALLRECORDERCALL",
+						"const": 3
+					},
+					{
+						"title": "eWASCALLRECORDINGMEMBER",
+						"const": 4
+					}]},
+			"AsnPresenceRightsFlags": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "eVisible",
+						"const": 1
+					},
+					{
+						"title": "eChangeable",
+						"const": 2
+					},
+					{
+						"title": "eAppointmentPrivate",
+						"const": 16
+					},
+					{
+						"title": "eAppointmentPublic",
+						"const": 32
+					},
+					{
+						"title": "ePatternUsed",
+						"const": 32768
+					},
+					{
+						"title": "eBlocked",
+						"const": 0
+					},
+					{
+						"title": "ePublic",
+						"const": 65536
+					},
+					{
+						"title": "eCompany",
+						"const": 131072
+					},
+					{
+						"title": "eTeam",
+						"const": 262144
+					},
+					{
+						"title": "ePersonal",
+						"const": 524288
+					}]},
+			"AsnPresenceRightsMasks": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "eAppointmentMask",
+						"const": 240
+					},
+					{
+						"title": "ePatternFlagsMask",
+						"const": 983040
+					}]},
+			"AsnPhoneControlRightsFlags": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "eBlocked",
+						"const": 0
+					},
+					{
+						"title": "eNumbersOutbound",
+						"const": 1
+					},
+					{
+						"title": "eNumbersInbound",
+						"const": 2
+					},
+					{
+						"title": "eNumbersRedirected",
+						"const": 4
+					},
+					{
+						"title": "eSetForwards",
+						"const": 256
+					},
+					{
+						"title": "eSetPickupCalls",
+						"const": 512
+					}]},
+			"AsnPresenceCommonRights": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "eBlocked",
+						"const": 0
+					},
+					{
+						"title": "ePublic",
+						"const": 98305
+					},
+					{
+						"title": "eCompany",
+						"const": 163873
+					},
+					{
+						"title": "eTeam",
+						"const": 294947
+					},
+					{
+						"title": "ePersonal",
+						"const": 557107
+					}]},
+			"AsnPhoneControlPrimaryCommonRights": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "eBlocked",
+						"const": 0
+					},
+					{
+						"title": "eCompany",
+						"const": 7
+					},
+					{
+						"title": "eTeam",
+						"const": 519
+					},
+					{
+						"title": "ePersonal",
+						"const": 775
+					}]},
+			"AsnPhoneControlSecondaryCommonRights": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "eBlocked",
+						"const": 0
+					},
+					{
+						"title": "eTeam",
+						"const": 7
+					},
+					{
+						"title": "ePersonal",
+						"const": 775
+					}]},
+			"AsnContactFeatureSetEnum": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "eCONTACTFEATURENONE",
+						"const": 0
+					},
+					{
+						"title": "eCONTACTFEATUREDIAL",
+						"const": 1
+					},
+					{
+						"title": "eCONTACTFEATURESETFORWARDL1",
+						"const": 2
+					},
+					{
+						"title": "eCONTACTFEATURESETFORWARDL2",
+						"const": 4
+					},
+					{
+						"title": "eCONTACTFEATURESWAP",
+						"const": 8
+					},
+					{
+						"title": "eCONTACTFEATUREANSWER",
+						"const": 16
+					},
+					{
+						"title": "eCONTACTFEATUREHANGUP",
+						"const": 32
+					},
+					{
+						"title": "eCONTACTFEATUREPICKUPL1",
+						"const": 64
+					},
+					{
+						"title": "eCONTACTFEATUREPICKUPL2",
+						"const": 128
+					},
+					{
+						"title": "eCONTACTFEATUREHOLD",
+						"const": 256
+					},
+					{
+						"title": "eCONTACTFEATUREMESSAGE",
+						"const": 512
+					},
+					{
+						"title": "eCONTACTFEATUREREDIRECT",
+						"const": 1024
+					},
+					{
+						"title": "eCONTACTFEATURESETABSENT",
+						"const": 2048
+					}]},
+			"AsnMetaDirectoryPasswordEncryption": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "iEncrypted",
+						"const": 0
+					},
+					{
+						"title": "iPlain",
+						"const": 1
+					}]},
+			"AsnNumberFormatRegExpression2": {
+				"type": "object",
+				"description": "### Category \nGeneral\n### Short \nRegular expression to reformat a phone number. Replaces AsnNumberFormatRegExpression.\n\n### Private \n0",
+				"properties": {
+					"u8sSearch": {
+						"type": "string"
+					},
+					"u8sReplace": {
+						"type": "string"
+					},
+					"bMatchReplace": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"u8sSearch",
+					"u8sReplace",
+					"bMatchReplace"
+				]
+			},
+			"AsnKeepAliveArgument": {
+				"type": "object",
+				"description": "### Category \nGeneral\n### Short \nArgunment for asnKeepAlive.\n\n### Private \n0",
+				"properties": {
+					"dummy": {
+						"nullable": "true"
+					}
+				},
+				"required": [
+					"dummy"
+				]
+			},
+			"AsnGetLocationInformationArgument": {
+				"type": "object",
+				"description": "### Category \nGeneral\n### Short \nArgument for asnGetLocationInformation and asnGetLocationInformation2.\n\n### Private \n0",
+				"properties": {
+					"u8sLocationID": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"u8sLocationID"
+				]
+			},
+			"AsnSetLocationInformation2Result": {
+				"type": "object",
+				"description": "### Category \nGeneral\n### Private \n0"
+			},
+			"AsnGetLocationIDsArgument": {
+				"type": "object",
+				"description": "### Category \nGeneral\n### Long \nLiefert die LocationIDs mit passender MD5 Prüfsumme.\nWird vom Client verwendet um zu Prüfen ob seine Location Settings noch aktuell sind\n\n### Private \n0",
+				"properties": {
+					"locationIDs": {
+						"$ref": "#/components/schemas/UTF8StringList"
+					}
+				}
+			},
+			"AsnGetLocationIDsResult": {
+				"type": "object",
+				"description": "### Category \nGeneral\n### Private \n0",
+				"properties": {
+					"locationIDMD5ChecksumList": {
+						"$ref": "#/components/schemas/AsnStringPairList"
+					}
+				},
+				"required": [
+					"locationIDMD5ChecksumList"
+				]
+			},
+			"AsnLocationInformationChangedArgument": {
+				"type": "object",
+				"description": "### Category \nGeneral\n### Private \n0",
+				"properties": {
+					"u8sLocationID": {
+						"type": "string"
+					},
+					"optionalParams": {
+						"$ref": "#/components/schemas/AsnOptionalParameters"
+					}
+				},
+				"required": [
+					"u8sLocationID"
+				]
+			},
+			"AsnUpdateMyContactConfigurationV2Argument": {
+				"type": "object",
+				"description": "### Category \nGeneral\n### Long \nThe changed contact details for the asnUpdateMyContactConfigurationV2 operation\n\n### Private \n0",
+				"properties": {
+					"contactChanged": {
+						"$ref": "#/components/schemas/AsnContactV2"
+					}
+				},
+				"required": [
+					"contactChanged"
+				]
+			},
+			"AsnSetUserAbsentStateArgument": {
+				"type": "object",
+				"description": "### Category \nGeneral\n### Short \nArgument for asnSetUserAbsentState\n\n### Long \nSet change the manual presence of a user, a AsnAbsentState struct has to be sent to the ucserver.\n\n### Private \n0",
+				"properties": {
+					"absentstate": {
+						"$ref": "#/components/schemas/AsnAbsentStateV2"
+					}
+				},
+				"required": [
+					"absentstate"
+				]
+			},
+			"AsnSetUserAbsentStateResult": {
+				"type": "object",
+				"description": "### Category \nGeneral\n### Short \nResult of asnSetUserAbsentState if the operation executes successfully.\n\n### Long \nResult of asnAbsentStateSetUser if the operation executes successfully.\n\n### Private \n0",
+				"properties": {
+					"bSuccess": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"bSuccess"
+				]
+			},
+			"AsnGetUserAbsentStateResult": {
+				"type": "object",
+				"description": "### Category \nGeneral\n### added_timestamp \n1724198400\n### Private \n0",
+				"properties": {
+					"absentstate": {
+						"$ref": "#/components/schemas/AsnAbsentStateV2"
+					}
+				},
+				"required": [
+					"absentstate"
+				]
+			},
+			"AsnResetUserAbsentStateArgument": {
+				"type": "object",
+				"description": "### Category \nGeneral\n### Short \nArgument for asnResetUserAbsentState\n\n### Long \nThe argument for asnResetUserAbsentState conatins the ContactID for the contact to reset its absent state to 'none'.\n\n### added_timestamp \n1724284800\n### Private \n0",
+				"properties": {
+					"u8sContactId": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"u8sContactId"
+				]
+			},
+			"AsnResetUserAbsentStateResult": {
+				"type": "object",
+				"description": "### Category \nGeneral\n### Short \nResult of asnResetUserAbsentState that indicates, that the oepration was successful.\n\n### added_timestamp \n1724284800\n### Private \n0"
+			},
+			"AsnUpdateMyAbsentStateV2Argument": {
+				"type": "object",
+				"description": "### Category \nGeneral\n### Private \n0",
+				"properties": {
+					"absentstate": {
+						"$ref": "#/components/schemas/AsnAbsentStateV2"
+					}
+				},
+				"required": [
+					"absentstate"
+				]
+			},
+			"AsnCustomNoteSetArgument": {
+				"type": "object",
+				"description": "### Category \nGeneral\n### Private \n0",
+				"properties": {
+					"customnote": {
+						"$ref": "#/components/schemas/AsnCustomNote"
+					}
+				},
+				"required": [
+					"customnote"
+				]
+			},
+			"AsnCustomNoteSetResult": {
+				"type": "object",
+				"description": "### Category \nGeneral\n### Private \n0",
+				"properties": {
+					"optionalParams": {
+						"$ref": "#/components/schemas/AsnOptionalParameters"
+					}
+				}
+			},
+			"AsnUpdateMyCustomNoteArgument": {
+				"type": "object",
+				"description": "### Category \nGeneral\n### Private \n0",
+				"properties": {
+					"customnote": {
+						"$ref": "#/components/schemas/AsnCustomNote"
+					}
+				},
+				"required": [
+					"customnote"
+				]
+			},
+			"AsnSetMetaSettingsResult": {
+				"type": "object",
+				"description": "### Category \nGeneral\n### Private \n0"
+			},
+			"AsnSubscribeServicesArgument": {
+				"type": "object",
+				"description": "### Category \nGeneral\n### Long \nTemporay helper object for the asnSubscribeServices\n\n### Private \n0"
+			},
+			"AsnSubscribeServicesResult": {
+				"type": "object",
+				"description": "### Category \nGeneral\n### Long \nTemporay helper object for the asnSubscribeServices\n\n### Private \n0"
+			},
+			"AsnNumberFormatRegExpressList2": {
+				"type": "array",
+				"items": {
+					"$ref": "#/components/schemas/AsnNumberFormatRegExpression2"
+				}
+			},
+			"AsnNumberFormatRegExpressions2": {
+				"type": "object",
+				"description": "### Category \nGeneral\n### Short \nEncapsulates AsnNumberFormatRegExpressList2 together with a readonly flag.\n\n### Private \n0",
+				"properties": {
+					"bIsReadOnlyFromFile": {
+						"type": "boolean"
+					},
+					"formatRules": {
+						"$ref": "#/components/schemas/AsnNumberFormatRegExpressList2"
+					}
+				},
+				"required": [
+					"bIsReadOnlyFromFile",
+					"formatRules"
+				]
+			},
+			"AsnLocationInformation2": {
+				"type": "object",
+				"description": "### Category \nGeneral\n### Short \nDescription of formatting and dialing rules for phone numbers.\n\n### Long \nEach PBX is connected to a phone network which defines the rules to apply if number should be dialed or how\nphone numbers are routed and transmitted.\n\nThe AsnLocationInformation contains information how to handle\nphone numbers to allow comfort functions for the user like formatting phone numbers to display them in a readable manner\nor to enable the user to enter numbers in a short format etc.\n\nReplaces AsnLocationInformation.\n\n### Private \n0",
+				"properties": {
+					"u8sLocationID": {
+						"type": "string"
+					},
+					"u8sLocationCheckSum": {
+						"type": "string"
+					},
+					"bUseVanity": {
+						"type": "boolean"
+					},
+					"bShowExtendedSettings": {
+						"type": "boolean"
+					},
+					"bUseTkSystem": {
+						"type": "boolean"
+					},
+					"bUseAdvancedLCR": {
+						"type": "boolean"
+					},
+					"bFixedNumberLenExtensionDTMFDialing": {
+						"type": "boolean"
+					},
+					"bMultiLocationSupport": {
+						"type": "boolean"
+					},
+					"bAutoCreateOtherLocationRules": {
+						"type": "boolean"
+					},
+					"bAllowNumberSearchOtherLocations": {
+						"type": "boolean"
+					},
+					"bShortenOtherLocationSCNumbersForDialing": {
+						"type": "boolean"
+					},
+					"iCountryID": {
+						"type": "integer"
+					},
+					"iLanguage": {
+						"type": "integer"
+					},
+					"u8sCountryCode": {
+						"type": "string"
+					},
+					"u8sLocalPrefix": {
+						"type": "string"
+					},
+					"u8sNationalPrefix": {
+						"type": "string"
+					},
+					"u8sInternationalPrefix": {
+						"type": "string"
+					},
+					"u8sLocalDialingRule": {
+						"type": "string"
+					},
+					"u8sNationalDialingRule": {
+						"type": "string"
+					},
+					"u8sInternationalDialingRule": {
+						"type": "string"
+					},
+					"u8sCityCodeNoPrefix": {
+						"type": "string"
+					},
+					"u8sVanityNumbers": {
+						"type": "string"
+					},
+					"u8sTKLocalAccessCode": {
+						"type": "string"
+					},
+					"u8sTKLongDistanceAccessCode": {
+						"type": "string"
+					},
+					"u8sTKInternationalAccessCode": {
+						"type": "string"
+					},
+					"u8sTKPrivateAccessCode": {
+						"type": "string"
+					},
+					"u8sTKForwardingAccessCode": {
+						"type": "string"
+					},
+					"u8sTKAnschlussNr": {
+						"type": "string"
+					},
+					"iTKMinLenInternalNumbers": {
+						"type": "integer"
+					},
+					"iTKMaxLenInternalNumbers": {
+						"type": "integer"
+					},
+					"numberFormatInternal": {
+						"$ref": "#/components/schemas/AsnNumberFormatRegExpressions2"
+					},
+					"numberFormatExternal": {
+						"$ref": "#/components/schemas/AsnNumberFormatRegExpressions2"
+					},
+					"numberFormatAutomaticOtherLocationsDDItoSC": {
+						"$ref": "#/components/schemas/AsnNumberFormatRegExpressions2"
+					},
+					"numberFormatAutomaticOtherLocationsSCtoDDI": {
+						"$ref": "#/components/schemas/AsnNumberFormatRegExpressions2"
+					},
+					"numberFormatRegExpressListIn": {
+						"$ref": "#/components/schemas/AsnNumberFormatRegExpressions2"
+					},
+					"numberFormatRegExpressListOut": {
+						"$ref": "#/components/schemas/AsnNumberFormatRegExpressions2"
+					},
+					"numberFormatRegExpressListDial": {
+						"$ref": "#/components/schemas/AsnNumberFormatRegExpressions2"
+					},
+					"numberFormatRegExpressListFinalDial": {
+						"$ref": "#/components/schemas/AsnNumberFormatRegExpressions2"
+					},
+					"projectPINRules": {
+						"$ref": "#/components/schemas/AsnProjectPinRuleList"
+					},
+					"u8sDDIRangeBegin": {
+						"type": "string"
+					},
+					"u8sDDIRangeEnd": {
+						"type": "string"
+					},
+					"iDialingNumberFormat": {
+						"type": "integer"
+					},
+					"bNoLocalDialing": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"u8sLocationID",
+					"u8sLocationCheckSum",
+					"bUseVanity",
+					"bShowExtendedSettings",
+					"bUseTkSystem",
+					"bUseAdvancedLCR",
+					"bFixedNumberLenExtensionDTMFDialing",
+					"bMultiLocationSupport",
+					"bAutoCreateOtherLocationRules",
+					"bAllowNumberSearchOtherLocations",
+					"bShortenOtherLocationSCNumbersForDialing",
+					"iCountryID",
+					"iLanguage",
+					"u8sCountryCode",
+					"u8sLocalPrefix",
+					"u8sNationalPrefix",
+					"u8sInternationalPrefix",
+					"u8sLocalDialingRule",
+					"u8sNationalDialingRule",
+					"u8sInternationalDialingRule",
+					"u8sCityCodeNoPrefix",
+					"u8sVanityNumbers",
+					"u8sTKLocalAccessCode",
+					"u8sTKLongDistanceAccessCode",
+					"u8sTKInternationalAccessCode",
+					"u8sTKPrivateAccessCode",
+					"u8sTKForwardingAccessCode",
+					"u8sTKAnschlussNr",
+					"iTKMinLenInternalNumbers",
+					"iTKMaxLenInternalNumbers",
+					"numberFormatInternal",
+					"numberFormatExternal",
+					"numberFormatAutomaticOtherLocationsDDItoSC",
+					"numberFormatAutomaticOtherLocationsSCtoDDI",
+					"numberFormatRegExpressListIn",
+					"numberFormatRegExpressListOut",
+					"numberFormatRegExpressListDial",
+					"numberFormatRegExpressListFinalDial",
+					"projectPINRules",
+					"u8sDDIRangeBegin",
+					"u8sDDIRangeEnd",
+					"iDialingNumberFormat",
+					"bNoLocalDialing"
+				]
+			},
+			"AsnGetLocationInformation2Result": {
+				"type": "object",
+				"description": "### Category \nGeneral\n### Short \nResult of asnGetLocationInformation2.\n\n### Private \n0",
+				"properties": {
+					"asnLocationData": {
+						"$ref": "#/components/schemas/AsnLocationInformation2"
+					}
+				},
+				"required": [
+					"asnLocationData"
+				]
+			},
+			"AsnSetLocationInformation2Argument": {
+				"type": "object",
+				"description": "### Category \nGeneral\n### Private \n0",
+				"properties": {
+					"asnLocationData": {
+						"$ref": "#/components/schemas/AsnLocationInformation2"
+					}
+				},
+				"required": [
+					"asnLocationData"
+				]
+			},
+			"AsnGetUserAbsentStateArgument": {
+				"type": "object",
+				"description": "### Category \nGeneral\n### added_timestamp \n1724198400\n### Private \n0",
+				"properties": {
+					"contactId": {
+						"$ref": "#/components/schemas/AsnContactID"
+					}
+				},
+				"required": [
+					"contactId"
+				]
+			},
+			"AsnGetMetaSettingsArgument": {
+				"type": "object",
+				"description": "### Category \nGeneral\n### Private \n0",
+				"properties": {
+					"eSendPlainPassword": {
+						"$ref": "#/components/schemas/AsnMetaDirectoryPasswordEncryption"
+					}
+				},
+				"required": [
+					"eSendPlainPassword"
+				]
+			},
+			"AsnMetaDirectorySettings": {
+				"type": "object",
+				"description": "### Category \nGeneral\n### Private \n0",
+				"properties": {
+					"iMetaEnabled": {
+						"type": "integer"
+					},
+					"iMetaPort": {
+						"type": "integer"
+					},
+					"u8sMetaServer": {
+						"type": "string"
+					},
+					"u8sBaseDN": {
+						"type": "string"
+					},
+					"iMetaForceSSL": {
+						"type": "integer"
+					},
+					"iMetaUseAccount": {
+						"type": "integer"
+					},
+					"u8sMetaUser": {
+						"type": "string"
+					},
+					"ePasswordEncryption": {
+						"$ref": "#/components/schemas/AsnMetaDirectoryPasswordEncryption"
+					},
+					"u8sMetaPassword": {
+						"type": "string"
+					},
+					"iMetaUseInServer": {
+						"type": "integer"
+					},
+					"iMetaUseInClient": {
+						"type": "integer"
+					}
+				},
+				"required": [
+					"iMetaEnabled",
+					"iMetaPort",
+					"u8sMetaServer",
+					"u8sBaseDN",
+					"iMetaForceSSL",
+					"iMetaUseAccount",
+					"u8sMetaUser",
+					"ePasswordEncryption",
+					"u8sMetaPassword",
+					"iMetaUseInServer",
+					"iMetaUseInClient"
+				]
+			},
+			"AsnSetMetaSettingsArgument": {
+				"type": "object",
+				"description": "### Category \nGeneral\n### Private \n0",
+				"properties": {
+					"eSendPlainPassword": {
+						"$ref": "#/components/schemas/AsnMetaDirectoryPasswordEncryption"
+					},
+					"metasettings": {
+						"$ref": "#/components/schemas/AsnMetaDirectorySettings"
+					}
+				},
+				"required": [
+					"eSendPlainPassword",
+					"metasettings"
+				]
+			},
+			"AsnGetMetaSettingsResult": {
+				"type": "object",
+				"description": "### Category \nGeneral\n### Private \n0",
+				"properties": {
+					"metasettings": {
+						"$ref": "#/components/schemas/AsnMetaDirectorySettings"
+					}
+				},
+				"required": [
+					"metasettings"
+				]
+			},
+			"AsnContactIDs": {
+				"type": "array",
+				"items": {
+					"$ref": "#/components/schemas/AsnContactID"
+				}
+			}
+		}
+	}
+}

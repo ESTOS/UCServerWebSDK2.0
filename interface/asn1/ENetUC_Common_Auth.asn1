@@ -1,0 +1,193 @@
+﻿UC-Server-Access-Protocol-AuthCommon
+	{ iso(1) identified-organization(3) dod(6) internet(1) private(4) enterprise(1) estos(10924) uc-server-access-protocol-v2(2) authcommon(36) }
+
+-- @category Common
+-- @brief Common types used for authentication
+-- @long
+-- ## Module description
+-- This module contains structures that are mainly used in combination with the logon 
+-- There should not be any function/operation defintions in this module.
+-- 
+-- THERE SHOULD NOT BE ANY FUNCTION/OPERATION DEFINTIONS IN THIS MODULE.
+
+DEFINITIONS
+IMPLICIT TAGS ::=
+BEGIN
+
+
+AsnAuthBasicCredential ::= SEQUENCE
+{
+	credential							UTF8String,	-- base64(username+":"+password) username and password in utf8!
+	...
+}
+
+AsnAuthNTLMCredential ::= SEQUENCE
+{
+	-- Request payload for the NTLM authentication. Containing NTLM Type 1 oder Type 3 message
+	authdata							OCTET STRING,
+	...
+}
+
+-- 
+AsnAuthKerberosCredential ::= SEQUENCE
+{
+	-- Request payload for the AsnAuthKerberosCredential
+	authdata							OCTET STRING,
+	...
+}
+
+-- @brief The information for a bearer auth request
+-- @added 12.09.2024
+AsnAuthBearer ::= SEQUENCE
+{
+	-- The JWT payload
+	u8sJWT								UTF8String,
+	...
+}
+
+-- @brief The information for an openidc auth request
+-- @added 12.09.2024
+AsnAuthOpenIDC ::= SEQUENCE
+{
+	-- This is send when we want to get a redirect link
+	u8sScope							[0] UTF8String OPTIONAL,
+	-- This is send when we got a token from the redirect
+	u8sIDToken							[1] UTF8String OPTIONAL,
+	...
+}
+
+AsnLoginV2ChoiceArgument ::= CHOICE
+{
+	-- Authenticate basic
+	authBasic 							[0] AsnAuthBasicCredential,
+	-- Authenticate digest
+	--authDigest						[1] AsnAuthDigestCredential,
+	-- Authenticate ntlm
+	authNTLM							[2] AsnAuthNTLMCredential,
+	-- Authenticate kerberos
+	authKerberos						[3] AsnAuthKerberosCredential,
+	-- Authenticate bearer (JWT)
+	authBearer							[4] AsnAuthBearer,
+	-- Authenticate openIDC
+	authOpenIDC							[5] AsnAuthOpenIDC
+}
+
+-- This type is used as parameter for the asn*Login methods
+AsnLoginV2Argument ::= SEQUENCE
+{
+	-- wenn nicht vorhanden,. schickt der server eine Antwort mit den unterstützen Methoden
+	-- wenn vorhanden, wird die entsprechende Authentisierung durchgeführt
+	auth [0]	AsnLoginV2ChoiceArgument OPTIONAL,
+	...
+}
+
+
+-- Authentication method negotiation - parameters/challenge for digest authentication
+AsnAuthDigestParams ::= SEQUENCE
+{
+	nonce				UTF8String,
+	opaque				UTF8String, -- base64 or hex
+	qop					UTF8String,
+	algorithm			[0] UTF8String OPTIONAL,
+	realm				[1] UTF8String OPTIONAL,
+	...
+}
+
+-- Authentication method negotiation The supported auth methods 
+AsnLoginV2SupportedAuthMethod ::= ENUMERATED
+{
+	-- do not use! Only exists to indicate an unknown type from conversion
+	noneOrUnknown(0),
+	-- Server supports basic
+	basic(1),
+	-- Server supports digest
+	digest(2),
+	-- Server supports ntlm
+	ntlm(3),
+	-- Server supports kerberos
+	kerberos(4),
+	-- Server supports bearer (JWT)
+	bearer(5),
+	-- Server supports openIDC
+	openidc(6)
+}
+
+-- Authentication method negotiation - An ordered list of supported auth mechanisms
+-- ~SEQUENCE OF = sortiert, SET OF fällt aus, weil ohne Sortierung
+AsnLoginV2SupportedAuthMethods ::= SEQUENCE OF AsnLoginV2SupportedAuthMethod
+
+-- Authentication method negotiation - ordered list of available auth methods and parameters to these auth methods
+AsnLoginV2ResultSupportedAuthMethods ::= SEQUENCE
+{
+	-- ordered list, defines the order in which the client shall use the auth methods
+	authMethodsOrdered			AsnLoginV2SupportedAuthMethods,
+	-- Server supports digest (object contains digest parameters)
+	authDigest 					[0] AsnAuthDigestParams OPTIONAL,
+	-- Server supports basic 
+	-- authBasic 				[1] AsnAuthBasicParams OPTIONAL,
+	-- Server supports NTLM (object contains NTLM parameters)
+	-- authNTLM					[2] AsnAuthNTLMParams OPTIONAL,
+	-- Server supports Kerbers (object contains Kerbers parameters)
+	-- authKerberos				[3] AsnAuthKerberosParams OPTIONAL,
+	-- Server supports bearer (object contains bearer parameters)
+	-- authBearer				[4] AsnAuthBearerParams OPTIONAL,
+	-- Server supports openIDC (object contains openIDC parameters)
+	-- authOpenIDC				[5] AsnAuthOpenIDCParams OPTIONAL,
+	...
+}
+
+-- This type is used as result for the asn*Login methods
+AsnLoginV2Token ::= CHOICE
+{
+	-- A jwt issued by the server
+	u8sJwt						[0] UTF8String,
+	-- An abritary token used to authenticate
+	u8sToken					[1] UTF8String
+}
+
+-- Return value for a successful login
+AsnLoginV2ResultSuccess ::= SEQUENCE
+{
+	u8sLoggedInUser				[0] UTF8String OPTIONAL,
+	token	 		 			[1] AsnLoginV2Token OPTIONAL,
+	...
+}
+
+-- Return value when redirecting to another Server (i.e. another UCServer is responsible for these credentials)
+AsnLoginV2ResultServerRedirect ::= SEQUENCE
+{
+	-- the new target server to connect to
+	u8sRedirectTo				UTF8String,
+	...
+}
+
+-- Return value when the UCServer currently does not process login requests on this connection
+AsnLoginV2ResultServerBusy ::= SEQUENCE
+{
+	iRetryInSeconds	INTEGER,
+	...
+}
+
+AsnLoginV2ResultRenegotiateNTLM ::= SEQUENCE
+{
+	-- Response payload for the NTLM authentication. Contains NTLM Type 2 message
+	authdata			OCTET STRING,
+	...
+}
+
+-- This type is used as result for the asn*Login methods
+AsnLoginV2Result ::= CHOICE
+{
+	-- Supported auth mechanisms
+	supportedAuthMethods		[0] AsnLoginV2ResultSupportedAuthMethods,
+	-- Login succeeded
+	succceeded					[1] AsnLoginV2ResultSuccess,
+	-- Redirect to another server
+	serverRedirect				[2] AsnLoginV2ResultServerRedirect,
+	-- The server is currently busy and asks us to retry later
+	serverBusy					[3] AsnLoginV2ResultServerBusy,
+	-- Authentiation requires another step (auth continue)
+	ntlmRenegotiate				[4] AsnLoginV2ResultRenegotiateNTLM
+}
+
+END

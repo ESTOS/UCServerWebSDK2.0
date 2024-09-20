@@ -1,0 +1,677 @@
+﻿UC-Server-Access-Protocol-PresenceV2
+	{ iso(1) identified-organization(3) dod(6) internet(1) private(4) enterprise(1) estos(10924) uc-server-access-protocol-v2(2) presence-v2(10) }
+
+-- @category PresenceV2
+-- @brief Presence interface (Version 2)
+-- @long
+-- ~Erlaubte Operation IDs: 4500- 4599
+-- 
+--
+--
+--
+--
+-- ## Module description
+-- This module defines structures and operations for the presence V2 interface.
+-- A version 2 of the presence interface was necessary to improve the amount of contact and service data.
+-- The presence shows at any time the current availability of the person you wish to communicate with. For a detailed description see the help of the UCClient.
+-- The following presence states are available:
+-- - Available (green)
+-- - Busy (red)
+-- - Absent (yellow)
+-- - Inactive (green/yellow)
+-- - Don't disturb  (red with a white stripe)
+-- - Offline (gray)
+--
+-- Additionally the API delivers information in form of contact data, service states and much more. 
+-- With all these infromations, it is possible to create an application, which give user the ability to see a detailed picture of a contact enriched with live state changes.
+--
+-- The live changes are results of the different services the UCServer combines the presence state of the user:
+-- - Telephone (via CTI)
+-- - Calendar
+-- - Audio/Video
+-- - Softphone 
+-- - Bluetooth device (locally attached to a client of the user).
+-- - Manual input of the user
+--
+-- ## Prerequisite for using the interface
+-- - The client needs a socket for secure data Transmission between client-server and vise versa.
+-- - Installation of ProCall Software in advance
+-- - Then create a user for testing purposes
+-- - login in this user name and check the functionality of this interface practically
+--
+--
+-- ## Functionalities
+-- - The status for client will be driven from various sources like: 
+-- - Digital Telephone, Mobile, Calender(ms outlook), Audio/Video Chat, Manually changing Status and Computer system(login/logout).
+-- - The user has the permission to manually change the status 
+-- - The user can set a user-defined status (ex: Coffee Break)
+-- - The user can set a couple of notices (ex: listing the daily appointments) 
+-- - The user can change status and notice
+-- - The user can remove status and notice
+--
+--
+-- ## Events
+-- The Events that the client receives from the server are:
+-- 
+-- \- **[asnUpdatePresence(V2)](PresenceV2.asnUpdatePresence.html)** :
+-- - It delivers the responses from Server to Client as per Client request   
+-- - The Server receives the specific request like [asnCustomNote](Common.type.AsnCustomNote.html) from Client
+-- - The Client reciprocally receives an [asnUpdatePresence(V2)](PresenceV2.asnUpdatePresence.html) from Server
+-- - The Update-Event will also be sent to those clients who are in touch with this client in the same Server
+-- - It receives the Event from server in two forms whether an Argument or an Error
+-- - As Argument: It handles the **Presence** and **iChangedFlags** events
+-- \- [Presence](PresenceV2.type.AsnUpdatePresenceArgument.html) : it shows updated data of the present-contact.
+-- \- [iChangedFlags](PresenceV2.type.AsnUpdatePresenceArgument.html) : it indicates that which area triggers the event and it's included because later on the server fills the fields 
+-- \* check the [AsnPresence](PresenceV2.type.AsnPresence.html)(Active details) for more details
+--
+-- \- **[asnRemovePresence](PresenceV2.asnRemovePresence.html)** :
+-- - It needs a contact id to remove the presence state 
+-- - It has an optionalParams for further implementation 
+--
+-- ## How the API works
+-- Here is a very simple diagram of how the presence API works
+-- @startuml
+-- "Client A" -> "UCServer": asnGetAndSubscribePresence(AsnGetAndSubscribePresenceArgument)
+-- "Client A" <- "UCServer": AsnGetAndSubscribePresenceResult
+-- note left
+--		Call asnGetAndSubscribePresence at least
+--		the ContactIDs of the contacts the client
+--		is interested to get updates from.
+-- end note
+-- ...
+-- "Client A" <- "UCServer": EVENT: asnUpdatePresence(V2)(AsnUpdatePresenceArgument)
+-- note right
+--		asnUpdatePresence(V2) are events from 
+--		the server with changes/updates made to 
+--		the contact the client has subscribed to.
+-- end note
+-- ...
+-- "Client A" -> "UCServer": asnUnsubscribePresence(AsnUnsubscribePresenceArgument)
+-- "Client A" <- "UCServer": AsnUnsubscribePresenceResult
+-- note left
+--		Call asnUnsubscribePresence for
+--		all contacts (ContactIDs) the server
+--		should stop fireing events for.
+-- end note
+-- @enduml
+
+DEFINITIONS
+IMPLICIT TAGS ::=
+BEGIN
+
+IMPORTS
+AsnOptionalParameters, AsnNetDatabaseContact, AsnUserPropertyBag, UTF8StringList, AsnRequestError, AsnNetDatabaseContactID, AsnStringIntegerPairList FROM UC-Server-Access-Protocol-Common
+AsnAbsentStateV2, AsnCustomNote, AsnUserDynamicRights, AsnUserStaticRights, AsnUserStaticRights2 FROM UC-Server-Access-Protocol-AsnContactCommon
+SEQAppointmentList, AsnAppointmentEntry FROM UC-Server-Access-Protocol-AppointmentsCommon
+AsnClientCapabilitiesV2 FROM UC-Server-Access-Protocol-ClientCapabilities
+EAsnCallType FROM UC-Server-Access-Protocol-Main
+EAsnJournalCallType, EAsnCallState FROM UC-Server-Access-Protocol-SIPCTICommon
+;
+
+-- @brief The structure is used to describe a phone line of a contact.
+-- @long
+-- The structure is used to describe a phone line of a contact, including it state, their number and URI, forwards on the line currently set.
+AsnPresenceLine ::= SEQUENCE
+{
+	u8sLinePhoneNumber		UTF8String, -- LineURI 
+	u8sLineNumber			UTF8String,	-- Lesbare Nummer der Leitung (extrahiert aus der LineURI)
+	iState					INTEGER,	-- Line State
+	iDoNotDisturb			INTEGER,	-- Line is on DoNotDisturb (1) or not (0)
+	iForwardFeaturesPBX		INTEGER,	-- What kind of forwarding this line supports
+	...
+}
+
+-- @brief List of AsnPresenceLine structures.
+-- @long
+-- List of AsnPresenceLine structures.
+AsnPresenceLines ::= SEQUENCE OF AsnPresenceLine;
+
+-- @brief This structure describes the information about a call on a phone line.
+-- @long 
+-- This structure describes the information about a call on a phone line of a contact including the last action taken
+-- by the call (added, removed, changed), the current call state, features/functions available on the call, call type and
+-- if available the remote contact.
+-- @added 16.09.2024
+AsnPresenceCallV2 ::= SEQUENCE
+{
+	iAction				INTEGER,				-- add/remove/change
+	u8sConnectionID		UTF8String,				-- the connectionID of the call
+	u8sLinePhoneNumber	UTF8String,				-- the lineURI of the device that holds the call
+	u8sLineNumber		UTF8String,				-- the readnable number from the lineURI
+	u8sCurrentNumberSC	UTF8String,				-- the number of the current remote side (in and outbound) in full qualified supercanonic notation
+	u8sTrackerID		UTF8String,				-- the id of the call tracker the associates multiple calls to one scenario
+	eCallState			EAsnCallState,			-- The state of the call
+	iFeatures			INTEGER,				-- Was darf der Eventgempfänger mit dem Call machen
+	bOutbound			BOOLEAN,				-- true outbound, false inbound
+	bInternal			BOOLEAN,				-- true internal conversation partner
+	eCallType			EAsnCallType,			-- The type of call
+	eJournalCallType	EAsnJournalCallType,	-- the journal call type
+	remoteContact		[0] AsnNetDatabaseContact OPTIONAL,	-- Das nötigste über den Anrufer soweit bekannt
+	...
+}
+
+-- @brief List of AsnPresenceCallV2 structures.
+-- @long 
+-- List of AsnPresenceCall structures.
+-- @added 16.09.2024
+AsnPresenceCallsV2 ::= SEQUENCE OF AsnPresenceCallV2;
+
+-- @brief This strutures describes the phone forward state of a phone line.
+-- @long 
+-- A phone line can be set to forward call automatically to other endpoints. This structure describes
+-- the different forward states.
+AsnPresenceForward ::= SEQUENCE
+{
+	u8sLinePhoneNumber	UTF8String,				-- LineURI der betroffenen Leitung
+	u8sLineNumber		UTF8String,				-- Lesbare Nummer der Leitung (extrahiert aus der LineURI)
+	iInternalID			INTEGER,				-- Interne ID des Forwards
+	u8sDestination		UTF8String,				-- Ziel der Umleitung
+	iForwardMode		INTEGER,				-- Art der Umleitung
+	iNoAnswerTime		[0] INTEGER OPTIONAL,		-- nach wie vielen sekunden bei noAns weitergeleitet wird
+	...
+}
+
+-- @brief List of AsnPresenceForward structures.
+-- @long 
+-- List of AsnPresenceForward structures.
+AsnPresenceForwards ::= SEQUENCE OF AsnPresenceForward;
+
+-- @brief Structure for AsnPresence to give the client a hint, whcih access rights are effective to set on an contact.
+-- @long
+-- Minimum and maximum of the user dynamic rights which can be set to a contact. See more details in AsnPresence .
+AsnActualUserDynamicRights ::= SEQUENCE
+{
+	asnMinPossibleRights	AsnUserDynamicRights,				-- The minimum of possible rights to set.
+	asnMaxPossibleRights	AsnUserDynamicRights,				-- The maximum of possible rights to set.
+	asnCurrentRights		[0] AsnUserDynamicRights OPTIONAL,		-- If not set, there are no rights set already.
+	...
+}
+
+-- @brief Struture for AsnPresence of the actual agent state of the contact
+-- @long
+-- To reflect the actual agent state of a contact which is a PBX or LiveChat Agent, this struture
+-- contains the state and agentgroup list of the contact.
+AsnAgentState ::= SEQUENCE
+{
+	dwState					INTEGER,								-- AsnAgentStateEnum - the current agent state of the contact.
+	mapDetails				[0] AsnStringIntegerPairList OPTIONAL,		-- To be Documented - Agent Group List with states?
+	...
+}
+
+-- @brief This sequence contains the data and service states of a contact, called its 'presence'.
+-- @long 
+-- AsnPresence contains all the data and service states which represents the 'presence' of a contact.<br />
+-- A client subscribing to the presence of a contact (via asnGetAndSubscribePresence ), will get back this structure filled according to his needs and access rights given.
+-- This structure is also used for update events ( asnUpdatePresence(V2) ) and in this case only the changed values or sections will be enclosed.
+AsnPresenceV2 ::= SEQUENCE
+{
+	u8sContactId						UTF8String,				-- ContactID of the contact which is responsible for this data
+	iPresenceState						[0] INTEGER 				OPTIONAL,	-- Calculated presence of the contact. This is the over all presence of all the services which have an influnce on the current presence state of the contact (line, appointments, absent state a.s.o.)
+	asnRemoteContact					[1] AsnNetDatabaseContact 	OPTIONAL,	-- The contact data of the contact
+	asnUserPropertyBag					[2] AsnUserPropertyBag 	OPTIONAL,		-- If the contact is an ucserver user, this may contain additional information about the user filtered by access rights.
+
+	iContactFeatureSet					[3] INTEGER 				OPTIONAL,	-- Feature set on the contact. Bitfield with flags, which actions are possible on the contact (like "set forwards").
+
+	iStaticRights						[4] INTEGER 				OPTIONAL,	-- Access rights on the contact.
+	iMonitorAccessRights				[5] INTEGER 				OPTIONAL,	-- Access rights on the probably configured, additional lines of the contact.
+	
+	asnAbsentState						[6] AsnAbsentStateV2		OPTIONAL,	-- Actual set absent state.
+	asnCustomNote						[7] AsnCustomNote 			OPTIONAL,	-- Actual set note.
+	
+	seqActualAppointments				[8] SEQAppointmentList 		OPTIONAL,	-- Actual appointments of the contact.
+	asnNextAppointment					[9] AsnAppointmentEntry 	OPTIONAL,	-- First appointment in the future of the contact in a given time frame of 30 days.
+
+	seqPhoneLines						[10] AsnPresenceLines 		OPTIONAL,	-- The phone lines of the contact.
+	seqCalls						    [11] AsnPresenceCallsV2		OPTIONAL,	-- The current calls of the contact.
+	seqLineForwards						[12] AsnPresenceForwards	OPTIONAL,	-- The currently set phone forwards of the contact.
+	asnContactCapabilitiesEx			[14] AsnClientCapabilitiesV2 OPTIONAL,  -- Capabilities in a simpler to expand format of the connected clients of the contact (audio, video, calendar replication etc.)
+
+	-- Minimum and maximum of the user dynamic rights which can be set to the contact.<br />
+	-- If there are administrative contact rights set, the client can only modify it in a such a way, that he can grant additional
+	-- rights. This field helps the client to show the user the remaining options.
+	asnCurrentUserDynamicRights			[15] AsnActualUserDynamicRights OPTIONAL,
+
+	iStaticRights2						[16] INTEGER				OPTIONAL,	-- Additional static user rights. See AsnUserStaticRights2.
+	asnAgentState						[17] AsnAgentState			OPTIONAL,	-- Actual state of the user if he is an agent (via PBX/ACD or LiveChat-Modules)
+	asnMonitorGroupingAttribute			[18] AsnMonitorGroupingAttribute OPTIONAL,	-- Future use - If the user has a monitor grouping attribute set, it will be delivered here.
+	asnNextAppointments					[19] SEQAppointmentList		OPTIONAL,	-- The next appointments of this user
+	...
+}
+
+-- @brief List of AsnPresenceEx sequences
+AsnPresenceV2List ::= SEQUENCE OF AsnPresenceV2
+
+
+-- @brief Argument of asnUpdatePresence
+-- @long 
+-- This argument contains the changes which triggered the event on the server and the new presence state of the corresponding contact.
+AsnUpdatePresenceV2Argument ::= SEQUENCE
+{
+	presence			AsnPresenceV2,					-- Updated data and service states of the contact. See AsnPresence for more details.
+	iChangedFlags		INTEGER,						-- Flags indicating which data sections od the contact have triggered the event. @linked AsnPresenceSubscriptionFlags														
+	...
+}
+
+-- @brief Event from the server to the client about presence updates
+-- @long 
+-- This event is fired from the server if the client has subscribed by asnGetAndSubscribePresence on a contact (=user).
+-- It contains the new presence state and other data which has changed.
+asnUpdatePresenceV2 OPERATION
+	ARGUMENT	arg AsnUpdatePresenceV2Argument
+::= 4504
+
+-- @brief Argument for the event asnRemovePresence.
+-- @long
+-- The argument contains only the ContactID if the contact whcih has been removed.
+AsnRemovePresenceArgument ::= SEQUENCE
+{
+	u8sContactID		UTF8String,						-- ContactID of the contact removed.
+	...
+}
+
+-- @brief Event from the server tzhat the contact has been removed from the presence system.
+-- @long
+-- This event will be sent to clients when a contact is removed from the presence system of the ucserver.
+-- Mostly by removing or deactivating the contact in the user management system.
+asnRemovePresence OPERATION
+	ARGUMENT	arg AsnRemovePresenceArgument
+::= 4501
+
+-- @brief This enum is for selecting the events and direct return values in which the client is interested when it calls asnGetAndSubscribePresence.
+-- @long
+-- This enum describes the bit values used by iEventFlagsToSubscribe and iContactDetailsReturnFilter of AsnGetAndSubscribePresenceArgument in 
+-- which the caller can select in which events and result value he is interested in.
+AsnPresenceSubscriptionFlags ::= ENUMERATED
+{
+	-- Send the calculated contact presence value (default: on)
+	ePresenceSubscriptionPresence					(1),
+
+	-- Send the complete, static contact data (name, adress, etc.) (default: on)
+	ePresenceSubscriptionData						(2),
+
+	-- Send the complete contact image (if there is one) not only the hash value (default: on)
+	ePresenceSubscriptionDataIncludeImage			(4),
+
+	-- Send information about the contact configuration (changes about access rights etc.) (default: on)
+	ePresenceSubscriptionConfiguration				(8),
+
+	-- Send information about the actual absent state. This is manual set presence, not the calculated one, which includes not only the absent state. (default: on)
+	ePresenceSubscriptionAbsentstate				(16),	
+
+	-- Send information about the note of the contact (default: on)
+	ePresenceSubscriptionNote						(32),	
+
+	-- Send information about appointments (default: on)
+	ePresenceSubscriptionAppointment				(64),
+		
+	-- Send information about the phone lines of the contact (default: on)
+	ePresenceSubscriptionPhoneLines					(128),
+
+	-- Send information about the calls on the phone lines of the contact (default: on)
+	ePresenceSubscriptionPhoneCalls					(256),
+
+	-- Send information about the forward states on the phone lines of the contact (default: on)
+	ePresenceSubscriptionPhoneForwards				(512),
+
+	-- Send information about the contact right challenges if some contzact requests new contact rights
+	ePresenceSubscriptionMyChallengeUpdates			(1024),  
+	                                                         
+	-- Send information about changes to the own authorization list
+	ePresenceSubscriptionDynamicRightsUpdate		(2048),  --	= 0x00000800,
+
+	-- Send information about changes to an authorization list on a group the logged in user is member of
+	ePresenceSubscriptionDynamicGroupRightsUpdate	(4096),  --	= 0x00001000,
+
+	-- Send informations about changes to the global authorisation list
+	ePresenceSubscriptionDynamicGlobalRightsUpdate  (8192), --	= 0x00002000,
+	
+	-- Send agent state events of other users. This is not part of the default value!
+	-- ~ Stand 28.06.2018: Ist nicht im Default enthalten, muss speziell angegeben oder nachgefordert werden.
+	ePresenceSubscriptionAgentStatus				(32768), -- = 0x00008000,
+
+	-- Send events by changes on the monitor grouping attributes. This is not part of the default value!
+	-- ~ Möchte updates über Änderungen an den MonitorGroupingAttributes haben; 
+	-- ~ Stand 28.06.2018: Ist nicht im Default enthalten, muss speziell angegeben oder nachgefordert werden.
+	ePresenceSubScriptionMonitorGroupingAttribute	(65536)	 -- = 0x00010000
+
+	-- ~ Journal, Tasks, Appointment lists, A/V, Chat etc. sind Services und KEINE Contact details, 
+	-- ~ die hier mit geschickt werden
+}
+
+-- @brief Call this operation to get information about and events of another contact.
+-- @long
+-- This operation enables the client to request informations and events about another contact. 
+-- The minimal parameter is a list of contact IDs (e.g. 'sip:tester@test.com'). These contacts 
+-- will be searched in the ucserver and the service will return contact data back in the result 
+-- and send events about changes from there on.
+--
+-- The data returned and events which will be send are depending on access rights and accessability on the contact data.
+--
+-- Which events and return values are necessary for the client can be adjusted by the iEventFlagsToSubscribe and 
+-- iContactDetailsReturnFilter members.
+--
+-- **Note**: Federation contacts (contgacts managed on another server as the connected one) may not return most of the data
+-- even the bits are set. This is because the ucserver has to contact the appropriate server first and this can take some time.
+-- To prevent long response times, the data which will be eventually given by the appropriate server will be send back via event.
+-- 
+-- If the client wants to prevent SIP or XMPP fedeation contacts, it can set bOpenOnlyInternalContacts to true.
+--
+-- If the client wants to prevent requesting new contact rights on the contact it can set bDontRequestPermissions to true.
+AsnGetAndSubscribePresenceArgument ::= SEQUENCE
+{
+	seqContactIDs					UTF8StringList,			-- List of strings containing the contact ID of the requestet contact (e.g. 'sip:tester@test.com')
+
+	iEventFlagsToSubscribe			[0] INTEGER OPTIONAL,	-- AsnPresenceSubscriptionFlags - which events does the client wants to receive from the server.
+	iContactDetailsReturnFilter		[1] INTEGER OPTIONAL,	-- AsnPresenceSubscriptionFlags - which return values are needed from the ucserver.
+	bOpenOnlyInternalContacts		[2] BOOLEAN OPTIONAL,	-- 
+	bDontRequestPermissions			[3] BOOLEAN OPTIONAL,	-- Keine Berechtigungsanfrage starten
+															-- (z.B. sollen anonyme Benutzer eben nicht alle Events bekommen können
+	...
+}
+
+-- @brief Result of asnGetAndSubscribePresence with the list of successfully subscribed contacts.
+-- @long
+-- If the operation was successfully executed this result contains the list of successfully subscribed contacts, containing all requested data (if available).
+AsnGetAndSubscribePresenceV2Result ::= SEQUENCE
+{
+	seqSubscribedPresence		AsnPresenceV2List,		-- Kontakte die angefordert wurden 
+	...
+}
+
+-- @brief Operation to retrieve contact data and to subscribe to events when these data will change.
+-- @long
+-- If a client is interested in monitoring the presence and data of its own and other contacts, this operation
+-- gives the possibility to get data about a contact, its used services (lines, appointments, chat etc.) and his calculated presence. See AsnGetAndSubscribePresenceArgument for more information.
+--
+-- To unsubscribe from contacts, call asnUnsubscribePresence. This is highly recommended before closing the connection to the ucserver.
+-- 
+-- If the operation fails it will return AsnRequestError.
+-- 
+-- If the operation is successful at least on some given contacts, it will return AsnGetAndSubscribePresenceResult.
+asnGetAndSubscribePresenceV2 OPERATION
+	ARGUMENT	arg AsnGetAndSubscribePresenceArgument
+	RESULT		res AsnGetAndSubscribePresenceV2Result
+	ERRORS		{AsnRequestError}
+::= 4505
+
+
+
+-- @brief Argument for stopping contact subscrptions on the ucserver.
+-- @long 
+-- To stop getting contact events from the ucserver with the operation asnUnsubscribePresence this sequence
+-- contains the list of contact IDs to unsubscribe from.
+AsnUnsubscribePresenceArgument ::= SEQUENCE
+{
+	seqContactIDs			UTF8StringList,			-- List of contact IDs to unsubscribe from (e.g. 'sip:tester@test.com').
+	...
+}
+
+-- @brief Result of asnUnsubscribePresence if the operation was executed successfully
+-- @long
+-- This result sequence is send by the server if the unsibscribe wents successfull. iResult should always be 0.
+AsnUnsubscribePresenceResult ::= SEQUENCE
+{
+	iResult					INTEGER,
+	...
+}
+
+-- @brief Operation to end subscriptions on contacts on the ucserver.
+-- @long 
+-- To stop getting events from contacts on the ucserver this operation is called with the list contact IDs of these contacts.
+-- 
+-- If the operation is executes successful, it will return the result AsnUnsubscribePresenceResult.
+--
+-- If an error occured, AsnRequestError will be returned.
+asnUnsubscribePresence OPERATION
+	ARGUMENT	arg AsnUnsubscribePresenceArgument
+	RESULT		res AsnUnsubscribePresenceResult
+	ERRORS		{AsnRequestError}
+::= 4503
+
+
+-- @brief Operation to set access rights for another contact on contact data and contcat service information.
+-- @long
+-- This operation is used to grant access rights (or changing them) to other users (contacts) on contact informations and service states of this contact.
+--
+-- **Note**: The access rights in the ucserver are always a sum of the global, group and personal right lists and what they grant. So removing specific rights with this 
+-- operation has no effect if the same rights are granted through global or group rights.
+--
+-- If the operation was executed successfully the result AsnSetDynamicRightsResult is returned.
+--
+-- If an error occured, AsnRequestError is returned.
+--
+-- **The access rights list**<br />
+-- If a client wants to receive contact data, its logged in contact (= user) has to have access rights granted by the other user to him.
+-- Each user of the ucserver has a list of access rights she gives other users. If someone is in this list, he can see contact data 
+-- and/or service states of the user depending on the rights level granted.
+--
+-- The list can be modified by asnSetDynamicRights and asnRemoveDynamicRights.
+--
+-- **Contact rights challenge**<br />
+-- In conjunction with the access rights list is the mechanic of the "contact rights challenge".<br />
+-- To get on the access list of another user, the user must request such rights from him or will get them through administrative configuration.
+-- If there is no administrative configuration the other user will be "challenged" to grant or deny rights to the user.
+-- This process is started as soon as a user (challenger) requests the ucserver by calling asnGetAndSubscribePresence on another users ContactID (challengee).
+-- The ucserver checks if there are already given rights and if not, the challenged user gets a new entry in his challenge request list, which then will be 
+-- dispatched to all of his clients. These clients should now prompt the user to accept or deny the request and the result will be saved in his access rights list.
+-- On the other side, the challenger will get data and service status after some time or not. There is no extra notification if the challenge was answered or not.
+--
+asnSetDynamicRights OPERATION
+	ARGUMENT	arg AsnSetDynamicRightsArgument
+	RESULT		res   AsnSetDynamicRightsResult
+	ERRORS		{AsnRequestError}
+::= 4510
+
+-- @brief Argument for asnSetDynamicRights to set/change access rights to contact data and its service informations
+-- @long 
+-- The argument must contain the contact ID of the contact which access rights list has to be modified, the contact ID 
+-- of the contact which gets/looses the rights and the rights itself.
+--
+-- The rights can be set with a constant value (iDynamicRights) or more specialized with the optional AsnUserDynamicRights member 
+-- (not recommended, only use it for very special edge cases). 
+--
+-- The values for iDynamicRights are part of AsnPresenceRightsFlags in the general module. The valid values are:
+-- <ul>
+-- 	<li>eBlocked (0)</li>
+--  <li>ePublic (65536, 0x0001 0000)</li>
+--  <li>eCompany (131072, 0x0002 0000)</li>
+--  <li>eTeam (262144, 0x0004 0000)</li>
+--  <li>ePersonal (524288, 0x0008 0000)</li>
+-- </ul>
+AsnSetDynamicRightsArgument ::= SEQUENCE
+{
+	u8sOwnerContactID	UTF8String,				-- ContactID of the contact who grants/changes the rights.
+	u8sRemoteContactID	UTF8String,				-- ContactID of the contact to give to/change the rights.
+
+	-- Valid values are (taken from AsnPresenceRightsFlags):
+	-- <ul>
+	-- 	<li>eBlocked (0)</li>
+	--  <li>ePublic (65536, 0x0001 0000)</li>
+	--  <li>eCompany (131072, 0x0002 0000)</li>
+	--  <li>eTeam (262144, 0x0004 0000)</li>
+	--  <li>ePersonal (524288, 0x0008 0000)</li>
+	-- </ul>
+	iDynamicRights		INTEGER,
+
+	-- Only use this member to give access rights, which are not part of the predefined patterns.<br />
+	-- **This is not recommended**, so you can leave this optional parameter unset.<br />
+	-- If these rights are set, the parameters u8sOwnerContactID a iDynamicRights are ignored.												
+	dynamicRights		[1] AsnUserDynamicRights OPTIONAL,
+	...
+}
+
+-- @brief Result of asnSetDynamicRights if the operation was successful.
+-- @long
+-- If asnSetDynamicRights was executed successful, this result will be returned and it will contain the resulting access rights list.
+AsnSetDynamicRightsResult ::= SEQUENCE
+{
+	iResult			INTEGER,				-- Should always be 0 (NO_ERROR).
+	dynamicRights	AsnUserDynamicRights,	-- The resulting rights in the rights list of the contact which rightslist had to be changed. This includes NOT the rights granted by global or group rights!
+ 	...
+}
+
+-- @brief This enumeration describes the possible iErrorDetail values of AsnRequestError if an error occured in the operation asnSetDynamicRights.
+-- @long
+-- This enumeration describes the possible iErrorDetail values of AsnRequestError if an error occured in the operation asnSetDynamicRights.
+AsnSetDynamicRightsErrorEnum ::= ENUMERATED 
+{ 
+	general(0),
+	permissiondenied(1),
+	writeprofiledenied(2),
+	unknownrights(3)
+}
+
+
+-- @brief This operation is used for removing access rights to contact data and service states between contacts.
+-- @long
+-- If a client wants to remove access rights to contact data and service states between contacts, asnRemoveDynamicRights has to be called.
+-- 
+-- Removing access rights will remove an entry in the access rights list of the contact who grants the rights. This means, that 
+-- 'remote contact' (see. AsnRemoveDynamicRightsArgument) has the chance to request new rights again.
+--
+-- In order to prevent the 'remote contact' to request new rights, the contact should be blocked 
+-- (setting user right 'blocked'). See asnSetDynamicRights for more details.
+asnRemoveDynamicRights OPERATION
+	ARGUMENT	arg AsnRemoveDynamicRightsArgument
+	RESULT		res   AsnRemoveDynamicRightsResult
+	ERRORS		{AsnRequestError}
+::= 4511
+
+-- @brief Argument for asnRemoveDynamicRights
+-- @long
+-- The operation asnRemoveDynamicRights get only two parameters in its argument. u8sOwnerContactID of the contact which access list will be changed and
+-- u8sRemoteContactID of the contact which will be removed from the list.
+AsnRemoveDynamicRightsArgument ::= SEQUENCE
+{
+	u8sOwnerContactID	UTF8String,				-- ContactID - owner of the access list whoich will be changed
+	u8sRemoteContactID	UTF8String,				-- ContactID - Contact which will be removed from the access list.
+	...
+}
+
+-- @brief Result of asnRemoveDynamicRights
+-- @long
+-- The operation asnRemoveDynamicRights returns this result, if removing the dynmaic rights from the list was successful.
+AsnRemoveDynamicRightsResult ::= SEQUENCE
+{
+	iResult							INTEGER,		-- Rückgabewert ob das geklappt hat, wenn nicht != 0
+	...
+}
+-- @brief This enumeration describes possible values returning from the server calling asnRemoveDynamicRights.
+-- @long
+-- This enumeration describes the values returned from the server in case the a call of asnRemoveDynamicRights failes. 
+-- The values are part of the then returned AsnRequestError.
+AsnRemoveDynamicRightsErrorEnum ::= ENUMERATED 
+{ 
+	general(0),
+	permissiondenied(1),
+	writeprofiledenied(2),
+	unknownrights(3)
+}
+
+
+-- @brief This enumeration describes the values possible returned by asnRequestContactImage and asnRequestLargeProfileImage.
+-- @long
+-- This are the possible returning values from getting an image from the server and the call was successful.
+-- The values represent that the result contains an image, the image has not changed and therefore there is no 
+-- image data sent or there is no image for the given contact.
+EnumRequestImageResult ::= ENUMERATED
+{
+	eIMAGEATTACHED (0),			-- The requested image is attached in the result.
+	eIMAGEHASHNOTCHANGED(1),	-- The image has not changed according to the given hash and therefore there is no image in the result.
+	eNOIMAGEFOUND(2)			-- There is no image fopr the given contact.
+}
+
+
+-- @brief Request an large image of a contact.
+-- @long
+-- With the operation asnRequestLargeProfileImage can request a large image of a contact. The large
+-- image can be optionally configured by the administrator additionally to the 'normal' small image in order to provide a
+-- higher resolution image of the contact for special purposes (like LiveChat client).
+-- Like with asnRequestContactImage, this operation is used to get or check the image from the server and the server can
+-- determine the need to provide a new image to the client using the given hash value.
+asnRequestLargeProfileImage OPERATION
+	ARGUMENT	arg AsnRequestLargeProfileImageArgument
+	RESULT		res AsnRequestLargeProfileImageResult
+	ERRORS		{AsnRequestError}
+::= 1601
+
+-- @brief Argument for asnRequestLargeProfileImage
+-- @long
+-- To get or check an large image of a contact, the client calls asnRequestContactImage with the ContactID (e.g. 'tester@test.com') or the AsnNetDatabaseContactID of the contact and
+-- the known image hash the client already has. If the client has no hash, an empty string will indicate the server that
+-- the client does not have an image yet.
+AsnRequestLargeProfileImageArgument ::= SEQUENCE
+{
+	u8sContactID				UTF8String,	-- ContactID of the contact to get or check the image
+	u8sKnownHash				UTF8String, -- If the client has an image already, it sends its hash so the server can determine if the image has changed.
+	netDatabaseContactID		[0] AsnNetDatabaseContactID OPTIONAL, -- Alternatively to u8sContactID one can use the AsnNetDatabaseContactID to identify the contact.
+	...
+}
+
+-- @brief Result of asnRequestLargeProfileImage
+-- @long
+-- If the operation asnRequestLargeProfileImage was executed successfully, this result will be send back to the client.
+-- If there is no image or the image has not changed according the hash value given in the argument, iResult will contain the corresponding value from EnumRequestImageResult.
+-- If the server will send back an image, sImageData will contain the binary data of the image and u8sImageHash the corresponding
+-- new hash value for that image.
+AsnRequestLargeProfileImageResult ::= SEQUENCE
+{
+	iResult						INTEGER,					-- EnumRequestImageResult - result of the call, if there is a new image, no image at all or the image hash has not changed.
+	sImageData					[0] OCTET STRING OPTIONAL,	-- If an image is send to the client, this field contains the binary data of the image.
+	u8sImageHash				[1] UTF8String OPTIONAL,	-- If an image is send to the client, this field contains the corresponding hash value for that image.
+	...
+}
+
+
+
+
+-- @brief Request an image of a contact
+-- @long
+-- This operation requests the normal (or 'small') Image of a contact. The caller sends
+-- a known hash of an already existing image to the server, so that the server can determine
+-- that the client get the stored image (the hash is not equal) or reponds to the client, that the image has not changed (hash is equal).
+-- If there is no image, no image is returned.
+asnRequestContactImage OPERATION
+	ARGUMENT	arg AsnRequestContactImageArgument
+	RESULT		res AsnRequestContactImageResult
+	ERRORS		{AsnRequestError}
+::= 1602
+
+-- @brief Argument for asnRequestContactImage
+-- @long
+-- To get or check an image of a contact, the client calls asnRequestContactImage with the AsnNetDatabaseContactID of the contact and
+-- the known image hash the client already has. If the client has no hash, an empty string will indicate the server that
+-- the client does not have an image yet.
+AsnRequestContactImageArgument ::= SEQUENCE
+{
+	netDatabaseContactID	AsnNetDatabaseContactID,		-- The contact identity of the contact of which the client wants to check or get the image of.
+	u8sKnownHash			UTF8String,						-- If the client has an image already, it sends its hash so the server can determine if the image has changed.
+	...
+}
+
+-- @brief Result of asnRequestContactImage
+-- @long
+-- If the operation asnRequestContactImage was executed successfully, this result will be send back to the client.
+-- If there is no image or the image has not changed according the hash value given in the argument, iResult will contain the corresponding value from EnumRequestImageResult.
+-- If the server will send back an image, sImageData will contain the binary data of the image and u8sImageHash the corresponding
+-- new hash value for that image.
+AsnRequestContactImageResult ::= SEQUENCE
+{
+	iResult						INTEGER,					-- EnumRequestImageResult - result of the call, if there is a new image, no image at all or the image hash has not changed.
+	sImageData					[0] OCTET STRING OPTIONAL,	-- If an image is send to the client, this field contains the binary data of the image.
+	u8sImageHash				[1] UTF8String OPTIONAL,	-- If an image is send to the client, this field contains the corresponding hash value for that image.
+	...
+}
+
+-- @brief Future use
+AsnMonitorGroupingAttribute ::= SEQUENCE
+{
+	u8sAttributeGUID		[0] UTF8String OPTIONAL,	-- Identification of grouping attribute set if it is defined by administration
+	u8sAttributeShort		[1] UTF8String OPTIONAL,	-- Short or abbreviation of the attribute
+	u8sAttributeLong		[2] UTF8String OPTIONAL,	-- Attribute or "Main" attribute
+	u8sAdditionalText		[3] UTF8String OPTIONAL,	-- Additional text or "secondary" attribute
+	...
+}
+
+
+END

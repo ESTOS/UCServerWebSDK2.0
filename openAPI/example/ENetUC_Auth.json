@@ -1,0 +1,730 @@
+{
+	"openapi": "3.1.0",
+	"info": {
+		"title": "ENetUC_Auth",
+		"version": "0.0.1",
+		"summary": "Authentication interface.\n\n",
+		"description": "## Module description\n\nThis module defines structures and functions for negotiation and authentication on the UCServer.\n\n\n\nClients connecting to the UCServer Webservices don't need to negotiate and login by themselfes, they should use \"createsession\" instead.\n\nSee the \"Web Service Overview\" section of this documentation for more details.\n\n"
+	},
+	"paths": {
+		"/asnNegotiateServerConnectionV2": {
+			"post": {
+				"tags": ["Authentication"],
+				"summary": "Negotiate server and client versions (current version)\n\n",
+				"description": "Handshaking the core details for the client and the server\n\n",
+				"deprecated": false,
+				"operationId": "1006",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnNegotiateServerConnectionV2Argument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnNegotiateServerConnectionV2ResultChoice"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnLoginV2": {
+			"post": {
+				"tags": ["Authentication"],
+				"description": "Used to login to the UCServer\n\n",
+				"deprecated": false,
+				"operationId": "1005",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnLoginV2Argument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnLoginV2Result"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnLogoff": {
+			"post": {
+				"tags": ["Authentication"],
+				"deprecated": false,
+				"operationId": "1001",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnLogoffArgument"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnGetUserTokenV2": {
+			"post": {
+				"tags": ["Authentication"],
+				"summary": "Request a user token to identify the user for other services.\n\n",
+				"deprecated": false,
+				"operationId": "1007",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnGetUserTokenArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnGetUserTokenV2Result"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/asnGetLoggedInContactV2": {
+			"post": {
+				"tags": ["Authentication"],
+				"summary": "Get Properties of Loggedin User\n\n",
+				"description": "A Client may use this function to get information about himself.\n\nThe User Profile will be returned.\n\n",
+				"deprecated": false,
+				"operationId": "1008",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AsnGetLoggedInContactArgument"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnGetLoggedInContactV2Result"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AsnRequestError"
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"schemas": {
+			"AsnOptionalParameters": {
+				"$ref": "ENetUC_Common.json#/components/schemas/AsnOptionalParameters"
+			},
+			"AsnRequestError": {
+				"$ref": "ENetUC_Common.json#/components/schemas/AsnRequestError"
+			},
+			"UTF8StringList": {
+				"$ref": "ENetUC_Common.json#/components/schemas/UTF8StringList"
+			},
+			"AsnSystemTime": {
+				"$ref": "ENetUC_Common.json#/components/schemas/AsnSystemTime"
+			},
+			"AsnConfigSTUNandTURNList": {
+				"$ref": "ENetUC_Common_SIPCTI.json#/components/schemas/AsnConfigSTUNandTURNList"
+			},
+			"AsnContactV2": {
+				"$ref": "ENetUC_Common_AsnContact.json#/components/schemas/AsnContactV2"
+			},
+			"AsnLoginV2Argument": {
+				"$ref": "ENetUC_Common_Auth.json#/components/schemas/AsnLoginV2Argument"
+			},
+			"AsnLoginV2Result": {
+				"$ref": "ENetUC_Common_Auth.json#/components/schemas/AsnLoginV2Result"
+			},
+			"AsnClientAppID": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "eCLIENTAPPIDUNKNOWN",
+						"const": 0
+					},
+					{
+						"title": "eCLIENTAPPIDPROCALL",
+						"const": 1
+					},
+					{
+						"title": "eCLIENTAPPIDCLNINST",
+						"const": 2
+					},
+					{
+						"title": "eCLIENTAPPIDENETSN",
+						"const": 3
+					},
+					{
+						"title": "eCLIENTAPPIDENETTSC",
+						"const": 4
+					},
+					{
+						"title": "eCLIENTAPPIDIVRDLL",
+						"const": 5
+					},
+					{
+						"title": "eCLIENTAPPIDECTISRVCMD",
+						"const": 6
+					},
+					{
+						"title": "eCLIENTAPPIDMOBILE",
+						"const": 7
+					},
+					{
+						"title": "eCLIENTAPPIDMOBILEPAD",
+						"const": 8
+					},
+					{
+						"title": "eCLIENTAPPIDWEBSERVICESDK",
+						"const": 9
+					},
+					{
+						"title": "eCLIENTAPPIDMAC",
+						"const": 10
+					},
+					{
+						"title": "eCLIENTAPPIDPROCALLWEB",
+						"const": 15
+					},
+					{
+						"title": "eCLIENTAPPIDPROCALLSIP",
+						"const": 16
+					},
+					{
+						"title": "eCLIENTAPPIDPROCALLXMPP",
+						"const": 17
+					},
+					{
+						"title": "eCLIENTAPPIDPROCALLONE",
+						"const": 18
+					},
+					{
+						"title": "eCLIENTAPPIDPUSHSERVICE",
+						"const": 19
+					},
+					{
+						"title": "eCLIENTAPPIDPROCALLANALYTICS",
+						"const": 20
+					},
+					{
+						"title": "eCLIENTAPPIDWEBLIVECHAT",
+						"const": 21
+					},
+					{
+						"title": "eCLIENTAPPIDEXCHANGECALENDARREPLICATOR",
+						"const": 22
+					},
+					{
+						"title": "eCLIENTAPPIDPROCALLPAC",
+						"const": 23
+					},
+					{
+						"title": "eCLIENTAPPIDPROCALLPCB",
+						"const": 24
+					},
+					{
+						"title": "eCLIENTAPPIDWEBCONFERENCING",
+						"const": 25
+					},
+					{
+						"title": "eCLIENTAPPIDPROCALLWEBAPP",
+						"const": 26
+					},
+					{
+						"title": "eCLIENTAPPIDWEBVIEW2CLIENT",
+						"const": 27
+					},
+					{
+						"title": "eCLIENTAPPIDMSTEAMSAPP",
+						"const": 28
+					}]},
+			"AsnNegotiateServerConnectionClientCapabilities": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "eNONE",
+						"const": 0
+					},
+					{
+						"title": "eSOFTPHONE",
+						"const": 1
+					},
+					{
+						"title": "eAVLINE",
+						"const": 2
+					},
+					{
+						"title": "eASN1V2EVENTS",
+						"const": 4
+					}]},
+			"AsnNegotiateServerConnectionServerTypeV2": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "ePROCALLENTERPRISE",
+						"const": 0
+					},
+					{
+						"title": "eTAPISERVER",
+						"const": 1
+					},
+					{
+						"title": "ePROCALLINFINITY",
+						"const": 2
+					},
+					{
+						"title": "ePROCALLNEX",
+						"const": 3
+					}]},
+			"AsnNegotiateServerConnectionAuthenticationMethod": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "ePASSWORD",
+						"const": 0
+					},
+					{
+						"title": "eDOMAIN",
+						"const": 1
+					},
+					{
+						"title": "eOAUTH",
+						"const": 2
+					}]},
+			"AsnLogonErrorEnum": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "eNETLOGININTERNALSERVERERROR",
+						"const": 100
+					},
+					{
+						"title": "eNETLOGININVALUSERNAME",
+						"const": 101
+					},
+					{
+						"title": "eNETLOGINNOMOREUSERS",
+						"const": 103
+					},
+					{
+						"title": "eNETLOGININVALIDVERSION",
+						"const": 104
+					},
+					{
+						"title": "eNETLOGINNEGOTIATIONREQUIRED",
+						"const": 105
+					},
+					{
+						"title": "eNETLOGININVALIDAUTHENTICATIONMETHOD",
+						"const": 106
+					},
+					{
+						"title": "eNETLOGINUSERNOTENABLED",
+						"const": 107
+					},
+					{
+						"title": "eNETLOGININVALIDCOMPUTERNAME",
+						"const": 108
+					},
+					{
+						"title": "eNETLOGINDOMAINAUTHFAILED",
+						"const": 109
+					},
+					{
+						"title": "eNETLOGINMISSINGRIGHTS",
+						"const": 110
+					},
+					{
+						"title": "eNETLOGINMISSINGRIGHTSTS",
+						"const": 111
+					},
+					{
+						"title": "eNETLOGINSERVERNOTCOMPATIBLE",
+						"const": 112
+					},
+					{
+						"title": "eNETLOGINALREADYAUTHENTICATED",
+						"const": 113
+					},
+					{
+						"title": "eNETLOGINTLSREQUIRED",
+						"const": 114
+					},
+					{
+						"title": "eNETLOGINACCOUNTPASSWORDLOCKED",
+						"const": 129
+					},
+					{
+						"title": "eNETLOGINTOKENEXIRED",
+						"const": 130
+					},
+					{
+						"title": "eNETLOGINTOOMANYATTEMPTS",
+						"const": 131
+					},
+					{
+						"title": "eNETLOGINWRONGPACMODE",
+						"const": 133
+					}]},
+			"AsnUserTokenType": {
+				"type": "integer",
+				"oneOf": [
+					{
+						"title": "eUserTokenExternal",
+						"const": 0
+					},
+					{
+						"title": "eUserTokenLogin",
+						"const": 1
+					}]},
+			"AsnAdminLoginChoice": {
+				"oneOf": [
+					{
+						"type": "string"
+					},
+					{
+						"type": "string"
+					}
+				]
+			},
+			"AsnNegotiateServerConnectionAnonymousDataArgument": {
+				"type": "object",
+				"description": "### Category \nAuthentication\n### Long \nIn case an anonymous client wants to connect it needs to provides these details in the AsnNegotiateServerConnectionV2Argument\n\n### Private \n0",
+				"properties": {
+					"u8sHintData": {
+						"type": "string"
+					},
+					"u8sToken": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"u8sHintData",
+					"u8sToken"
+				]
+			},
+			"AsnNegotiateServerConnectionAnonymousDataResult": {
+				"type": "object",
+				"description": "### Category \nAuthentication\n### Long \nWhen an anonymous client connects the server provides a username and a token\n\n### Private \n0",
+				"properties": {
+					"u8sUsername": {
+						"type": "string"
+					},
+					"u8sToken": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"u8sUsername",
+					"u8sToken"
+				]
+			},
+			"AsnNegotiateServerConnectionV2ServerBusy": {
+				"type": "object",
+				"description": "### Category \nAuthentication\n### Long \nServer is busy result of the asnNegotiateServerConnectionV2 operation\n\n### Private \n0",
+				"properties": {
+					"iServerBusyTimeout": {
+						"type": "integer"
+					}
+				},
+				"required": [
+					"iServerBusyTimeout"
+				]
+			},
+			"AsnNegotiateServerConnectionV2IncompatibleInterfaceVersion": {
+				"type": "object",
+				"description": "### Category \nAuthentication\n### Long \nInterface not compatible result of the asnNegotiateServerConnectionV2 operation\n\n### Private \n0",
+				"properties": {
+					"u8sServerInterfaceVersion": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"u8sServerInterfaceVersion"
+				]
+			},
+			"AsnLogoffArgument": {
+				"type": "object",
+				"description": "### Category \nAuthentication\n### Private \n0"
+			},
+			"AsnGetUserTokenV2Result": {
+				"type": "object",
+				"description": "### Category \nAuthentication\n### Short \nResult of asnGetUserTokenV2.\n\n### Private \n0",
+				"properties": {
+					"sToken": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"sToken"
+				]
+			},
+			"AsnProfileAttribute": {
+				"type": "object",
+				"description": "### Category \nAuthentication\n### Short \nProfile values added as public claim as [Service_type]\/[Profile elementname] : [Profile elementvalue] used by asnGetUserToken.\n\n### Private \n0",
+				"properties": {
+					"u8sServiceType": {
+						"type": "string"
+					},
+					"u8seName": {
+						"type": "string"
+					},
+					"u8sValue": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"u8sServiceType",
+					"u8seName"
+				]
+			},
+			"AsnGetLoggedInContactArgument": {
+				"type": "object",
+				"description": "### Category \nAuthentication\n### Short \nArgument for asnGetLoggedInContact.\n\n### Long \nThis opertaion does not need any parameter since the logged in contact is alread well known on the server.\n\n### Private \n0"
+			},
+			"AsnGetLoggedInContactV2Result": {
+				"type": "object",
+				"description": "### Category \nAuthentication\n### Short \nResult of AsnGetLoggedInContactV2.\n\n### added_timestamp \n1724198400\n### Private \n0",
+				"properties": {
+					"u8sLoggedInUser": {
+						"type": "string"
+					},
+					"ownContact": {
+						"$ref": "#/components/schemas/AsnContactV2"
+					}
+				},
+				"required": [
+					"u8sLoggedInUser",
+					"ownContact"
+				]
+			},
+			"AsnNegotiateServerConnectionV2Argument": {
+				"type": "object",
+				"description": "### Category \nAuthentication\n### Long \nArgument for the asnNegotiateServerConnectionV2 operation\n\n### Private \n0",
+				"properties": {
+					"u8sMinSupportedInterfaceVersion": {
+						"type": "string"
+					},
+					"u8sMaxSupportedInterfaceVersion": {
+						"type": "string"
+					},
+					"u8sClientDeviceId": {
+						"type": "string"
+					},
+					"u8sClientVersion": {
+						"type": "string"
+					},
+					"eClientAppID": {
+						"$ref": "#/components/schemas/AsnClientAppID"
+					},
+					"u8sClientDeviceName": {
+						"type": "string"
+					},
+					"iClientCapabilities": {
+						"type": "integer"
+					},
+					"u8sConnectionGUID": {
+						"type": "string"
+					},
+					"eAnonymousLogin": {
+						"$ref": "#/components/schemas/AsnNegotiateServerConnectionAnonymousDataArgument"
+					}
+				},
+				"required": [
+					"u8sMinSupportedInterfaceVersion",
+					"u8sMaxSupportedInterfaceVersion",
+					"u8sClientDeviceId",
+					"u8sClientVersion",
+					"eClientAppID",
+					"u8sClientDeviceName",
+					"iClientCapabilities"
+				]
+			},
+			"AsnNegotiateServerConnectionV2Result": {
+				"type": "object",
+				"description": "### Category \nAuthentication\n### Long \nResult of the asnNegotiateServerConnectionV2 operation\n\n### Private \n0",
+				"properties": {
+					"eServerType": {
+						"$ref": "#/components/schemas/AsnNegotiateServerConnectionServerTypeV2"
+					},
+					"u8sServerInterfaceVersion": {
+						"type": "string"
+					},
+					"eAuthenticationMethod": {
+						"$ref": "#/components/schemas/AsnNegotiateServerConnectionAuthenticationMethod"
+					},
+					"sServerAuthentication": {
+						"type": "string",
+						"format": "byte"
+					},
+					"stServerTime": {
+						"$ref": "#/components/schemas/AsnSystemTime"
+					},
+					"u8sServerVersion": {
+						"type": "string"
+					},
+					"u8sConnectionGUID": {
+						"type": "string"
+					},
+					"u8sPresenceDomains": {
+						"$ref": "#/components/schemas/UTF8StringList"
+					},
+					"iOEM": {
+						"type": "integer"
+					},
+					"u8sProductVersion": {
+						"type": "string"
+					},
+					"bPresenceServicesDisabled": {
+						"type": "boolean"
+					},
+					"bUserUserRightsDisabled": {
+						"type": "boolean"
+					},
+					"eAnonymousDetails": {
+						"$ref": "#/components/schemas/AsnNegotiateServerConnectionAnonymousDataResult"
+					}
+				},
+				"required": [
+					"eServerType",
+					"u8sServerInterfaceVersion",
+					"eAuthenticationMethod",
+					"sServerAuthentication",
+					"stServerTime",
+					"u8sServerVersion",
+					"u8sConnectionGUID",
+					"u8sPresenceDomains"
+				]
+			},
+			"AsnNegotiateServerConnectionV2ResultChoice": {
+				"oneOf": [
+					{
+						"$ref": "#/components/schemas/AsnNegotiateServerConnectionV2Result"
+					},
+					{
+						"$ref": "#/components/schemas/AsnNegotiateServerConnectionV2ServerBusy"
+					},
+					{
+						"$ref": "#/components/schemas/AsnNegotiateServerConnectionV2IncompatibleInterfaceVersion"
+					}
+				]
+			},
+			"AsnAdminLogin": {
+				"type": "object",
+				"description": "### Category \nAuthentication\n### Short \nUCServer administrator login credentials used as optional by AsnGetUserTokenArgument\n\n### Private \n0",
+				"properties": {
+					"u8sAdminUsername": {
+						"type": "string"
+					},
+					"adminPassword": {
+						"$ref": "#/components/schemas/AsnAdminLoginChoice"
+					}
+				},
+				"required": [
+					"u8sAdminUsername",
+					"adminPassword"
+				]
+			},
+			"AsnProfileAttributeList": {
+				"type": "array",
+				"items": {
+					"$ref": "#/components/schemas/AsnProfileAttribute"
+				}
+			},
+			"AsnGetUserTokenArgument": {
+				"type": "object",
+				"description": "### Category \nAuthentication\n### Short \nArgument for asnGetUserToken.\n\n### Private \n0",
+				"properties": {
+					"iType": {
+						"type": "integer"
+					},
+					"iTTL": {
+						"type": "integer"
+					},
+					"lstServiceType": {
+						"$ref": "#/components/schemas/UTF8StringList"
+					},
+					"lstProfileAttributes": {
+						"$ref": "#/components/schemas/AsnProfileAttributeList"
+					},
+					"adminLogin": {
+						"$ref": "#/components/schemas/AsnAdminLogin"
+					}
+				}
+			}
+		}
+	}
+}

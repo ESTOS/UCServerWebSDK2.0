@@ -1,0 +1,61 @@
+name: PlantUML Diagram Generator
+
+
+on:
+  push:
+    paths:
+      - '**/*.puml'
+  pull_request:
+    paths:
+      - '**/*.puml'
+  workflow_dispatch:
+
+jobs:
+  generate-diagrams:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout the repository
+      uses: actions/checkout@v2
+
+    - name: Set up Java
+      uses: actions/setup-java@v3
+      with:
+        distribution: 'temurin'
+        java-version: '11'
+
+    - name: Install PlantUML and Dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y plantuml graphviz
+
+    - name: Debug - Find .puml files
+      run: |
+        echo "Finding .puml files:"
+        find . -name "*.puml" -print
+        echo " "
+
+    - name: Generate diagrams from .puml files (verbose)
+      run: |
+        echo "Generating diagrams:"
+        find . -name "*.puml" -exec echo "Processing {}" \; -exec sh -c 'plantuml -tpng -pipe < "$1" > "${1%.puml}.png"' _ {} \;
+        echo "PlantUML generation complete."
+        echo " "
+
+    - name: Debug - List generated .png files
+      run: |
+        echo "Listing all generated .png files:"
+        find . -name "*.png" -print
+        echo " "
+
+    - name: Commit and push generated images
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add *.png || true
+        git add **/*.png || true
+        git commit -m "Auto-generated PlantUML diagrams"
+        git push
+      continue-on-error: true

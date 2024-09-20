@@ -1,0 +1,1044 @@
+﻿UC-Server-Access-Protocol-ChatV2
+	{ iso(1) identified-organization(3) dod(6) internet(1) private(4) enterprise(1) estos(10924) uc-server-access-protocol-v2(2) chat2(13)}
+
+-- @category ChatV2
+-- @brief Text chat functions
+-- @long
+-- ## Module description
+-- This module defines structures and functions for the text chat functionality of the UCServer.
+-- 
+-- Example for sending a Chat Message from "ProCall A" to "ProCall B":
+-- @startuml
+-- "ProCall A" -> "UCServer"                : asnChatSubscribeEvents
+-- note right
+--		asnChatSubscribeEvents is
+--		necessary to receive Chat
+--		Events
+-- end note
+-- activate "UCServer"
+-- "ProCall A" <- "UCServer"                : asnChatSubscribeEventsResult
+-- deactivate "UCServer"
+--                "UCServer" <- "ProCall B" : asnChatSubscribeEvents
+-- activate "UCServer"
+--                "UCServer" -> "ProCall B" : asnChatSubscribeEventsResult
+-- deactivate "UCServer"
+-- "ProCall A" -> "UCServer"                : asnChatTextMessage{RecipientURI/ConversationID,\nMessage, EventCrossRefID, ...}
+-- note right
+--		EventCrossRefID must be
+--		unique for every Message
+--		a Client sends
+-- end note
+-- activate "UCServer"
+-- "ProCall A" <- "UCServer"                : asnChatTextMessageResult {ConvSequenceID}
+-- deactivate "UCServer"
+-- "ProCall A" <- "UCServer" : asnChatEvent {Message, ConvSequenceID,\nConversationID, EventCrossRefID, ...}
+-- note right #FF9999
+--		It is not guaranteed that
+--		ChatTextMessageResult always
+--		is received before ChatEvent!
+-- end note
+--                "UCServer" -> "ProCall B" : ChatEvent {Message, ConvSequenceID,\nConversationID, EventCrossRefID, ...}
+-- "ProCall A" <- "UCServer" : ChatEvent {..., DeliverTime, ...}
+-- @enduml
+
+
+
+
+
+
+
+
+
+
+-- ~													This can e.g. then be the case if the server database has been deleted.
+-- ~													Add to a one-to-one chat creates a new multi-user chat, which then remains a multi-user chat.
+-- ~													or BinaryMessageEvents received / sent in a conversation.
+
+DEFINITIONS
+IMPLICIT TAGS ::=
+BEGIN
+
+IMPORTS
+AsnOptionalParameters, AsnNetDatabaseContact, AsnSystemTime, UTF8StringList, SEQInteger, AsnRequestError FROM UC-Server-Access-Protocol-Common
+AsnNetDatabaseJournal FROM UC-Server-Access-Protocol-Journal
+AsnBinaryTransferMetaData, AsnBinaryTransferMetaDataList FROM UC-Server-Access-Protocol-BinaryTransfer
+;
+
+-- Nachrichtenrelevante Strukturen
+AsnChatResultEnum ::= ENUMERATED
+{
+	noerror(0),											-- no error
+	forbidden(1),										-- User is not allowed to perform this operation
+	invalidconversationid(2),							-- Conversation ID is invalid
+	invalidmessageid(3),								-- Message ID is invalid
+	tomanymessages(4),									-- Too many messages, make a smaller request
+	unknownrecipient(5),								-- unknown receiver
+	databasefail(6),									-- Database error in the server
+	invalidcrossrefid(7),								-- Request was not accepted because a CrossRefID that already existed in the database was used
+	federationfail(8),									-- Message was not accepted by the federated server
+	requestfail(9),										-- Request could not be processed, e.g. if a user is to be removed from a chat room but is not a member of the chat room
+	invalidparam(10),									-- Invalid parameter
+	notsubscribed(11)									-- If the client sends asnChatTextMessage, asnChatBinaryMessage, asnChatForwardMessage, asnChatForward, asnChatSetUserlist, asnChatUserlistModify or asnChatSetMessagesStatus without beeing subscribed (asnChatSubscribeEvents) for chat events first "notsubscribed" is returned. This means that the request of the client has been processed, but the client will not receive any events because of the missing subscription.
+}
+
+AsnChatUserlistModify ::= ENUMERATED
+{
+	added(1),											-- User added
+	removed(2),											-- User removed
+	update(3)											-- complete user list is attached, e.g. when user joins a chat room and gets the current status of the participant
+}
+
+AsnChatWatchModeEnum ::= ENUMERATED
+{
+	watch(1),											-- Chat-Raum Start observation
+	unwatch(0)											-- Chat-Raum End observation
+}
+
+AsnConversationType ::= ENUMERATED
+{
+	one-to-one(1),			-- Chat between two participants
+	multi-user(2),			-- Chat with more than two participants (chat room)
+	static-chatroom(3),		--
+	public-chatroom(4)		-- Chat between participants, e.g. Anonymous and agent, participants can actively join and follow the history completely
+}
+
+-- @brief execute action from App
+-- @long
+-- the following type's prefixed with AsnChatAppAction currently not part of the client/server communication
+-- it will be used within the Win32-Client to communicate with the ProCallApp for Web
+-- the advantage using different types is, keep the action and its parameters together!
+-- navigate to existing room, args <ConversationId>
+AsnChatAppActionNavigateArgument ::= SEQUENCE
+{
+	u8sConversationID					UTF8String,					-- Conversation ID (of the room)
+	...
+}
+
+-- trigger Action/Wizzard for new Multiparty-Chat, args list of UserId's
+AsnChatAppActionCreateRoomArgument ::= SEQUENCE
+{
+	u8sUsers							UTF8StringList,				-- Contact URIs of initial room member
+	...
+}
+
+AsnChatEventList ::= SEQUENCE OF AsnChatEvent
+AsnChatEvent ::= SEQUENCE
+{
+	u8sEventCrossRefID					UTF8String,										-- For the assignment of events to a request. u8sEventCrossRefID must not be longer than 80 characters!
+	u8sConversationID					UTF8String,										-- Conversation ID (of the room)
+	iConvSequenceID						INTEGER,										-- Index of the event within the corresponding conversation. If iConvSequenceID = 0, the event changes communicated to a conversation, but which should not be visible in the course of the conversation. e.g. Update the iLastReadSequenceID of a party in multi-user chat
+	iGlobTransactionID					INTEGER,										-- global transaction ID
+	bUpdate								BOOLEAN,										-- false = new data record, true = update for existing data record
+	u8sSenderURI						[0] UTF8String OPTIONAL,						-- Contact URI of the sender of the message. e.g. 'sip: jan@estos.de'
+	asnCreateTime						[1] AsnSystemTime OPTIONAL,						-- Time at which the event was triggered (e.g. when a read revision was sent for a user)
+
+	-- message (changed)
+	asnChatMessage						[2] AsnChatEventMessage OPTIONAL,				-- A text message, binary message, or journal entry
+	-- conversation, users, name (changed)
+	asnChatConversation					[3] AsnChatEventConversation OPTIONAL,			-- Conversation description
+
+	-- error code
+	iError								[4] INTEGER	OPTIONAL,							-- @linked AsnChatResultEnum
+
+	-- *Liste der optionalen Parameter:*
+	-- - optionalParams Name "IsMuted" Value BOOLEAN ('TRUE' für aktiv) für den Client des Empfängers soll diese ConversationID gemuted sein
+	-- - optionalParams Name "AvatarID" Value UTF8String - AvatarID/hash für den jeweiligen Chat - kann via asnChatGetConversationAvatar abgeholt werden
+	optionalParams						[5] AsnOptionalParameters OPTIONAL,
+
+	...
+}
+
+AsnChatEventMessage ::= SEQUENCE
+{
+	-- textmessage
+	u8sMessage							[0] UTF8String OPTIONAL,					-- Chat message
+
+	-- binarymessage
+	asnBinaryDescription				[1] AsnBinaryTransferMetaData OPTIONAL,		-- Description of the binary data
+		
+	-- journalentry
+	journalEntry 						[2] AsnNetDatabaseJournal OPTIONAL,			-- Journal entry (CTI / AV)
+	
+	-- messageupdate 
+	asnDeliverTime						[3] AsnSystemTime OPTIONAL,					-- Time at which the message was delivered to the recipient
+	asnReadTime							[4] AsnSystemTime OPTIONAL,					-- Time at which the message was read by the recipient
+	bRead								[5] BOOLEAN OPTIONAL,						-- Message was read by the recipient
+	bDeleted							[6] BOOLEAN OPTIONAL,						-- Message has been deleted
+
+	-- reply
+	asnReplyToEvent						[7] AsnChatEvent OPTIONAL,					-- If this parameter exists, this message is a reply to the in Message contained asnReplyToEvent
+
+	-- message forward<br />
+	-- SIP URI of the original sender of a forwarded message. If this parameter is set, this is a forwarded message.
+	u8sForwardOrigin					[8] UTF8String OPTIONAL,
+
+	-- reactions
+	asnReactions						[9] AsnChatReactionsEmojiList OPTIONAL,      -- Reactions to this message
+
+	...
+}
+
+AsnChatEventConversation ::= SEQUENCE
+{
+	-- chatname (changed)
+	u8sConversationName					[0] UTF8String OPTIONAL,					-- Name of the conversation
+
+	-- conversationparties (changed)
+	asnChatParties						[1] AsnChatParties OPTIONAL,				-- Chat participants with their permissions (after adding, removing a party)
+
+	-- users added, removed
+	iChatUserlistModify					[2] INTEGER OPTIONAL,						-- AsnChatUserlistModify enum added or removed for users
+	u8sUsersModified					[3] UTF8StringList OPTIONAL,				-- Contact URIs of added, removed contacts
+
+	-- forwarding
+	u8sForwardedFromURI					[4] UTF8String OPTIONAL,					-- URI of the user who forwarded
+	u8sForwardedURI						[5] UTF8String OPTIONAL,					-- URI of the user who was forwarded
+
+	-- link to other conversation
+	u8sLinkedConversationID				[6] UTF8String OPTIONAL,					-- Link to another conversation if group chat was created from one-to-one or if it was forwarded.
+
+	-- Type of conversation
+	iConversationType					[7] INTEGER OPTIONAL,						-- AsnConversationType enum for the type of chat. e.g. One-to-one, group, static, public ...
+
+	-- Conversation Deleted
+	bDeleted							[8] BOOLEAN OPTIONAL,						-- Conversation has been deleted
+
+	-- *Liste der optionalen Parameter:*
+	-- - optionalParams Name "IsMuted" Value BOOLEAN ('TRUE' für aktiv) für den Client des Empfängers soll diese ConversationID gemuted sein
+	-- - optionalParams Name "MutedUntilTime"  Value AsnSystemTime Time until this conversationID should be handled as muted (UTC time)
+	-- - optionalParams Name "AvatarID" Value UTF8String - AvatarID/hash für den jeweiligen Chat - kann via asnChatGetConversationAvatar abgeholt werden
+	optionalParams						[9] AsnOptionalParameters OPTIONAL,			-- Optional parameters
+	...
+}
+
+AsnChatConversationList ::= SEQUENCE OF AsnChatConversation
+AsnChatConversation ::= SEQUENCE
+{
+	u8sConversationID					UTF8String,						-- Conversation ID (of the room)
+	u8sConversationName					UTF8String,						-- Name of the conversation
+	iConversationType					INTEGER,						-- AsnConversationType enum for the type of chat. e.g. One-to-one, group, static, public ...
+	iConvSequenceID						INTEGER,						-- Chat Sequence ID
+	iGlobTransactionID					INTEGER,						-- globale Transaction ID
+	asnChatParties						AsnChatParties,					-- Chat participants with their permissions
+	...
+}
+
+AsnChatParty ::= SEQUENCE
+{
+	u8sContactURI					UTF8String,										-- Contact URI, including display names jan@estos.de; display = Jan Rievenherm
+	u8sDisplayName					UTF8String OPTIONAL,							-- Anzeigename des Kontaktes, e.g. 'Jan Rievenherm'
+	iContactRights					INTEGER,										-- Rights (bit mask) of the user in this chat<br />0x0000 0001					may write<br />0x0000 0002					may add and remove users
+	iLastReadSequenceID				[0] INTEGER OPTIONAL,							-- Sequence ID up to which the party read (optional, only AsnChatEventConversation)
+	bReadNotifySupported			[1] BOOLEAN OPTIONAL,							-- If a federated contact does not send read notifications, this flag is set to false
+	contactInformation				[2] AsnNetDatabaseContact OPTIONAL,				-- Contact information for SMS, MMS etc. where the party is NOT a CtiServer user and therefore the contact information is not available on the client, is only filled and sent with PArty Added and ConversationCreated
+	...
+}
+AsnChatParties ::= SEQUENCE OF AsnChatParty
+
+
+-- @brief Subscribe to chat notifications, get the changes
+-- @long
+-- Subscribing to chat events allows you to get the div of the last known transaction ID to the current one on the server
+asnChatSubscribeEvents OPERATION
+	ARGUMENT	arg AsnChatSubscribeEventsArgument
+	RESULT		res AsnChatSubscribeEventsResult
+	ERRORS		{AsnRequestError}
+::= 1410
+
+AsnChatSubscribeEventsArgument ::= SEQUENCE 
+{
+	bReceiveChatEvents					BOOLEAN,							-- Chat Events abbonieren (true = subscribe / false = unsubscribe)
+	iLastKnownGlobTransactionID			[0] INTEGER OPTIONAL,				-- last known global TransactionsID
+	iMaxEvents							[1] INTEGER OPTIONAL,				-- Max x events back (will be set to 100 by the server if not specified)
+	u8sEventListCrossRefID				[2] UTF8String OPTIONAL,			-- The event list that is sent back by the server based on this request contains this CrossRefID. This enables the client to assign events to a request sent by it. The CrossRefID must be assigned by the client and cannot be generated by the server and returned in the return. The reason for this is that there is no guarantee that the return will reach the client before the event list.
+
+	-- - optionalParams name "bFilterAVJournalEvents" Value BOOLEAN false: AV JournalEvents are sent to the client as ChatV2 events. (Default) true: AV JournalEvents are not sent to the client as ChatV2 events.
+	-- - optionalParams name "bSubscribeDBMaintenance" Value BOOLEAN false: ChatDatabaseMaintenance events are NOT sent to the client (default) true: ChatDatabaseMaintenance events are sent to the client
+	optionalParams						[3] AsnOptionalParameters OPTIONAL,
+	bSupportReactions					[4] BOOLEAN OPTIONAL,				-- if NOT present treat as false
+	...
+}
+
+AsnChatSubscribeEventsResult ::= SEQUENCE
+{
+	iResult								INTEGER,						-- @linked AsnChatResultEnum
+	...
+}
+
+-- @brief Query the database ID
+-- @long
+-- Returns a unique ID of the database that clients can use to determine whether the server is using a new database.
+--
+-- This can e.g. then be the case if the server database has been deleted.
+asnChatGetDatabaseID OPERATION
+	ARGUMENT	arg AsnChatGetDatabaseIDArgument
+	RESULT		res AsnChatGetDatabaseIDResult
+	ERRORS		{AsnRequestError}
+::= 1411
+
+AsnChatGetDatabaseIDArgument ::= SEQUENCE
+{
+	...
+}
+
+AsnChatGetDatabaseIDResult ::= SEQUENCE
+{
+	iResult								INTEGER,						-- @linked AsnChatResultEnum
+	u8sDatabaseID						UTF8String,						-- Unique ID of the current server database
+	...
+}
+
+
+-- @brief Pick up changes, even for individual conversations
+-- @long
+-- Differential update with the last known TransactionID and ConversationID
+--
+asnChatGetDiffUpdate OPERATION
+	ARGUMENT	arg AsnChatGetDiffUpdateArgument
+	RESULT		res AsnChatGetDiffUpdateResult
+	ERRORS		{AsnRequestError}
+::= 1412
+
+AsnChatGetDiffUpdateArgument ::= SEQUENCE 
+{
+	iLastKnownGlobTransactionID			[0] INTEGER OPTIONAL,				-- last known global TransactionsID
+	iMaxEvents							[1] INTEGER OPTIONAL,				-- Max x events back (will be set to 100 by the server if not specified)
+	u8sEventListCrossRefID				[2] UTF8String OPTIONAL,			-- The event list that is sent back by the server based on this request contains this CrossRefID. This enables the client to assign events to a request sent by it. The CrossRefID must be assigned by the client and cannot be generated by the server and returned in the return. The reason for this is that there is no guarantee that the return will reach the client before the event list.
+	u8sConversationID					[3] UTF8String OPTIONAL,			-- Conversation ID (if not specified, Diff Update will be fetched for all conversations)
+	iMaxSequenceID						[4] INTEGER OPTIONAL,				-- If a conversation ID has been specified, this parameter can be used to limit the update up to iMaxSequenceID. The client then only receives updates for data records that it already knows. New records can be fetched using paging.
+	...
+}
+
+AsnChatGetDiffUpdateResult ::= SEQUENCE
+{
+	iResult								INTEGER,						-- @linked AsnChatResultEnum
+	...
+}
+
+-- @brief Overview of conversations
+-- @long
+-- Delivers new conversations with the last or unread messages in these conversations
+--
+asnChatGetConversationOverview OPERATION
+	ARGUMENT	arg AsnChatGetConversationOverviewArgument
+	RESULT		res AsnChatGetConversationOverviewResult
+	ERRORS		{AsnRequestError}
+::= 1413
+
+AsnChatGetConversationOverviewArgument ::= SEQUENCE 
+{
+	iLastKnownGlobTransactionID			[0] INTEGER OPTIONAL,				-- last known global TransactionsID (for diff update)
+	iMaxConversations					[1] INTEGER OPTIONAL,				-- Conversation limit, all if not specified
+	u8sEventListCrossRefID				[2] UTF8String OPTIONAL,			-- The event list that is sent back by the server based on this request contains this CrossRefID. This enables the client to assign events to a request sent by it. The CrossRefID must be assigned by the client and cannot be generated by the server and returned in the return. The reason for this is that there is no guarantee that the return will reach the client before the event list.
+	iNumLastMessages					[3] INTEGER OPTIONAL,				-- Number of the latest message events that are delivered for each conversation
+	bAddUnread							[4] BOOLEAN OPTIONAL,				-- Provide unread message events for every requested conversation
+	...
+}
+
+AsnChatGetConversationOverviewResult ::= SEQUENCE
+{
+	iResult								INTEGER,						-- @linked AsnChatResultEnum
+	...
+}
+
+-- @brief Chat Text Send message
+-- @long
+-- Send new chat message
+--
+asnChatTextMessage OPERATION
+	ARGUMENT	arg AsnChatTextMessageArgument
+	RESULT		res AsnChatTextMessageResult
+	ERRORS		{AsnRequestError}
+::= 1420
+
+AsnChatTextMessageArgument ::= SEQUENCE 
+{
+	u8sRecipientURIs					UTF8StringList,					-- URIs of the recipients, must be filled if the ConversationID is empty
+	u8sMessage							UTF8String,						-- Message that will be sent
+	u8sEventCrossRefID					UTF8String,						-- For the assignment of events to a request. u8sEventCrossRefID must not be longer than 80 characters!
+	u8sConversationID					[0] UTF8String OPTIONAL,		-- Chat ID, can be empty if it is a 1: 1 chat and the recipient is named
+	u8sConversationName					[1] UTF8String OPTIONAL,		-- Title of the Chatrooms
+	iConversationType					[2] INTEGER OPTIONAL,			-- AsnConversationType enum for the type of chat. e.g. One-to-one, group, static, public ...
+	iReplyToSequenceID					[3] INTEGER OPTIONAL,			-- Text Message is a reply to another message with SequenceID = iReplyToSequenceID
+	...
+}
+
+AsnChatTextMessageResult ::= SEQUENCE
+{
+	iResult								INTEGER,						-- @linked AsnChatResultEnum
+	iConvSequenceID						INTEGER,						-- Sequence ID des Events
+	u8sConversationID					UTF8String,						-- Reference ID for the chat,
+	...
+}
+
+-- @brief Send chat binary message
+-- @long
+-- Send a new binary message to the server
+--
+asnChatBinaryMessage OPERATION
+	ARGUMENT	arg AsnChatBinaryMessageArgument
+	RESULT		res AsnChatBinaryMessageResult
+	ERRORS		{AsnRequestError}
+::= 1421
+
+AsnChatBinaryMessageArgument ::= SEQUENCE 
+{
+	u8sRecipientURIs					UTF8StringList,						-- URIs of the recipient, must be filled if the ConversationID is empty
+	u8sTransferID						UTF8String,							-- ID assigned by the BinaryTransfer Manager (The BinaryTransfer Manager takes care of the binary data, the chat only references it here)
+	u8sEventCrossRefID					UTF8String,							-- For the assignment of events to a request. u8sEventCrossRefID must not be longer than 80 characters!
+	u8sConversationID					[0] UTF8String OPTIONAL,			-- Chat ID, can be empty if it is a 1: 1 chat and the recipient is named
+	u8sMessage							[1] UTF8String OPTIONAL,			-- Binary message text, e.g. caption
+	iConversationType					[2] INTEGER OPTIONAL,				-- AsnConversationType enum for the type of chat. e.g. One-to-one, group, static, public ...
+	iReplyToSequenceID					[3] INTEGER OPTIONAL,				-- Binary Message is a reply to another message with SequenceID = iReplyToSequenceID
+	--~ optionalParams					[4] DO NOT REUSE THIS ID,			   former optional params
+	u8sConversationName					[5] UTF8String OPTIONAL, 		    -- Titel des Chatrooms
+	...
+}
+
+AsnChatBinaryMessageResult ::= SEQUENCE
+{
+	iResult								INTEGER,							-- @linked AsnChatResultEnum
+	iConvSequenceID						INTEGER,						-- Sequence ID des Events
+	u8sConversationID					UTF8String,						-- Reference ID for the chat,
+	...
+}
+
+-- @brief Forward a message
+-- @long
+-- Used to forward a single message to another user or to a chat room
+asnChatForwardMessage OPERATION
+	ARGUMENT	arg AsnChatForwardMessageArgument
+	RESULT		res AsnChatForwardMessageResult
+	ERRORS		{AsnRequestError}
+::= 1422
+
+AsnConversationIDChoice ::= CHOICE
+{
+	u8sConversationID				[0] UTF8String,					-- ID of Chats
+	u8sPartnerURI					[1] UTF8String					-- ID of the other chat partner in a one-to-one chat
+}
+
+AsnChatForwardMessageArgument ::= SEQUENCE 
+{
+	u8sSourceConversationID			UTF8String,						-- ConversationID of the forwarded Message
+	iSourceSequenceID				INTEGER,						-- Sequence ID of the forwarded Message
+	asnForwardDestinationIDChoice	AsnConversationIDChoice,		-- Destination for forward
+	u8sEventCrossRefID				UTF8String,						-- For the assignment of events to a request. u8sEventCrossRefID must not be longer than 80 characters!
+	...
+}
+
+AsnChatForwardMessageResult ::= SEQUENCE
+{
+	iResult						INTEGER,						-- @linked AsnChatResultEnum
+	...
+}
+
+-- @brief Add, remove, or forward chat to users
+-- @long
+-- Add or remove users In one-to-one chats you can signal "leave" by removing yourself.
+--
+-- Add to a one-to-one chat creates a new multi-user chat, which then remains a multi-user chat.
+--
+asnChatUserlistModify OPERATION
+	ARGUMENT	arg AsnChatUserlistModifyArgument
+	RESULT		res AsnChatUserlistModifyResult
+	ERRORS		{AsnRequestError}
+::= 1425
+
+AsnChatUserlistModifyArgument ::= SEQUENCE 
+{
+	u8sConversationID					UTF8String,							-- Reference ID for the chat
+	iChatUserlistModify					INTEGER,							-- AsnChatUserlistModify enum added or removed for users
+	u8sUserURIs							UTF8StringList,						-- List of URIs that are added / removed, or URI of the user to be forwarded to
+	u8sEventCrossRefID					UTF8String,							-- For the assignment of events to a request. u8sEventCrossRefID must not be longer than 80 characters!
+	...
+}
+
+AsnChatUserlistModifyResult ::= SEQUENCE
+{
+	iResult								INTEGER,							-- @linked AsnChatResultEnum
+	iConvSequenceID						INTEGER,							-- Sequence ID des Events
+	u8sConversationID					UTF8String OPTIONAL,				-- New reference ID for the chat, e.g. when a 1: 1 chat becomes a conference (by adding a user)
+	...
+}
+
+AsnChatMessageStatus ::= ENUMERATED
+{
+	eRead(1),															-- read
+	eUnread(2),															-- unread
+	eDeleted(3),														-- deleted
+	eUndeleted(4)														-- undeleted
+}
+
+-- @brief Search chat events on server
+-- @long
+--  Searches for a search string in the chat text messages of the logged-in user and returns all events in which there was a match.
+--  (!) With this search, the ProCall client also receives hits that match the contact details (e.g. first name, last name or email) of the sender of a message.
+asnChatFindEvents OPERATION
+	ARGUMENT	arg AsnChatFindEventsArgument
+	RESULT		res AsnChatFindEventsResult
+	ERRORS		{AsnRequestError}
+::= 1433
+
+AsnChatFindEventsArgument ::= SEQUENCE 
+{
+	u8sSearchString						UTF8String,						-- String to search for
+	iMaxEvents							INTEGER,						-- Number of search results
+	iOffset								INTEGER OPTIONAL,				-- Paging offset, 0 if not specified
+	u8sConversationID					UTF8String OPTIONAL,			-- Can optionally be specified if you only want to search within a specific conversation. Otherwise, all of the user's conversations are searched.
+	...
+}
+
+AsnChatFindEventsResult ::= SEQUENCE
+{
+	iResult								INTEGER,						-- @linked AsnChatResultEnum
+	iNumTotalResults					INTEGER,						-- Total search results (asnChatEventList is limited to AsnChatFindEventsArgument.iMaxEvents)
+	asnChatEventList					AsnChatEventList,				-- Paged Search Result
+	...
+}
+
+-- @brief Chat Events Range vom Server holen
+-- @long
+-- Get messages for a ConversationID before or after a Sequence ID (paging).
+--
+asnChatGetEventsRange OPERATION
+	ARGUMENT	arg AsnChatGetEventsRangeArgument
+	RESULT		res AsnChatGetEventsRangeResult
+	ERRORS		{AsnRequestError}
+::= 1436
+
+AsnChatGetEventsRangeArgument ::= SEQUENCE 
+{
+	asnConversationIDChoice				AsnConversationIDChoice,		-- Conversation ID Choice
+	iSequenceID							[0] INTEGER OPTIONAL,			-- Starting point for the range. The parameters iNumLessThanSeqID and iNumGreaterThanOrEqualSeqID can be used to determine how many events will be returned before and after the iSquenceID. If iSequenceID is not specified, the highest (newest) SequenceID + 1 in the conversation is used.
+	iNumLessThanSeqID					[1] INTEGER OPTIONAL,			-- Maximum number of events that are BEFORE the iSequenceID. Restricted to 100 if not specified.
+	iNumGreaterThanOrEqualSeqID			[2] INTEGER OPTIONAL,			-- Maximum number of events that are AFTER the iSequenceID. Is set to 0 if not specified. If no iSequenceID was specified, iNumGreaterThanOrEqualSeqID is ignored.
+	u8sEventListCrossRefID				UTF8String OPTIONAL,			-- The event list that is sent back by the server based on this request contains this CrossRefID. This enables the client to assign events to a request sent by it. The CrossRefID must be assigned by the client and cannot be generated by the server and returned in the return. The reason for this is that there is no guarantee that the return will reach the client before the event list.
+	...
+}
+
+AsnChatGetEventsRangeResult ::= SEQUENCE
+{
+	iResult								INTEGER,						-- @linked AsnChatResultEnum
+	...
+}
+
+-- @brief Query BinaryMessageEvents which were sent or received from another user or in a certain conversation
+-- @long
+-- The following example shows how paging works. We assume the asnConversationIDChoice is the same for both requests. The Client gets the first ten events with the first request and the remaining seven events with the second request.
+-- @startuml
+-- "Client" -> "UCServer"                : asnChatGetBinaryMessageEvents{..., iPageSize = 10, iPageOffset = 0, ...}
+-- activate "UCServer"
+-- "Client" <- "UCServer"                 : asnChatEvent{asnChatEventList, ... , optionalParams{iNumTotalResults = 17}}
+-- note left
+-- 	Client receives
+-- 	Events 1 to 10
+-- end note
+-- deactivate "UCServer"
+-- "Client" -> "UCServer"                : asnChatGetBinaryMessageEvents{..., iPageSize = 10, iPageOffset = 10, ...}
+-- activate "UCServer"
+-- "Client" <- "UCServer"                 : asnChatEvent{asnChatEventList, ... , optionalParams{iNumTotalResults = 17}}
+-- note left
+-- 	Client receives
+-- 	Events 11 to 17
+-- end note
+-- deactivate "UCServer"
+-- @enduml
+
+asnChatGetBinaryMessageEvents OPERATION
+	ARGUMENT	arg AsnChatGetBinaryMessageEventsArgument
+	RESULT		res AsnChatGetBinaryMessageEventsResult
+	ERRORS		{AsnRequestError}
+::= 1437
+
+AsnChatGetBinaryMessageEventsArgument ::= SEQUENCE 
+{
+	asnConversationIDChoice				AsnConversationIDChoice,		-- Conversation ID Choice
+	iPageSize							INTEGER,						-- Number of elements for the page. Allowed values: 1-100
+	iPageOffset							[0] INTEGER OPTIONAL,			-- Offset for Paging, Default = 0. iPageOffset = 0 returns the first Page. For example, if iPageSize = 10, the iPageOffset for the second page would be 10, for the third 20 and so on. 
+	iLastKnownGlobTransactionID			[1] INTEGER OPTIONAL,			-- can be set to request a diff update
+	u8sEventListCrossRefID				[2] UTF8String OPTIONAL,		-- The event list returned by the server based on this request contains this CrossRefID. This enables the client to match events to a request that it has sent.
+	...
+}
+
+AsnChatGetBinaryMessageEventsResult ::= SEQUENCE
+{
+	iResult								INTEGER,						-- @linked AsnChatResultEnum
+	...
+}
+
+-- @brief Set status of chat messages in the server
+-- @long
+-- Set status (e.g. mark read)
+--
+asnChatSetMessagesStatus OPERATION
+	ARGUMENT	arg AsnChatSetMessagesStatusArgument
+	RESULT		res AsnChatSetMessagesStatusResult
+	ERRORS		{AsnRequestError}
+::= 1427
+
+AsnChatSequenceIDSet ::= CHOICE
+{
+	asnSequenceIDs						SEQInteger,							-- Sequence IDs in u8sConversationID for which the status is to be set
+	iLastSequenceID						INTEGER								-- Last sequence ID up to which the status is to be set
+}
+
+AsnChatSetMessagesStatusArgument ::= SEQUENCE 
+{
+	u8sConversationID					UTF8String,							-- ID of Chats
+	iStatus								INTEGER,							-- Status Type (see enum AsnChatMessageStatus)
+	u8sEventCrossRefID					UTF8String,							-- For the assignment of events to a request. u8sEventCrossRefID must not be longer than 80 characters!
+	asnSequenceIDSet					AsnChatSequenceIDSet,				-- Description of the sequence IDs for which the status is to be set
+	...
+}
+
+AsnChatSetMessagesStatusResult ::= SEQUENCE
+{
+	iResult								INTEGER,						-- @linked AsnChatResultEnum
+	...
+}
+
+-- @brief Get information about chat rooms
+-- @long
+-- Get information about chat rooms on the server (name, members, permissions, last message, etc.)
+--
+asnChatGetConversations OPERATION
+	ARGUMENT	arg AsnChatGetConversationsArgument
+	RESULT		res AsnChatGetConversationsResult
+	ERRORS		{AsnRequestError}
+::= 1428
+
+AsnChatGetConversationsArgument ::= SEQUENCE 
+{
+	u8sConversationID					[0] UTF8String OPTIONAL,			-- ID of the chat room, if empty all of the user
+	u8sContactURI						[1] UTF8String OPTIONAL,			-- delivers all conversations in which the requesting user and u8sContactURI are participants
+	bStaticConversations				[2] BOOLEAN OPTIONAL,				-- Get information about static conversations
+	...
+}
+
+AsnChatGetConversationsResult ::= SEQUENCE
+{
+	iResult								INTEGER,						-- @linked AsnChatResultEnum
+	asnConversationList					AsnChatConversationList,		-- Description of the conversations
+	...
+}
+
+-- @brief Returns the ConversationID for a one-to-one chat
+-- @long
+--
+asnChatGetConversationID OPERATION
+	ARGUMENT	arg AsnChatGetConversationIDArgument
+	RESULT		res AsnChatGetConversationIDResult
+	ERRORS		{AsnRequestError}
+::= 1430
+
+AsnChatGetConversationIDArgument ::= SEQUENCE 
+{
+	u8sContactURI						UTF8String,						-- Contact for whom the ConversationID should be queried
+	...
+}
+
+AsnChatGetConversationIDResult ::= SEQUENCE
+{
+	iResult								INTEGER,						-- @linked AsnChatResultEnum
+	u8sConversationID					UTF8String,						-- Conversation ID
+	...
+}
+
+
+-- @brief Forward a conversation
+-- @long
+--
+asnChatForward OPERATION
+	ARGUMENT	arg AsnChatForwardArgument
+	RESULT		res AsnChatForwardResult
+	ERRORS		{AsnRequestError}
+::= 1429
+
+AsnChatForwardArgument ::= SEQUENCE 
+{
+	u8sConversationID					UTF8String,						-- ID of the conversation from which to forward. The forwarding may result in a new ConversationID 
+	u8sForwardURI						UTF8String,						-- URI of the subscriber who is forwarded
+	u8sForwardToURIs					UTF8StringList,					-- URIs of the participants to be forwarded to
+	u8sMessage							UTF8String,						-- Forwarding message, will be sent to the participants to whom the forwarding will take place
+	u8sEventCrossRefID					UTF8String,						-- For the assignment of events to a request. u8sEventCrossRefID must not be longer than 80 characters!
+	...
+}
+
+AsnChatForwardResult ::= SEQUENCE
+{
+	iResult								INTEGER,						-- @linked AsnChatResultEnum
+	iConvSequenceID						INTEGER,						-- Sequence ID des Events
+	...
+}
+
+-- @brief Query whether chat is deactivated globally
+-- @long
+--
+asnChatIsGlobalDisabled OPERATION
+	ARGUMENT	arg AsnChatIsGlobalDisabledArgument
+	RESULT		res AsnChatIsGlobalDisabledResult
+	ERRORS		{AsnRequestError}
+::=	1431
+
+AsnChatIsGlobalDisabledArgument ::= SEQUENCE
+{
+	...
+}
+
+AsnChatIsGlobalDisabledResult ::= SEQUENCE
+{
+	iResult								INTEGER,						-- @linked AsnChatResultEnum
+	bDisabled							BOOLEAN,						-- true: Chat ist global disabled, false: Chat ist global enabled
+	...
+}
+
+
+-- @brief watching a public chat conversation room
+-- @long
+-- Receiving chat events for a public chat conversation room allows you to pick up the div of the last known ConvSequenceID for the current one on the server
+asnChatWatchConversation OPERATION
+	ARGUMENT	arg AsnChatWatchConversationArgument
+	RESULT		res AsnChatWatchConversationResult
+	ERRORS		{AsnRequestError}
+::= 1432
+
+AsnChatWatchConversationArgument ::= SEQUENCE 
+{
+	iWatchMode							INTEGER,							-- @linked AsnChatWatchModeEnum
+	u8sConversationID                   UTF8String,							-- ConversationID subscribe/unsubscribe
+	iConvSequenceID						[0] INTEGER OPTIONAL,				-- last SequenceId known in the client for the chat room (without an iConvSequenceID no events are implicitly delivered)
+	iMaxEvents							[1] INTEGER OPTIONAL,				-- Max x events back (will be set to 100 by the server if not specified)
+	u8sEventListCrossRefID				[2] UTF8String OPTIONAL,			-- The event list that is sent back by the server based on this request contains this CrossRefID. This enables the client to assign events to a request sent by it. The CrossRefID must be assigned by the client and cannot be generated by the server and returned in the return. The reason for this is that there is no guarantee that the return will reach the client before the event list.
+	...
+}
+
+AsnChatWatchConversationResult ::= SEQUENCE
+{
+	iResult								INTEGER,						-- @linked AsnChatResultEnum
+	...
+}
+
+-- @brief Change the list of participants in a public chat conversation room
+-- @long
+-- The list of participants in a public chat conversation room is completely replaced by the UserURIs transmitted in the request
+asnChatSetUserlist OPERATION
+	ARGUMENT	arg AsnChatSetUserlistArgument
+	RESULT		res AsnChatSetUserlistResult
+	ERRORS		{AsnRequestError}
+::= 1434
+
+AsnChatSetUserlistArgument ::= SEQUENCE 
+{
+	u8sConversationID					UTF8String,							-- Reference ID for the chat
+	u8sUserURIs							UTF8StringList,						-- Complete list of URIs that should be the new conversation participants from now on
+	u8sEventListCrossRefID				UTF8String,							-- The event list that is sent back by the server based on this request contains this CrossRefID. This enables the client to assign events to a request sent by it. The CrossRefID must be assigned by the client and cannot be generated by the server and returned in the return. The reason for this is that there is no guarantee that the return will reach the client before the event list.
+	...
+}
+
+AsnChatSetUserlistResult ::= SEQUENCE
+{
+	iResult								INTEGER,						-- @linked AsnChatResultEnum
+	iConvSequenceID						INTEGER,						-- Sequence ID des Events 
+	...
+}
+
+
+-- @brief New events in a chat
+-- @long
+-- Notification to a client that a new event has taken place in a chat.
+-- 
+asnChatEvent OPERATION
+	ARGUMENT	arg AsnChatEventArgument
+::= 1440
+
+AsnChatEventArgument ::= SEQUENCE 
+{	
+	asnChatEventList					AsnChatEventList,				-- Events in Chat
+	u8sEventListCrossRefID				UTF8String OPTIONAL,			-- Request to EventList Correlator
+	bLastSegment						BOOLEAN OPTIONAL,				-- last segment for this u8sEventListCrossRefID, TRUE if this segment is the last in a list of related event lists.
+
+	-- optionalParams Name "iNumTotalResults" Value INTEGER	Number of total results for paged search request (e.g. asnChatGetBinaryMessageEvents)
+	optionalParams						AsnOptionalParameters OPTIONAL,
+	...
+}
+
+-- New user status in a chat (typing notification)
+AsnChatTypingTime ::= ENUMERATED
+{
+	refreshInterval(20),                                                -- Interval in Seconds a client has to refresh the server that the user is typing
+	timeout(30)                                                         -- Time after which a client decides that the other side no longer is typing due to network lag/error
+}
+
+
+-- @brief New user status in a chat
+-- @long
+-- New user status in a chat (typing notification)
+-- 
+asnChatUserStatus OPERATION
+	ARGUMENT	arg AsnChatUserStatusArgument
+::= 1441
+
+AsnChatUserStatusArgument ::= SEQUENCE 
+{	
+	u8sConversationID					UTF8String,							-- ID of Chats (Chatraumes)
+	u8sSenderURI						UTF8String,							-- Contact URI of the sender of the message
+	bUserTyping							[0] BOOLEAN OPTIONAL,				-- User types a message or not.
+	...
+}
+
+-- @brief Change of database ID
+-- @long
+-- Event is sent from the server to the client if the database ID changes at runtime.
+-- This currently happens when the use of a database for chat in the server is switched off. Then one
+-- In-memory database is used, but is deleted once a day to prevent it from being in memory
+-- Accumulate conversations.
+
+asnChatDatabaseIDChanged OPERATION
+	ARGUMENT	arg AsnChatDatabaseIDChangedArgument
+::= 1442
+
+AsnChatDatabaseIDChangedArgument ::= SEQUENCE
+{
+	u8sDatabaseID						UTF8String,						-- Unique ID of the current server database
+	...
+}
+
+
+-- @brief Change to the database through automatic maintenance (e.g. "delete chats after X days")
+-- @long
+-- Event is sent from the server to the clients if chat messages in the server database due to the function
+-- "Delete chat messages after X days" will be deleted. The event contains a sequence ID up to which the deletion was carried out.
+-- Clients can adapt existing caches accordingly. I.e. TextMessages that have a Sequence ID less than or equal to
+-- have the ID specified in the event, must be deleted. The event is also sent to the client during the initial subscription.
+-- The event is only sent to clients who subscribe to it with the optional parameter "bSubscribeDBMaintenance" = true
+-- have requested.
+
+asnChatDatabaseMaintenance OPERATION
+	ARGUMENT	arg AsnChatDatabaseMaintenanceArgument
+::= 1443
+
+AsnChatDatabaseMaintenanceArgument ::= SEQUENCE
+{
+	iDeletedToSequenceID				INTEGER,						-- Sequence ID up to which TExt messages were deleted
+	...
+}
+
+
+-- @brief mute conversation for user - events are still dispatched, client should check on his site 
+-- @long
+-- User wants to mute the conversation - events are still dispatched from UCServer, so client needs to adopt its logic about the stuff
+asnChatMuteConversation OPERATION
+	ARGUMENT	arg AsnChatMuteConversationArgument
+	RESULT		res AsnChatMuteConversationResult
+	ERRORS		{AsnRequestError}
+::= 1438
+
+AsnChatMuteConversationArgument ::= SEQUENCE 
+{
+	u8sConversationID					UTF8String,							-- Reference ID for the chat
+	u8sEventCrossRefID					UTF8String,							-- For the assignment of events to a request. u8sEventCrossRefID must not be longer than 80 characters!
+	asnMutedUntilTime					[0] AsnSystemTime OPTIONAL,			-- Time until this channel should be handled muted (UTC time)
+	...
+}
+
+AsnChatMuteConversationResult ::= SEQUENCE
+{
+	iResult								INTEGER,						-- @linked AsnChatResultEnum
+	...
+}
+
+
+-- @brief unmute conversation for user
+-- @long
+-- User wants to unmute the conversation
+asnChatUnmuteConversation OPERATION
+	ARGUMENT	arg AsnChatUnmuteConversationArgument
+	RESULT		res AsnChatUnmuteConversationResult
+	ERRORS		{AsnRequestError}
+::= 1439
+
+AsnChatUnmuteConversationArgument ::= SEQUENCE 
+{
+	u8sConversationID					UTF8String,							-- Reference ID for the chat
+	u8sEventCrossRefID					UTF8String,							-- For the assignment of events to a request. u8sEventCrossRefID must not be longer than 80 characters!
+	...
+}
+
+AsnChatUnmuteConversationResult ::= SEQUENCE
+{
+	iResult								INTEGER,						-- @linked AsnChatResultEnum
+	...
+}
+
+
+
+-- @brief mute status of specific conversationid was changed
+-- @long
+-- Notification to a client that a mute state was changed
+-- 
+asnChatMuteStatusChanged OPERATION
+	ARGUMENT	arg AsnChatMuteStatusChangedArgument
+::= 1444
+
+AsnChatMuteStatusChangedArgument ::= SEQUENCE 
+{	
+	u8sConversationID					UTF8String,						-- ID of Chats (Chatraumes)
+	u8sSenderURI						UTF8String,						-- Contact URI of the sender of the message
+	u8sEventCrossRefID					UTF8String,						-- For the assignment of events to the corresponding request.
+	bMuted								BOOLEAN,						-- TRUE: channel should be handled as muted
+	asnMutedUntilTime					AsnSystemTime OPTIONAL,			-- Time until this channel should be handled muted (UTC time)
+	...
+}
+
+
+-- @brief This enumeration describes the values possible returned by asnChatGetConversationAvatar
+-- @long
+-- This are the possible returning values from getting an image from the server and the call was successful.
+-- The values represent that the result contains an image, the image has not changed and therefore there is no image data sent or there is no image for the given conversationID.
+EnumRequestConversationAvatarResult ::= ENUMERATED
+{
+	eDEFAULT (0),			-- There is no image/avatar defined for the given conversationID - so please use the default one
+	eHASHNOTCHANGED(1),		-- The image/avatar has not changed according to the given hash and therefore there is no image in the result.
+	eATTACHED(2)			-- The requested image/avatar is attached in the result.
+}
+
+
+-- @brief set conversation avatar
+-- @long
+-- set avatar for conversationID - members will be informed by event
+asnChatSetConversationAvatar OPERATION
+	ARGUMENT	arg AsnChatSetConversationAvatarArgument
+	RESULT		res AsnChatSetConversationAvatarResult
+	ERRORS		{AsnRequestError}
+::= 1460
+
+AsnChatSetConversationAvatarArgument ::= SEQUENCE 
+{
+	u8sConversationID					UTF8String,							-- Reference ID for the chat
+	u8sEventCrossRefID					UTF8String,							-- For the assignment of events to a request. u8sEventCrossRefID must not be longer than 80 characters!
+	-- binaryData (base64 encoded jpg) of the image
+	u8sImageData 						UTF8String,
+	...
+}
+
+AsnChatSetConversationAvatarResult ::= SEQUENCE
+{
+	iResult								INTEGER,						-- @linked AsnChatResultEnum
+	...
+}
+
+-- @brief get conversation avatar
+-- @long
+-- get avatar for conversationID - only relevant in group-chat context
+asnChatGetConversationAvatar OPERATION
+	ARGUMENT	arg AsnChatGetConversationAvatarArgument
+	RESULT		res AsnChatGetConversationAvatarResult
+	ERRORS		{AsnRequestError}
+::= 1461
+
+AsnChatGetConversationAvatarArgument ::= SEQUENCE 
+{
+	u8sConversationID					UTF8String,							-- Reference ID for the chat
+	u8sKnownHash						UTF8String OPTIONAL, 			-- If the client has an image already, it sends its hash so the server can determine if the image has changed.
+	...
+}
+
+AsnChatGetConversationAvatarResult ::= SEQUENCE
+{
+	iResult								INTEGER,							-- @linked AsnChatResultEnum
+	iImageResult						INTEGER,							-- @linked EnumRequestConversationAvatarResult - result of the call, if there is a new image, no image at all or the image hash has not changed.
+	u8sImageHash						[0] UTF8String OPTIONAL,			-- If an image is send to the client, this field contains the corresponding hash value for that image.
+	-- If an image is send to the client, this field contains the binaryData (base64 encoded jpg)
+	u8sImageData 						[1] UTF8String OPTIONAL,
+	...
+}
+
+-- @brief events when conversation avatar was changed
+-- @long
+-- Notification to a client that a new (group-chat) avatar was changed - client might check his local hash or request new image via asnChatGetConversationAvatar
+-- 
+asnChatConversationAvatarChanged OPERATION
+	ARGUMENT	arg AsnChatConversationAvatarChangedArgument
+::= 1445
+
+AsnChatConversationAvatarChangedArgument ::= SEQUENCE 
+{	
+	u8sConversationID					UTF8String,						-- ID of Chats (Chatraumes)
+	u8sSenderURI						UTF8String,						-- Contact URI of the sender of the message (who changed the avatar)
+	u8sImageHash						UTF8String,						-- the client can compare with its internal hash and request the new avatar with asnChatGetConversationAvatar
+	...
+}
+
+-- this (payload) structure based on the client requirements
+-- every ChatMessage covers, 0 - n (unique), Emoji(s) with a UsersList.
+-- see also: protocoll overhead "primaryKey" AND TransactionID/USN
+-- every ResultList/SetOfEmojis from Server comes with it's USN
+-- there is no extra type which covers AsnChatReactionsEmojiList AND it's associated USN
+-- if you add methods which return/ship AsnChatReactionsEmojiList remeber to support USN too
+AsnChatReactionsEmojiList ::= SEQUENCE OF AsnChatReactionsEmoji
+AsnChatReactionsEmoji ::= SEQUENCE
+{
+	u8sEmoji							UTF8String,										-- single Emoji
+	u8sUsers							UTF8StringList,									-- Contact URIs voted
+
+	...
+}
+
+-- @brief Set the reaction to a chat message for the calling user
+-- @long
+-- Set the reaction to a chat message for the calling user
+asnChatSetReaction OPERATION
+	ARGUMENT	arg AsnChatSetReactionArgument
+	RESULT		res AsnChatSetReactionResult
+	ERRORS		{AsnRequestError}
+::= 1474
+
+asnChatClearReaction OPERATION
+	ARGUMENT	arg AsnChatSetReactionArgument
+	RESULT		res AsnChatSetReactionResult
+	ERRORS		{AsnRequestError}
+::= 1475
+
+AsnChatSetReactionArgument ::= SEQUENCE
+{
+	-- primaryKey (u8sConversationID, iConvSequenceID)
+	u8sConversationID					UTF8String,						-- Conversation ID (of the room)
+	iConvSequenceID						INTEGER,						-- Chat Sequence ID
+
+	-- payload
+	u8sEmoji							UTF8String,						-- a single emoji
+
+	...
+}
+
+AsnChatSetReactionResult ::= SEQUENCE
+{
+	-- das Result fuer Set/Clear-Reaction wird asynchron als:
+	-- AsnChatEvent::AsnChatEventMessage::AsnChatReactionsEmojiList versand
+
+	...
+}
+
+-- Dieser ResultType wrapped den reinen payload (AsnChatReactionsEmojiList)
+-- mit verwaltungs/protokoll-infos: primaryKey/FK & TransactionID/USN
+-- Da wir fuer das DiffUpdate die uebergeordnete iGlobTransactionID wieder-verwenden
+-- wird dieser im Interface NICHT referenziert!
+-- das UCServer (private) InMemory-Model nutzt diesen type.
+AsnChatReactionsResultList ::= SEQUENCE OF AsnChatReactionsResult
+AsnChatReactionsResult ::= SEQUENCE
+{
+	-- primaryKey/FK (u8sConversationID, iConvSequenceID)
+	-- je nach verwendeter sprache/implementierung ist das optional/mandatory.
+	-- ein JavaScript kann evtl. ueber ein closure zugreifen ...
+	u8sConversationID					UTF8String,						-- Conversation ID (of the room)
+	iConvSequenceID						INTEGER,						-- Chat Sequence ID
+	iTransactionID						INTEGER,						-- the TransactionID
+
+	-- payload
+	asnEmojiList						AsnChatReactionsEmojiList,		-- eine map von <emoji> -> <lstUser>
+
+	...
+}
+
+END

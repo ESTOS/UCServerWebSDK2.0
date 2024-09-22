@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>asnRankingRankSessionAgent</h3>
+    <p>übergibt den aktuellen Ranking-Wert für den Session-Agenten
+</p>
+    <p><p>legt das für den SessionAgent aktuelle Ranking/Punkte fest.</p>
+</p>
+    <p class="strong">ArgumentType: AsnRankingRankSessionAgentArgument</p>
+    <div class="typevalues">
+      <p class="private">- PRIVATE -</p>
+      <p>AsnRankingRankSessionAgentArgument is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>iPoints</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>absoluter aktueller Ranking-Wert für den Agenten (für diese Session)
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+    <p></p>
+    <p class="strong">ResultType: AsnRankingRankSessionAgentResult</p>
+    <div class="typevalues">
+      <p class="private">- PRIVATE -</p>
+      <p>AsnRankingRankSessionAgentResult is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>u8sSessionAgentURI</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>URI des aktuellen Session-Agenten
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iCurrentPoints</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>aktueller Punkte-Wert des Agenten für diese Session
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iCumulatedAgentPoints</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>aktueller Ranking-Wert für den Agenten (absolut - kumuliert über alle Connections)
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sSessionGroupID</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>GroupID des aktuellen Session-Agenten
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+    <p></p>
+    <p class="strong">ErrorType: AsnRequestError</p>
+    <div class="typevalues">
+      <p>AsnRequestError is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>iErrorDetail</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>A number representing the error
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sErrorString</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>A string representing the error
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

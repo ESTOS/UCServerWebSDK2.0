@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>asnUpdatePresenceV2</h3>
+    <p>Event from the server to the client about presence updates
+</p>
+    <p><p>This event is fired from the server if the client has subscribed by asnGetAndSubscribePresence on a contact (=user).<br>
+It contains the new presence state and other data which has changed.</p>
+</p><strong>ArgumentType: AsnUpdatePresenceV2Argument</strong>
+    <div class="typevalues">
+      <p>AsnUpdatePresenceV2Argument is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>presence</p>
+          </td>
+          <td> 
+            <p><a href="PresenceV2.type.AsnPresenceV2.html">AsnPresenceV2</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Updated data and service states of the contact. See AsnPresence for more details.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iChangedFlags</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Flags indicating which data sections od the contact have triggered the event. @linked AsnPresenceSubscriptionFlags
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

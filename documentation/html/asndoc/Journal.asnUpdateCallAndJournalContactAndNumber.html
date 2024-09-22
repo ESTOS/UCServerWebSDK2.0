@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>asnUpdateCallAndJournalContactAndNumber</h3>
+    <p>Update the contact information of a current active call or a journal entry.
+</p>
+    <p><p>A Client can update the contact information for a call. This function updates the information is currently active or, if already disconnected, the corresponding journal entry.</p>
+<p>If neither the active call was found nor the journal entry, an error will be returned.</p>
+</p>
+    <p class="strong">ArgumentType: AsnUpdateCallAndJournalContactAndNumberArgument</p>
+    <div class="typevalues">
+      <p>AsnUpdateCallAndJournalContactAndNumberArgument is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>u8sConnectionID</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Unique ID of the call or journal entry to modify.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sRemoteNumberSC</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Phone number to set for the contact in long format (e.g. +49815136856177).
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>remoteContact</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.AsnNetDatabaseContact.html">AsnNetDatabaseContact</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>The contact to set for the journal entry.
+ (Linked Type: <a href="Common.type.AsnNetDatabaseContact.html">AsnNetDatabaseContact</a>)
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+    <p></p>
+    <p class="strong">ResultType: AsnUpdateCallAndJournalContactAndNumberResult</p>
+    <div class="typevalues">
+      <p>AsnUpdateCallAndJournalContactAndNumberResult is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>bResultCallInfoUpdate</p>
+          </td>
+          <td> 
+            <p>boolean</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>If the active call was updated, this will be &quot;true&quot;.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>bResultJournalUpdate</p>
+          </td>
+          <td> 
+            <p>boolean</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>If the journal entry was updated, this will be &quot;true&quot;.
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+    <p></p>
+    <p class="strong">ErrorType: AsnRequestError</p>
+    <div class="typevalues">
+      <p>AsnRequestError is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>iErrorDetail</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>A number representing the error
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sErrorString</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>A string representing the error
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

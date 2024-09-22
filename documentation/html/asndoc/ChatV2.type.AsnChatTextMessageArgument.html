@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnChatTextMessageArgument </h3>
+    <p></p>
+    <p></p>
+    <div class="typevalues">
+      <p>AsnChatTextMessageArgument is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>u8sRecipientURIs</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.UTF8StringList.html">UTF8StringList</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>URIs of the recipients, must be filled if the ConversationID is empty
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sMessage</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Message that will be sent
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sEventCrossRefID</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>For the assignment of events to a request. u8sEventCrossRefID must not be longer than 80 characters!
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sConversationID</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>Chat ID, can be empty if it is a 1: 1 chat and the recipient is named
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sConversationName</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>Title of the Chatrooms
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iConversationType</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>AsnConversationType enum for the type of chat. e.g. One-to-one, group, static, public ...
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iReplyToSequenceID</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>Text Message is a reply to another message with SequenceID = iReplyToSequenceID
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

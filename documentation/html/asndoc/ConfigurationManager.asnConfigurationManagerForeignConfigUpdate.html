@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>asnConfigurationManagerForeignConfigUpdate</h3>
+    <p></p>
+    <p><p>config of other UCServer changed &quot;event&quot; (implemented as invoke to guarantee the correct order)</p>
+</p>
+    <p class="strong">ArgumentType: AsnConfigurationManagerUpdateArgument</p>
+    <div class="typevalues">
+      <p class="private">- PRIVATE -</p>
+      <p>AsnConfigurationManagerUpdateArgument is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>bFullDBSync</p>
+          </td>
+          <td> 
+            <p>boolean</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>is this a full db sync with all settings (and not a delta sync with only all added, changed, removed settings)
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>syncstateOld</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p> 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>syncstateNew</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p> 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>bFirstPage</p>
+          </td>
+          <td> 
+            <p>boolean</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p> 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>bLastPage</p>
+          </td>
+          <td> 
+            <p>boolean</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p> 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>configurationAdded</p>
+          </td>
+          <td> 
+            <p><a href="ConfigurationManager.type.AsnConfigurationManagerConfiguration.html">AsnConfigurationManagerConfiguration</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p> 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>configurationChanged</p>
+          </td>
+          <td> 
+            <p><a href="ConfigurationManager.type.AsnConfigurationManagerConfiguration.html">AsnConfigurationManagerConfiguration</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p> 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>configurationDeleted</p>
+          </td>
+          <td> 
+            <p><a href="ConfigurationManager.type.AsnConfigurationManagerConfiguration.html">AsnConfigurationManagerConfiguration</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p> 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+    <p></p>
+    <p class="strong">ResultType: AsnConfigurationManagerCRUDResult</p>
+    <div class="typevalues">
+      <p class="private">- PRIVATE -</p>
+      <p>AsnConfigurationManagerCRUDResult is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>iResultCode</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p> 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+    <p></p>
+    <p class="strong">ErrorType: AsnRequestError</p>
+    <div class="typevalues">
+      <p>AsnRequestError is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>iErrorDetail</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>A number representing the error
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sErrorString</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>A string representing the error
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

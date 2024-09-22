@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<!--
+  Example for creating a session and call functions, retrieving results and errors.
+  This is a very simplified example of an ASN.1/ROSE communication over websockets.
+  It shows the basic principles, of how to connect to the UCServer via 7224/HTTP (7225/HTTPS needs more code)
+
+  In this sample, a connection will be established and the logged in contact data will be fetched from the server.
+  With the ContactID of this user, the presence will be subscribed to get state change events from the server.
+
+  Each change of the users presence state will be displayed on the page by showing the contents of the corresponding events.
+  (To change the State of the user, login a windows or mobile client with the same credentials and switch its presence state).
+-->
+<html>
+<head>
+  <!-- make it a bit more visual appealing with bootstrap material -->
+  <link rel="stylesheet" href="https://unpkg.com/bootstrap-material-design@4.1.1/dist/css/bootstrap-material-design.min.css" integrity="sha384-wXznGJNEXNG1NFsbm0ugrLFMQPWswR3lds2VeinahP8N0zJw9VWSopbjv2x7WCvX" crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/popper.js@1.12.6/dist/umd/popper.js" integrity="sha384-fA23ZRQ3G/J53mElWqVJEGJzU0sTs+SvzG8fXVWP+kJQ1lwFAOkcUOysnlKJC33U" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/bootstrap-material-design@4.1.1/dist/js/bootstrap-material-design.js" integrity="sha384-CauSuKpEqAFajSpkdjv3z9t8E7RlpJ1UP0lKM/+NdtSarroVKu069AlsRPKkFBz9" crossorigin="anonymous"></script>
+  <script>$(document).ready(function() { $('body').bootstrapMaterialDesign(); });</script>
+
+  <body>
+    <div class = "container">
+      <p>
+        <a href="index.html" class="badge badge-pill badge-primary"> &lt;== Back to index</a>
+      </p>
+      <p>
+        After every step you can see what is send and what is received at the bottom of this page.
+      </p>
+      <hr />
+      <p><strong>1. Login: Create a new session with credentials</strong></p>
+      <form>
+        <div class="form-row">
+          <div class="form-group col-md-4">
+          <label for="serverurl">Server URL:</label>
+            <input id="serverurl" type="text" class="form-control" value="http://localhost:7224"/><br/>
+          </div>
+          <div class="form-group col-md-4">
+            <label for="ucsid">UCSID:</label>
+            <input id="ucsid" type="text" class="form-control" value="local"/><br/>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="from-group col-md-4">
+            <label for="user">Username:</label>
+            <input id="user" type="text" class = "form-control" value=""/><br/>
+          </div>
+          <div class="form-group col-md-4">
+            <label for="pass">Password:</label>
+            <input id="pass" class="form-control" value="" type="password"/><br/>
+          </div>
+        </div>
+        <div class="form-row">
+          <div>
+            <button type='submit' onclick='createsession(); event.preventDefault();'>Create Session</button><br/>
+          </div>
+        </div>
+      </form>      
+      <hr />
+      <p><strong>2. On successful login you will get a SessionID, to identify your client operation calls on the server</strong></p>
+      <form class="form-group">
+        <label for="sessionid">SessionID:</label>
+        <input id="sessionid" class="form-control" value=""/><br/>
+      </form>
+      <p>In this example the SessionID is needed to create the WebSocket. All functions will be called using this socket.</p>
+      <hr />
+      <p><strong>3. Get your own contact data</strong></p>
+      <form>
+        <button type='submit' onclick='getmycontact(); event.preventDefault();'>Get my Contact</button><br/>
+      </form>
+      <p>With this data we can do more useful stuff, for example subscribing to presence changes or getting own lines etc.</p>
+      <hr />
+      <p><strong>4. From your own data, extract your contact id (this example will do this for you with step 3 :) )</strong></p>
+      <form>
+        <label for="contactid">ContactID</label>
+        <input id="contactid" type="text" class="form-control" value="">
+      </form>
+      <hr />
+      <p><strong>5. With the contact id you can subscribe your client on the contact object on the server to get events when something about the contact is changing on the server</strong></p>
+      <form>
+        <button type='submit' onclick='subscribeToContact(); event.preventDefault();'>Subscribe events on my contact</button><br/>
+      </form> 
+      <hr />
+      <p>Now login with a windows client on the server with the same credentials. See down below the events when you change the presence state of the user.</p>
+      <hr />
+      <p>Messages sent to and received from the server:</p>
+      </p>
+      <p>SEND:<br />
+        <pre id="sended"></pre>
+      </p>
+      <p>RECEIVE:<br />
+        <pre id="result"></pre>
+      </p>
+      <div id="output-area"></div>
+    </div>
+  </body>
+
+  <script>
+    var invokeid = 2;
+    var client = null;
+    var user_contactid = '';
+
+    var sockethandlers = {
+      // Handler for a socket error
+      onError: function(err) {
+          console.log('error: ' + err);
+      },
+
+      // Handler for a successful connect
+      onConnect: function() {
+        console.log('connect');
+      },
+
+      // Handler for a closed socket connection
+      onClose: function() {
+        console.log('close');
+      },
+
+      // Handler for data received from the server
+      onMessage: function(data) {
+        var outtext = data.data;
+        let rosemsg = null;
+        try {
+          rosemsg = JSON.parse(outtext)[0]; // Get the JavaScript object
+          outtext = JSON.stringify(rosemsg, null, 4); // Make a readable form to display on HTML Page
+        } catch(e) {
+        }
+        
+        if ('result' in rosemsg) {
+          if ('result' in rosemsg.result) {
+              if ('result' in rosemsg.result.result) {
+                // then it is a normal result of the function call
+                document.getElementById("result").innerHTML = 'Result-Message<br />' + outtext;
+                parseResult(rosemsg);
+              }
+          }
+        } else if('invoke' in rosemsg) {
+          // Events are ROSE invokes from the server to the client, only with arguments und the special invokeID 99999
+          if('invokeID' in rosemsg.invoke) {
+            if(rosemsg.invoke.invokeID === 99999) {
+              document.getElementById("result").innerHTML = 'Event-Message<br />' + outtext;
+              parseEventFromServer(rosemsg);
+            }
+          }
+        } else if ('error' in rosemsg) {
+          document.getElementById("result").innerHTML = 'Error-Message<br />' + outtext;
+          /*
+          {
+              "error": {
+                  "_type": "AsnLogonError",
+                  "iErrorDetail": 101,
+                  "sAuthCredetials": "",
+                  "u8sErrorString": "Authentication failed",
+                  "u8sFailedUser": ""
+              },
+              "error_value": 0,
+              "invokedID": 87,
+              "sessionID": "6668CC892EE8474EBE7CFB93542B29F0"
+          }
+          */
+        } else if ('reject' in rosemsg) {
+          document.getElementById("result").innerHTML = 'Reject-Message<br />' + outtext;
+          /**/
+        } else {
+          /* PROTOCOLL ERROR */
+          document.getElementById("result").innerHTML = 'Protocoll Error?!<br />' + outtext;
+        }
+      }
+    }
+
+    // Parser for ROSE-Result objects
+    function parseResult(rosemsg) {
+      // normally check now, which invokeID is corresponds to this result to 
+      // find the waiting caller-object and cl,ose its call with this result object.
+      let rose_result = rosemsg.result.result.result;
+
+      // in this example we just have a very small number of calls we are waiting for
+      // results
+      if(rose_result._type === "AsnGetLoggedInContactResult") {
+        user_contactid = rose_result.ownContact.u8sContactId;
+        document.getElementById("contactid").value = user_contactid;
+      }
+    }
+
+    function parseEventFromServer(rosemsg) {
+      let event_argument = rosemsg.invoke.argument;
+      /* do what you need to do with the event data */
+    }
+
+    // once created a session, you can start a websocket
+    function createwebsocket(serverurl, sessionid) {
+      // ws://localhost:7224/ws/client/websocket?x-ucsessionid=<sessionid>
+      socketurl = serverurl.replace('http', 'ws') + '/ws/client/websocket?x-ucsessionid=' + sessionid;
+      client = new WebSocket(socketurl);
+
+      // connect to the handlers for some calls from the socket
+      client.onclose = sockethandlers.onClose;
+      client.onerror = sockethandlers.onError;
+      client.onopen = sockethandlers.onConnect;
+      client.onmessage = sockethandlers.onMessage;
+    }
+
+    // first step, create a sessionid giving credentials
+    function createsession()
+    {
+      let serverurl = document.getElementById("serverurl").value;
+      let ucsid = document.getElementById("ucsid").value;
+      let user = document.getElementById("user").value;
+      let pass = document.getElementById("pass").value;
+      let func = 'createsession?clientappid=15'; // since ProCall 7 you have to tell the server your application type (Web = 15)
+      
+      var oXHR = new XMLHttpRequest();   // new HttpRequest instance
+      oXHR.addEventListener("loadend", function(evt) {
+        var outtext = oXHR.responseText;
+        var response = {};
+        try {
+          response = JSON.parse(oXHR.responseText);
+          outtext = JSON.stringify(response, null, 4);        
+        } catch(e) {
+        }
+        if (oXHR.status == 0) {
+          document.getElementById("result").innerHTML = 'Failed: General Network Error';
+        } else if (outtext == '') {
+          document.getElementById("result").innerHTML = 'Failed: No response received';
+        } else if (oXHR.status == 200) {
+          document.getElementById("result").innerHTML = outtext;
+          if (response.hasOwnProperty('sessionid')) {
+              document.getElementById("sessionid").value = response.sessionid;
+
+              // with the help of the sessionid, we start the websocket now
+              createwebsocket(serverurl, response.sessionid);
+            }
+        } else {
+          document.getElementById("result").innerHTML = outtext;
+        }
+      });
+
+      const apiVersion = 70 // 70 for ProCall 7 upwards, 61 for Procall 6
+
+      oXHR.open("POST", serverurl + "/ws/client/" + func, true);
+      oXHR.setRequestHeader("Authorization", "Basic " + btoa(user + ":" + pass)); 
+      oXHR.setRequestHeader("Content-Type", "application/json;charset=utf-8");
+      oXHR.setRequestHeader("X-no401", "1");
+      oXHR.setRequestHeader("X-ucsid", ucsid);
+      oXHR.setRequestHeader("X-simple", "1");
+      oXHR.send('{ "negotiate": { "iClientProtocolVersion": ' + apiVersion + ' } }');
+    }
+
+    function rose_invoke(operationname, argument) {
+      let rose_function = {
+        "invoke" : {
+          "argument" : argument,
+          "invokeID" : invokeid++, // each invoke must have a unique ID, to check which
+                                   // message from the server is an answer to a call.
+                                   // Since the server is highly multithreaded, the messages
+                                   // from the server may come in a different order than the messages
+                                   // sent to the server. So it is neccessary to match the calling processes/objects
+                                   // with their corresponding answers
+          "operationID" : 0, // for JSON-Encoded ASN.1 (estos) set this to 0
+          "operationName" : operationname
+        }
+      }
+      let outtext = JSON.stringify(rose_function, null, 4);
+      document.getElementById("sended").innerHTML = outtext;
+      client.send(outtext);
+    }
+
+    // Argument object for the asnGetLoggedInContact call
+    function AsnGetLoggedInContactArgument() {
+      this._type = 'AsnGetLoggedInContactArgument';
+    }
+
+    function getmycontact()
+    {
+      // asnGetLoggedInContact does not contain parameters in the argument
+      rose_invoke("asnGetLoggedInContact", new AsnGetLoggedInContactArgument());
+    }
+
+    var AsnPresenceSubscriptionFlags = {
+      ePresenceSubscriptionPresence: 1,
+      ePresenceSubscriptionData: 2,
+      ePresenceSubscriptionDataIncludeImage: 4,
+      ePresenceSubscriptionConfiguration: 8,
+      ePresenceSubscriptionAbsentstate: 16,
+      ePresenceSubscriptionNote: 32,
+      ePresenceSubscriptionAppointment: 64,
+      ePresenceSubscriptionPhoneLines: 128,
+      ePresenceSubscriptionPhoneCalls: 256,
+      ePresenceSubscriptionPhoneForwards: 512,
+      ePresenceSubscriptionMyChallengeUpdates: 1024,
+      ePresenceSubscriptionDynamicRightsUpdate: 2048,
+      ePresenceSubscriptionDynamicGroupRightsUpdate: 4096,
+      ePresenceSubscriptionDynamicGlobalRightsUpdate: 8192,
+      ePresenceSubscriptionContactCapabilities: 16384,
+      ePresenceSubscriptionAgentStatus: 32768,
+      ePresenceSubScriptionMonitorGroupingAttribute: 65536
+    };
+    function AsnGetAndSubscribePresenceArgument() {
+      this._type = 'AsnGetAndSubscribePresenceArgument';
+      this.seqContactIDs = []; //  type: UTF8StringList},
+      // this.iEventFlagsToSubscribe = 0; leave this undefinied, the server will send every event
+      // this.iContactDetailsReturnFilter = 0; leave this undefined, the server should not filter anything besides of access rights
+      // this.bOpenOnlyInternalContacts = false; // boolean},
+      // this.bDontRequestPermissions = false; // boolean},
+      this.optionalParams = {}; //  type: AsnOptionalParameters}
+    }
+
+    function subscribeToContact() {
+        let arg = new AsnGetAndSubscribePresenceArgument();
+        arg.seqContactIDs.push(user_contactid);
+        rose_invoke("asnGetAndSubscribePresence", arg);
+    }
+
+  </script>
+</html>

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>asnUnsubscribePresence</h3>
+    <p>Operation to end subscriptions on contacts on the ucserver.
+</p>
+    <p><p>To stop getting events from contacts on the ucserver this operation is called with the list contact IDs of these contacts.</p>
+<p>If the operation is executes successful, it will return the result <a href="PresenceV2.type.AsnUnsubscribePresenceResult.html">AsnUnsubscribePresenceResult</a></p>
+<p>If an error occured, AsnRequestError will be returned.</p>
+</p>
+    <p class="strong">ArgumentType: AsnUnsubscribePresenceArgument</p>
+    <div class="typevalues">
+      <p>AsnUnsubscribePresenceArgument is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>seqContactIDs</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.UTF8StringList.html">UTF8StringList</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>List of contact IDs to unsubscribe from (e.g. 'sip:tester@test.com').
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+    <p></p>
+    <p class="strong">ResultType: AsnUnsubscribePresenceResult</p>
+    <div class="typevalues">
+      <p>AsnUnsubscribePresenceResult is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>iResult</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p> 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+    <p></p>
+    <p class="strong">ErrorType: AsnRequestError</p>
+    <div class="typevalues">
+      <p>AsnRequestError is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>iErrorDetail</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>A number representing the error
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sErrorString</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>A string representing the error
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

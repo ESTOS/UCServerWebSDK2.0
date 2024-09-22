@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>asnGetOfflineJournal</h3>
+    <p>Fetch and optionally delete offline journal entries.
+</p>
+    <p><p>The UCServer saves journal entries of missed calls additionally in an offline database, if the owner of the line<br>
+where the call was happening was not logged into the UCServer.<br>
+With this function it is possible to read (and delete) such entries.</p>
+</p>
+    <p class="strong">ArgumentType: AsnGetOfflineJournalArgument</p>
+    <div class="typevalues">
+      <p>AsnGetOfflineJournalArgument is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>iMaxDays</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Maximum Days to get offline journal entries. (0 = 365 days)
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iMarkRead</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>0: Don't change the entries; 1: Mark the offline entries as &quot;read&quot;, which means delete the entry from the offline database. The corresponding entry in the journal database will not be touched.
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+    <p></p>
+    <p class="strong">ResultType: AsnGetOfflineJournalResult</p>
+    <div class="typevalues">
+      <p>AsnGetOfflineJournalResult is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>journalList</p>
+          </td>
+          <td> 
+            <p><a href="Journal.type.AsnNetDatabaseJournalList.html">AsnNetDatabaseJournalList</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>List of AsnNetDatabaseJournal objects, containing the offline journal entries found.
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+    <p></p>
+    <p class="strong">ErrorType: AsnRequestError</p>
+    <div class="typevalues">
+      <p>AsnRequestError is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>iErrorDetail</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>A number representing the error
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sErrorString</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>A string representing the error
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

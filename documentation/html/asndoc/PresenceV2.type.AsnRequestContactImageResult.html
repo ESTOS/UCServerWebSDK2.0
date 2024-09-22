@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnRequestContactImageResult </h3>
+    <p>Result of <a href="PresenceV2.asnRequestContactImage.html">asnRequestContactImage</a>
+</p>
+    <p><p>If the operation <a href="PresenceV2.asnRequestContactImage.html">asnRequestContactImage</a> was executed successfully, this result will be send back to the client.<br>
+If there is no image or the image has not changed according the hash value given in the argument, iResult will contain the corresponding value from <a href="PresenceV2.type.EnumRequestImageResult.html">EnumRequestImageResult</a><br>
+If the server will send back an image, sImageData will contain the binary data of the image and u8sImageHash the corresponding<br>
+new hash value for that image.</p>
+</p>
+    <div class="typevalues">
+      <p>AsnRequestContactImageResult is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>iResult</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>EnumRequestImageResult - result of the call, if there is a new image, no image at all or the image hash has not changed.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>sImageData</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>If an image is send to the client, this field contains the binary data of the image.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sImageHash</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>If an image is send to the client, this field contains the corresponding hash value for that image.
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

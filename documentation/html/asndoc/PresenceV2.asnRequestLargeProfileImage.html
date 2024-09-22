@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>asnRequestLargeProfileImage</h3>
+    <p>Request an large image of a contact.
+</p>
+    <p><p>With the operation <a href="PresenceV2.asnRequestLargeProfileImage.html">asnRequestLargeProfileImage</a> can request a large image of a contact. The large<br>
+image can be optionally configured by the administrator additionally to the 'normal' small image in order to provide a<br>
+higher resolution image of the contact for special purposes (like LiveChat client).<br>
+Like with <a href="PresenceV2.asnRequestContactImage.html">asnRequestContactImage</a>, this operation is used to get or check the image from the server and the server can<br>
+determine the need to provide a new image to the client using the given hash value.</p>
+</p>
+    <p class="strong">ArgumentType: AsnRequestLargeProfileImageArgument</p>
+    <div class="typevalues">
+      <p>AsnRequestLargeProfileImageArgument is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>u8sContactID</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>ContactID of the contact to get or check the image
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sKnownHash</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>If the client has an image already, it sends its hash so the server can determine if the image has changed.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>netDatabaseContactID</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.AsnNetDatabaseContactID.html">AsnNetDatabaseContactID</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>Alternatively to u8sContactID one can use the AsnNetDatabaseContactID to identify the contact.
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+    <p></p>
+    <p class="strong">ResultType: AsnRequestLargeProfileImageResult</p>
+    <div class="typevalues">
+      <p>AsnRequestLargeProfileImageResult is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>iResult</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>EnumRequestImageResult - result of the call, if there is a new image, no image at all or the image hash has not changed.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>sImageData</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>If an image is send to the client, this field contains the binary data of the image.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sImageHash</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>If an image is send to the client, this field contains the corresponding hash value for that image.
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+    <p></p>
+    <p class="strong">ErrorType: AsnRequestError</p>
+    <div class="typevalues">
+      <p>AsnRequestError is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>iErrorDetail</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>A number representing the error
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sErrorString</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>A string representing the error
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

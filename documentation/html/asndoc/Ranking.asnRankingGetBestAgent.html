@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>asnRankingGetBestAgent</h3>
+    <p>ermittelt den preferierten Agenten
+</p>
+    <p><p>Server ermittelt im Ranking-Verfahren den preferierten Agenten.<br>
+Entweder steht der preferierte Agent in der (preferred) Gruppe zur Verfügung.<br>
+Falls nicht, wird aus der Liste der Gruppen der bestAgent ermittelt.</p>
+</p>
+    <p class="strong">ArgumentType: AsnRankingGetBestAgentArgument</p>
+    <div class="typevalues">
+      <p class="private">- PRIVATE -</p>
+      <p>AsnRankingGetBestAgentArgument is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>u8sGroupIDs</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.UTF8StringList.html">UTF8StringList</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Liste von GroupIDs die berücksichtigt werden sollen (entweder GroupURI oder GroupName)
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sPreferredAgentURI</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>URI des bevorzugten Agenten (muss in der übergebenen u8sPreferredGroupID verfügbar sein)
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sPreferredGroupID</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>GroupURI in der der bevorzugte Agent verfügbar sein muss
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+    <p></p>
+    <p class="strong">ResultType: AsnRankingGetBestAgentResult</p>
+    <div class="typevalues">
+      <p class="private">- PRIVATE -</p>
+      <p>AsnRankingGetBestAgentResult is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>u8sAgentURI</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>URI des ermittelten Gruppen Agent
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sGroupID</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>ID der ermittelten Gruppe (entweder GroupURI oder GroupName)
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iPublicAgentPresence</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>aktuelle öffentliche Präsenz des Agenten
+ (Linked Type: <a href="Ranking.type.AsnRankingAgentPublicPresenceEnum.html">AsnRankingAgentPublicPresenceEnum</a>)
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iCumulatedAgentPoints</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>aktueller Ranking-Wert für den Agenten (absolut - kumuliert über alle Connections)
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+    <p></p>
+    <p class="strong">ErrorType: AsnRequestError</p>
+    <div class="typevalues">
+      <p>AsnRequestError is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>iErrorDetail</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>A number representing the error
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sErrorString</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>A string representing the error
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

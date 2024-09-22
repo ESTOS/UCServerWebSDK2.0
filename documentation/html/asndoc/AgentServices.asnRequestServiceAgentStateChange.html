@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>asnRequestServiceAgentStateChange</h3>
+    <p>The state of a agent should be changed
+</p>
+    <p><p>This event will be sent by the UCServer when the user wants to change his agent state (button in the UI).<br>
+The connected service should change the agents satte accordingliy and send an update of the resulting agent state back to the UCServer.</p>
+<p>The UCServer by itself will not cache or predict the agent state resulting, so it will only change the internal state only the service<br>
+send the update.</p>
+<img src="https://www.plantuml.com/plantuml/png/vLJBQiCm4BpxAnQV4aFy0Q4kCI6t4a9DRxsezaPPi5TKMXlozvLbqpIf7UYXfzmaPXypErfjd2WhRLD7MGRRasADe3IoW0S4WPY4_A62ZpF82U5jMw3jg4J8iYXAqnHUZ2O6SmJ5O-g2Za3YWB54vvGzBy47Hd4Uq34_XgSLGFnTBuOr9Cckyo7h907b-1K_MtGouY4vz7hdHJwFvbQtZRyi8rKATRs8cyQ_YAoURqCybuCrFNjY7NGFuoY72TcXzsIXEu8AlA9Rz2NTe6OIkaYfS5PCy61lRAFgQv9YIMkq5-jQXnOCXtDPKrzbnfO_kXBO3ezdrfiVCG_fa7-RffM9DG7wfqNnxUvjYeSVpeWDSkN_kYy0" alt="uml diagram">
+</p><strong>ArgumentType: AsnRequestServiceAgentStateChangeArgument</strong>
+    <div class="typevalues">
+      <p>AsnRequestServiceAgentStateChangeArgument is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>serviceAgentState</p>
+          </td>
+          <td> 
+            <p><a href="AgentServices.type.AsnServiceAgent.html">AsnServiceAgent</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Agent and its state
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

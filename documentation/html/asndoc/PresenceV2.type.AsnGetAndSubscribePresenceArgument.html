@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnGetAndSubscribePresenceArgument </h3>
+    <p>Call this operation to get information about and events of another contact.
+</p>
+    <p><p>This operation enables the client to request informations and events about another contact.<br>
+The minimal parameter is a list of contact IDs (e.g. 'sip:tester@test.com'). These contacts<br>
+will be searched in the ucserver and the service will return contact data back in the result<br>
+and send events about changes from there on.</p>
+<p>The data returned and events which will be send are depending on access rights and accessability on the contact data.</p>
+<p>Which events and return values are necessary for the client can be adjusted by the iEventFlagsToSubscribe and<br>
+iContactDetailsReturnFilter members.</p>
+<p><strong>Note</strong>: Federation contacts (contgacts managed on another server as the connected one) may not return most of the data<br>
+even the bits are set. This is because the ucserver has to contact the appropriate server first and this can take some time.<br>
+To prevent long response times, the data which will be eventually given by the appropriate server will be send back via event.</p>
+<p>If the client wants to prevent SIP or XMPP fedeation contacts, it can set bOpenOnlyInternalContacts to true.</p>
+<p>If the client wants to prevent requesting new contact rights on the contact it can set bDontRequestPermissions to true.</p>
+</p>
+    <div class="typevalues">
+      <p>AsnGetAndSubscribePresenceArgument is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>seqContactIDs</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.UTF8StringList.html">UTF8StringList</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>List of strings containing the contact ID of the requestet contact (e.g. 'sip:tester@test.com')
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iEventFlagsToSubscribe</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>AsnPresenceSubscriptionFlags - which events does the client wants to receive from the server.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iContactDetailsReturnFilter</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>AsnPresenceSubscriptionFlags - which return values are needed from the ucserver.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>bOpenOnlyInternalContacts</p>
+          </td>
+          <td> 
+            <p>boolean</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p> 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>bDontRequestPermissions</p>
+          </td>
+          <td> 
+            <p>boolean</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>Keine Berechtigungsanfrage starten
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>asnNegotiateServerConnection</h3>
+    <p>Negotiate server and client versions (deprecated)
+</p>
+    <p><p>Aushandeln der Version des Servers und des Client, sowie der Login Optionen</p>
+<p class='strong'>Erlaubte Fehler</p>
+<p>RequestError::invalidProtocolVersion</p>
+</p>
+    <p class="strong">ArgumentType: AsnNegotiateServerConnectionArgument</p>
+    <div class="typevalues">
+      <p class="private">- DEPRECATED -</p>
+      <p>AsnNegotiateServerConnectionArgument is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>iClientProtocolVersion</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Angeforderte Protokoll Version des Clients
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>optionalParams</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.AsnOptionalParameters.html">AsnOptionalParameters</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p><em>Liste der optionalen Parameter:</em>
+<ul>
+<li>optionalParams Name &quot;ClientDeviceId&quot; Value String ID die der Client vergibt, die eineindeutig sein muss</li>
+<li>optionalParams Name &quot;ClientDeviceName&quot; Value String Name des Devices</li>
+<li>optionalParams Name &quot;AnonymousLogin&quot; Value AsnInt Client wünscht eine Anonymous Verbindung</li>
+<li>optionalParams Name &quot;AnonymousHintData&quot; Value String Zusätzliche Information, damit der Server evtl. eine Verknüpfung mit einer älteren/oder späteren anonymen Verbindung wieder herstellen kann.</li>
+<li>optionalParams Name &quot;AnonymousToken&quot; Value String is a password to authenticate the connection</li>
+<li>optionalParams Name &quot;SoftphoneClient&quot; Value Int ('1' für aktiv) Der Client bietet Softphone Funktionalität</li>
+<li>optionalParams Name &quot;ProvideAVLine&quot; Value Int ('1' für aktiv) Der Client erhält die AVLine als Leitung mit den entsprechenden Notifies</li>
+<li>optionalParams Name &quot;ConnectionGUID&quot;  Value String ID ist ungleich null wenn der Client eine existierende ENetCtiClientConnectionGUID weiter benutzen will.</li>
+</ul>
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+    <p></p>
+    <p class="strong">ResultType: AsnNegotiateServerConnectionResult</p>
+    <div class="typevalues">
+      <p class="private">- DEPRECATED -</p>
+      <p>AsnNegotiateServerConnectionResult is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>iServerProtocolVersion</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Protokoll Version des Servers
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iServerUMSecurityOption</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Verfügbare Login Option
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iServerTLSSecurityOption</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>TLS nie verwenden, ermöglichen oder voraussetzen.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>sServerAuthentication</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Timestamp des Servers für Verschlüsselung am Client
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>optionalParams</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.AsnOptionalParameters.html">AsnOptionalParameters</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p><em>Liste der möglichen optionalen Parameter:</em>
+<ul>
+<li>optionalParams Name &quot;serverClientWriteablePassword&quot;  Value AsnInt definiert ob der Client das PAsswort selbst ändern kann oder nicht (LiveChat Passwort ändern)</li>
+<li>optionalParams Name &quot;serverVersion&quot; Value String Versionsstring des Servers</li>
+<li>optionalParams Name &quot;productVersion&quot; Value String UCServer-ProductVersion (für ProCall identisch mit der FileVersion, ProCallGo fängt bei 1.xx an)</li>
+<li>optionalParams Name &quot;ServerProtocolVersion&quot; Value AsnInt (completly senseless as it is already contained in the iServerProtocolVersion)</li>
+<li>optionalParams Name &quot;ServerInterfaceVersion&quot; Value AsnInt (an additional internal version (410))</li>
+<li>optionalParams Name &quot;serverConnectionId&quot; Value String GUID der Verbindung, die der Server zugewiesen hat und dazu verwendet auf diese Verbindung zu verweisen bzw. zu identifizieren.</li>
+<li>optionalParams Name &quot;presenceDomains&quot; Value String Liste der PrsenceDomains die der Server verwaltet duch ; getrennt.</li>
+<li>optionalParams Name &quot;PresenceServicesDisabled&quot; Value AsnInt (only if presence is disabled)</li>
+<li>optionalParams Name &quot;UserUserRightsDisabled&quot; Value AsnInt (only if userrights are disabled)</li>
+<li>optionalParams Name &quot;AnonymousUsername&quot; Value String - UserName for the Anonymous login</li>
+<li>optionalParams Name &quot;AnonymousToken&quot; Value String - Token for the Anonymous login</li>
+<li>optionalParams Name &quot;ServerType&quot; Value AsnInt AsnNegotiateServerConnectionServerType</li>
+<li>optionalParams Name &quot;ServerManType&quot; Value AsnInt OEMId des Servers (ab Version 6.2 verfügbar)</li>
+<li>optionalParams Name &quot;ServerBusyTimeout&quot; Value AsnInt Sekunden bis zum nächsten Verbindungsversuch</li>
+<li>optionalParams Name &quot;Auth_%s&quot; Value AsnString different Authentication methods the server is offering</li>
+<li>optionalParams Name &quot;localUCWeb&quot; Value AsnString the local ucweb url</li>
+<li>optionalParams Name &quot;localUCWebs&quot; Value AsnString the local ucweb url</li>
+<li>optionalParams Name &quot;ucsid&quot; Value AsnString the ucsid of the server</li>
+<li>optionalParams Name &quot;ucscontroller&quot; Value AsnString the ucscontroller url</li>
+<li>optionalParams Name &quot;ucsurl&quot; Value AsnString the complete url to contact the controller</li>
+</ul>
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>stServerTime</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>Timestamp zum Abgleich der Uhrzeit zwischen Client und Server. Ermöglicht z.B. korrekte Anzeige von Call-Duration bei abweichender Serverzeit.
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+    <p></p>
+    <p class="strong">ErrorType: AsnNegotiateServerConnectionError</p>
+    <div class="typevalues">
+      <p class="private">- DEPRECATED -</p>
+      <p>AsnNegotiateServerConnectionError is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>iErrorDetail</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>A number representing the error
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sErrorString</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>A string representing the error
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>optionalParams</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.AsnOptionalParameters.html">AsnOptionalParameters</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>optionalParams Name &quot;serverVersion&quot; Value string<br>
+optionalParams Name &quot;productVersion&quot; Value string<br>
+optionalParams Name &quot;ServerProtocolVersion&quot; Value number
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

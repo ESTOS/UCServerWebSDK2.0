@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnChatEventMessage </h3>
+    <p></p>
+    <p></p>
+    <div class="typevalues">
+      <p>AsnChatEventMessage is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>u8sMessage</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>textmessage<br>
+Chat message
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>asnBinaryDescription</p>
+          </td>
+          <td> 
+            <p><a href="BinaryTransfer.type.AsnBinaryTransferMetaData.html">AsnBinaryTransferMetaData</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>binarymessage<br>
+Description of the binary data
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>journalEntry</p>
+          </td>
+          <td> 
+            <p><a href="Journal.type.AsnNetDatabaseJournal.html">AsnNetDatabaseJournal</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>journalentry<br>
+Journal entry (CTI / AV)
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>asnDeliverTime</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>messageupdate<br>
+Time at which the message was delivered to the recipient
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>asnReadTime</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>Time at which the message was read by the recipient
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>bRead</p>
+          </td>
+          <td> 
+            <p>boolean</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>Message was read by the recipient
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>bDeleted</p>
+          </td>
+          <td> 
+            <p>boolean</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>Message has been deleted
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>asnReplyToEvent</p>
+          </td>
+          <td> 
+            <p><a href="ChatV2.type.AsnChatEvent.html">AsnChatEvent</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>reply<br>
+If this parameter exists, this message is a reply to the in Message contained asnReplyToEvent
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sForwardOrigin</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>message forward<br /><br>
+SIP URI of the original sender of a forwarded message. If this parameter is set, this is a forwarded message.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>asnReactions</p>
+          </td>
+          <td> 
+            <p><a href="ChatV2.type.AsnChatReactionsEmojiList.html">AsnChatReactionsEmojiList</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>reactions<br>
+Reactions to this message
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

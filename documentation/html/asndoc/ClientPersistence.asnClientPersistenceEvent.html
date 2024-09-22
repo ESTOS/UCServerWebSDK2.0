@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>asnClientPersistenceEvent</h3>
+    <p>Event from the UCServer for signalling changes in an item store.
+</p>
+    <p><p>The server responds via the <a href="ClientPersistence.asnClientPersistenceEvent.html">asnClientPersistenceEvent</a> with the corresponding u8sCrossRefID.<br /><br>
+The configured access permissions are taken into account and acknowledged with an error if necessary.<br>
+The server event is also delivered if the unique ID of the server database has changed.<br>
+The client should then discard its (locally cached) data and request new initial data from the server.</p>
+</p><strong>ArgumentType: AsnClientPersistenceEventArgument</strong>
+    <div class="typevalues">
+      <p>AsnClientPersistenceEventArgument is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>iResult</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>See AsnClientPersistenceResultDetailsEnum for possible values.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sCrossRefID</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>If it is not empty, it is a response to a request from the client, otherwise it is a UCServer generated event.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iGlobalRevision</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>The transaction ID managed by the server that led to this event.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>changedItems</p>
+          </td>
+          <td> 
+            <p><a href="ClientPersistence.type.AsnClientPersistenceItemList.html">AsnClientPersistenceItemList</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>List of changed items (the list may contain items from several ItemStores)
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>deletedItems</p>
+          </td>
+          <td> 
+            <p><a href="ClientPersistence.type.AsnClientPersistenceItemList.html">AsnClientPersistenceItemList</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>List of deleted items (the list may contain items from several ItemStores)
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sDatabaseID</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>Unique ID of the current server database, sent by the server on request - or automatically if the DB ID has changed.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iAvailableItemsCount</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>Is only returned if only the number of elements was requested for asnClientPersistenceRead.
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnAbsentStateV2 </h3>
+    <p>The absent state of a user/contact in the ucserver.
+</p>
+    <p><p>AsnAbsentSate is used to describe the manual presence of a User.<br>
+The manual presence is used to override the system calculated presence state of the user until a new system<br>
+state is calculated or the system calculated one is back to &quot;available&quot; again.<br>
+So the manual presence overrides the actual presence at the moment it is set, but it will be overridden by new system<br>
+events other than &quot;available&quot;.</p>
+</p>
+    <div class="typevalues">
+      <p>AsnAbsentStateV2 is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>u8sContactId</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>The Contact ID of the user.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>eAbsentState</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.AsnAbsentStateEnum.html">AsnAbsentStateEnum</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p> 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iPresenceState</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>The serverside calculated presence state of the contact. This is a 32 Bit field assembled with values from AsnPresenceStateEnum and bits of AsnPresenceStateFlags.
+ (Linked Type: <a href="General.type.AsnPresenceStateFlags.html">AsnPresenceStateFlags</a>)
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>stTimeFrom</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>Timestamp from which the state is valid.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>stTimeTo</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>Timestamp the state state is valid to.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>eReachability</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.AsnReachabilityEnum.html">AsnReachabilityEnum</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>The reachability of the user
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>externalPresenceStates</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.AsnExternalPresenceStates.html">AsnExternalPresenceStates</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>external presence state providers that influence the presence
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

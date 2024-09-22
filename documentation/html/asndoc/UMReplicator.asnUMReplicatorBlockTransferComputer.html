@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>asnUMReplicatorBlockTransferComputer</h3>
+    <p></p>
+    <p></p>
+    <p class="strong">ArgumentType: AsnUMReplicatorBlockTransferComputerArgument</p>
+    <div class="typevalues">
+      <p class="private">- PRIVATE -</p>
+      <p>AsnUMReplicatorBlockTransferComputerArgument is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>enuOperationmode</p>
+          </td>
+          <td> 
+            <p><a href="UMReplicator.type.AsnUMReplicatorBlockTransferComputerArgumentEnum.html">AsnUMReplicatorBlockTransferComputerArgumentEnum</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Blocktransfer startet intern eine Transaction für die die nicht optionalen Parameter<br>
+benötigt werden.<br>
+Operationmode
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iSourceType</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Datenbanktyp (Analog DATABASETYPE aus edbeproviderdatabasesettings.h)<br>
+eDATABASE_TYPELDAPACTIVEDIRECTORY = 7, oder<br>
+eDATABASE_TYPELDAPMETADIRECTORY = 9
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sSourceComputerName</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Rechner von dem die Datenbank kommt
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>sequ8sObjectUIDsToDelete</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.UTF8StringList.html">UTF8StringList</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>Was transferiert wird ist optional. Wird nichts übertragen, wird wrongparameter zurückgemeldet.<br>
+Liste der GUIDs der Computer die gelöscht werden sollen
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>computerProfileListToTransfer</p>
+          </td>
+          <td> 
+            <p><a href="UMReplicator.type.AsnComputerReplicateList.html">AsnComputerReplicateList</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>Liste der Computerdaten die transferiert werden sollen
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>computerDefaultProfile</p>
+          </td>
+          <td> 
+            <p><a href="UMReplicator.type.AsnComputerReplicate.html">AsnComputerReplicate</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>Default-Werte für Felder von Computer
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+    <p></p>
+    <p class="strong">ResultType: AsnUMReplicatorBlockTransferComputerResult</p>
+    <div class="typevalues">
+      <p class="private">- PRIVATE -</p>
+      <p>AsnUMReplicatorBlockTransferComputerResult is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+      </table>
+      <!-- include typesample-->
+    </div>
+    <p></p>
+    <p class="strong">ErrorType: AsnRequestError</p>
+    <div class="typevalues">
+      <p>AsnRequestError is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>iErrorDetail</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>A number representing the error
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sErrorString</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>A string representing the error
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

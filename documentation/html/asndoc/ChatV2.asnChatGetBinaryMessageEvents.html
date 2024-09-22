@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>asnChatGetBinaryMessageEvents</h3>
+    <p>Query BinaryMessageEvents which were sent or received from another user or in a certain conversation
+</p>
+    <p><p>The following example shows how paging works. We assume the asnConversationIDChoice is the same for both requests. The Client gets the first ten events with the first request and the remaining seven events with the second request.</p>
+<img src="https://www.plantuml.com/plantuml/png/rPAnQiD038RtUmhXsJ7r52Xj2JKXIzg6fdq0aSYju7mNJhAXDNxtAd4XeKCwPOWs_IVnV_gvcIWcRHlliiep1SrWyW3PUxMcr57Au4_T0ageFb4Nf8ySC7qzaGX-qBopPUcBeiY1LoQi-PlW7igRt_wbheNK51DiQd2uKUvGwSJj274tEGDnf3YuzgVDaaKF1f13t2d7W7w52Hlf-RbjtgAYVoLflSgURZeCBaI3y5Ih6zqXqOQu8t7ZKL22HZl4KTZ2VjXjwIpyfHCihp32CSFfVndExDr-umy0" alt="uml diagram">
+</p>
+    <p class="strong">ArgumentType: AsnChatGetBinaryMessageEventsArgument</p>
+    <div class="typevalues">
+      <p>AsnChatGetBinaryMessageEventsArgument is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>asnConversationIDChoice</p>
+          </td>
+          <td> 
+            <p><a href="ChatV2.type.AsnConversationIDChoice.html">AsnConversationIDChoice</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Conversation ID Choice
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iPageSize</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Number of elements for the page. Allowed values: 1-100
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iPageOffset</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>Offset for Paging, Default = 0. iPageOffset = 0 returns the first Page. For example, if iPageSize = 10, the iPageOffset for the second page would be 10, for the third 20 and so on.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iLastKnownGlobTransactionID</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>can be set to request a diff update
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sEventListCrossRefID</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>The event list returned by the server based on this request contains this CrossRefID. This enables the client to match events to a request that it has sent.
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+    <p></p>
+    <p class="strong">ResultType: AsnChatGetBinaryMessageEventsResult</p>
+    <div class="typevalues">
+      <p>AsnChatGetBinaryMessageEventsResult is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>iResult</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p> (Linked Type: <a href="ChatV2.type.AsnChatResultEnum.html">AsnChatResultEnum</a>)
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+    <p></p>
+    <p class="strong">ErrorType: AsnRequestError</p>
+    <div class="typevalues">
+      <p>AsnRequestError is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>iErrorDetail</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>A number representing the error
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sErrorString</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>A string representing the error
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

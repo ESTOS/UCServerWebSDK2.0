@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>asnSetSettingsDynamicRights</h3>
+    <p></p>
+    <p><p>~ AsnUserDynamicRights = EUserRightDetails    siehe dazu EUserRightDetails.h/.cpp im UCServer-Source<br>
+~ EUserRightDetails ist eine Kombination aus 3 DWORD Bitfeldern<br>
+~<br>
+~ Werte der einzelnen Bitfelder:<br>
+~ iPresenceRights / m_dwPresenceRights<br>
+~ Flags für den Präsenz-Sichtbarkeit<br>
+~ UR_PRESENCE_VISIBLE					0x00000001    sichtbar<br>
+~ UR_PRESENCE_CHANGEABLE				0x00000002    änderbar<br>
+~ Flags für die Appointments (werden im Presence Field gespeichert)<br>
+~ UR_PRESENCE_APPOINTMENT_PRIVATE		0x00000010    auch private termine sichtbar<br>
+~ UR_PRESENCE_APPOINTMENT_PUBLIC		0x00000020    nur öffentliche termine sichtbar<br>
+~ Für die Verwendung der Berechtigungsstufen wurden noch folgende Flags iPresenceRights eingefährt<br>
+~ // Wenn das Bit nicht gesetzt ist, wurden die Detail-Berechtigungen vom Benutzer verändert.<br>
+~ UR_PRESENCE_PATTERN_USED				0x00008000<br>
+~<br>
+~ // Das Fehlen eines Musters entspricht 'Blocked' == &quot;none&quot; == &quot;unused&quot; für Global und Gruppen, da wir rein additive Logik verwenden.<br>
+~ // Stand 30.10.2015 (aber auch schon deutlich früher): ein wenig ungeschickt, macht aber weniger Sonderlocken-Code nötig als wenn es<br>
+~ //                  ein wirklich eigenständiger Wert wäre.<br>
+~ UR_PRESENCE_NONE						0x00000000<br>
+~ UR_PRESENCE_BLOCKED					0x00000000<br>
+~ UR_PRESENCE_PUBLIC					0x00010000<br>
+~ UR_PRESENCE_COMPANY					0x00020000<br>
+~ UR_PRESENCE_TEAM						0x00040000<br>
+~ UR_PRESENCE_PERSONAL					0x00080000<br>
+~ iPhoneControlRightsPrimary/iPhoneControlRightsSecondary<br>
+~          Gelten für beide Felder; Primary für die erste Leitung,<br>
+~          secondary für alle restlichen Leitungen die dem Benutzer dirket zugeordnet sind<br>
+~          (also NICHT den &quot;Zusätzliche Leitungen&quot; Leitungen im Admin).<br>
+~ UR_PHONE_NUMBERS_OUTBOUND			0x000000001   abgehende Nummern/Kontakte sichtbar<br>
+~ UR_PHONE_NUMBERS_INBOUND				0x000000002   eingehende Nummern/Kontakte sichtbar<br>
+~ UR_PHONE_NUMBERS_REDIRECTED			0x000000004   Rufnummern der Rufumleitungen sichtbar<br>
+~<br>
+~ UR_PHONE_SET_FORWARDS				0x000000100   Rufumleitungen dürfen gesetzt werden<br>
+~ UR_PHONE_PICKUP_CALLS				0x000000200   Klingelnde Rufe können herangeholt werden<br>
+~ Berechtigungsstufen haben folgende Werte-Kombinationen</p>
+</p>
+    <p class="strong">ArgumentType: AsnSetSettingsDynamicRightsArgument</p>
+    <div class="typevalues">
+      <p class="private">- PRIVATE -</p>
+      <p>AsnSetSettingsDynamicRightsArgument is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>u8sContactID</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>ContactID des Kontaktes, dessen Rechteliste gestzt werden soll (im Moment darf man nur bei sich selbst ändern).
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>seqDynamicRightsList</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.AsnUserDynamicRightsList.html">AsnUserDynamicRightsList</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Berechtigungsliste der ausschließlich vom Benutzer selbst vergebenen Berechtigungen. Achtung: hier immer die vollständige Liste setzen; fehlende Elemente werden am Server als &quot;entfernt&quot; interpretiert!<br>
+Um über diese Funktion einzelne Rechte zu ergänzen/ändern, muss vorher mit asnGetSettingsDynamicRights die aktuelle Liste abgeholt werden.<br>
+Für das einfache Hinzufügen/ändern/Löschen von einzelnen Einträgen asnSetDynamicRights/asnRemoveDynamicRights im Modul PresenceV2 verwenden.
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+    <p></p>
+    <p class="strong">ResultType: AsnSetSettingsDynamicRightsResult</p>
+    <div class="typevalues">
+      <p class="private">- PRIVATE -</p>
+      <p>AsnSetSettingsDynamicRightsResult is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>iResult</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Rückgabewert ob das geklappt hat, wenn nicht != 0
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+    <p></p>
+    <p class="strong">ErrorType: AsnRequestError</p>
+    <div class="typevalues">
+      <p>AsnRequestError is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>iErrorDetail</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>A number representing the error
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sErrorString</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>A string representing the error
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

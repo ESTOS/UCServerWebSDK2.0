@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnAgentGroupCapabilitiesEnum </h3>
+    <p></p>
+    <p><p>The agent group supports a combination of the following agent states.</p>
+<p>The highest DWORD bit indicates whether it is a PBX ACD group or not.</p>
+<p>eAGENTCAPISPBXACDGROUP(2147483648, 0x80000000) This agent group is an ACD group in a PBX; unfortunately there is a problem with the tool which prevents the conversion of this ENUM value into .Net.</p>
+</p>
+    <div class="typevalues">
+      <p>AsnAgentGroupCapabilitiesEnum is an Enumeration</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Value</th>
+        <th>Comment</th>
+        <tr>
+          <td>eAGENTCAPSUPPORTEDAGENTREQUESTSLOGIN</td>
+          <td>number</td>
+          <td>1</td>
+          <td>(0x01) &quot;login&quot; is supported
+</td>
+        </tr>
+        <tr>
+          <td>eAGENTCAPSUPPORTEDAGENTREQUESTSLOGOUT</td>
+          <td>number</td>
+          <td>2</td>
+          <td>(0x02) &quot;logout&quot; is supported / same as state eAGENTSTATENOAGENT
+</td>
+        </tr>
+        <tr>
+          <td>eAGENTCAPSUPPORTEDAGENTREQUESTSNOTREADY</td>
+          <td>number</td>
+          <td>4</td>
+          <td>(0x04) &quot;not ready&quot; is supported
+</td>
+        </tr>
+        <tr>
+          <td>eAGENTCAPSUPPORTEDAGENTREQUESTSREADY</td>
+          <td>number</td>
+          <td>8</td>
+          <td>(0x08) &quot;ready&quot; is supported
+</td>
+        </tr>
+        <tr>
+          <td>eAGENTCAPSUPPORTEDAGENTREQUESTSBUSY</td>
+          <td>number</td>
+          <td>16</td>
+          <td>(0x10) &quot;busy&quot; is supported
+</td>
+        </tr>
+        <tr>
+          <td>eAGENTCAPSUPPORTEDAGENTREQUESTSWORKINGAFTERCALL</td>
+          <td>number</td>
+          <td>32</td>
+          <td>(0x20) &quot;working after call&quot; is supported
+</td>
+        </tr>
+        <tr>
+          <td>eAGENTCAPSUPPORTEDAGENTREQUESTSMASK</td>
+          <td>number</td>
+          <td>255</td>
+          <td>(0xff) (currently not supported)
+</td>
+        </tr>
+        <tr>
+          <td>eAGENTCAPISPORTALGROUP</td>
+          <td>number</td>
+          <td>536870912</td>
+          <td>(0x20000000) The group is a (Contact)Portal Group
+</td>
+        </tr>
+        <tr>
+          <td>eAGENTCAPISPUBLICCHATGROUP</td>
+          <td>number</td>
+          <td>1073741824</td>
+          <td>(0x40000000) The agents in this group can handle PUBLIC-CHATs<br>
+See AsnConversationType.
+</td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

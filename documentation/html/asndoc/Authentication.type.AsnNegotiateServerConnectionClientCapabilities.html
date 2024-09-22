@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnNegotiateServerConnectionClientCapabilities </h3>
+    <p></p>
+    <p><p>The capabilities of a client as (!) BITMASK (!)</p>
+</p>
+    <div class="typevalues">
+      <p>AsnNegotiateServerConnectionClientCapabilities is an Enumeration</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Value</th>
+        <th>Comment</th>
+        <tr>
+          <td>eNONE</td>
+          <td>number</td>
+          <td>0</td>
+          <td>0x0000 client is not offering any special capabilities
+</td>
+        </tr>
+        <tr>
+          <td>eSOFTPHONE</td>
+          <td>number</td>
+          <td>1</td>
+          <td>0x0001 client is a softphone client and implements the functionalities of ENetUC_AV.asn1
+</td>
+        </tr>
+        <tr>
+          <td>eAVLINE</td>
+          <td>number</td>
+          <td>2</td>
+          <td>0x0002 client wants to provide an AV line for ProCall to ProCall Audio Video Chats (ENetUC_AV.asn1)
+</td>
+        </tr>
+        <tr>
+          <td>eASN1V2EVENTS</td>
+          <td>number</td>
+          <td>4</td>
+          <td>0x0004 client is able to handle the new V2 events the asn1 interface is providing with the 08.2024 refactoring
+</td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnCtiLineMonitorStartResult </h3>
+    <p></p>
+    <p><p>If <a href="CTI.asnCtiLineMonitorStart.html">asnCtiLineMonitorStart</a> is executed successful, AsnCtiLineMonitorStartResult will be returned.</p>
+</p>
+    <div class="typevalues">
+      <p>AsnCtiLineMonitorStartResult is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>u8sMonitorCrossRefID</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>CrossrefID to identify the corresponding events after calling asnCtiLineMonitorStart.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>lineInfo</p>
+          </td>
+          <td> 
+            <p><a href="CTI.type.AsnCtiLineInfo.html">AsnCtiLineInfo</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Current line state.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>seqCalls</p>
+          </td>
+          <td> 
+            <p><a href="CTI.type.AsnCtiCallInformationList.html">AsnCtiCallInformationList</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Current calls on the line.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iDoNotDisturb</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Current state of DoNotDisturb is set (1) or not (0).
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>seqLineForwards</p>
+          </td>
+          <td> 
+            <p><a href="CommonSIPCTI.type.AsnLineForwards.html">AsnLineForwards</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Current list of forwarding settings on the line.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>remoteOfficeState</p>
+          </td>
+          <td> 
+            <p><a href="CTI.type.AsnRemoteOfficeState.html">AsnRemoteOfficeState</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Current state of remote office feature.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>optionalParams</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.AsnOptionalParameters.html">AsnOptionalParameters</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>Optionals
+<ul>
+<li>Key &quot;InvalidPasswordState&quot; Value AsnInt (1) oder (0)</li>
+<li>Key &quot;InvalidPasswordUser&quot; Value String</li>
+<li>Key &quot;BusyOnBusy&quot; Value AsnInt (1) oder (0)</li>
+</ul>
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

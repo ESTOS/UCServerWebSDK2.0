@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnClientPersistenceResultDetailsEnum </h3>
+    <p>ResultDetails
+</p>
+    <p><p>The server always responds asynchronously with a corresponding iResult in the event - in case of an error, the server uses a corresponding ErrorCode from this list here.</p>
+</p>
+    <div class="typevalues">
+      <p>AsnClientPersistenceResultDetailsEnum is an Enumeration</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Value</th>
+        <th>Comment</th>
+        <tr>
+          <td>noerror</td>
+          <td>number</td>
+          <td>0</td>
+          <td>No error
+</td>
+        </tr>
+        <tr>
+          <td>itemstoreaccessdenied</td>
+          <td>number</td>
+          <td>1</td>
+          <td>Access to ItemStore not allowed
+</td>
+        </tr>
+        <tr>
+          <td>dataaccessdenied</td>
+          <td>number</td>
+          <td>2</td>
+          <td>Access denied (read/write)
+</td>
+        </tr>
+        <tr>
+          <td>invalidsubscription</td>
+          <td>number</td>
+          <td>3</td>
+          <td>Invalid Subscribe/Unsubscribe
+</td>
+        </tr>
+        <tr>
+          <td>invalidcrossrefid</td>
+          <td>number</td>
+          <td>4</td>
+          <td>Invalid CrossRef ID given
+</td>
+        </tr>
+        <tr>
+          <td>invalidkey</td>
+          <td>number</td>
+          <td>5</td>
+          <td>Invalid key element
+</td>
+        </tr>
+        <tr>
+          <td>invaliddata</td>
+          <td>number</td>
+          <td>6</td>
+          <td>Invalid data element (e.g. too big)
+</td>
+        </tr>
+        <tr>
+          <td>clientpersistenceoverload</td>
+          <td>number</td>
+          <td>7</td>
+          <td>Too many requests (a client should only have 10 requests in parallel on the UCServer)
+</td>
+        </tr>
+        <tr>
+          <td>databasefail</td>
+          <td>number</td>
+          <td>8</td>
+          <td>Database error (read/write)
+</td>
+        </tr>
+        <tr>
+          <td>revisionoutdated</td>
+          <td>number</td>
+          <td>9</td>
+          <td>Client requests with a revision that is too old, i.e. client must discard its data and request again (= get initial data)
+</td>
+        </tr>
+        <tr>
+          <td>clientpersistencedisabled</td>
+          <td>number</td>
+          <td>99</td>
+          <td>ClientPersistence system is not active on the UCServer
+</td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

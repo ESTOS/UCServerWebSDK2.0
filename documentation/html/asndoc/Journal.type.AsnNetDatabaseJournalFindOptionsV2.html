@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnNetDatabaseJournalFindOptionsV2 </h3>
+    <p>Filter options for finding more specific journal entries.
+</p>
+    <p><p>The find options are use to give more details about the journal entries which should be in the result list.<br>
+By default, the search is limited to the journal entries of the logged in user (public and private). Deleted ones are never listed.</p>
+<p>If there are user names given in u8slistLineUserNames, the search can be expanded on users, where access rights were granted (public only).</p>
+</p>
+    <div class="typevalues">
+      <p>AsnNetDatabaseJournalFindOptionsV2 is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>stStartTimeFrom</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Filter on &quot;StartTime&quot;, first time stamp of a desired time window of journal entries.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>stStartTimeTo</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Filter on &quot;StartTime&quot;, last time stamp of a desired time window of journal entries.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8slistLineUserNames</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.UTF8StringList.html">UTF8StringList</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>A list of CTIUserNames of which journal entries should be searched.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8slistPhoneNumber</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.UTF8StringList.html">UTF8StringList</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>The own user name of the logged in user is not necessary and should not be given here.<br>
+Filter on sought after phone numbers.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sContactName</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Name of the conversational partner.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sCompanyName</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Company name of the conversational partner.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sFilterText</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Free text which will be found in the contact name, company name, phone number or memo field.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iMaxNumEntries</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Max count of journal entries to return, 0 would be &quot;all&quot;. Higher values resulting in a increasing perfomance impact on the ucserver. A good value is 100.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iFilter</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Defines a filter based on AsnNetDatabaseJournalFilterEnumeration
+ (Linked Type: <a href="Journal.type.AsnNetDatabaseJournalFilterEnumeration.html">AsnNetDatabaseJournalFilterEnumeration</a>)
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iLastKnownGlobTransactionID</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>Last known global transaction ID. If this parameter is given, only entries with a global transaction ID newer than iLastKnownGlobTransactionID will be delivered. The value has to be greater than 0.
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

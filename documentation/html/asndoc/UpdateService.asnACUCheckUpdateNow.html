@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>asnACUCheckUpdateNow</h3>
+    <p>Ask the server if we are allowed to install the downloaded update file now
+</p>
+    <p><p>If one of the clients running on the same machine as the update service<br>
+has an active AV call, the server will reject the installation of the update.<br>
+The server evaluates the status of all clients on the machine and check that no av call is active.<br>
+If the update server is configured to force the update the server will allow the update no matter if av calls are active or not.<br>
+If the update server is configured to wait for all media calls beeing terminated the client has to implement the business logic<br>
+If the result denies an update the client has to subsequent ask for permission.<br>
+Depending on the iMaxWaitTimeInMinutes the client may process the update after the mentioned period even if media calls are active.</p>
+</p>
+    <p class="strong">ArgumentType: AsnACUCheckUpdateNowArgument</p>
+    <div class="typevalues">
+      <p class="private">- PRIVATE -</p>
+      <p>AsnACUCheckUpdateNowArgument is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>u8sClientComputerName</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Computer Name of the client
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+    <p></p>
+    <p class="strong">ResultType: AsnACUCheckUpdateNowResult</p>
+    <div class="typevalues">
+      <p class="private">- PRIVATE -</p>
+      <p>AsnACUCheckUpdateNowResult is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>bUpdateNow</p>
+          </td>
+          <td> 
+            <p>boolean</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>true if the client is allowed to install the update now, false if not
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iMaxWaitTimeInMinutes</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>If specified, this is the configured maximum Wait time the client has to wait until it forces the update.<br>
+If this value is 0 the client must wait until bUpdateNow gets true<br>
+If this value is greater than 0 the client must store the timestamp it first received it.
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+    <p></p>
+    <p class="strong">ErrorType: AsnRequestError</p>
+    <div class="typevalues">
+      <p>AsnRequestError is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>iErrorDetail</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>A number representing the error
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sErrorString</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>A string representing the error
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

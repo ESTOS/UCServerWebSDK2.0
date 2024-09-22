@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>asnAdministrativeMonitorContentGroupChanged</h3>
+    <p>Event from server to client if changes to the Administrative Monitor Content Groups were made.
+</p>
+    <p><p>If the administrator changed something in the configuration of the groups which are part of the Administrative Groups, these changes<br>
+will be provided to the clients with this event.</p>
+<p>The argument contains a <a href="ClientContactsList.type.AsnAdministrativeMonitorGroup.html">AsnAdministrativeMonitorGroup</a> if it was changed.<br>
+The changed group will contain the updated list of users, so the client must probably detect if there were users added or removed.</p>
+</p><strong>ArgumentType: AsnAdministrativeMonitorContentGroupChangedArgument</strong>
+    <div class="typevalues">
+      <p>AsnAdministrativeMonitorContentGroupChangedArgument is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>adminMonitorGroupChanged</p>
+          </td>
+          <td> 
+            <p><a href="ClientContactsList.type.AsnAdministrativeMonitorGroup.html">AsnAdministrativeMonitorGroup</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Groups which was changed
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

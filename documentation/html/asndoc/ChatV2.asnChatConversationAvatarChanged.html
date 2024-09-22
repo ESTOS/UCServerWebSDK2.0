@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>asnChatConversationAvatarChanged</h3>
+    <p>events when conversation avatar was changed
+</p>
+    <p><p>Notification to a client that a new (group-chat) avatar was changed - client might check his local hash or request new image via <a href="ChatV2.asnChatGetConversationAvatar.html">asnChatGetConversationAvatar</a></p>
+</p><strong>ArgumentType: AsnChatConversationAvatarChangedArgument</strong>
+    <div class="typevalues">
+      <p>AsnChatConversationAvatarChangedArgument is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>u8sConversationID</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>ID of Chats (Chatraumes)
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sSenderURI</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Contact URI of the sender of the message (who changed the avatar)
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sImageHash</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>the client can compare with its internal hash and request the new avatar with asnChatGetConversationAvatar
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

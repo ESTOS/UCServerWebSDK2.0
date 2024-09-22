@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h1>ChatV2</h1>
+    <p>Module Version: 8.0.0</p>
+    <p>Text chat functions
+</p>
+    <p><p class='strong'>Module description</p>
+<p>This module defines structures and functions for the text chat functionality of the UCServer.</p>
+<p>Example for sending a Chat Message from &quot;ProCall A&quot; to &quot;ProCall B&quot;:</p>
+<img src="https://www.plantuml.com/plantuml/png/hPHDJm8n48Rl_HNZUWKyQun15qdsO6Buk7afkmCqAQssqrL2-EzEOULZWu26tfgTUUUTPphRzYGTXPaMoQkpgTGQ7XDeFa0oJFleIdG9rCuTI6_IgQH-6FdSgH4-bsZ82sC9mQd9bCJX250SX3bwBzqSo8BZYoeHOgoeLD0K49M4p4cLaYMtLlPCtZV_ORA7FcWI1HvKtyf5yPzQJydlFP-GYI3Fa3dkwi-36U0NlKJA4rpqC5VlYeiCUzbDQWqdUadAcgpJU3DLL0DMFb9dFNiPyoTejLhBtOdM0c0MFC48HJ3g8o2ChGDaxJbKaa92gcDTy3pHYuzrfyKrF5Z4vlh8PaoEMMTv1itzKXljLQkmsB3P5sPgDOmduS5rjtlBHsJ4An0nm2H89mqX5a3nyH_kIUfFEVU2SwfDAHWvervlpAhirPRiiNTtmRwE4Tmfmx4DwA1crswWPbXbjzak_sw-0G00" alt="uml diagram">
+</p><a href="ChatV2.doc.html"> </a>
+    <h2>Operations:</h2><a href="ChatV2.doc.operations.html"> </a><a href="ChatV2.operations.html"> </a>
+    <table>
+      <th>Name</th>
+      <th>Description</th>
+      <tr>
+        <td>
+          <p><a href="ChatV2.asnChatSubscribeEvents.html">asnChatSubscribeEvents</a></p>
+        </td>
+        <td> 
+          <p>Subscribe to chat notifications, get the changes
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.asnChatGetDatabaseID.html">asnChatGetDatabaseID</a></p>
+        </td>
+        <td> 
+          <p>Query the database ID
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.asnChatGetDiffUpdate.html">asnChatGetDiffUpdate</a></p>
+        </td>
+        <td> 
+          <p>Pick up changes, even for individual conversations
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.asnChatGetConversationOverview.html">asnChatGetConversationOverview</a></p>
+        </td>
+        <td> 
+          <p>Overview of conversations
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.asnChatTextMessage.html">asnChatTextMessage</a></p>
+        </td>
+        <td> 
+          <p>Chat Text Send message
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.asnChatBinaryMessage.html">asnChatBinaryMessage</a></p>
+        </td>
+        <td> 
+          <p>Send chat binary message
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.asnChatForwardMessage.html">asnChatForwardMessage</a></p>
+        </td>
+        <td> 
+          <p>Forward a message
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.asnChatUserlistModify.html">asnChatUserlistModify</a></p>
+        </td>
+        <td> 
+          <p>Add, remove, or forward chat to users
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.asnChatFindEvents.html">asnChatFindEvents</a></p>
+        </td>
+        <td> 
+          <p>Search chat events on server
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.asnChatGetEventsRange.html">asnChatGetEventsRange</a></p>
+        </td>
+        <td> 
+          <p>Chat Events Range vom Server holen
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.asnChatGetBinaryMessageEvents.html">asnChatGetBinaryMessageEvents</a></p>
+        </td>
+        <td> 
+          <p>Query BinaryMessageEvents which were sent or received from another user or in a certain conversation
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.asnChatSetMessagesStatus.html">asnChatSetMessagesStatus</a></p>
+        </td>
+        <td> 
+          <p>Set status of chat messages in the server
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.asnChatGetConversations.html">asnChatGetConversations</a></p>
+        </td>
+        <td> 
+          <p>Get information about chat rooms
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.asnChatGetConversationID.html">asnChatGetConversationID</a></p>
+        </td>
+        <td> 
+          <p>Returns the ConversationID for a one-to-one chat
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.asnChatForward.html">asnChatForward</a></p>
+        </td>
+        <td> 
+          <p>Forward a conversation
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.asnChatIsGlobalDisabled.html">asnChatIsGlobalDisabled</a></p>
+        </td>
+        <td> 
+          <p>Query whether chat is deactivated globally
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.asnChatWatchConversation.html">asnChatWatchConversation</a></p>
+        </td>
+        <td> 
+          <p>watching a public chat conversation room
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.asnChatSetUserlist.html">asnChatSetUserlist</a></p>
+        </td>
+        <td> 
+          <p>Change the list of participants in a public chat conversation room
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.asnChatMuteConversation.html">asnChatMuteConversation</a></p>
+        </td>
+        <td> 
+          <p>mute conversation for user - events are still dispatched, client should check on his site
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.asnChatUnmuteConversation.html">asnChatUnmuteConversation</a></p>
+        </td>
+        <td> 
+          <p>unmute conversation for user
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.asnChatSetConversationAvatar.html">asnChatSetConversationAvatar</a></p>
+        </td>
+        <td> 
+          <p>set conversation avatar
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.asnChatGetConversationAvatar.html">asnChatGetConversationAvatar</a></p>
+        </td>
+        <td> 
+          <p>get conversation avatar
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.asnChatSetReaction.html">asnChatSetReaction</a></p>
+        </td>
+        <td> 
+          <p>Set the reaction to a chat message for the calling user
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.asnChatClearReaction.html">asnChatClearReaction</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+    </table>
+    <h2>Events:</h2><a href="ChatV2.doc.events.html"> </a><a href="ChatV2.events.html"> </a>
+    <table>
+      <th>Name</th>
+      <th>Description</th>
+      <tr>
+        <td>
+          <p><a href="ChatV2.asnChatEvent.html">asnChatEvent</a></p>
+        </td>
+        <td> 
+          <p>New events in a chat
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.asnChatUserStatus.html">asnChatUserStatus</a></p>
+        </td>
+        <td> 
+          <p>New user status in a chat
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.asnChatDatabaseIDChanged.html">asnChatDatabaseIDChanged</a></p>
+        </td>
+        <td> 
+          <p>Change of database ID
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.asnChatDatabaseMaintenance.html">asnChatDatabaseMaintenance</a></p>
+        </td>
+        <td> 
+          <p>Change to the database through automatic maintenance (e.g. &quot;delete chats after X days&quot;)
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.asnChatMuteStatusChanged.html">asnChatMuteStatusChanged</a></p>
+        </td>
+        <td> 
+          <p>mute status of specific conversationid was changed
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.asnChatConversationAvatarChanged.html">asnChatConversationAvatarChanged</a></p>
+        </td>
+        <td> 
+          <p>events when conversation avatar was changed
+</p>
+        </td>
+      </tr>
+    </table>
+    <h2>Types:</h2><a href="ChatV2.doc.types.html"> </a><a href="ChatV2.types.html"> </a>
+    <table>
+      <th>Name</th>
+      <th>Description</th>
+      <tr>
+        <td>
+          <p><a href="ChatV2.type.AsnChatResultEnum.html">AsnChatResultEnum</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.type.AsnChatUserlistModify.html">AsnChatUserlistModify</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.type.AsnChatWatchModeEnum.html">AsnChatWatchModeEnum</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.type.AsnConversationType.html">AsnConversationType</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.type.AsnChatMessageStatus.html">AsnChatMessageStatus</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.type.AsnChatTypingTime.html">AsnChatTypingTime</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.type.EnumRequestConversationAvatarResult.html">EnumRequestConversationAvatarResult</a></p>
+        </td>
+        <td> 
+          <p>This enumeration describes the values possible returned by <a href="ChatV2.asnChatGetConversationAvatar.html">asnChatGetConversationAvatar</a>
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.type.AsnChatParty.html">AsnChatParty</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.type.AsnChatSubscribeEventsArgument.html">AsnChatSubscribeEventsArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.type.AsnChatSubscribeEventsResult.html">AsnChatSubscribeEventsResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.type.AsnChatGetDatabaseIDArgument.html">AsnChatGetDatabaseIDArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.type.AsnChatGetDatabaseIDResult.html">AsnChatGetDatabaseIDResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.type.AsnChatGetDiffUpdateArgument.html">AsnChatGetDiffUpdateArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.type.AsnChatGetDiffUpdateResult.html">AsnChatGetDiffUpdateResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.type.AsnChatGetConversationOverviewArgument.html">AsnChatGetConversationOverviewArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.type.AsnChatGetConversationOverviewResult.html">AsnChatGetConversationOverviewResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.type.AsnChatTextMessageArgument.html">AsnChatTextMessageArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.type.AsnChatTextMessageResult.html">AsnChatTextMessageResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.type.AsnChatBinaryMessageArgument.html">AsnChatBinaryMessageArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.type.AsnChatBinaryMessageResult.html">AsnChatBinaryMessageResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.type.AsnConversationIDChoice.html">AsnConversationIDChoice</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.type.AsnChatForwardMessageResult.html">AsnChatForwardMessageResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.type.AsnChatUserlistModifyArgument.html">AsnChatUserlistModifyArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.type.AsnChatUserlistModifyResult.html">AsnChatUserlistModifyResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.type.AsnChatFindEventsArgument.html">AsnChatFindEventsArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.type.AsnChatGetEventsRangeResult.html">AsnChatGetEventsRangeResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.type.AsnChatGetBinaryMessageEventsResult.html">AsnChatGetBinaryMessageEventsResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.type.AsnChatSequenceIDSet.html">AsnChatSequenceIDSet</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.type.AsnChatSetMessagesStatusResult.html">AsnChatSetMessagesStatusResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.type.AsnChatGetConversationsArgument.html">AsnChatGetConversationsArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.type.AsnChatGetConversationIDArgument.html">AsnChatGetConversationIDArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.type.AsnChatGetConversationIDResult.html">AsnChatGetConversationIDResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.type.AsnChatForwardArgument.html">AsnChatForwardArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.type.AsnChatForwardResult.html">AsnChatForwardResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.type.AsnChatIsGlobalDisabledArgument.html">AsnChatIsGlobalDisabledArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.type.AsnChatIsGlobalDisabledResult.html">AsnChatIsGlobalDisabledResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.type.AsnChatWatchConversationArgument.html">AsnChatWatchConversationArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.type.AsnChatWatchConversationResult.html">AsnChatWatchConversationResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.type.AsnChatSetUserlistArgument.html">AsnChatSetUserlistArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.type.AsnChatSetUserlistResult.html">AsnChatSetUserlistResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.type.AsnChatUserStatusArgument.html">AsnChatUserStatusArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.type.AsnChatDatabaseIDChangedArgument.html">AsnChatDatabaseIDChangedArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.type.AsnChatDatabaseMaintenanceArgument.html">AsnChatDatabaseMaintenanceArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.type.AsnChatMuteConversationArgument.html">AsnChatMuteConversationArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.type.AsnChatMuteConversationResult.html">AsnChatMuteConversationResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.type.AsnChatUnmuteConversationArgument.html">AsnChatUnmuteConversationArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.type.AsnChatUnmuteConversationResult.html">AsnChatUnmuteConversationResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.type.AsnChatMuteStatusChangedArgument.html">AsnChatMuteStatusChangedArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.type.AsnChatSetConversationAvatarArgument.html">AsnChatSetConversationAvatarArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.type.AsnChatSetConversationAvatarResult.html">AsnChatSetConversationAvatarResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.type.AsnChatGetConversationAvatarArgument.html">AsnChatGetConversationAvatarArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.type.AsnChatGetConversationAvatarResult.html">AsnChatGetConversationAvatarResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.type.AsnChatConversationAvatarChangedArgument.html">AsnChatConversationAvatarChangedArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.type.AsnChatReactionsEmoji.html">AsnChatReactionsEmoji</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.type.AsnChatSetReactionArgument.html">AsnChatSetReactionArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.type.AsnChatSetReactionResult.html">AsnChatSetReactionResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.type.AsnChatParties.html">AsnChatParties</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.type.AsnChatForwardMessageArgument.html">AsnChatForwardMessageArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.type.AsnChatGetEventsRangeArgument.html">AsnChatGetEventsRangeArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.type.AsnChatGetBinaryMessageEventsArgument.html">AsnChatGetBinaryMessageEventsArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.type.AsnChatSetMessagesStatusArgument.html">AsnChatSetMessagesStatusArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.type.AsnChatReactionsEmojiList.html">AsnChatReactionsEmojiList</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.type.AsnChatReactionsResult.html">AsnChatReactionsResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.type.AsnChatEventConversation.html">AsnChatEventConversation</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.type.AsnChatConversation.html">AsnChatConversation</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.type.AsnChatConversationList.html">AsnChatConversationList</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.type.AsnChatGetConversationsResult.html">AsnChatGetConversationsResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.type.AsnChatEvent.html">AsnChatEvent</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.type.AsnChatEventMessage.html">AsnChatEventMessage</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.type.AsnChatEventList.html">AsnChatEventList</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.type.AsnChatFindEventsResult.html">AsnChatFindEventsResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.type.AsnChatEventArgument.html">AsnChatEventArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.type.AsnChatAppActionNavigateArgument.html">AsnChatAppActionNavigateArgument</a></p>
+        </td>
+        <td> 
+          <p>execute action from App
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.type.AsnChatAppActionCreateRoomArgument.html">AsnChatAppActionCreateRoomArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ChatV2.type.AsnChatReactionsResultList.html">AsnChatReactionsResultList</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

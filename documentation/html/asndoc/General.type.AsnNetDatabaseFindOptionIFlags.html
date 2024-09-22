@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnNetDatabaseFindOptionIFlags </h3>
+    <p></p>
+    <p></p>
+    <div class="typevalues">
+      <p class="private">- PRIVATE -</p>
+      <p>AsnNetDatabaseFindOptionIFlags is an Enumeration</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Value</th>
+        <th>Comment</th>
+        <tr>
+          <td>eRAWNAMEDATA</td>
+          <td>number</td>
+          <td>1</td>
+          <td>Alt: Wird nicht mehr benötigt! // Im Feld &quot;m_strLastName&quot; kann sich eine Komination aus Vor- und Nachnamen befinden, &quot;m_strFirstName&quot; wird ignoriert
+</td>
+        </tr>
+        <tr>
+          <td>ePHONEBOOKS</td>
+          <td>number</td>
+          <td>2</td>
+          <td>Telefonbücher in Suche einbeziehen
+</td>
+        </tr>
+        <tr>
+          <td>eOTHERDBS</td>
+          <td>number</td>
+          <td>4</td>
+          <td>Restliche, hier bisher nicht genannte Datenbanken in Suche einbeziehen
+</td>
+        </tr>
+        <tr>
+          <td>eRIGHTSCHECKED</td>
+          <td>number</td>
+          <td>8</td>
+          <td>Wurde der Benutzer bereits überprüft, ob er die nötigen Berechtigungen hat<br>
+Wenn das Flag gesetzt ist, wurde der Benutzer bereits überprüft
+</td>
+        </tr>
+        <tr>
+          <td>ePHONETICAL</td>
+          <td>number</td>
+          <td>16</td>
+          <td>Phonetische Suche anschalten
+</td>
+        </tr>
+        <tr>
+          <td>eMETADIRECTORY</td>
+          <td>number</td>
+          <td>32</td>
+          <td>MetaDirectory mit in die Suche einbeziehen
+</td>
+        </tr>
+        <tr>
+          <td>eSINGLENUMBER</td>
+          <td>number</td>
+          <td>64</td>
+          <td>Tel-Buch-Einträge mit mehreren Nummern werden nicht zusammengefasst, sondern einzeln gehalten. Die Telefonnummer steht in &quot;m_strPhoneBusiness&quot;
+</td>
+        </tr>
+        <tr>
+          <td>eFORCEMOBILE</td>
+          <td>number</td>
+          <td>128</td>
+          <td>Die Suche nach Mobilrufnummern bei TVG zulassen, auch wenn kein Ort angegeben wurde (zeitintensiv!!)
+</td>
+        </tr>
+        <tr>
+          <td>eMULTIFIELDNAME</td>
+          <td>number</td>
+          <td>256</td>
+          <td>nur der LastName enthält einen Suchstring, der in mehreren Feldern gesucht wird (auch in Company...) die anderen Suchfelder sollten leer bleiben
+</td>
+        </tr>
+        <tr>
+          <td>eONLYCTISERVERUSERS</td>
+          <td>number</td>
+          <td>512</td>
+          <td>Nur CtiServer User suchen (betrifft nur NachCache im CtiServer)
+</td>
+        </tr>
+        <tr>
+          <td>eMANUALSEARCH</td>
+          <td>number</td>
+          <td>1024</td>
+          <td>Die Suche wurde manuell vom Benutzer gestartet und ist keine Suche, die durch einen Call automatisch angestoßen wurde
+</td>
+        </tr>
+        <tr>
+          <td>eSORTBYDISPLAYNAME</td>
+          <td>number</td>
+          <td>2048</td>
+          <td>Die Suchergebnisse innerhalb des Suchknotens (!) nach dem Anzeigenamen sortiert zurückgeben
+</td>
+        </tr>
+        <tr>
+          <td>eUSENOCACHE</td>
+          <td>number</td>
+          <td>4096</td>
+          <td>Immer neu suchen
+</td>
+        </tr>
+        <tr>
+          <td>eCOMPANYSEARCH</td>
+          <td>number</td>
+          <td>8192</td>
+          <td>Suche nach Firmenrufnummern (ignoriere Durchwahlen)
+</td>
+        </tr>
+        <tr>
+          <td>eNOPHONEBOOKS</td>
+          <td>number</td>
+          <td>16384</td>
+          <td>Telefonbücher NICHT in Suche einbeziehen
+</td>
+        </tr>
+        <tr>
+          <td>eMANDANTSEARCH</td>
+          <td>number</td>
+          <td>32768</td>
+          <td>Suche nach gerufener Nummer (Mandantensuche, Hotline-Funktion)
+</td>
+        </tr>
+        <tr>
+          <td>eONLYMETADIRECTORY</td>
+          <td>number</td>
+          <td>65536</td>
+          <td>Nur im MetaDirectory suchen
+</td>
+        </tr>
+        <tr>
+          <td>eJPEGPHOTOHASH</td>
+          <td>number</td>
+          <td>131072</td>
+          <td>Wenn nicht gesetzt, werden die Bild-Binärdaten direkt im optionalParam 'jpegPhoto' übertragen. Andernfalls wird nur der optionalParam 'jpegPhotoHash' übertragen, anhand dem mittels 'asnRequestContactImage' die Binärdaten separat abgeholt werden können. Funktioniert nur bei UCServer Benutzern.
+</td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

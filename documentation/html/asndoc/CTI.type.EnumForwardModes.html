@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>EnumForwardModes </h3>
+    <p>Different forward modes the API supports
+</p>
+    <p><p>These are the different forward modes the UCServer supports for forwarding.<br>
+The highest value is eFORWARDBACKENDSPECIFIC	(2147483648; 0x80000000) - A backend specific forwarding entry</p>
+</p>
+    <div class="typevalues">
+      <p>EnumForwardModes is an Enumeration</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Value</th>
+        <th>Comment</th>
+        <tr>
+          <td>eFORWARDMODEUNKNOWN</td>
+          <td>number</td>
+          <td>0</td>
+          <td>0x0000_0000 Forward unknown
+</td>
+        </tr>
+        <tr>
+          <td>eFORWARDMODEIMMEDIATE</td>
+          <td>number</td>
+          <td>1</td>
+          <td>0x0000_0001 Forward Immediate
+</td>
+        </tr>
+        <tr>
+          <td>eFORWARDMODEBUSY</td>
+          <td>number</td>
+          <td>2</td>
+          <td>0x0000_0002 Forward on Busy
+</td>
+        </tr>
+        <tr>
+          <td>eFORWARDMODENOANSW</td>
+          <td>number</td>
+          <td>4</td>
+          <td>0x0000_0004 Forward on No Answer
+</td>
+        </tr>
+        <tr>
+          <td>eFORWARDMODEBUSYINT</td>
+          <td>number</td>
+          <td>8</td>
+          <td>0x0000_0008 Forward on Busy for internal callers
+</td>
+        </tr>
+        <tr>
+          <td>eFORWARDMODEBUSYEXT</td>
+          <td>number</td>
+          <td>16</td>
+          <td>0x0000_0010 Forward on Busy for external callers
+</td>
+        </tr>
+        <tr>
+          <td>eFORWARDMODENOANSINT</td>
+          <td>number</td>
+          <td>32</td>
+          <td>0x0000_0020 Forward on No answer for internal callers
+</td>
+        </tr>
+        <tr>
+          <td>eFORWARDMODENOANSEXT</td>
+          <td>number</td>
+          <td>64</td>
+          <td>0x0000_0040 Forward on No answer for external callers
+</td>
+        </tr>
+        <tr>
+          <td>eFORWARDMODEIMMINT</td>
+          <td>number</td>
+          <td>128</td>
+          <td>0x0000_0080 Forward immediate for internal callers
+</td>
+        </tr>
+        <tr>
+          <td>eFORWARDMODEIMMEXT</td>
+          <td>number</td>
+          <td>256</td>
+          <td>0x0000_0100 Forward immediate for external callers
+</td>
+        </tr>
+        <tr>
+          <td>eFORWARDDISC</td>
+          <td>number</td>
+          <td>512</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>eFORWARDDISCINT</td>
+          <td>number</td>
+          <td>1024</td>
+          <td>0x0000_0200 Forward on No client connected for internal callers (SIP)
+</td>
+        </tr>
+        <tr>
+          <td>eFORWARDDISCEXT</td>
+          <td>number</td>
+          <td>2048</td>
+          <td>0x0000_0400 Forward on No client connected for external callers (SIP)
+</td>
+        </tr>
+        <tr>
+          <td>eFORWARDADMINDISC</td>
+          <td>number</td>
+          <td>4096</td>
+          <td>0x0000_0800 Admin Forward on No client connected (SIP)
+</td>
+        </tr>
+        <tr>
+          <td>eFORWARDADMINDISCINT</td>
+          <td>number</td>
+          <td>8192</td>
+          <td>0x0000_1000 Admin Forward on No client connected for internal callers (SIP)
+</td>
+        </tr>
+        <tr>
+          <td>eFORWARDADMINDISCEXT</td>
+          <td>number</td>
+          <td>16384</td>
+          <td>0x0000_2000 Admin Forward on No client connected for external callers (SIP)
+</td>
+        </tr>
+        <tr>
+          <td>eFORWARDALLMODESMASK</td>
+          <td>number</td>
+          <td>32767</td>
+          <td>0x0000_4000 Backend specific forwarding entry
+</td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

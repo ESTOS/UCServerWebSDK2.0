@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>asnMgmtPushServiceDevicesResult</h3>
+    <p>Event that contains the results of <a href="Management.asnMgmtGetPushServiceDevices.html">asnMgmtGetPushServiceDevices</a>
+</p>
+    <p><p>This event contains the data requested by <a href="Management.asnMgmtGetPushServiceDevices.html">asnMgmtGetPushServiceDevices</a><br>
+This event is fired multiple times, until bLastSegment is TRUE.<br>
+The u8sCrossRefID matches the u8sCrossRefID from the asnMgmtGetPushServiceDevicesResult</p>
+</p><strong>ArgumentType: AsnMgmtPushServiceDevicesResultArgument</strong>
+    <div class="typevalues">
+      <p>AsnMgmtPushServiceDevicesResultArgument is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>listPushDevices</p>
+          </td>
+          <td> 
+            <p><a href="Management.type.AsnMgmtPushServiceDevicePropsList.html">AsnMgmtPushServiceDevicePropsList</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>List of Devices (max 50 in one segment)
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sCrossRefID</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>CrossrefID from AsnMgmtGetPushServiceDevicesResult.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>bLastSegment</p>
+          </td>
+          <td> 
+            <p>boolean</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>last Segment for this u8sCrossRefID, TRUE, wenn dieses Segment das Ende der Liste ist.
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

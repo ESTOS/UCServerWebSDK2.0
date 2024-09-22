@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnMgmtUCServerFeatures </h3>
+    <p></p>
+    <p><p>Uses the same values as in EUserProfile.h<br>
+If you change or add values here you need to modify the EUserProfile.h accordingly</p>
+</p>
+    <div class="typevalues">
+      <p>AsnMgmtUCServerFeatures is an Enumeration</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Value</th>
+        <th>Comment</th>
+        <tr>
+          <td>none</td>
+          <td>number</td>
+          <td>0</td>
+          <td>no features at all
+</td>
+        </tr>
+        <tr>
+          <td>federation</td>
+          <td>number</td>
+          <td>1</td>
+          <td>server is built with federation and federation is enabled (no matter if it is properly configured)
+</td>
+        </tr>
+        <tr>
+          <td>xmpp_federation</td>
+          <td>number</td>
+          <td>2</td>
+          <td>server is built with xmpp federation and federation (not necessarily xmpp) is enabled (no matter if it is properly configured)
+</td>
+        </tr>
+        <tr>
+          <td>cstaserver</td>
+          <td>number</td>
+          <td>4</td>
+          <td>server is built with csta server support and the server is active
+</td>
+        </tr>
+        <tr>
+          <td>webserver</td>
+          <td>number</td>
+          <td>8</td>
+          <td>there is a EUCWEb.exe next to the ucserver, no matter if the webserver is actually running
+</td>
+        </tr>
+        <tr>
+          <td>ucconnect</td>
+          <td>number</td>
+          <td>16</td>
+          <td>server is build with ucoonnect, no matter if ucconnect is enabled properly configured or connected
+</td>
+        </tr>
+        <tr>
+          <td>voiceservices</td>
+          <td>number</td>
+          <td>32</td>
+          <td>the server holds a voice service license (no matter if voiceservices is configured)
+</td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnClientContentGroupCluster </h3>
+    <p>AsnClientContentGroupCluster object contains a list of <a href="ClientContactsList.type.AsnClientContentGroup.html">AsnClientContentGroup</a> objects and some meta data for displaying groups in the UI.
+</p>
+    <p><p>GroupCluster structure contains the list of groups so they can be managed/displayed in the UI.<br>
+The original design needed this, to give the user the ability to arrange their contacts in groups AND in &quot;groups of groups&quot; (= clusters).<br>
+In the desktop clients main window the favorites tab is a group cluster with visible groups named &quot;Favorites&quot;.<br>
+In the Monitor window the user can per default manage only groupclusters with exact one group inside.<br>
+It is possible to activate the groups in the monitor too, but this feature is very seldom used by users.<br /><br>
+GroupClusters contains also an unique id (unique in the client content of the user), a display name and some flags.</p>
+</p>
+    <div class="typevalues">
+      <p>AsnClientContentGroupCluster is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>u8sID</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Unique ID of the group cluster inside the whole client content.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sName</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Display name of the gorup cluster.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iIsEditable</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>The user may change the contents of this group cluster or not. Used mostly for administrative content, which the user should not manipulate.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iIsPersistent</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>The content of the group cluster will be saved or not. The non persistent content ist also mostly used for administratve content, which is dynamically created by the server and therefore it makes no sense to save it in the database/file.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iIsTabbed</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>ignore for now, may be removed in the future.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sNeighbourClusterID</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>ignore for now, may be removed in the future.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>listGroups</p>
+          </td>
+          <td> 
+            <p><a href="ClientContactsList.type.AsnClientContentGroupList.html">AsnClientContentGroupList</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>list of AsnClientContentGroups in this cluster.
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

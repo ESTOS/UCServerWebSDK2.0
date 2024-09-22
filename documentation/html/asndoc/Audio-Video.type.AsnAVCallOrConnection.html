@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnAVCallOrConnection </h3>
+    <p></p>
+    <p><p>Choice with all combinations<br>
+-&gt; wenn man eine LogEndpointID hat dann nimmt man die logconnectionID, wenn nicht und man hat aber eine EndpointID dann nimmt man die connectionID, wenn man aber alle EndpointIDs welche<br>
+-&gt; mit dem Call verbunden sind erreichen will, dann kann man auch nur die CallID zur Adressierung verwenden</p>
+</p>
+    <div class="typevalues">
+      <p>AsnAVCallOrConnection is a Choice</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Comment</th>
+        <tr>
+          <td>u8sCallID</td>
+          <td>string</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>connectionID</td>
+          <td> 
+            <p><a href="Audio-Video.type.AsnAVCallAndConnectionID.html">AsnAVCallAndConnectionID</a></p>
+          </td>
+          <td></td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

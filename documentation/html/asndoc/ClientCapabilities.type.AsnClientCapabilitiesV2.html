@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnClientCapabilitiesV2 </h3>
+    <p>Data structure to transport capabilities a client/connection is capable to handle
+</p>
+    <p><p>This data structure is used to transport client capabilities between the clients and the server<br>
+In an invoke towards the server the client tells what the client is capable to handle. This list<br>
+contains well known properties as well as custom properties a client wants to exchange with other clients.<br>
+Well known capabilites are an integer list which contains enums values of the <a href="ClientCapabilities.type.AsnClientCapabilityEnum.html">AsnClientCapabilityEnum</a><br>
+Additionaly clients may specify additional information they need to exchange with other clients using the customCapabilities<br>
+The serve builds a sum over all connected clients an notifies clients via the PresenceV2 implementation or changed events<br>
+within this interface.</p>
+</p>
+    <div class="typevalues">
+      <p>AsnClientCapabilitiesV2 is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>eClientCapabilities</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.SEQInteger.html">SEQInteger</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>List of capabilities the client or connection is capable to handle
+ (Linked Type: <a href="ClientCapabilities.type.AsnClientCapabilityEnum.html">AsnClientCapabilityEnum</a>)
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>customCapabilities</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.AsnStringPairList.html">AsnStringPairList</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Custom capabilites clients share with each other as a name:value list<br>
+the server creates a sum over the client provided capabilites<br>
+if clients provide properties with same name but different values the list will containt names multiple times
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

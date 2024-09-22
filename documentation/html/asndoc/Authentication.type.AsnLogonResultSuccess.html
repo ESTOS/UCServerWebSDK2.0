@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnLogonResultSuccess </h3>
+    <p></p>
+    <p><p>Contains the success details of a logon operation</p>
+</p>
+    <div class="typevalues">
+      <p>AsnLogonResultSuccess is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>u8sLoggedInUser</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Der CtiUserName der eingeloggt wurde.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iValidContact</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Wenn erfolgreich ist dieser Wert immer 1 und der ownContact gefüllt.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>ownContact</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.AsnContact.html">AsnContact</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Die eigenen ActiveContact daten
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>listConfigSTUNandTURN</p>
+          </td>
+          <td> 
+            <p><a href="CommonSIPCTI.type.AsnConfigSTUNandTURNList.html">AsnConfigSTUNandTURNList</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>Die STUN/TURN Konfiguration fuer SIP-Softphone und Audio/Video call.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>listDataCenterServers</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.UTF8StringList.html">UTF8StringList</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>Die Server die zu dem Rechnerverbund gehören, an den man sich gerade gültg angemeldet hat.
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

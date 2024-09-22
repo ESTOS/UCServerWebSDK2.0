@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>/ws/direct</title>
+    <link rel="stylesheet" type="text/css" href="../stylesheet.css">
+  </head>
+  <body>
+    <h2>/ws/direct</h2>
+    <p>The direct route is used to call single function with direct authentication. Every function call must be authenticated.
+    This route can only be used for simple functions that do not require events.</p>
+    <p class="strong">First Steps</p> 
+    <p>The most simple example is to get the properties of a user with http GET. Just paste the following line in a browser window. 
+    You will be prompted for authentication. Use a UCServer user name and password to authenticate. The result will be a json struct that contains the 
+    attributes of the user.</p>
+    <PRE>http://localhost:7224/ws/direct/asnGetLoggedInContact</PRE>
+    <p class="strong">Authentication options</p> 
+    <p>There are different authentication options available.</p>
+    <ul>
+      <li><strong>HTTP Basic Authentication</strong><br/>
+        When using HTTP Basic Authentication in the Browser, a prompt will ask the user for credentials.
+        <br/><br/>
+      </li>
+      <li><strong><a href="tokenauth.htm">Token Authentication</a></strong><br/>
+        Token Authentication is used to authenticate users without transmitting the password every time.
+        A Login Token can be obtained with <a href="../asndoc/Authentication.asnGetUserToken.html">asnGetUserToken</a>.
+        The Token is transmitted either with a query parameter (http://localhost:7224/ws/direct/asnGetLoggedInContact?token=aabbccddeeff) or as HTTP custom header (x-uctoken: aabbccddeeff).
+        When using this option, no 401 response will be given. Failed Authentication will result in a 400 response with an json error struct.
+        
+        <pre>Replace aabbccddeeff with the login token:
+http://localhost:7224/ws/direct/asnGetLoggedInContact?token=aabbccddeeff</pre>
+      </li>
+      <li><strong>Username and Password in query</strong><br/>
+        Username and Password may be transmitted as query parameters.
+        When using this option, no 401 response will be given. Failed Authentication will result in a 400 response with an json error struct.
+        <pre>Replace username and password with valid credentials:
+http://localhost:7224/ws/direct/asnGetLoggedInContact?user=username&pass=password</pre>
+      </li>
+    </ul>
+    <p class="strong">Using Javascript</p>
+    <p>You may Javascript to send commands to the server. Copy the following text to a html file and open it in the browser.
+    You may also open the page here: <a href="wsdirectjs.htm" target="_blank">Open Page</a>.;
+    <pre>
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+  &lt;style&gt;
+    span { vertical-align: top; display: inline-block; width: 200px; }
+    input { display: inline-block; width: 400px; }
+  &lt;/style&gt;
+  &lt;body&gt;
+    &lt;form&gt;
+      &lt;span&gt;Server URL:&lt;/span&gt;&lt;input id=&quot;serverurl&quot; value=&quot;http://localhost:7224&quot;/&gt;&lt;br/&gt;
+      &lt;span&gt;Username:&lt;/span&gt;&lt;input id=&quot;user&quot; value=&quot;&quot;/&gt;&lt;br/&gt;
+      &lt;span&gt;Password:&lt;/span&gt;&lt;input id=&quot;pass&quot; value=&quot;&quot;/&gt;&lt;br/&gt;
+      &lt;span&gt;Function:&lt;/span&gt;&lt;input id=&quot;func&quot; value=&quot;asnGetLoggedInContact&quot;/&gt;&lt;br/&gt;
+      &lt;span&gt;Params:&lt;/span&gt;&lt;textarea rows=&quot;7&quot; id=&quot;params&quot;&gt;{ }&lt;/textarea&gt;&lt;br/&gt;
+      &lt;button type=&#39;submit&#39; onclick=&#39;sendcommand(); event.preventDefault();&#39;&gt;Send Command&lt;/button&gt;&lt;br/&gt;
+    &lt;/form&gt;
+    &lt;pre id=&quot;result&quot;&gt;&lt;/pre&gt;
+  &lt;/body&gt;
+  &lt;script&gt;
+    function sendcommand()
+    {
+      var serverurl = document.getElementById(&quot;serverurl&quot;).value;
+      var user = document.getElementById(&quot;user&quot;).value;
+      var pass = document.getElementById(&quot;pass&quot;).value;
+      var func = document.getElementById(&quot;func&quot;).value;
+      var params = document.getElementById(&quot;params&quot;).value;
+      try {
+        JSON.parse(params);
+      } catch(e) {
+        document.getElementById(&quot;result&quot;).innerHTML = &#39;Failed: Params are not valid JSON: &#39; + e;
+        return;
+      }
+      
+      var oXHR = new XMLHttpRequest();   // new HttpRequest instance
+      oXHR.addEventListener(&quot;loadend&quot;, function(evt) {
+        var outtext = oXHR.responseText;
+        try {
+          outtext = JSON.stringify(JSON.parse(oXHR.responseText), null, 4);        
+        } catch(e) {
+        }
+        if (oXHR.status == 0) {
+          document.getElementById(&quot;result&quot;).innerHTML = &#39;Failed: General Network Error&#39;;
+        } else if (outtext == &#39;&#39;) {
+          document.getElementById(&quot;result&quot;).innerHTML = &#39;Failed: No response received&#39;;
+        } else if (oXHR.status == 200) {
+          document.getElementById(&quot;result&quot;).innerHTML = outtext;
+        } else {
+          document.getElementById(&quot;result&quot;).innerHTML = outtext;
+        }
+      });
+      var querystring = &#39;?user=&#39; + encodeURIComponent(user) + &#39;&amp;pass=&#39; + encodeURIComponent(pass);
+      oXHR.open(&quot;POST&quot;, serverurl + &quot;/ws/direct/&quot; + func + querystring);
+      oXHR.setRequestHeader(&quot;Content-Type&quot;, &quot;application/json;charset=utf-8&quot;);
+      oXHR.send(params);    
+    }
+  &lt;/script&gt;
+&lt;/html&gt;
+</pre>
+    </p>
+    <p class="strong">Using cURL</p>
+    <p>You may use cURL (http command line) to send commands to the server. cURL can be found for multiple operating systems on the internet.
+    <pre>Using HTTP POST:
+curl.exe "http://localhost:7224/ws/direct/asnGetLoggedInContact?user=username&pass=password" -X POST -H "Content-Type: application/json" -d "{ }"
+
+Using HTTP GET:
+curl.exe "http://localhost:7224/ws/direct/asnGetLoggedInContact?user=username&pass=password"</pre>
+    </p>
+    
+    <p>All API endpoints may be called with GET or POST. Jsonp is supported.</p>
+    
+  </body>
+</html>

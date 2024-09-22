@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnChatEvent </h3>
+    <p></p>
+    <p></p>
+    <div class="typevalues">
+      <p>AsnChatEvent is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>u8sEventCrossRefID</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>For the assignment of events to a request. u8sEventCrossRefID must not be longer than 80 characters!
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sConversationID</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Conversation ID (of the room)
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iConvSequenceID</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Index of the event within the corresponding conversation. If iConvSequenceID = 0, the event changes communicated to a conversation, but which should not be visible in the course of the conversation. e.g. Update the iLastReadSequenceID of a party in multi-user chat
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iGlobTransactionID</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>global transaction ID
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>bUpdate</p>
+          </td>
+          <td> 
+            <p>boolean</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>false = new data record, true = update for existing data record
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sSenderURI</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>Contact URI of the sender of the message. e.g. 'sip: jan@estos.de'
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>asnCreateTime</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>Time at which the event was triggered (e.g. when a read revision was sent for a user)
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>asnChatMessage</p>
+          </td>
+          <td> 
+            <p><a href="ChatV2.type.AsnChatEventMessage.html">AsnChatEventMessage</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>message (changed)<br>
+A text message, binary message, or journal entry
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>asnChatConversation</p>
+          </td>
+          <td> 
+            <p><a href="ChatV2.type.AsnChatEventConversation.html">AsnChatEventConversation</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>conversation, users, name (changed)<br>
+Conversation description
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iError</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>error code
+ (Linked Type: <a href="ChatV2.type.AsnChatResultEnum.html">AsnChatResultEnum</a>)
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>optionalParams</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.AsnOptionalParameters.html">AsnOptionalParameters</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p><em>Liste der optionalen Parameter:</em>
+<ul>
+<li>optionalParams Name &quot;IsMuted&quot; Value BOOLEAN ('TRUE' für aktiv) für den Client des Empfängers soll diese ConversationID gemuted sein</li>
+<li>optionalParams Name &quot;AvatarID&quot; Value UTF8String - AvatarID/hash für den jeweiligen Chat - kann via asnChatGetConversationAvatar abgeholt werden</li>
+</ul>
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

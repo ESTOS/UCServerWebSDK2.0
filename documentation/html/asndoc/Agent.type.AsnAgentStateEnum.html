@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnAgentStateEnum </h3>
+    <p>The possible states the agent can have.
+</p>
+    <p><p>This is the state of the agent; hence it is an integer and not a bit field.<br>
+This value is to be used for server messages as well as for setting these states.</p>
+</p>
+    <div class="typevalues">
+      <p>AsnAgentStateEnum is an Enumeration</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Value</th>
+        <th>Comment</th>
+        <tr>
+          <td>eAGENTSTATENOAGENT</td>
+          <td>number</td>
+          <td>0</td>
+          <td>Agent logged out from group - (is set implicitly at AgentLogoff() by the server)
+</td>
+        </tr>
+        <tr>
+          <td>eAGENTSTATENOTREADY</td>
+          <td>number</td>
+          <td>1</td>
+          <td>Agent unavailable
+</td>
+        </tr>
+        <tr>
+          <td>eAGENTSTATEREADY</td>
+          <td>number</td>
+          <td>2</td>
+          <td>Agent available in group - (is initially set at AgentLogin() by the server)
+</td>
+        </tr>
+        <tr>
+          <td>eAGENTSTATEBUSY</td>
+          <td>number</td>
+          <td>3</td>
+          <td>Agent is busy
+</td>
+        </tr>
+        <tr>
+          <td>eAGENTSTATEWORKINGAFTERCALL</td>
+          <td>number</td>
+          <td>4</td>
+          <td>Agent is working after a call
+</td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

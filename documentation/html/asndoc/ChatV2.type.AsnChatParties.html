@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnChatParties </h3>
+    <p></p>
+    <p></p>
+    <div class="typevalues">
+      <p>AsnChatParties is an Array of AsnChatParty</p>
+      <p>AsnChatParty is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>u8sContactURI</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Contact URI, including display names jan@estos.de; display = Jan Rievenherm
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sDisplayName</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>Anzeigename des Kontaktes, e.g. 'Jan Rievenherm'
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iContactRights</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Rights (bit mask) of the user in this chat<br />0x0000 0001					may write<br />0x0000 0002					may add and remove users
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iLastReadSequenceID</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>Sequence ID up to which the party read (optional, only AsnChatEventConversation)
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>bReadNotifySupported</p>
+          </td>
+          <td> 
+            <p>boolean</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>If a federated contact does not send read notifications, this flag is set to false
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>contactInformation</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.AsnNetDatabaseContact.html">AsnNetDatabaseContact</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>Contact information for SMS, MMS etc. where the party is NOT a CtiServer user and therefore the contact information is not available on the client, is only filled and sent with PArty Added and ConversationCreated
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

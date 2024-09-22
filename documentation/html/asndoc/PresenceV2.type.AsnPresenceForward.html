@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnPresenceForward </h3>
+    <p>This strutures describes the phone forward state of a phone line.
+</p>
+    <p><p>A phone line can be set to forward call automatically to other endpoints. This structure describes<br>
+the different forward states.</p>
+</p>
+    <div class="typevalues">
+      <p>AsnPresenceForward is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>u8sLinePhoneNumber</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>LineURI der betroffenen Leitung
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sLineNumber</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Lesbare Nummer der Leitung (extrahiert aus der LineURI)
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iInternalID</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Interne ID des Forwards
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sDestination</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Ziel der Umleitung
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iForwardMode</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Art der Umleitung
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iNoAnswerTime</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>nach wie vielen sekunden bei noAns weitergeleitet wird
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

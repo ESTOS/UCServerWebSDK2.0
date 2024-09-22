@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnCtiMakeCallArgument </h3>
+    <p>Arguments for <a href="CTI.asnCtiMakeCall.html">asnCtiMakeCall</a>
+</p>
+    <p></p>
+    <div class="typevalues">
+      <p>AsnCtiMakeCallArgument is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>u8sPhoneNumberFrom</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Phone number (supercanonic notation, starts with '+', e.g. '+49815136856177') or line URI of the line where the call will be initiated.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sPhoneNumberTo</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Number to dial.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iNumberFormat</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>The u8sPhoneNumberTo is the number to dial and normally the server would reformat the number into a dialable form. This behavior can be altered:
+<ul>
+<li>0: Server should not format the number for dialing, it shall use it like it is.</li>
+<li>Other values: Server should format the number before dialing (set prefix and area code etc.).<br>
+Hint: If you are not sure, the number should always be formatted (-&gt; use '1')</li>
+</ul>
+ (Linked Type: <a href="General.type.AsnETAPIDialNumberFormat.html">AsnETAPIDialNumberFormat</a>)
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>newCallParams</p>
+          </td>
+          <td> 
+            <p><a href="CommonSIPCTI.type.AsnCtiNewCallParams.html">AsnCtiNewCallParams</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>Allows to set additional information (Project/Pin rules, hide caller id, set remote contact details etc.). These information are completely optional and in the most cases you can omit this parameter.
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>asnCtiNotifyMonitorStopped</h3>
+    <p>Event from the server that a monitoring point was closed due to a configuration change<br>
+In order to get these events the line must be monitored with <a href="CTI.asnCtiLineMonitorStart.html">asnCtiLineMonitorStart</a><br>
+This event is send to the client if a monitor was closed due to a configuation change on the server<br>
+The client shall remove the monitor point with u8sMonitorCrossRefID on the client side.
+</p>
+    <p></p><strong>ArgumentType: AsnCtiNotifyMonitorStoppedArgument</strong>
+    <div class="typevalues">
+      <p>AsnCtiNotifyMonitorStoppedArgument is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>u8sMonitorCrossRefID</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>CrossrefID for the corresponding asnCtiLineMonitorStart.
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

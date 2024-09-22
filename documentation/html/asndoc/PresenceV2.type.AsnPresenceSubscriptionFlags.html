@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnPresenceSubscriptionFlags </h3>
+    <p>This enum is for selecting the events and direct return values in which the client is interested when it calls asnGetAndSubscribePresence.
+</p>
+    <p><p>This enum describes the bit values used by iEventFlagsToSubscribe and iContactDetailsReturnFilter of <a href="PresenceV2.type.AsnGetAndSubscribePresenceArgument.html">AsnGetAndSubscribePresenceArgument</a> in<br>
+which the caller can select in which events and result value he is interested in.</p>
+</p>
+    <div class="typevalues">
+      <p>AsnPresenceSubscriptionFlags is an Enumeration</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Value</th>
+        <th>Comment</th>
+        <tr>
+          <td>ePresenceSubscriptionPresence</td>
+          <td>number</td>
+          <td>1</td>
+          <td>Send the calculated contact presence value (default: on)
+</td>
+        </tr>
+        <tr>
+          <td>ePresenceSubscriptionData</td>
+          <td>number</td>
+          <td>2</td>
+          <td>Send the complete, static contact data (name, adress, etc.) (default: on)
+</td>
+        </tr>
+        <tr>
+          <td>ePresenceSubscriptionDataIncludeImage</td>
+          <td>number</td>
+          <td>4</td>
+          <td>Send the complete contact image (if there is one) not only the hash value (default: on)
+</td>
+        </tr>
+        <tr>
+          <td>ePresenceSubscriptionConfiguration</td>
+          <td>number</td>
+          <td>8</td>
+          <td>Send information about the contact configuration (changes about access rights etc.) (default: on)
+</td>
+        </tr>
+        <tr>
+          <td>ePresenceSubscriptionAbsentstate</td>
+          <td>number</td>
+          <td>16</td>
+          <td>Send information about the actual absent state. This is manual set presence, not the calculated one, which includes not only the absent state. (default: on)
+</td>
+        </tr>
+        <tr>
+          <td>ePresenceSubscriptionNote</td>
+          <td>number</td>
+          <td>32</td>
+          <td>Send information about the note of the contact (default: on)
+</td>
+        </tr>
+        <tr>
+          <td>ePresenceSubscriptionAppointment</td>
+          <td>number</td>
+          <td>64</td>
+          <td>Send information about appointments (default: on)
+</td>
+        </tr>
+        <tr>
+          <td>ePresenceSubscriptionPhoneLines</td>
+          <td>number</td>
+          <td>128</td>
+          <td>Send information about the phone lines of the contact (default: on)
+</td>
+        </tr>
+        <tr>
+          <td>ePresenceSubscriptionPhoneCalls</td>
+          <td>number</td>
+          <td>256</td>
+          <td>Send information about the calls on the phone lines of the contact (default: on)
+</td>
+        </tr>
+        <tr>
+          <td>ePresenceSubscriptionPhoneForwards</td>
+          <td>number</td>
+          <td>512</td>
+          <td>Send information about the forward states on the phone lines of the contact (default: on)
+</td>
+        </tr>
+        <tr>
+          <td>ePresenceSubscriptionMyChallengeUpdates</td>
+          <td>number</td>
+          <td>1024</td>
+          <td>Send information about the contact right challenges if some contzact requests new contact rights
+</td>
+        </tr>
+        <tr>
+          <td>ePresenceSubscriptionDynamicRightsUpdate</td>
+          <td>number</td>
+          <td>2048</td>
+          <td>Send information about changes to the own authorization list<br>
+= 0x00000800,
+</td>
+        </tr>
+        <tr>
+          <td>ePresenceSubscriptionDynamicGroupRightsUpdate</td>
+          <td>number</td>
+          <td>4096</td>
+          <td>Send information about changes to an authorization list on a group the logged in user is member of<br>
+= 0x00001000,
+</td>
+        </tr>
+        <tr>
+          <td>ePresenceSubscriptionDynamicGlobalRightsUpdate</td>
+          <td>number</td>
+          <td>8192</td>
+          <td>Send informations about changes to the global authorisation list<br>
+= 0x00002000,
+</td>
+        </tr>
+        <tr>
+          <td>ePresenceSubscriptionAgentStatus</td>
+          <td>number</td>
+          <td>32768</td>
+          <td>Send agent state events of other users. This is not part of the default value!<br>
+= 0x00008000,
+</td>
+        </tr>
+        <tr>
+          <td>ePresenceSubScriptionMonitorGroupingAttribute</td>
+          <td>number</td>
+          <td>65536</td>
+          <td>Send events by changes on the monitor grouping attributes. This is not part of the default value!<br>
+= 0x00010000
+</td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

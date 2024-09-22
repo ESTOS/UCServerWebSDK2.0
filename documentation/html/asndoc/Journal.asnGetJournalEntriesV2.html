@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>asnGetJournalEntriesV2</h3>
+    <p>Search for journal entries of the users conversations.
+</p>
+    <p><p>asnGetJournalEntries makes it possible to search in the journal database of the user. The search is limited to the journal entries of the logged in user himself (public and private)<br>
+and to the journal entries of users where permissions are granted for the logged in user.</p>
+<p>With <a href="Journal.type.AsnGetJournalEntriesV2Argument.html">AsnGetJournalEntriesV2Argument</a>findOptions it is possible to give more search criterias.</p>
+</p>
+    <p class="strong">ArgumentType: AsnGetJournalEntriesV2Argument</p>
+    <div class="typevalues">
+      <p>AsnGetJournalEntriesV2Argument is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>findOptions</p>
+          </td>
+          <td> 
+            <p><a href="Journal.type.AsnNetDatabaseJournalFindOptionsV2.html">AsnNetDatabaseJournalFindOptionsV2</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p> 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+    <p></p>
+    <p class="strong">ResultType: AsnGetJournalEntriesResult</p>
+    <div class="typevalues">
+      <p>AsnGetJournalEntriesResult is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>journalList</p>
+          </td>
+          <td> 
+            <p><a href="Journal.type.AsnNetDatabaseJournalList.html">AsnNetDatabaseJournalList</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p> 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+    <p></p>
+    <p class="strong">ErrorType: AsnRequestError</p>
+    <div class="typevalues">
+      <p>AsnRequestError is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>iErrorDetail</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>A number representing the error
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sErrorString</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>A string representing the error
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

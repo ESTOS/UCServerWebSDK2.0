@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnAppointmentEntry </h3>
+    <p>Datatype for transport of Appointment Data to and from the UCServer.
+</p>
+    <p></p>
+    <div class="typevalues">
+      <p>AsnAppointmentEntry is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>u8sEntryID</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Unique EntryID of the data source
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sOwner</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Owner of the dataset - will be changed by the ucserver with the loggedin user to enforce ownership for security reasons
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sDataSource</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Symbolic name of the data source
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>stStart</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Start time of the appointment
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>stEnd</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>End time of the appointment
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iDuration</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Duration of the appointment
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sSubject</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Subject of the appointment
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sText</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Message body of the appointment
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>bAllDay</p>
+          </td>
+          <td> 
+            <p>boolean</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Indicates, if it is an allday appointment (true) or not (false)
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iStatus</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>(Presence) State of the user while the appointment is active, see EnumAppointmentState
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sCategory</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Category of the appointment
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iImportance</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Importance of the appointment, see EnumAppointmentImportance
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iSensitivity</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Sensitivity (private or not), see EnumAppointmentSensitivity
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>bIsValid</p>
+          </td>
+          <td> 
+            <p>boolean</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Is it a valid entry (data set), will be set on the ucserver (e.g. TabIndex of the database entry is not 0)
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>optionalParams</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.AsnOptionalParameters.html">AsnOptionalParameters</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>optionalParams Name &quot;Location&quot; Value String
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

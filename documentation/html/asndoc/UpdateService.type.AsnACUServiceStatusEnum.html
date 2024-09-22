@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnACUServiceStatusEnum </h3>
+    <p>Update Status Values
+</p>
+    <p><p>The Client Update Service reports it status with <a href="UpdateService.asnACUOnSetNewStatus.html">asnACUOnSetNewStatus</a><br>
+The iNewStatus member contains two statuses.<br>
+One in the lower 8 bits (aCUSERVICESTATUSMASK) and one in the higher 8 bits(aCUUPDATESTATUSMASK).<br>
+The aCISERVICESTATUS values tell the status of the Update Service.<br>
+The aCUUPDATESTATUS values tell the status of an update package.</p>
+</p>
+    <div class="typevalues">
+      <p class="private">- PRIVATE -</p>
+      <p>AsnACUServiceStatusEnum is an Enumeration</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Value</th>
+        <th>Comment</th>
+        <tr>
+          <td>aCISERVICESTATUSUNKNOWN</td>
+          <td>number</td>
+          <td>0</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>aCISERVICESTATUSWAITINGFORINSTALLATION</td>
+          <td>number</td>
+          <td>1</td>
+          <td>The computer waits for beiing served by the Installation service
+</td>
+        </tr>
+        <tr>
+          <td>aCISERVICESTATUSCONNECTING</td>
+          <td>number</td>
+          <td>2</td>
+          <td>ESoftwareClientServiceInstall::ConnectClient in WNetAddConnection2
+</td>
+        </tr>
+        <tr>
+          <td>aCISERVICESTATUSINSTALLING</td>
+          <td>number</td>
+          <td>3</td>
+          <td>ESoftwareClientServiceInstall::InstallService running
+</td>
+        </tr>
+        <tr>
+          <td>aCISERVICESTATUSINSTALLED</td>
+          <td>number</td>
+          <td>4</td>
+          <td>ESoftwareClientServiceInstall::InstallService completed successfully
+</td>
+        </tr>
+        <tr>
+          <td>aCISERVICESTATUSINSTALLFAILED</td>
+          <td>number</td>
+          <td>5</td>
+          <td>ESoftwareClientServiceInstall failed
+</td>
+        </tr>
+        <tr>
+          <td>aCISERVICESTATUSDELETED</td>
+          <td>number</td>
+          <td>6</td>
+          <td>ESoftwareClientServiceInstall::UninstallService completed successfully, or client has been uninstalled and has reported that to the server.
+</td>
+        </tr>
+        <tr>
+          <td>aCISERVICESTATUSUNINSTALLFAILED</td>
+          <td>number</td>
+          <td>7</td>
+          <td>Uninstall vom Server aus ist fehlgeschlagen
+</td>
+        </tr>
+        <tr>
+          <td>aCUSERVICESTATUSMASK</td>
+          <td>number</td>
+          <td>255</td>
+          <td>Maske f├╝r nur die service stati
+</td>
+        </tr>
+        <tr>
+          <td>aCUUPDATESTATUSIDLE</td>
+          <td>number</td>
+          <td>256</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>aCUUPDATESTATUSDOWNLOADING</td>
+          <td>number</td>
+          <td>512</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>aCUUPDATESTATUSGATHERINGINFOS</td>
+          <td>number</td>
+          <td>768</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>aCUUPDATESTATUSINSTALLING</td>
+          <td>number</td>
+          <td>1024</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>aCUUPDATESTATUSINSTALLSUCCESS</td>
+          <td>number</td>
+          <td>1280</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>aCUUPDATESTATUSFAILED</td>
+          <td>number</td>
+          <td>1536</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>aCUUPDATESTATUSUNINSTALLED</td>
+          <td>number</td>
+          <td>2304</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>aCUUPDATESTATUSMASK</td>
+          <td>number</td>
+          <td>65280</td>
+          <td>Mask for the Update flags
+</td>
+        </tr>
+        <tr>
+          <td>aCUNOSTATUSEVENT</td>
+          <td>number</td>
+          <td>65535</td>
+          <td>If no Status needs to be reported
+</td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

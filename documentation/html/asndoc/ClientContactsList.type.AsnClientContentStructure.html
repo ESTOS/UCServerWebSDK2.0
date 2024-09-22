@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnClientContentStructure </h3>
+    <p>AsnClientContentStructure is the root of the client content structure object.
+</p>
+    <p><p>When calling <a href="ClientContactsList.asnGetClientContent.html">asnGetClientContent</a> or <a href="ClientContactsList.asnSubscribeClientContent.html">asnSubscribeClientContent</a>, the result contains an instance of this object.<br>
+It is the entry point to the structure of the client content which describes which item is in which and which group is in which groupcluster.</p>
+</p>
+    <div class="typevalues">
+      <p>AsnClientContentStructure is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>iIsEditable</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Indication for the client, that changes may be ignored by the server. Nomrally it is 1 because we want the user to manage his favorites for himself.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sVersion</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Version of Content-Structure API, should be at least 2.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sRevision</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Revision of user's content structure; will be set by the server every time the struture/contacts will be changed.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sLastWriter</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>ignore for now, may be removed.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>listGroupClusters</p>
+          </td>
+          <td> 
+            <p><a href="ClientContactsList.type.AsnClientContentGroupClusterList.html">AsnClientContentGroupClusterList</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>list of groupclusters in this structure.
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

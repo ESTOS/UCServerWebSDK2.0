@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnAVNewCallArgument </h3>
+    <p></p>
+    <p><hr>
+<p>**************** asnAVNewCall (deprecated) ***************</p>
+<hr>
+<ul>
+<li>Invoked (Event) signalling a new (incoming) call</li>
+</ul>
+</p>
+    <div class="typevalues">
+      <p class="private">- DEPRECATED -</p>
+      <p>AsnAVNewCallArgument is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>callAndConnectionID</p>
+          </td>
+          <td> 
+            <p><a href="Audio-Video.type.AsnAVCallAndConnectionID.html">AsnAVCallAndConnectionID</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>IDs fuer den Angerufenen (called party)
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sCTIConnectionID</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>CID des erzeugten EVirtualSIPAVCall-Objekts im Line-Call-Model. Nach Rücksprache mit RB leider nicht mit der AV-ConnectionID vereinbar.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>callType</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Media Type
+ (Linked Type: <a href="Audio-Video.type.AsnAVMediaType.html">AsnAVMediaType</a>)
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sUriFrom</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>SIP-Identität des Anrufenden
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>endpointIDFrom</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>EndpointIDs des Anrufenden (calling party)
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sUriTo</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>SIP-Identität des Angerufenen
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sContentType</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>derzeit application/sdp
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sBody</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Session Description Protocol Daten (SDP Offer)
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>newCallParams</p>
+          </td>
+          <td> 
+            <p><a href="CommonSIPCTI.type.AsnCtiNewCallParams.html">AsnCtiNewCallParams</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>Additional data for the call
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sAssociatedTextChatConversationID</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p> 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sCaps</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>capability strings: HOLD, EBTRANS, BTRANS , CTRANS , CANNOT_REJECT (details see EDataStructuresAVMessages.h)
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>optionalParams</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.AsnOptionalParameters.html">AsnOptionalParameters</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>optionalParams Name &quot;CTITrackerID&quot; Value String<br>
+optionalParams Name &quot;localContact&quot; Value BER encoded localContact<br>
+optionalParams Name &quot;u8sHoldContactNumberSC&quot; Value String<br>
+optionalParams Name &quot;holdContact&quot; Value BER encoded holdContact<br>
+optionalParams Name &quot;u8sRedirectingNumberSC&quot; Value String<br>
+optionalParams Name &quot;redirectingContact&quot; Value BER encoded redirectingContact<br>
+optionalParams Name &quot;IsRemoteControlCallOut&quot; Value Boolean<br>
+optionalParams Name &quot;IsRemoteControlCallIn&quot; Value Boolean
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

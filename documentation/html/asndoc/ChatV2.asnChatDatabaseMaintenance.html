@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>asnChatDatabaseMaintenance</h3>
+    <p>Change to the database through automatic maintenance (e.g. &quot;delete chats after X days&quot;)
+</p>
+    <p><p>Event is sent from the server to the clients if chat messages in the server database due to the function<br>
+&quot;Delete chat messages after X days&quot; will be deleted. The event contains a sequence ID up to which the deletion was carried out.<br>
+Clients can adapt existing caches accordingly. I.e. TextMessages that have a Sequence ID less than or equal to<br>
+have the ID specified in the event, must be deleted. The event is also sent to the client during the initial subscription.<br>
+The event is only sent to clients who subscribe to it with the optional parameter &quot;bSubscribeDBMaintenance&quot; = true<br>
+have requested.</p>
+</p><strong>ArgumentType: AsnChatDatabaseMaintenanceArgument</strong>
+    <div class="typevalues">
+      <p>AsnChatDatabaseMaintenanceArgument is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>iDeletedToSequenceID</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Sequence ID up to which TExt messages were deleted
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

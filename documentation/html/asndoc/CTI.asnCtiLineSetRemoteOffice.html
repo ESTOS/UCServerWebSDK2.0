@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>asnCtiLineSetRemoteOffice</h3>
+    <p>Changes the state of the &quot;Remote Office&quot; feature on a line.
+</p>
+    <p><p>&quot;Remote office&quot; is a feature, where a user can virtually attach his mobile phone to his line on the PBX. So every incoming call to the line on the PBX will be automatically forwarded to the mobile phone.<br>
+Additionally the outgoing calls will be forwarded to the mobile too, if either the PBX itself supports this feature or the UCServer can emulate it.</p>
+</p>
+    <p class="strong">ArgumentType: AsnCtiLineSetRemoteOfficeArgument</p>
+    <div class="typevalues">
+      <p>AsnCtiLineSetRemoteOfficeArgument is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>u8sLinePhoneNumber</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Identifier of the line
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>remoteOfficeState</p>
+          </td>
+          <td> 
+            <p><a href="CTI.type.AsnRemoteOfficeState.html">AsnRemoteOfficeState</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>The state to set. See AsnRemoteOfficeState for more details.
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+    <p></p>
+    <p class="strong">ResultType: AsnCtiLineSetRemoteOfficeResult</p>
+    <div class="typevalues">
+      <p>AsnCtiLineSetRemoteOfficeResult is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+      </table>
+      <!-- include typesample-->
+    </div>
+    <p></p>
+    <p class="strong">ErrorType: AsnRequestError</p>
+    <div class="typevalues">
+      <p>AsnRequestError is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>iErrorDetail</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>A number representing the error
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sErrorString</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>A string representing the error
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

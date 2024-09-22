@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h1>Common</h1>
+    <p>Module Version: 8.0.20240913</p>
+    <p>Common interface definitions
+</p>
+    <p><p class='strong'>Module description</p>
+<p>This module contains common usable strutures for the other interfaces.<br>
+There should not be any function/operation defintions in this module.</p>
+</p><a href="Common.doc.html"> </a>
+    <h2>Types:</h2><a href="Common.doc.types.html"> </a><a href="Common.types.html"> </a>
+    <table>
+      <th>Name</th>
+      <th>Description</th>
+      <tr>
+        <td>
+          <p><a href="Common.type.AsnSystemTime.html">AsnSystemTime</a></p>
+        </td>
+        <td> 
+          <p>Datatype for time values
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Common.type.AsnOptionalParamChoice.html">AsnOptionalParamChoice</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Common.type.AsnStringPair.html">AsnStringPair</a></p>
+        </td>
+        <td> 
+          <p>Key value pair of strings.
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Common.type.AsnIntegerPair.html">AsnIntegerPair</a></p>
+        </td>
+        <td> 
+          <p>Key value pair of integer
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Common.type.AsnStringIntegerPair.html">AsnStringIntegerPair</a></p>
+        </td>
+        <td> 
+          <p>Key value pair of &lt;string, integer&gt;
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Common.type.AsnNetDatabaseContactID.html">AsnNetDatabaseContactID</a></p>
+        </td>
+        <td> 
+          <p>A three tuple to identify contact data.
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Common.type.AsnOptionalParam.html">AsnOptionalParam</a></p>
+        </td>
+        <td> 
+          <p>Encapsulated key value pair, including a definition of the value type.
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Common.type.AsnStringPairList.html">AsnStringPairList</a></p>
+        </td>
+        <td> 
+          <p>List of key value pairs of strings.
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Common.type.AsnJSONWebTokenHeader.html">AsnJSONWebTokenHeader</a></p>
+        </td>
+        <td> 
+          <p>Header data for a RFC-7519 JSON Web Token
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Common.type.AsnJSONWebTokenPayLoad.html">AsnJSONWebTokenPayLoad</a></p>
+        </td>
+        <td> 
+          <p>Payload data for a RFC-7519 JSON Web Token
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Common.type.AsnOptionalParameters.html">AsnOptionalParameters</a></p>
+        </td>
+        <td> 
+          <p>List of <a href="Common.type.AsnOptionalParam.html">AsnOptionalParam</a>
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Common.type.AsnNetDatabaseContact.html">AsnNetDatabaseContact</a></p>
+        </td>
+        <td> 
+          <p>Sequence/object containing contact data.
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Common.type.AsnIntegerPairList.html">AsnIntegerPairList</a></p>
+        </td>
+        <td> 
+          <p>List of key value paitrs of integer
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Common.type.AsnStringIntegerPairList.html">AsnStringIntegerPairList</a></p>
+        </td>
+        <td> 
+          <p>List of key value pairs of &lt;string, integer&gt;
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Common.type.AsnRequestError.html">AsnRequestError</a></p>
+        </td>
+        <td> 
+          <p>Generic error sequence. See the documentation of the operations specific descriptions.
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Common.type.SEQInteger.html">SEQInteger</a></p>
+        </td>
+        <td> 
+          <p>List of integers
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Common.type.UTF8StringList.html">UTF8StringList</a></p>
+        </td>
+        <td> 
+          <p>List of strings.
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Common.type.AsnNetDatabaseContactList.html">AsnNetDatabaseContactList</a></p>
+        </td>
+        <td> 
+          <p>List of <a href="Common.type.AsnNetDatabaseContact.html">AsnNetDatabaseContact</a>
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Common.type.AsnNetDatabaseContactIDList.html">AsnNetDatabaseContactIDList</a></p>
+        </td>
+        <td> 
+          <p>List of <a href="Common.type.AsnNetDatabaseContactID.html">AsnNetDatabaseContactID</a> .
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Common.type.AsnUserPropertyBag.html">AsnUserPropertyBag</a></p>
+        </td>
+        <td> 
+          <p>Property bag definition for storing runtime defined content for objects (like users, computers, groups etc.).
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Common.type.AsnJSONWebToken.html">AsnJSONWebToken</a></p>
+        </td>
+        <td> 
+          <p>Data for a RFC-7519 JSON Web Token
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Common.type.EnumAppointmentState.html">EnumAppointmentState</a></p>
+        </td>
+        <td> 
+          <p>Enumeration for the iStatus field values.
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Common.type.EnumAppointmentImportance.html">EnumAppointmentImportance</a></p>
+        </td>
+        <td> 
+          <p>Enumeration for the iImportance field values.
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Common.type.EnumAppointmentSensitivity.html">EnumAppointmentSensitivity</a></p>
+        </td>
+        <td> 
+          <p>Enumeration for the iSensitivity field values.
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Common.type.AsnAppointmentEntry.html">AsnAppointmentEntry</a></p>
+        </td>
+        <td> 
+          <p>Datatype for transport of Appointment Data to and from the UCServer.
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Common.type.SEQAppointmentList.html">SEQAppointmentList</a></p>
+        </td>
+        <td> 
+          <p>List of <a href="Common.type.AsnAppointmentEntry.html">AsnAppointmentEntry</a>
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Common.type.AsnUserStaticRights.html">AsnUserStaticRights</a></p>
+        </td>
+        <td> 
+          <p>Bitfield with access rights for the user to use specific services/functions on the UCserver.
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Common.type.AsnUserStaticRights2.html">AsnUserStaticRights2</a></p>
+        </td>
+        <td> 
+          <p>Bitfield with access rights for the user to use specific services/functions on the UCserver.
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Common.type.AsnContactPhoneLineState.html">AsnContactPhoneLineState</a></p>
+        </td>
+        <td> 
+          <p>Enumeration for the iState field values of <a href="Common.type.AsnContactPhoneLineState.html">AsnContactPhoneLineState</a>
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Common.type.AsnAbsentStateEnum.html">AsnAbsentStateEnum</a></p>
+        </td>
+        <td> 
+          <p>The enum of the state in AsnAbsentState.
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Common.type.AsnReachabilityEnum.html">AsnReachabilityEnum</a></p>
+        </td>
+        <td> 
+          <p>The enum of the reachability in AsnAbsentState.
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Common.type.AsnExternalPresenceType.html">AsnExternalPresenceType</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Common.type.AsnUserDynamicRights.html">AsnUserDynamicRights</a></p>
+        </td>
+        <td> 
+          <p>The authorizations a user has on another user or gets from him.
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Common.type.AsnContactCallInformationV2.html">AsnContactCallInformationV2</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Common.type.AsnSIPLineDetails.html">AsnSIPLineDetails</a></p>
+        </td>
+        <td> 
+          <p>Parameter for a SIP line
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Common.type.AsnCustomNote.html">AsnCustomNote</a></p>
+        </td>
+        <td> 
+          <p>Structure for handling the user defined note.
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Common.type.AsnContactCallInformationsV2.html">AsnContactCallInformationsV2</a></p>
+        </td>
+        <td> 
+          <p>List of AsnContactCallInformation.
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Common.type.AsnContactPhoneLineV2.html">AsnContactPhoneLineV2</a></p>
+        </td>
+        <td> 
+          <p>Phone line object which is used in the presence object model.
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Common.type.AsnContactPhoneLinesV2.html">AsnContactPhoneLinesV2</a></p>
+        </td>
+        <td> 
+          <p>List of <a href="Common.type.AsnContactPhoneLineV2.html">AsnContactPhoneLineV2</a> objects.
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Common.type.AsnExternalPresenceState.html">AsnExternalPresenceState</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Common.type.AsnExternalPresenceStates.html">AsnExternalPresenceStates</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Common.type.AsnAbsentStateV2.html">AsnAbsentStateV2</a></p>
+        </td>
+        <td> 
+          <p>The absent state of a user/contact in the ucserver.
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Common.type.AsnContactV2.html">AsnContactV2</a></p>
+        </td>
+        <td> 
+          <p>The interface representation of an ActveContact (or short &quot;contact&quot;) of the UCServer with static contact and dynamic presence data.
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Common.type.AsnUserDynamicRightsList.html">AsnUserDynamicRightsList</a></p>
+        </td>
+        <td> 
+          <p>List of <a href="Common.type.AsnUserDynamicRights.html">AsnUserDynamicRights</a>
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Common.type.AsnContactsV2.html">AsnContactsV2</a></p>
+        </td>
+        <td> 
+          <p>List of <a href="Common.type.AsnContactV2.html">AsnContactV2</a> objects.
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Common.type.AsnLoginV2SupportedAuthMethod.html">AsnLoginV2SupportedAuthMethod</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Common.type.AsnAuthBasicCredential.html">AsnAuthBasicCredential</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Common.type.AsnAuthNTLMCredential.html">AsnAuthNTLMCredential</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Common.type.AsnAuthKerberosCredential.html">AsnAuthKerberosCredential</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Common.type.AsnAuthBearer.html">AsnAuthBearer</a></p>
+        </td>
+        <td> 
+          <p>The information for a bearer auth request
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Common.type.AsnAuthOpenIDC.html">AsnAuthOpenIDC</a></p>
+        </td>
+        <td> 
+          <p>The information for an openidc auth request
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Common.type.AsnAuthDigestParams.html">AsnAuthDigestParams</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Common.type.AsnLoginV2Token.html">AsnLoginV2Token</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Common.type.AsnLoginV2ResultServerRedirect.html">AsnLoginV2ResultServerRedirect</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Common.type.AsnLoginV2ResultServerBusy.html">AsnLoginV2ResultServerBusy</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Common.type.AsnLoginV2ResultRenegotiateNTLM.html">AsnLoginV2ResultRenegotiateNTLM</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Common.type.AsnLoginV2ChoiceArgument.html">AsnLoginV2ChoiceArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Common.type.AsnLoginV2SupportedAuthMethods.html">AsnLoginV2SupportedAuthMethods</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Common.type.AsnLoginV2ResultSupportedAuthMethods.html">AsnLoginV2ResultSupportedAuthMethods</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Common.type.AsnLoginV2ResultSuccess.html">AsnLoginV2ResultSuccess</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Common.type.AsnLoginV2Argument.html">AsnLoginV2Argument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Common.type.AsnLoginV2Result.html">AsnLoginV2Result</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

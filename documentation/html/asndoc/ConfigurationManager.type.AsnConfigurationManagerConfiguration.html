@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnConfigurationManagerConfiguration </h3>
+    <p></p>
+    <p><p>mehrere ConfigurationSettings sind eine Configuration</p>
+</p>
+    <div class="typevalues">
+      <p class="private">- PRIVATE -</p>
+      <p>AsnConfigurationManagerConfiguration is an Array of AsnConfigurationManagerConfigurationSetting</p>
+      <p>AsnConfigurationManagerConfigurationSetting is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>u8sKey</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Ein Key ist hierarchisch aufgebaut (und kein &quot;.&quot; am Ende)<br>
+bspw. &quot;general.xmpp.ProxyEnabled&quot;
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sObjectName</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>falls der Key ein benanntes Objekt repraesentiert, dann ist dies der Name<br>
+bspw. &quot;default&quot; (bspw. bei einem Standort)
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sHomeServer</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>leer, falls das Setting Teil der Basiskonfiguration sein soll.<br>
+Oder der Name des einzigen UCServers, fuer den<br>
+dieses (von der Basiskonfiguration abweichendes) Setting gelten soll.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sValue</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>der Wert (beliebiger String)
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sType</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>eines der Strings: TEXT, NUMBER, FLOAT, BOOLEAN, JSON<br>
+(TODO: enumeration machen)
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sWrittenByServer</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>der Name des Servers, der dieses Setting in die DB geschrieben hat<br>
+kann beim Senden zum Webservice leer gelassen werden<br>
+wird vom Webservice gesetzt
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iTriggerUpdate</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>soll die Aenderung dieses Settings einen Update an die anderen UCServers triggern?
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

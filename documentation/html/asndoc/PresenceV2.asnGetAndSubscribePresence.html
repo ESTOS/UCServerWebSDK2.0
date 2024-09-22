@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>asnGetAndSubscribePresence</h3>
+    <p>Operation to retrieve contact data and to subscribe to events when these data will change.
+</p>
+    <p><p>If a client is interested in monitoring the presence and data of its own and other contacts, this operation<br>
+gives the possibility to get data about a contact, its used services (lines, appointments, chat etc.) and his calculated presence. See <a href="PresenceV2.type.AsnGetAndSubscribePresenceArgument.html">AsnGetAndSubscribePresenceArgument</a> for more information.</p>
+<p>To unsubscribe from contacts, call <a href="PresenceV2.asnUnsubscribePresence.html">asnUnsubscribePresence</a> This is highly recommended before closing the connection to the ucserver.</p>
+<p>If the operation fails it will return <a href="Common.type.AsnRequestError.html">AsnRequestError</a></p>
+<p>If the operation is successful at least on some given contacts, it will return <a href="PresenceV2.type.AsnGetAndSubscribePresenceResult.html">AsnGetAndSubscribePresenceResult</a></p>
+</p>
+    <p class="strong">ArgumentType: AsnGetAndSubscribePresenceArgument</p>
+    <div class="typevalues">
+      <p>AsnGetAndSubscribePresenceArgument is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>seqContactIDs</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.UTF8StringList.html">UTF8StringList</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>List of strings containing the contact ID of the requestet contact (e.g. 'sip:tester@test.com')
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iEventFlagsToSubscribe</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>AsnPresenceSubscriptionFlags - which events does the client wants to receive from the server.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iContactDetailsReturnFilter</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>AsnPresenceSubscriptionFlags - which return values are needed from the ucserver.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>bOpenOnlyInternalContacts</p>
+          </td>
+          <td> 
+            <p>boolean</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p> 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>bDontRequestPermissions</p>
+          </td>
+          <td> 
+            <p>boolean</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>Keine Berechtigungsanfrage starten
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+    <p></p>
+    <p class="strong">ResultType: AsnGetAndSubscribePresenceResult</p>
+    <div class="typevalues">
+      <p class="private">- DEPRECATED -</p>
+      <p>AsnGetAndSubscribePresenceResult is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>seqSubscribedPresence</p>
+          </td>
+          <td> 
+            <p><a href="PresenceV2.type.AsnPresenceList.html">AsnPresenceList</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Kontakte die angefordert wurden
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+    <p></p>
+    <p class="strong">ErrorType: AsnRequestError</p>
+    <div class="typevalues">
+      <p>AsnRequestError is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>iErrorDetail</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>A number representing the error
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sErrorString</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>A string representing the error
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

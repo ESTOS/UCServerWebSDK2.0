@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnAgentGroupInfo </h3>
+    <p>AsnAgentGroupInfo encapsulates the data for an agent (ACD) group from the agent's point of view.
+</p>
+    <p><p>An <a href="Agent.type.AsnAgentGroupInfo.html">AsnAgentGroupInfo</a> can only be uniquely identified with the combination of u8sAgentURI and u8sGroupURI.</p>
+<p class='strong'>OptionalParameters - Subsequent Enhancements to the data structure</p>
+<ul>
+<li>&quot;PhoneNumber&quot; String phone number to be displayed in the client; only server to client.</li>
+<li>&quot;AgentLoginRequiredParameters&quot; DWORD bit flags that indicate which data the PBX requires for the user/line logon. Only sent server to client. Not filled for contact portal/business card. See <a href="Agent.type.AsnAgentLoginRequiredParametersEnum.html">AsnAgentLoginRequiredParametersEnum</a></li>
+<li>&quot;SupportedAgentStates&quot; DWORD bit flags indicating which agents status values can be used in this group. Only sent server to client. See also <a href="Agent.type.AsnSupportedAgentStatesEnum.html">AsnSupportedAgentStatesEnum</a></li>
+</ul>
+</p>
+    <div class="typevalues">
+      <p>AsnAgentGroupInfo is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>u8sAgentURI</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>URI of the group agent (LineURI or ContactURI) e.g. &quot;tel:+4912345678;phys=678@ECSTA for OpenScape Business&quot; or &quot;sip:test.tester@test.de&quot;
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sGroupURI</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>URI of the group (e.g. &quot;pbxg:601@ECSTA for Panasonic&quot; or &quot;sip:mygroup@estos.de&quot;).
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sDisplayName</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Display name of the group.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iGroupCapabilities</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>This shows which status changes are supported. See also AsnAgentGroupCapabilitiesEnum.<br>
+If the highest bit is set (0x80000000), this group is a PBX/ACD group.<br>
+If the bit is not set, the group is managed by the UCServer.<br>
+See AsnAgentGroupCapabilitiesEnum.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iAgentState</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Agent status of the agent within the group as defined in AsnAgentStateEnum.<br>
+See AsnAgentStateEnum.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>optionalParams</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.AsnOptionalParameters.html">AsnOptionalParameters</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>OptionalParameters - Subsequent extensions to the data structure
+<ul>
+<li>&quot;PhoneNumber&quot; String phone number for display in client; only server to client.</li>
+<li>&quot;AgentLoginRequiredParameters&quot; DWORD bit flags that indicate which data the PBX requires for the user/line logon. Only sent server to client. Not filled for contact portal/business card. See AsnAgentLoginRequiredParametersEnum.</li>
+<li>&quot;SupportedAgentStates&quot; DWORD bit flags indicating which agents status values can be used in this group. Only sent server to client. See AsnSupportedAgentStatesEnum.</li>
+</ul>
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

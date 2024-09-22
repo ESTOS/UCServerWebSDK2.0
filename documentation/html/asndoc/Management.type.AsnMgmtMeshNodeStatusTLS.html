@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnMgmtMeshNodeStatusTLS </h3>
+    <p></p>
+    <p><p>TLS status of a node</p>
+</p>
+    <div class="typevalues">
+      <p>AsnMgmtMeshNodeStatusTLS is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>bTLS</p>
+          </td>
+          <td> 
+            <p>boolean</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>true if connection is TLS encrypted
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iTLSProtocol</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Protocol used (if no TLS: 0) google SecPkgContext_ConnectionInfo structure
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iCertChainVerifyReturn</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>certificate chain error (success: 0); only valid if connection outbound and bTls = true
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sIssuedTo</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>server certificate issuedTo; only valid if connection outbound and bTls = true
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sIssuer</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>server certificate issuer; only valid if connection outbound and bTls = true
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>timValidFrom</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>server certificate valid from; only valid if connection outbound and bTls = true
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>timValidTo</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>server certificate valid to; only valid if connection outbound and bTls = true
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sListAlternateNames</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.UTF8StringList.html">UTF8StringList</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>server certificate alternate names; only valid if connection outbound and bTls = true
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>asnConfigurationManagerConnectToDatabase</h3>
+    <p></p>
+    <p><p>07.06.2023 Error object has been changed from a custom to an <a href="Common.type.AsnRequestError.html">AsnRequestError</a><br>
+Diese Operation gibt dem UCWeb den Auftrag, sich mit einer Konfigurationsdatenbank zu verbinden (aktuell 03.07.2024 wird nur MSSQL-Server unterstuetzt).<br>
+Falls nicht connected werden kann (bspw. DB offline), wird ein <a href="Common.type.AsnRequestError.html">AsnRequestError</a> zurueckgegeben.<br>
+... der UCWeb versucht dann aber weiterhin in Intervallen, sich mit der DB zu verbinden, und sendet im Erfolgsfall ein <a href="ConfigurationManager.asnConfigurationManagerDBConnectionChangedEvent.html">asnConfigurationManagerDBConnectionChangedEvent</a><br>
+Falls connected werden kann, wird ein <a href="ConfigurationManager.type.AsnConfigurationManagerConnectToDatabaseResult.html">AsnConfigurationManagerConnectToDatabaseResult</a> zurückgegeben.<br>
+... falls iDBVersionRequired im Argument angegeben wurde, wird diese Version mit der Version aus der DB abgeglichen. Nur wenn die Version<br>
+...... uebereinstimmt (oder iDBVersionRequired nicht angegeben wurde), ist die Connection erfolgreich hergestellt und iResult = 0 im Result.<br>
+... falls der Abgleich der Version negativ ausfaellt, wird die Verbindung wieder erfolglos geschlossen, und es steht iResult = 1 im Result<br>
+...... und ucweb wird keine weiteren Verbindungsversuche unternehmen.</p>
+</p>
+    <p class="strong">ArgumentType: AsnConfigurationManagerConnectToDatabaseArgument</p>
+    <div class="typevalues">
+      <p class="private">- PRIVATE -</p>
+      <p>AsnConfigurationManagerConnectToDatabaseArgument is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>mapConnectionProperties</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.AsnStringPairList.html">AsnStringPairList</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Die Verbindungsattribute in Form einer Key-Value Liste, die folgende Elemente enthalten muss:<br>
+(&quot;server&quot;, <sqlserver Servername oder Instanzname>), (&quot;dialect&quot;, &quot;mssql_mdac&quot;), (&quot;user&quot;, <user>), (&quot;password&quot;, <password>), (&quot;dbname&quot;, <db-name>)
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>bTestMode</p>
+          </td>
+          <td> 
+            <p>boolean</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>falls gesetzt und true: Connection wird nur testweise geoeffnet (und gleich wieder geschlossen), incl. Abgleich von iDBVersionRequired (falls angegeben).<br>
+falls nicht gesetzt oder false: Connection wird dauerhaft geoeffnet.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iDBVersionRequired</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>falls gesetzt, wird vom ucweb die Connection zur Konfigurationsdatenbank nur hergestellt, wenn iDBVersionRequired mit der Version der Konfigurationsdatenbank uebereinhstimmt.
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+    <p></p>
+    <p class="strong">ResultType: AsnConfigurationManagerConnectToDatabaseResult</p>
+    <div class="typevalues">
+      <p class="private">- PRIVATE -</p>
+      <p>AsnConfigurationManagerConnectToDatabaseResult is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>iResult</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>0: success<br>
+1: fail (die Connection konnte zwar geoeffnet werden, aber die DB-Interfaceversion in der KonfigDB entspricht nicht der geforderten<br>
+Interfaceversion. Connection wurde deswegen wieder erfolglos geschlossen)
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>bFilledWithConfigurationSettings</p>
+          </td>
+          <td> 
+            <p>boolean</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>true, wenn es Konfigurationssettings in der DB gibt (wenn also die settings Tabelle nicht leer ist)
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iDBVersion</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>enthaelt die DB-Version der Konfigurationsdatenbank (1 ist die kleinste Version)
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+    <p></p>
+    <p class="strong">ErrorType: AsnRequestError</p>
+    <div class="typevalues">
+      <p>AsnRequestError is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>iErrorDetail</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>A number representing the error
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sErrorString</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>A string representing the error
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

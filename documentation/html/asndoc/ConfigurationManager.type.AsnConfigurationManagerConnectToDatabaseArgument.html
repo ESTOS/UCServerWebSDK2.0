@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnConfigurationManagerConnectToDatabaseArgument </h3>
+    <p></p>
+    <p><p>logon/auth</p>
+<p>Verbinden von ucweb mit Konfigurationsdatenbank</p>
+</p>
+    <div class="typevalues">
+      <p class="private">- PRIVATE -</p>
+      <p>AsnConfigurationManagerConnectToDatabaseArgument is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>mapConnectionProperties</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.AsnStringPairList.html">AsnStringPairList</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Die Verbindungsattribute in Form einer Key-Value Liste, die folgende Elemente enthalten muss:<br>
+(&quot;server&quot;, <sqlserver Servername oder Instanzname>), (&quot;dialect&quot;, &quot;mssql_mdac&quot;), (&quot;user&quot;, <user>), (&quot;password&quot;, <password>), (&quot;dbname&quot;, <db-name>)
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>bTestMode</p>
+          </td>
+          <td> 
+            <p>boolean</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>falls gesetzt und true: Connection wird nur testweise geoeffnet (und gleich wieder geschlossen), incl. Abgleich von iDBVersionRequired (falls angegeben).<br>
+falls nicht gesetzt oder false: Connection wird dauerhaft geoeffnet.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iDBVersionRequired</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>falls gesetzt, wird vom ucweb die Connection zur Konfigurationsdatenbank nur hergestellt, wenn iDBVersionRequired mit der Version der Konfigurationsdatenbank uebereinhstimmt.
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

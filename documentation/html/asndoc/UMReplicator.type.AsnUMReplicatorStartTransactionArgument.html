@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnUMReplicatorStartTransactionArgument </h3>
+    <p></p>
+    <p><p>REQUEST: asnUMReplicatorStartTransaction</p>
+</p>
+    <div class="typevalues">
+      <p class="private">- PRIVATE -</p>
+      <p>AsnUMReplicatorStartTransactionArgument is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>enuOperationmode</p>
+          </td>
+          <td> 
+            <p><a href="UMReplicator.type.AsnUMReplicatorStartTransactionArgumentEnum.html">AsnUMReplicatorStartTransactionArgumentEnum</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Operationmode
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iSourceType</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Die beiden folgenden Parameter sind in StartTransaction, da ein Replikator<br>
+später nicht unbedingt nur einen Rechner/ActiveDirectory replizieren können soll<br>
+Datenbanktyp (Analog DATABASETYPE aus edbeproviderdatabasesettings.h)<br>
+eDATABASE_TYPELDAPACTIVEDIRECTORY = 7, oder<br>
+eDATABASE_TYPELDAPMETADIRECTORY = 9
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sSourceComputerName</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Rechner von dem die Datenbank kommt
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

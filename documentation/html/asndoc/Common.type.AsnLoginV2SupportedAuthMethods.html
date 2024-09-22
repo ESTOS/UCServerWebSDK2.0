@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnLoginV2SupportedAuthMethods </h3>
+    <p></p>
+    <p><p>Authentication method negotiation - An ordered list of supported auth mechanisms</p>
+</p>
+    <div class="typevalues">
+      <p>AsnLoginV2SupportedAuthMethods is an Array of AsnLoginV2SupportedAuthMethod</p>
+      <p>AsnLoginV2SupportedAuthMethod is an Enumeration</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Value</th>
+        <th>Comment</th>
+        <tr>
+          <td>noneOrUnknown</td>
+          <td>number</td>
+          <td>0</td>
+          <td>do not use! Only exists to indicate an unknown type from conversion
+</td>
+        </tr>
+        <tr>
+          <td>basic</td>
+          <td>number</td>
+          <td>1</td>
+          <td>Server supports basic
+</td>
+        </tr>
+        <tr>
+          <td>digest</td>
+          <td>number</td>
+          <td>2</td>
+          <td>Server supports digest
+</td>
+        </tr>
+        <tr>
+          <td>ntlm</td>
+          <td>number</td>
+          <td>3</td>
+          <td>Server supports ntlm
+</td>
+        </tr>
+        <tr>
+          <td>kerberos</td>
+          <td>number</td>
+          <td>4</td>
+          <td>Server supports kerberos
+</td>
+        </tr>
+        <tr>
+          <td>bearer</td>
+          <td>number</td>
+          <td>5</td>
+          <td>Server supports bearer (JWT)
+</td>
+        </tr>
+        <tr>
+          <td>openidc</td>
+          <td>number</td>
+          <td>6</td>
+          <td>Server supports openIDC
+</td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

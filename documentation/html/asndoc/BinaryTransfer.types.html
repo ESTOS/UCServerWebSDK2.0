@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h1>BinaryTransfer</h1>
+    <p>Module Version: 8.0.0</p>
+    <p>Data structures and methods to transport binary data between clients and the server
+</p>
+    <p><p>The binary transfer can be used to transport any binary data blob between clients. It´s primary targeting to transfer<br>
+files within the chat but may be used to implement file sharing in remote desktop sessions as well as to implement a new procall function:<br>
+Provinding files for customers.<br>
+The interface is simple and has no other dependencies.<br>
+Primary target is to be able to transport the file contents inband in the asn.1 connection.<br>
+Later the implementation will also target 3rd party file shares like onedrive, awss3, dropbox or ucweb.</p>
+</p><a href="BinaryTransfer.doc.html"> </a>
+    <h2>Types:</h2><a href="BinaryTransfer.doc.types.html"> </a><a href="BinaryTransfer.types.html"> </a>
+    <table>
+      <th>Name</th>
+      <th>Description</th>
+      <tr>
+        <td>
+          <p><a href="BinaryTransfer.type.AsnBinaryTransferMetaDataTypeEnum.html">AsnBinaryTransferMetaDataTypeEnum</a></p>
+        </td>
+        <td> 
+          <p>embedded metadata types
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="BinaryTransfer.type.AsnBinaryTransferRequestErrorEnum.html">AsnBinaryTransferRequestErrorEnum</a></p>
+        </td>
+        <td> 
+          <p>eror values of binarytransfer
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="BinaryTransfer.type.AsnBinaryTransferStorageTypeEnum.html">AsnBinaryTransferStorageTypeEnum</a></p>
+        </td>
+        <td> 
+          <p>storage service provider
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="BinaryTransfer.type.AsnBinaryTransferServiceTypeEnum.html">AsnBinaryTransferServiceTypeEnum</a></p>
+        </td>
+        <td> 
+          <p>binarytransfer service settings
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="BinaryTransfer.type.AsnBinaryTransferSettings.html">AsnBinaryTransferSettings</a></p>
+        </td>
+        <td> 
+          <p>Data structure describing binary transfer settings
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="BinaryTransfer.type.AsnBinaryTransferStorageSettings.html">AsnBinaryTransferStorageSettings</a></p>
+        </td>
+        <td> 
+          <p>binary transfer storage settings
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="BinaryTransfer.type.AsnBinaryTransferMetaData.html">AsnBinaryTransferMetaData</a></p>
+        </td>
+        <td> 
+          <p>Data structure describing binary transfer settings
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="BinaryTransfer.type.AsnGetBinaryTransferSettingsArgument.html">AsnGetBinaryTransferSettingsArgument</a></p>
+        </td>
+        <td> 
+          <p>Argument for the AsnGetBinaryTransferSettings
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="BinaryTransfer.type.AsnInitBinaryTransferUploadResult.html">AsnInitBinaryTransferUploadResult</a></p>
+        </td>
+        <td> 
+          <p>Result for the <a href="BinaryTransfer.asnInitBinaryTransferUpload.html">asnInitBinaryTransferUpload</a>
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="BinaryTransfer.type.AsnSendBinaryChunkArgument.html">AsnSendBinaryChunkArgument</a></p>
+        </td>
+        <td> 
+          <p>Argument for the <a href="BinaryTransfer.asnSendBinaryChunk.html">asnSendBinaryChunk</a>
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="BinaryTransfer.type.AsnSendBinaryChunkResult.html">AsnSendBinaryChunkResult</a></p>
+        </td>
+        <td> 
+          <p>Result for the <a href="BinaryTransfer.asnSendBinaryChunk.html">asnSendBinaryChunk</a>
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="BinaryTransfer.type.AsnBinaryTransferUploadCompletedArgument.html">AsnBinaryTransferUploadCompletedArgument</a></p>
+        </td>
+        <td> 
+          <p>Argument for the UploadCompleted
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="BinaryTransfer.type.AsnBinaryTransferUploadCompletedResult.html">AsnBinaryTransferUploadCompletedResult</a></p>
+        </td>
+        <td> 
+          <p>Result for the UploadCompleted
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="BinaryTransfer.type.AsnInitBinaryTransferDownloadArgument.html">AsnInitBinaryTransferDownloadArgument</a></p>
+        </td>
+        <td> 
+          <p>Argument for the <a href="BinaryTransfer.asnInitBinaryTransferDownload.html">asnInitBinaryTransferDownload</a>
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="BinaryTransfer.type.AsnReceiveBinaryChunkArgument.html">AsnReceiveBinaryChunkArgument</a></p>
+        </td>
+        <td> 
+          <p>Argument for the <a href="BinaryTransfer.asnReceiveBinaryChunk.html">asnReceiveBinaryChunk</a>
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="BinaryTransfer.type.AsnReceiveBinaryChunkResult.html">AsnReceiveBinaryChunkResult</a></p>
+        </td>
+        <td> 
+          <p>Result for the <a href="BinaryTransfer.asnReceiveBinaryChunk.html">asnReceiveBinaryChunk</a>
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="BinaryTransfer.type.AsnBinaryTransferDownloadCompletedArgument.html">AsnBinaryTransferDownloadCompletedArgument</a></p>
+        </td>
+        <td> 
+          <p>Argument for the <a href="BinaryTransfer.asnBinaryTransferDownloadCompleted.html">asnBinaryTransferDownloadCompleted</a>
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="BinaryTransfer.type.AsnBinaryTransferDownloadCompletedResult.html">AsnBinaryTransferDownloadCompletedResult</a></p>
+        </td>
+        <td> 
+          <p>Result for the <a href="BinaryTransfer.asnBinaryTransferDownloadCompleted.html">asnBinaryTransferDownloadCompleted</a>
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="BinaryTransfer.type.AsnGetBinaryTransferMetaDataArgument.html">AsnGetBinaryTransferMetaDataArgument</a></p>
+        </td>
+        <td> 
+          <p>Argument for the <a href="BinaryTransfer.asnGetBinaryTransferMetaData.html">asnGetBinaryTransferMetaData</a>
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="BinaryTransfer.type.AsnBinaryTransferRemoveElementArgument.html">AsnBinaryTransferRemoveElementArgument</a></p>
+        </td>
+        <td> 
+          <p>Argument for the <a href="BinaryTransfer.asnBinaryTransferRemoveElement.html">asnBinaryTransferRemoveElement</a>
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="BinaryTransfer.type.AsnBinaryTransferRemoveElementResult.html">AsnBinaryTransferRemoveElementResult</a></p>
+        </td>
+        <td> 
+          <p>Result for the <a href="BinaryTransfer.asnBinaryTransferRemoveElement.html">asnBinaryTransferRemoveElement</a>
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="BinaryTransfer.type.AsnBinaryTransferForwardElementArgument.html">AsnBinaryTransferForwardElementArgument</a></p>
+        </td>
+        <td> 
+          <p>Argument for the <a href="BinaryTransfer.asnBinaryTransferForwardElement.html">asnBinaryTransferForwardElement</a>
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="BinaryTransfer.type.AsnBinaryTransferForwardElementResult.html">AsnBinaryTransferForwardElementResult</a></p>
+        </td>
+        <td> 
+          <p>Result for the <a href="BinaryTransfer.asnBinaryTransferForwardElement.html">asnBinaryTransferForwardElement</a>
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="BinaryTransfer.type.AsnBinaryTransferSettingsList.html">AsnBinaryTransferSettingsList</a></p>
+        </td>
+        <td> 
+          <p>list of <a href="BinaryTransfer.type.AsnBinaryTransferSettings.html">AsnBinaryTransferSettings</a>
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="BinaryTransfer.type.AsnGetBinaryTransferSettingsResult.html">AsnGetBinaryTransferSettingsResult</a></p>
+        </td>
+        <td> 
+          <p>Result for the AsnGetBinaryTransferSettings
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="BinaryTransfer.type.AsnInitBinaryTransferUploadArgument.html">AsnInitBinaryTransferUploadArgument</a></p>
+        </td>
+        <td> 
+          <p>Argument for the <a href="BinaryTransfer.asnInitBinaryTransferUpload.html">asnInitBinaryTransferUpload</a>
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="BinaryTransfer.type.AsnInitBinaryTransferDownloadResult.html">AsnInitBinaryTransferDownloadResult</a></p>
+        </td>
+        <td> 
+          <p>Result for the <a href="BinaryTransfer.asnInitBinaryTransferDownload.html">asnInitBinaryTransferDownload</a>
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="BinaryTransfer.type.AsnGetBinaryTransferMetaDataResult.html">AsnGetBinaryTransferMetaDataResult</a></p>
+        </td>
+        <td> 
+          <p>Result for the <a href="BinaryTransfer.asnGetBinaryTransferMetaData.html">asnGetBinaryTransferMetaData</a>
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="BinaryTransfer.type.AsnBinaryTransferStorageSettingsList.html">AsnBinaryTransferStorageSettingsList</a></p>
+        </td>
+        <td> 
+          <p>list of <a href="BinaryTransfer.type.AsnBinaryTransferStorageSettings.html">AsnBinaryTransferStorageSettings</a>
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="BinaryTransfer.type.AsnBinaryTransferMetaDataList.html">AsnBinaryTransferMetaDataList</a></p>
+        </td>
+        <td> 
+          <p>list of <a href="BinaryTransfer.type.AsnBinaryTransferMetaData.html">AsnBinaryTransferMetaData</a>
+</p>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

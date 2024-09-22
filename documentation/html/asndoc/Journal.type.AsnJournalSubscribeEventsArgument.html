@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnJournalSubscribeEventsArgument </h3>
+    <p>Argument for <a href="Journal.asnJournalSubscribeEvents.html">asnJournalSubscribeEvents</a>
+</p>
+    <p></p>
+    <div class="typevalues">
+      <p>AsnJournalSubscribeEventsArgument is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>bReceiveJournalEvents</p>
+          </td>
+          <td> 
+            <p>boolean</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Set to true to subscribe, set to false to unsubscribe (completely)
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iLastKnownGlobTransactionID</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>If this parameter is set to the last known transaction id, the server will only send the journal entries with a higher transaction id.<br>
+The search is limited to the last 60 days. If older entries are of interest, the client should use asnGetJournalEntries with find options set accordingly.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iMaxEntries</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>Maximum number of journal entries to retrieve by this call
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iFlags</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>Additional subscribe options defined in AsnJournalSubscribeFlags
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

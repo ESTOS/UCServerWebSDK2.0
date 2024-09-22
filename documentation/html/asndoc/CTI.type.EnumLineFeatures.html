@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>EnumLineFeatures </h3>
+    <p>Bitfield describing which features/function can be executed on a line
+</p>
+    <p><p>Some of these bit flags indicate that certain functions may be called on the line. For example, if eCTILINEFEATUREMAKECALL is set, the client may call &quot;MakeCall&quot;.<br>
+Other bits are indicators of a status, like eCTILINEFEATUREINVALIDPASSWORD, for example, tells the client, that the line will not work as expected, because the password validation on the PBX failed.</p>
+</p>
+    <div class="typevalues">
+      <p>EnumLineFeatures is an Enumeration</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Value</th>
+        <th>Comment</th>
+        <tr>
+          <td>eCTILINEFEATURENONE</td>
+          <td>number</td>
+          <td>0</td>
+          <td>No actions are available. The client can only show the call states, but no other actions will be completed successfully.
+</td>
+        </tr>
+        <tr>
+          <td>eCTILINEFEATUREMAKECALL</td>
+          <td>number</td>
+          <td>1</td>
+          <td>Call can be initiated.
+</td>
+        </tr>
+        <tr>
+          <td>eCTILINEFEATUREDONOTDISTURB</td>
+          <td>number</td>
+          <td>2</td>
+          <td>&quot;Do not disturb&quot; can be set/modified.
+</td>
+        </tr>
+        <tr>
+          <td>eCTILINEFEATUREPICKUP</td>
+          <td>number</td>
+          <td>4</td>
+          <td>Calls from this line can be picked to other lines.
+</td>
+        </tr>
+        <tr>
+          <td>eCTILINEFEATUREBLOCKID</td>
+          <td>number</td>
+          <td>8</td>
+          <td>While &quot;MakeCall&quot; the CALLERID may be suppressed.
+</td>
+        </tr>
+        <tr>
+          <td>eCTILINEFEATURENOIMMEDIATEINQUIRY</td>
+          <td>number</td>
+          <td>16</td>
+          <td>This flag is set, if it is not possible to execute &quot;MakeCall&quot; while another call is already in active state (no automatic &quot;put on hold&quot; available).
+</td>
+        </tr>
+        <tr>
+          <td>eCTILINEFEATUREREMOTEOFFICE</td>
+          <td>number</td>
+          <td>32</td>
+          <td>Remote Office - Nomadic Mode - is possible
+</td>
+        </tr>
+        <tr>
+          <td>eCTILINEFEATUREINVALIDPASSWORD</td>
+          <td>number</td>
+          <td>64</td>
+          <td>Invalid Password (currently only for BroadWorks lines)
+</td>
+        </tr>
+        <tr>
+          <td>eCTILINEFEATUREREMOTEOFFICEEMULATION</td>
+          <td>number</td>
+          <td>128</td>
+          <td>This flag can be set additionally with ECTILINEFEATURE_REMOTEOFFICE, if the remote office feature will be emulated by the UCServer (call association).
+</td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

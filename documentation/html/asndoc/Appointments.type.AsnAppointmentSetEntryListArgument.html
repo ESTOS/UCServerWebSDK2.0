@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnAppointmentSetEntryListArgument </h3>
+    <p>Argument for <a href="Appointments.asnAppointmentSetEntryList.html">asnAppointmentSetEntryList</a>
+</p>
+    <p></p>
+    <div class="typevalues">
+      <p>AsnAppointmentSetEntryListArgument is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>u8sOwner</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Username of the user (NOT the identity/sip address). The server will use the logged in user's name. The parameter is only used, if a user with admin rights will set appointments for other users (e.g. EWS Calendar Replicator).
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sDataSource</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>A String to indicate the source of the appointments. Following strings are used by now:
+<ul>
+<li><em>MAPI</em> - MAPI Connector to Microsoft Outlook</li>
+<li><em>EWS</em> - EWS Calendar Replicator to a Microsoft Exchange Server</li>
+<li><em>LOTUSNOTES</em> - IBM Notes</li>
+<li><em>Exchange Web Services</em> - UCClient EWS Connector</li>
+<li><em>Windows Contacts</em> - Appointment data from the Windows 10 &quot;Calendar&quot;</li>
+<li><em>Google</em> - Google GSUITE (or other Google online Calendar)</li>
+<li><em>TOBIT</em> - (depricated) Tobit David</li>
+</ul>
+<p>Name of the Source Database (e.g. MAPI, NOTES, TOBIT etc.)..
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>appointments</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.SEQAppointmentList.html">SEQAppointmentList</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>List of AsnAppointmentEntry objects.
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnChatReactionsEmojiList </h3>
+    <p></p>
+    <p><p>this (payload) structure based on the client requirements<br>
+every ChatMessage covers, 0 - n (unique), Emoji(s) with a UsersList.<br>
+see also: protocoll overhead &quot;primaryKey&quot; AND TransactionID/USN<br>
+every ResultList/SetOfEmojis from Server comes with it's USN<br>
+there is no extra type which covers <a href="ChatV2.type.AsnChatReactionsEmojiList.html">AsnChatReactionsEmojiList</a> AND it's associated USN<br>
+if you add methods which return/ship <a href="ChatV2.type.AsnChatReactionsEmojiList.html">AsnChatReactionsEmojiList</a> remeber to support USN too</p>
+</p>
+    <div class="typevalues">
+      <p>AsnChatReactionsEmojiList is an Array of AsnChatReactionsEmoji</p>
+      <p>AsnChatReactionsEmoji is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>u8sEmoji</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>single Emoji
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sUsers</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.UTF8StringList.html">UTF8StringList</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Contact URIs voted
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnInitBinaryTransferUploadResult </h3>
+    <p>Result for the <a href="BinaryTransfer.asnInitBinaryTransferUpload.html">asnInitBinaryTransferUpload</a>
+</p>
+    <p></p>
+    <div class="typevalues">
+      <p>AsnInitBinaryTransferUploadResult is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>eTargetType</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Tells the client which storage provider it shall use for the binary transfer<br>
+Server will set itself if no further transfer is necessary (e.g. vcf or location sent to the server)
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sTransferID</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>The server provided id identifying the transfer
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sTargetServiceDetails</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.AsnStringPairList.html">AsnStringPairList</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>Service/Target specific configuration, members see AsnBinaryTransferStorageypeEnum (only for 3rd party storage providers)
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

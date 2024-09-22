@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnDeletedItem </h3>
+    <p>A deleted item - contact or AsnClientContactItem.
+</p>
+    <p><p>If an element of the client content is deleted, this object contains the ID of the object.<br>
+All fields are optional and only be set if necessary.</p>
+<p>If a complete cluster has to be removed, only the cluster ID is given.<br /><br>
+If a complete group has to be removed, the group and the according cluster ID is given.<br /><br>
+If an item has to be removed, the item, gourp and cluster ID is given.<br /><br>
+If a contact has to be removed, its contact ID is given.<br /><br>
+It is possible that all four fields are set, when the Item and the contact attached to should be removed.</p>
+</p>
+    <div class="typevalues">
+      <p class="private">- PRIVATE -</p>
+      <p class="private">- DEPRECATED -</p>
+      <p>AsnDeletedItem is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>contactID</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.AsnNetDatabaseContactID.html">AsnNetDatabaseContactID</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>If a contact was removed, this field contains its contact id.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sItemID</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>If an AsnClientContentItem was deleted this field contains it ID. In this case the group and cluster IDs should also be set.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sGroupID</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>If an AsnClientContentGroup or an item of the group should be deleted, this ID is set.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sGroupclusterID</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>If an AsnClientContentGroupCluster or a group or item inside should be deleted, thsi ID is set.
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>asnUpdateMyCallInformation</h3>
+    <p></p>
+    <p></p><strong>ArgumentType: AsnUpdateMyCallInformationArgument</strong>
+    <div class="typevalues">
+      <p class="private">- PRIVATE -</p>
+      <p class="private">- DEPRECATED -</p>
+      <p>AsnUpdateMyCallInformationArgument is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>u8sContactChangedId</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>The contact id of the contact this information is related to.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iPresenceState</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Actual presence state of the contact this information is related to.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sConnectionID</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Unique identifier of the call.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sLinePhoneNumber</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Line identfier (or phone number if URI is not available) of the phone
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sCharging</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>line on which the call is active.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iCallState</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Call state in which the call currently is. See EnumCallState for more details.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iDisconnectedReason</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>If a call is disconnected, this could contain a reason for the disconnect. See EnumCallDisconnectedReason for more details.
+ (Linked Type: <a href="General.type.EnumCallState.html">EnumCallState</a>)
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iFeatures</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>This field contains the currently available call features - what can a client do with this call. See EnumCallFeatures for more details.
+ (Linked Type: <a href="General.type.EnumCallDisconnectedReason.html">EnumCallDisconnectedReason</a>)
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>bOutbound</p>
+          </td>
+          <td> 
+            <p>boolean</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>true if the call was initiated (dialed) on the attached line; false if the call is incoming from outside.
+ (Linked Type: <a href="CTI.type.EnumCallFeatures.html">EnumCallFeatures</a>)
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>bInternal</p>
+          </td>
+          <td> 
+            <p>boolean</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>true if the call terminates in the same PBX; false if the other device is not attached to this PBX.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>bPrivate</p>
+          </td>
+          <td> 
+            <p>boolean</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>true if the call is marked as private, false if not.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iCallRecordingState</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Call recording state of this call. See EnumCallRecordingState for more details.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>bConferenceCtlr</p>
+          </td>
+          <td> 
+            <p>boolean</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>true if this call is used to control a conference.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sCurrentNumberSC</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Phone number of the partner.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>pu8sRedirectingNumber</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>May contain the number of the line on which the call was received first and then redirected.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>pRemoteContact</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.AsnNetDatabaseContact.html">AsnNetDatabaseContact</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>If present, this Field contains contact data attached to this call (UCServer intern only)
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>optionalParams</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.AsnOptionalParameters.html">AsnOptionalParameters</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>optionalParams Name &quot;TrackerID&quot; Value String<br>
+optionalParams Name &quot;eJournalCallType&quot; Value Number
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

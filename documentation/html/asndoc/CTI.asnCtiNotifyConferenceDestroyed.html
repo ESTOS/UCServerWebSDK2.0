@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>asnCtiNotifyConferenceDestroyed</h3>
+    <p>Event from the server if a conference is closed/destroyed.<br>
+In order to get these events the line must be monitored via <a href="CTI.asnCtiLineMonitorStart.html">asnCtiLineMonitorStart</a>
+</p>
+    <p></p><strong>ArgumentType: AsnCtiNotifyConferenceDestroyedArgument</strong>
+    <div class="typevalues">
+      <p>AsnCtiNotifyConferenceDestroyedArgument is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>u8sLineMonitorCrossRefID</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>CrossrefID for the corresponding asnCtiLineMonitorStart
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sLinePhoneNumber</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Line identifier for the line where the changes happened.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>conferenceControllerCallInfo</p>
+          </td>
+          <td> 
+            <p><a href="CTI.type.AsnCtiCallInformation.html">AsnCtiCallInformation</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>The call information of the conference controller.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>conferenceMemberCallInfoList</p>
+          </td>
+          <td> 
+            <p><a href="CTI.type.AsnCtiCallInformationList.html">AsnCtiCallInformationList</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>The call information of the other participants.
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

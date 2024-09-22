@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnContactPhoneLine </h3>
+    <p>Phone line object which is used in the presence object model.
+</p>
+    <p><p>Not every client will have full CTI functionality, but has to display some information baout the<br>
+lines and phone states of users. For this <a href="Common.type.AsnContactPhoneLine.html">AsnContactPhoneLine</a> represents teh state of a line in the presence model.</p>
+</p>
+    <div class="typevalues">
+      <p class="private">- DEPRECATED -</p>
+      <p>AsnContactPhoneLine is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>iType</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Enum for the type of the line. See AsnContactPhoneLineType for details.
+ (Linked Type: <a href="CommonSIPCTI.type.AsnContactPhoneLineType.html">AsnContactPhoneLineType</a>)
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sLinePhoneNumber</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>The identificator of a line. This could be a Phonenumber or a phone URI.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sDescriptor</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Description text for a line.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sNumber</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Phone number of the line.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>seqCalls</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.AsnContactCallInformations.html">AsnContactCallInformations</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Call which are currently on the line.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>seqLineForwards</p>
+          </td>
+          <td> 
+            <p><a href="CommonSIPCTI.type.AsnLineForwards.html">AsnLineForwards</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Line forwardings currently set on the line.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iState</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.AsnContactPhoneLineState.html">AsnContactPhoneLineState</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>The line state. See AsnContactPhoneLineState for details (eLINEOFFLINE, eLINEONLINE, etc.)
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>bDoNotDisturb</p>
+          </td>
+          <td> 
+            <p>boolean</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Do not disturb flag for this line. TRUE do not disturb is active, FALSE not.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iForwardFeaturesPBX</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Which sort of call forward is available on this line. See AsnForwardMode for details.
+ (Linked Type: <a href="General.type.AsnForwardMode.html">AsnForwardMode</a>)
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>optionalParams</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.AsnOptionalParameters.html">AsnOptionalParameters</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>Optonal parameters
+<ul>
+<li>Key &quot;AddressNames&quot; Value UTF8String - ';' separated list of line addresses.</li>
+<li>Key &quot;AddressCaps&quot; Value UTF8String - XML with the capabilities of the line.</li>
+<li>Key &quot;CTIFeatureCodes&quot; Value UTF8String - XML with the feature codes available for this line.</li>
+<li>Key &quot;PrivateLine&quot; Value Bool - true: the line has to be treated as private, false: normal line, no private restrictions.</li>
+<li>Key &quot;SIPAVMediaMode&quot; Value Integer - Media Mode on this audio/video line; only available if the line ia an A/V line.</li>
+<li>Key &quot;SIPAVAudioCodecs&quot; Value List of Integer - Available codecs on this line;  only available if the line ia an A/V line.</li>
+</ul>
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

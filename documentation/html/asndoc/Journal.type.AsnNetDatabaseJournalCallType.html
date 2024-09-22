@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnNetDatabaseJournalCallType </h3>
+    <p>Call type of the journal entry used in <a href="Journal.type.AsnNetDatabaseJournal.html">AsnNetDatabaseJournal</a> objects.
+</p>
+    <p></p>
+    <div class="typevalues">
+      <p>AsnNetDatabaseJournalCallType is an Enumeration</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Value</th>
+        <th>Comment</th>
+        <tr>
+          <td>eJOURNALCALLTYPEPBX</td>
+          <td>number</td>
+          <td>0</td>
+          <td>Calls on PBX lines (TAPI)
+</td>
+        </tr>
+        <tr>
+          <td>eJOURNALCALLTYPEVIDEOCHAT</td>
+          <td>number</td>
+          <td>1</td>
+          <td>Video Chat (WebRTC based) (only Video, no Audio; e.g. desktop sharing session)
+</td>
+        </tr>
+        <tr>
+          <td>eJOURNALCALLTYPEAUDIOCHAT</td>
+          <td>number</td>
+          <td>2</td>
+          <td>Audio Chat (WebRTC based) (only Audio, no Video)
+</td>
+        </tr>
+        <tr>
+          <td>eJOURNALCALLTYPEAUDIOVIDEOCHAT</td>
+          <td>number</td>
+          <td>3</td>
+          <td>Video Chat (WebRTC based) (Audio and Video)
+</td>
+        </tr>
+        <tr>
+          <td>eJOURNALCALLTYPEIM</td>
+          <td>number</td>
+          <td>4</td>
+          <td>Text Chat
+</td>
+        </tr>
+        <tr>
+          <td>eJOURNALCALLTYPEBLUETOOTHMOBILE</td>
+          <td>number</td>
+          <td>5</td>
+          <td>Bluetooth mobile phone call
+</td>
+        </tr>
+        <tr>
+          <td>eJOURNALCALLTYPEBLUETOOTHMOBILEUNKNOWNDURATION</td>
+          <td>number</td>
+          <td>6</td>
+          <td>Bluetooth mobile phone - Call duration of the connected call is (1 sec, offline Journal)
+</td>
+        </tr>
+        <tr>
+          <td>eJOURNALCALLTYPESIPAVCALL</td>
+          <td>number</td>
+          <td>7</td>
+          <td>Audio chat via SIP connection to PBX. Looks like a normal PBX call, but is technically a SIP softphone call via PBX using WebRTC.
+</td>
+        </tr>
+        <tr>
+          <td>eJOURNALCALLTYPESMS</td>
+          <td>number</td>
+          <td>8</td>
+          <td>SMS
+</td>
+        </tr>
+        <tr>
+          <td>eJOURNALCALLTYPESCREENSHARING</td>
+          <td>number</td>
+          <td>9</td>
+          <td>Screen/Desktop sharing (WebRTC based, invite := outgoing)
+</td>
+        </tr>
+        <tr>
+          <td>eJOURNALCALLTYPERSCREENSHARING</td>
+          <td>number</td>
+          <td>10</td>
+          <td>Screen/Desktop sharing (WebRTC based, request := incoming)
+</td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

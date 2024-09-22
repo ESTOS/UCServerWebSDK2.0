@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h1>AgentServices</h1>
+    <p>Module Version: 8.0.0</p>
+    <p>API for Server to Server Agents functionality
+</p>
+    <p><p class='strong'>Module description</p>
+<p>This module defines structures and operations for a agent functionality backend other than UCServer or PBX.</p>
+<p class='strong'>Prerequisite for using the interface</p>
+<ul>
+<li>The other service needs a socket for secure data Transmission between client-server and vise versa.</li>
+<li>Installation of ProCall Software in advance at the client side</li>
+<li>Login the other service at the UCServer</li>
+<li>Provide IDs (full canonical telephone numbers or user IDs) of the User, which should use the agnet functionality</li>
+<li>Attach to Events for the user commands (like logon or logoff)</li>
+<li>Provide state changes of the agent with its IDas event to the UCServer</li>
+<li>While closing the connection, detach from events first, unregister IDs and close socket connection to the UCServer.</li>
+</ul>
+<p class='strong'>Functionalities</p>
+<ul>
+<li>If the user can be recognized as agnet user oft the other server it will gain the client UI for agnet state changes</li>
+<li>User commands according state changes of the user will be provided to the other service</li>
+<li>State changes from the other service will be provided to the corresponding clients</li>
+</ul>
+<p class='strong'>Sequence diagram</p>
+<p>&quot;Call&quot;: Like a RPC Call, expect results or errors as an answer.</p>
+<p>&quot;Event&quot;: Behaviour is like an event it is named, this call will not have any results sent back.</p>
+<img src="https://www.plantuml.com/plantuml/png/VPBBRi8m44Nt_eghB2F81rHDHKKttO9GDzaO619BoJZo658aFhuJ4nNw4BjuVELpPYOBYJR4OzUQiiJICzCkEizelGYs50SYXgs98uJ2oUq8blVOBDVJgIoDoLvJO2fbcBzy8lkEPERk6y_p-widV5WNSV01WNPN_0nx3_QnSLpFAjue5pPP2MmWk9fze7tnyDat9tRRgcpRNlLb1l5GbXESdBZnCdh4Xd1KWYX93rRRz1qbDXhRzwJDJh4VKz3uyCVyiTAAEd-YsrE2G_0TEYs7SyNZM5DX36pUuGytkGBhw7kCH1KhpELo-MVelt6JrTZArC9jRROTx5amkDXK72XGxIG6ctO_aIT9Mrl7HSLvlYP2jaf9NKd2IrRakJ4B7PF-Gry0" alt="uml diagram">
+</p><a href="AgentServices.doc.html"> </a>
+    <h2>Operations:</h2><a href="AgentServices.doc.operations.html"> </a><a href="AgentServices.operations.html"> </a>
+    <table>
+      <th>Name</th>
+      <th>Description</th>
+      <tr>
+        <td>
+          <p><a href="AgentServices.asnRegisterServiceAgents.html">asnRegisterServiceAgents</a></p>
+        </td>
+        <td> 
+          <p>register agents to the service
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="AgentServices.asnUnregisterServiceAgents.html">asnUnregisterServiceAgents</a></p>
+        </td>
+        <td> 
+          <p>unregister agents from the service
+</p>
+        </td>
+      </tr>
+    </table>
+    <h2>Events:</h2><a href="AgentServices.doc.events.html"> </a><a href="AgentServices.events.html"> </a>
+    <table>
+      <th>Name</th>
+      <th>Description</th>
+      <tr>
+        <td>
+          <p><a href="AgentServices.asnSetServiceAgentStates.html">asnSetServiceAgentStates</a></p>
+        </td>
+        <td> 
+          <p>Event to set the state of agent(s). There is no answer to this event.
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="AgentServices.asnResponseSetServiceAgentStatesFailed.html">asnResponseSetServiceAgentStatesFailed</a></p>
+        </td>
+        <td> 
+          <p>Event to for agent states that the UCServer was unable to set
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="AgentServices.asnRequestServiceAgentStateChange.html">asnRequestServiceAgentStateChange</a></p>
+        </td>
+        <td> 
+          <p>The state of a agent should be changed
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="AgentServices.asnRequestServiceAgentLogin.html">asnRequestServiceAgentLogin</a></p>
+        </td>
+        <td> 
+          <p>The agent should be logged in
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="AgentServices.asnRequestServiceAgentLogout.html">asnRequestServiceAgentLogout</a></p>
+        </td>
+        <td> 
+          <p>The agent request a logout
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="AgentServices.asnRequestServiceAgentsStatusUpdate.html">asnRequestServiceAgentsStatusUpdate</a></p>
+        </td>
+        <td> 
+          <p>The connected service should update the state of the given agents or all agents
+</p>
+        </td>
+      </tr>
+    </table>
+    <h2>Types:</h2><a href="AgentServices.doc.types.html"> </a><a href="AgentServices.types.html"> </a>
+    <table>
+      <th>Name</th>
+      <th>Description</th>
+      <tr>
+        <td>
+          <p><a href="AgentServices.type.AsnNetServicesAgentsErrors.html">AsnNetServicesAgentsErrors</a></p>
+        </td>
+        <td> 
+          <p>Error return codes used in the API
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="AgentServices.type.AsnServiceAgentStateFailedReasonEnum.html">AsnServiceAgentStateFailedReasonEnum</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="AgentServices.type.AsnAgentACDLoginData.html">AsnAgentACDLoginData</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="AgentServices.type.AsnServiceAgent.html">AsnServiceAgent</a></p>
+        </td>
+        <td> 
+          <p>Structure with the agent information needed whcih is exchanegd between the agent service and the UCServer.
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="AgentServices.type.AsnRegisterServiceAgentsResult.html">AsnRegisterServiceAgentsResult</a></p>
+        </td>
+        <td> 
+          <p>Result of asnRegisterAgents
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="AgentServices.type.AsnUnregisterServiceAgentsResult.html">AsnUnregisterServiceAgentsResult</a></p>
+        </td>
+        <td> 
+          <p>Result of <a href="AgentServices.asnUnregisterServiceAgents.html">asnUnregisterServiceAgents</a>
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="AgentServices.type.AsnServiceAgentStateFailedReason.html">AsnServiceAgentStateFailedReason</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="AgentServices.type.AsnServiceAgentList.html">AsnServiceAgentList</a></p>
+        </td>
+        <td> 
+          <p>List of <a href="AgentServices.type.AsnServiceAgent.html">AsnServiceAgent</a> strutures
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="AgentServices.type.AsnRegisterServiceAgentsArgument.html">AsnRegisterServiceAgentsArgument</a></p>
+        </td>
+        <td> 
+          <p>Argument for <a href="AgentServices.asnRegisterServiceAgents.html">asnRegisterServiceAgents</a>
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="AgentServices.type.AsnUnregisterServiceAgentsArgument.html">AsnUnregisterServiceAgentsArgument</a></p>
+        </td>
+        <td> 
+          <p>Argument for <a href="AgentServices.asnUnregisterServiceAgents.html">asnUnregisterServiceAgents</a>
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="AgentServices.type.AsnSetServiceAgentStatesArgument.html">AsnSetServiceAgentStatesArgument</a></p>
+        </td>
+        <td> 
+          <p>Argument for asnSetAgentStates
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="AgentServices.type.AsnServiceAgentStateFailedReasonList.html">AsnServiceAgentStateFailedReasonList</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="AgentServices.type.AsnResponseSetServiceAgentStatesFailedArgument.html">AsnResponseSetServiceAgentStatesFailedArgument</a></p>
+        </td>
+        <td> 
+          <p>Argument for AsnResponseSetServiceAgentStatesFailed
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="AgentServices.type.AsnRequestServiceAgentStateChangeArgument.html">AsnRequestServiceAgentStateChangeArgument</a></p>
+        </td>
+        <td> 
+          <p>Argument for asnEventServiceAgentStateChanged
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="AgentServices.type.AsnRequestServiceAgentLoginArgument.html">AsnRequestServiceAgentLoginArgument</a></p>
+        </td>
+        <td> 
+          <p>Argument for asnEventServiceAgentStateChanged
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="AgentServices.type.AsnRequestServiceAgentLogoutArgument.html">AsnRequestServiceAgentLogoutArgument</a></p>
+        </td>
+        <td> 
+          <p>Argument for asnEventServiceAgentStateChanged
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="AgentServices.type.AsnRequestServiceAgentsStatusUpdateArgument.html">AsnRequestServiceAgentsStatusUpdateArgument</a></p>
+        </td>
+        <td> 
+          <p>Argument for <a href="AgentServices.asnRequestServiceAgentsStatusUpdate.html">asnRequestServiceAgentsStatusUpdate</a>
+</p>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

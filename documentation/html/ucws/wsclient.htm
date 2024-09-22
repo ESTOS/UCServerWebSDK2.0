@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>/ws/client</title>
+    <link rel="stylesheet" type="text/css" href="../stylesheet.css">    
+  </head>
+  <body>
+    <h2>/ws/client</h2>
+    <p>The client route is used to establish a user session with event notifications.</p>
+    <p class="strong">First Steps</p> 
+    <p>The first step is to create the user session. Use a UCServer user name and password to authenticate. The result will be a json Object that contains the 
+    sessionid.</p>
+    <p>Since UCServer Version 7 the protocol version must be given in the body of the request and should be set to <b>70</b>. The URL parameter <b>clientappid</b> helps the UCServer to categorize the client and should be set to 15 for SDK Clients.</p>
+    <p>
+    <b>POST:</b><br />
+<pre><code>POST http://localhost:7224/ws/client/createsession?clientappid=15
+  Content-Type application/json;charset=utf-8
+  X-no401 1
+  X-ucsid local
+  X-simple 1
+  
+  { "negotiate": { "iClientProtocolVersion": 70 } }</code></pre>
+</p>
+<p>
+<b>RESPONSE:</b><br />
+    <pre><code>200 OK
+{
+    "sessionid": "470977D3647E174DB9AF9A0C3567A3E7"
+}</code></pre></p>
+
+    <p class="strong">Authentication options</p> 
+    <p>There are different authentication options available.</p>
+    <ul>
+      <li><strong>HTTP Authentication</strong><br/>
+        When using HTTP Authentication in the Browser, a prompt will ask the user for credentials.
+        To prevent the 401 Authentication failed response, use the parameter 'no401' (http://localhost:7224/ws/client/createsession?no401).
+        <br/><br/>
+      </li>
+      <li><strong><a href="tokenauth.htm">Token Authentication</a></strong><br/>
+        Token Authentication is used to authenticate users without transmitting the password every time.
+        A Login Token can be obtained with <a href="../asndoc/Authentication.asnGetUserToken.html">asnGetUserToken</a>.
+        The Token is transmitted either with a query parameter (http://localhost:7224/ws/client/createsession?token=aabbccddeeff&clientappid=15) or as HTTP custom header (x-uctoken: aabbccddeeff).
+        When using this option, no 401 response will be given. Failed Authentication will result in a 400 response with an json error struct.
+        
+        <pre><code>Replace aabbccddeeff with the login token:
+http://localhost:7224/ws/client/createsession?token=aabbccddeeff&clientappid=15</code></pre>
+      </li>
+      <li><strong>Username and Password in query</strong><br/>
+        Username and Password may be transmitted as query parameters.
+        When using this option, no 401 response will be given. Failed Authentication will result in a 400 response with an json error struct.
+        <pre><code>Replace username and password with valid credentials:
+http://localhost:7224/ws/client/createsession?user=username&pass=password&clientappid=15</code></pre>
+      </li>
+    </ul>
+    <p class="strong">Error Conditions</p> 
+    <p>There are different error coditions and corresponding error messages.</p>
+    <table>
+      <tr>
+        <th>HTTP Code</th>
+        <th>Description</th>
+        <th>Result Body</th>
+      </tr>
+      <tr>
+        <td>502</td>
+        <td>invalid UCSID or UCServer is not connected here</td>
+        <td>
+          <pre>
+{
+    "error": {
+        "details": "server not connected here: [local1]",
+        "_type": "WsError",
+        "iErrorDetail": 119,
+        "u8sErrorString": "UCServer is not connected here"
+    }
+}
+          </pre>
+        </td>
+      </tr>
+      <tr>
+        <td>400</td>
+        <td>Logon to UCServer failed. For iErrorDetail Values see <a href="../asndoc/Authentication.type.AsnLogonErrorEnum.html">AsnLogonErrorEnum</a>.</td>
+        <td>
+          <pre>
+{
+    "error": {
+        "_type": "AsnLogonError",
+        "iErrorDetail": 101,
+        "sAuthCredetials": "",
+        "u8sErrorString": "User Authentication failed",
+        "u8sFailedUser": ""
+    },
+    "error_value": 0,
+    "invokedID": 44,
+    "sessionID": "F157012E9D63824C80141E367C77659A"
+}
+          </pre>
+        </td>
+      </tr>
+    </table>
+    <p class="strong">Using Javascript</p>
+    <p>You may use Javascript to send commands to the server. Copy the following text to a html file and open it in the browser.
+    You may also <a href="wsclientjs.htm" target="_blank">open the page here</a>.
+    <code><PRE>
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+  &lt;style&gt;
+    span { vertical-align: top; display: inline-block; width: 200px; }
+    input { display: inline-block; width: 400px; }
+  &lt;/style&gt;
+  &lt;body&gt;
+    &lt;form&gt;
+      &lt;span&gt;Server URL:&lt;/span&gt;&lt;input id=&quot;serverurl&quot; value=&quot;http://localhost:7224&quot;/&gt;&lt;br/&gt;
+      &lt;span&gt;UCSID:&lt;/span&gt;&lt;input id=&quot;ucsid&quot; value=&quot;local&quot;/&gt;&lt;br/&gt;
+      &lt;span&gt;Username:&lt;/span&gt;&lt;input id=&quot;user&quot; value=&quot;&quot;/&gt;&lt;br/&gt;
+      &lt;span&gt;Password:&lt;/span&gt;&lt;input id=&quot;pass&quot; value=&quot;&quot;/&gt;&lt;br/&gt;
+      &lt;button type='submit' onclick='createsession(); event.preventDefault();'&gt;Create Session&lt;/button&gt;&lt;br/&gt;
+    &lt;/form&gt;
+    &lt;form&gt;
+      &lt;span&gt;SessionID:&lt;/span&gt;&lt;input id=&quot;sessionid&quot; value=&quot;&quot;/&gt;&lt;br/&gt;
+      &lt;span&gt;Function:&lt;/span&gt;&lt;input id=&quot;func&quot; value=&quot;asnGetLoggedInContact&quot;/&gt;&lt;br/&gt;
+      &lt;span&gt;Params:&lt;/span&gt;&lt;textarea rows=&quot;7&quot; id=&quot;params&quot;&gt;{ }&lt;/textarea&gt;&lt;br/&gt;
+      &lt;button type='submit' onclick='sendcommand(); event.preventDefault();'&gt;Send Command&lt;/button&gt;&lt;br/&gt;
+    &lt;/form&gt;
+    &lt;pre id=&quot;result&quot;&gt;&lt;/pre&gt;
+  &lt;/body&gt;
+  &lt;script&gt;
+    function createsession()
+    {
+      let serverurl = document.getElementById(&quot;serverurl&quot;).value;
+      let ucsid = document.getElementById(&quot;ucsid&quot;).value;
+      let user = document.getElementById(&quot;user&quot;).value;
+      let pass = document.getElementById(&quot;pass&quot;).value;
+      let func = 'createsession?clientappid=15'; // since ProCall 7 you have to tell the server your application type (Web = 15)
+            
+      let oXHR = new XMLHttpRequest();   // new HttpRequest instance
+      oXHR.addEventListener(&quot;loadend&quot;, function(evt) {
+        let outtext = oXHR.responseText;
+        let response = {};
+        try {
+          response = JSON.parse(oXHR.responseText);
+          outtext = JSON.stringify(response, null, 4);        
+        } catch(e) {
+        }
+        if (oXHR.status == 0) {
+          document.getElementById(&quot;result&quot;).innerHTML = 'Failed: General Network Error';
+        } else if (outtext == '') {
+          document.getElementById(&quot;result&quot;).innerHTML = 'Failed: No response received';
+        } else if (oXHR.status == 200) {
+          document.getElementById(&quot;result&quot;).innerHTML = outtext;
+          if (response.hasOwnProperty('sessionid')) {
+              document.getElementById(&quot;sessionid&quot;).value = response.sessionid;
+          }
+        } else {
+          document.getElementById(&quot;result&quot;).innerHTML = outtext;
+        }
+      });
+      //epid must be unique for every createsession request
+    
+      // for ProCall 7 it is a MUST to tell the server the API Version ('70' for ProCall 7, '61' for ProCall 6)
+      // for ProCall 6 you can (and SHOULD) do it.
+      let apiVersion = 70;
+	
+      oXHR.open(&quot;POST&quot;, serverurl + &quot;/ws/client/&quot; + func, true);
+      oXHR.setRequestHeader(&quot;Authorization&quot;, &quot;Basic &quot; + btoa(user + &quot;:&quot; + pass)); 
+      oXHR.setRequestHeader(&quot;Content-Type&quot;, &quot;application/json;charset=utf-8&quot;);
+      oXHR.setRequestHeader(&quot;X-no401&quot;, &quot;1&quot;);
+      oXHR.setRequestHeader(&quot;X-ucsid&quot;, ucsid);
+      oXHR.setRequestHeader(&quot;X-simple&quot;, &quot;1&quot;);
+      oXHR.send('{ &quot;negotiate&quot;: { &quot;iClientProtocolVersion&quot;: '+apiVersion+' } }');    
+    }
+	
+    function sendcommand()
+    {
+      let serverurl = document.getElementById(&quot;serverurl&quot;).value;
+      let func = document.getElementById(&quot;func&quot;).value;
+      let sessionid = document.getElementById(&quot;sessionid&quot;).value;
+      let params = document.getElementById(&quot;params&quot;).value;
+      try {
+        JSON.parse(params);
+      } catch(e) {
+        document.getElementById(&quot;result&quot;).innerHTML = 'Failed: Params are not valid JSON: ' + e;
+        return;
+      }
+      
+      let oXHR = new XMLHttpRequest();   // new HttpRequest instance
+      oXHR.addEventListener(&quot;loadend&quot;, function(evt) {
+        let outtext = oXHR.responseText;
+        try {
+          outtext = JSON.stringify(JSON.parse(oXHR.responseText), null, 4);        
+        } catch(e) {
+        }
+        if (oXHR.status == 0) {
+          document.getElementById(&quot;result&quot;).innerHTML = 'Failed: General Network Error';
+        } else if (outtext == '') {
+          document.getElementById(&quot;result&quot;).innerHTML = 'Failed: No response received';
+        } else if (oXHR.status == 200) {
+          document.getElementById(&quot;result&quot;).innerHTML = outtext;
+        } else {
+          document.getElementById(&quot;result&quot;).innerHTML = outtext;
+        }
+      });
+      oXHR.open(&quot;POST&quot;, serverurl + &quot;/ws/client/&quot; + func);
+      oXHR.setRequestHeader(&quot;Content-Type&quot;, &quot;application/json;charset=utf-8&quot;);
+      oXHR.setRequestHeader(&quot;X-ucsessionid&quot;, sessionid); 
+      oXHR.setRequestHeader(&quot;X-ucsid&quot;, ucsid);
+
+      oXHR.send(params);    
+    }
+  &lt;/script&gt;
+&lt;/html&gt;
+</code></PRE>
+    </p>
+    
+    <p>All API endpoints may be called with GET or POST. Jsonp is supported.</p>
+    
+  </body>
+</html>

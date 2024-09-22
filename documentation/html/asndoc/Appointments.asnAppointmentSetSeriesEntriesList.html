@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>asnAppointmentSetSeriesEntriesList</h3>
+    <p>Send a complete list of recurrent appointments to the server.
+</p>
+    <p><p>Send a complete list of recurrent appointments to the server. Each entry must have the same entryID.</p>
+</p>
+    <p class="strong">ArgumentType: AsnAppointmentSetSeriesEntriesListArgument</p>
+    <div class="typevalues">
+      <p>AsnAppointmentSetSeriesEntriesListArgument is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>u8sOwner</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Name of the owner of the appointments. It is only neccessary if the appointments were set for another user (as admin). For user logins, the server will get the username from the logged in user profile.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sDataSource</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Name of the data source. See AsnAppointmentSetEntryListArgument for possible strings.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>appointments</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.SEQAppointmentList.html">SEQAppointmentList</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>List of AsnAppointmentEntry. In this case the u8sEntryID should alle be the same.
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+    <p></p>
+    <p class="strong">ResultType: AsnAppointmentSetSeriesEntriesListResult</p>
+    <div class="typevalues">
+      <p>AsnAppointmentSetSeriesEntriesListResult is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>iResult</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>0: The call went well, other values indicates, that the database could not be updated. If the call to the server fails, an AsnRequestError will be returned instead of AsnAppointmentSetSeriesEntriesListResult.
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+    <p></p>
+    <p class="strong">ErrorType: AsnRequestError</p>
+    <div class="typevalues">
+      <p>AsnRequestError is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>iErrorDetail</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>A number representing the error
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sErrorString</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>A string representing the error
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

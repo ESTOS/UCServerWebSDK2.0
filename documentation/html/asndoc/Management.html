@@ -1,0 +1,5087 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h1>Management</h1>
+    <p>Module Version: 8.0.20240715</p>
+    <p>Administration interface (UCServer administration)
+</p>
+    <p><p class='strong'>Module description</p>
+<p>This module defines the structures and operations operationsfor the UCServer management software.<br>
+It should be used by the UCServer Administrator, Web based administration tools or automatic provisioning applications.<br>
+Several operations are a copy of operations in ENetUC_Admin.asn1 and renamed &quot;asnAdmin...&quot; -&gt; &quot;asnMgmt...&quot;<br>
+(for having a clearer separation of the interfaces)</p>
+<p class='strong'>Versioning</p>
+<p>It is important to increment the version of the protocol, whenever there are incompatible changes.<br>
+The admin and the server must have an equal version to communicate.<br>
+The protocol version defined with the field named AsnManagementProtocolVersion</p>
+<p class='strong'>Management operations</p>
+</p><a href="Management.doc.html"> </a>
+    <h2>Operations:</h2><a href="Management.doc.operations.html"> </a><a href="Management.operations.html"> </a>
+    <table>
+      <th>Name</th>
+      <th>Description</th>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtSetUserProfile.html">asnMgmtSetUserProfile</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtSetUserProfilesList.html">asnMgmtSetUserProfilesList</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtGetUserProfiles.html">asnMgmtGetUserProfiles</a></p>
+        </td>
+        <td> 
+          <p>Get all user profiles
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtGetUsers.html">asnMgmtGetUsers</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtReloadUserConfig.html">asnMgmtReloadUserConfig</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtUpdateActiveUserProfiles.html">asnMgmtUpdateActiveUserProfiles</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtGetUMMode.html">asnMgmtGetUMMode</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtSetUMMode.html">asnMgmtSetUMMode</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtTestUMInterface.html">asnMgmtTestUMInterface</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtUserProfileGetLargeImage.html">asnMgmtUserProfileGetLargeImage</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtSubscribeUserGroupComputerModifiedEvents.html">asnMgmtSubscribeUserGroupComputerModifiedEvents</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtUnsubscribeUserGroupComputerModifiedEvents.html">asnMgmtUnsubscribeUserGroupComputerModifiedEvents</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtGetGroups.html">asnMgmtGetGroups</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtRemoveGroup.html">asnMgmtRemoveGroup</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtGetGroupAgentPublicPresence.html">asnMgmtGetGroupAgentPublicPresence</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtGetComputers.html">asnMgmtGetComputers</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtRefreshComputerStatus.html">asnMgmtRefreshComputerStatus</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtClearComputerStatus.html">asnMgmtClearComputerStatus</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtRemoveComputer.html">asnMgmtRemoveComputer</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtSetSMSManagerSettings.html">asnMgmtSetSMSManagerSettings</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtGetSMSManagerSettings.html">asnMgmtGetSMSManagerSettings</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtGetSMSProvider.html">asnMgmtGetSMSProvider</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtSendSMS.html">asnMgmtSendSMS</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtGetGoogleClientID.html">asnMgmtGetGoogleClientID</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtSetGoogleClientID.html">asnMgmtSetGoogleClientID</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtGetClientInstallProfileComputerNames.html">asnMgmtGetClientInstallProfileComputerNames</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtSendBroadcast.html">asnMgmtSendBroadcast</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtGetClientInstallProfile.html">asnMgmtGetClientInstallProfile</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtSetClientInstallProfile.html">asnMgmtSetClientInstallProfile</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtGetAvailableUpdates.html">asnMgmtGetAvailableUpdates</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtGetUpdateServiceSettings.html">asnMgmtGetUpdateServiceSettings</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtSetUpdateServiceSettings.html">asnMgmtSetUpdateServiceSettings</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtConResetLine.html">asnMgmtConResetLine</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtGetLineSources.html">asnMgmtGetLineSources</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtGetLineSourceDeviceIDs.html">asnMgmtGetLineSourceDeviceIDs</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtGetLinesForSource.html">asnMgmtGetLinesForSource</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtGetLineStates.html">asnMgmtGetLineStates</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtGetLineGroups.html">asnMgmtGetLineGroups</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtUnsubscribeLineEvents.html">asnMgmtUnsubscribeLineEvents</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtSubscribeLineEvents.html">asnMgmtSubscribeLineEvents</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtGetLineConfig.html">asnMgmtGetLineConfig</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtSetLineConfig.html">asnMgmtSetLineConfig</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtDeleteLine.html">asnMgmtDeleteLine</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtETapiUIDllCallback.html">asnMgmtETapiUIDllCallback</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtGetLineGroupConfig.html">asnMgmtGetLineGroupConfig</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtSetLineGroupConfig.html">asnMgmtSetLineGroupConfig</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtRequestPBXLineExists.html">asnMgmtRequestPBXLineExists</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtGetUMInterfaceSettings.html">asnMgmtGetUMInterfaceSettings</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtSetUMInterfaceSettings.html">asnMgmtSetUMInterfaceSettings</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtGetUMSettings.html">asnMgmtGetUMSettings</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtSetUMSettings.html">asnMgmtSetUMSettings</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtAddLicense.html">asnMgmtAddLicense</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtRemoveLicense.html">asnMgmtRemoveLicense</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtSetLicenseGenuineStatus.html">asnMgmtSetLicenseGenuineStatus</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtGetLicense.html">asnMgmtGetLicense</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtGetHasCurrentVersionLicenses.html">asnMgmtGetHasCurrentVersionLicenses</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtGetNumLicenses.html">asnMgmtGetNumLicenses</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtGetRemainingTrialDays.html">asnMgmtGetRemainingTrialDays</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtGetHWID.html">asnMgmtGetHWID</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtGetUCWebServicesStatus.html">asnMgmtGetUCWebServicesStatus</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtVerifyUCWebServicesConfig.html">asnMgmtVerifyUCWebServicesConfig</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtGetLocalWebServiceConfig4Admin.html">asnMgmtGetLocalWebServiceConfig4Admin</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtGetWebServiceConfig4Admin.html">asnMgmtGetWebServiceConfig4Admin</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtSetWebServiceConfig4Admin.html">asnMgmtSetWebServiceConfig4Admin</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtGetUCConnectSettings.html">asnMgmtGetUCConnectSettings</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtSetUCConnectSettings.html">asnMgmtSetUCConnectSettings</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtSendMail.html">asnMgmtSendMail</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtSendInviteMail.html">asnMgmtSendInviteMail</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtGetMailSettings.html">asnMgmtGetMailSettings</a></p>
+        </td>
+        <td> 
+          <p>CtiServer Administrator login
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtSetMailSettings.html">asnMgmtSetMailSettings</a></p>
+        </td>
+        <td> 
+          <p>CtiServer Administrator login
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtGetTapiProblemSettings.html">asnMgmtGetTapiProblemSettings</a></p>
+        </td>
+        <td> 
+          <p>CtiServer Administrator login
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtSetTapiProblemSettings.html">asnMgmtSetTapiProblemSettings</a></p>
+        </td>
+        <td> 
+          <p>CtiServer Administrator login
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtGetDatabaseManagerSettings.html">asnMgmtGetDatabaseManagerSettings</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtSetDatabaseManagerSettings.html">asnMgmtSetDatabaseManagerSettings</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtGetAvailableDatabases.html">asnMgmtGetAvailableDatabases</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtGetListeningInterfaces.html">asnMgmtGetListeningInterfaces</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtSetListeningInterfaces.html">asnMgmtSetListeningInterfaces</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtGetListeningInterfaceStatuses.html">asnMgmtGetListeningInterfaceStatuses</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtDeleteLogfiles.html">asnMgmtDeleteLogfiles</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtAquireLoggerLock.html">asnMgmtAquireLoggerLock</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtReleaseLoggerLock.html">asnMgmtReleaseLoggerLock</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtGetLogFileSettings.html">asnMgmtGetLogFileSettings</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtSetLogFileSettings.html">asnMgmtSetLogFileSettings</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtGetLocationInformationMgmt.html">asnMgmtGetLocationInformationMgmt</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtSetLocationInformationMgmt.html">asnMgmtSetLocationInformationMgmt</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtDeleteLocation.html">asnMgmtDeleteLocation</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtGetLocationIDs.html">asnMgmtGetLocationIDs</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtGetCSTAServerSettings.html">asnMgmtGetCSTAServerSettings</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtSetCSTAServerSettings.html">asnMgmtSetCSTAServerSettings</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtGetSTUNandTURNSettings.html">asnMgmtGetSTUNandTURNSettings</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtSetSTUNandTURNSettings.html">asnMgmtSetSTUNandTURNSettings</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtGetSTUNandTURNConsumerConfig.html">asnMgmtGetSTUNandTURNConsumerConfig</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtGetDBManSettings.html">asnMgmtGetDBManSettings</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtSetDBManSettings.html">asnMgmtSetDBManSettings</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtGetXmppSettings.html">asnMgmtGetXmppSettings</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtSetXmppSettings.html">asnMgmtSetXmppSettings</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtGetSIPFEDSettings.html">asnMgmtGetSIPFEDSettings</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtSetSIPFEDSettings.html">asnMgmtSetSIPFEDSettings</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtGetSIPFEDPubIPAdr.html">asnMgmtGetSIPFEDPubIPAdr</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtStartSipFedXmppDiagnostics.html">asnMgmtStartSipFedXmppDiagnostics</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtGetSIPFEDSrvState.html">asnMgmtGetSIPFEDSrvState</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtGetSIPFEDNetState.html">asnMgmtGetSIPFEDNetState</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtGetSIPGatewaySettings.html">asnMgmtGetSIPGatewaySettings</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtSetSIPGatewaySettings.html">asnMgmtSetSIPGatewaySettings</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtGetSIPGatewayNetState.html">asnMgmtGetSIPGatewayNetState</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtSetSIPGatewaySettingsV2.html">asnMgmtSetSIPGatewaySettingsV2</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtSetCallRecorderSettings.html">asnMgmtSetCallRecorderSettings</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtGetCallRecorderSettings.html">asnMgmtGetCallRecorderSettings</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtLogin.html">asnMgmtLogin</a></p>
+        </td>
+        <td> 
+          <p>CtiServer Administrator login
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtChangeLogin.html">asnMgmtChangeLogin</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtLoginV2.html">asnMgmtLoginV2</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtNegotiateInterfaceVersion.html">asnMgmtNegotiateInterfaceVersion</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtMonGetServerStatistics.html">asnMgmtMonGetServerStatistics</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtSaveSettings.html">asnMgmtSaveSettings</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtStartTLS.html">asnMgmtStartTLS</a></p>
+        </td>
+        <td> 
+          <p>Request to start TLS
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtGetServerVersion.html">asnMgmtGetServerVersion</a></p>
+        </td>
+        <td> 
+          <p>Request server version
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtGetCtiServerType.html">asnMgmtGetCtiServerType</a></p>
+        </td>
+        <td> 
+          <p>Request server Type and Features.
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtGetIPInterfaceList.html">asnMgmtGetIPInterfaceList</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtCleanupJournal.html">asnMgmtCleanupJournal</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtRestartServer.html">asnMgmtRestartServer</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtRestartServerAndInstallDatabaseUpdates.html">asnMgmtRestartServerAndInstallDatabaseUpdates</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtFullSyncContactCache.html">asnMgmtFullSyncContactCache</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtSendPushCheck.html">asnMgmtSendPushCheck</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtSetUCCheckServerCookie.html">asnMgmtSetUCCheckServerCookie</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtCommitSaveSettings.html">asnMgmtCommitSaveSettings</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtGetNotificationSettings.html">asnMgmtGetNotificationSettings</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtSetNotificationSettings.html">asnMgmtSetNotificationSettings</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtFetchMetaDNs.html">asnMgmtFetchMetaDNs</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtSetMetaSettings.html">asnMgmtSetMetaSettings</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtSetMetaPhoneBooksSettings.html">asnMgmtSetMetaPhoneBooksSettings</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtGetMetaSettings.html">asnMgmtGetMetaSettings</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtGetMetaPhoneBooksSettings.html">asnMgmtGetMetaPhoneBooksSettings</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtGetAvailableCertificates.html">asnMgmtGetAvailableCertificates</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtGetSoftwareProfiles.html">asnMgmtGetSoftwareProfiles</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtSetSoftwareProfiles.html">asnMgmtSetSoftwareProfiles</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtGetGlobalGroupingAttributes.html">asnMgmtGetGlobalGroupingAttributes</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtSetGlobalGroupingAttributes.html">asnMgmtSetGlobalGroupingAttributes</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtGetUserXmlClientContent.html">asnMgmtGetUserXmlClientContent</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtSetUserXmlClientContent.html">asnMgmtSetUserXmlClientContent</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtGetUserDefinedCustomFields.html">asnMgmtGetUserDefinedCustomFields</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtSetUserDefinedCustomFields.html">asnMgmtSetUserDefinedCustomFields</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtGetSIPFEDXmppDiagnostic.html">asnMgmtGetSIPFEDXmppDiagnostic</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtGetLineForwarding.html">asnMgmtGetLineForwarding</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtSetLineForwarding.html">asnMgmtSetLineForwarding</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtGetXMLAvailableLanguages.html">asnMgmtGetXMLAvailableLanguages</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtUpgradeStart.html">asnMgmtUpgradeStart</a></p>
+        </td>
+        <td> 
+          <p>Start Upgrade on Server running in administrative Mode.
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtGetPushServiceDevices.html">asnMgmtGetPushServiceDevices</a></p>
+        </td>
+        <td> 
+          <p>Get the List of Push Service Device Registrations
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtDeletePushServiceDevice.html">asnMgmtDeletePushServiceDevice</a></p>
+        </td>
+        <td> 
+          <p>Delete an active Push Service Device Registration
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtSetPhoneJournalSettings.html">asnMgmtSetPhoneJournalSettings</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtGetPhoneJournalSettings.html">asnMgmtGetPhoneJournalSettings</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtAddComputerProfile.html">asnMgmtAddComputerProfile</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtGetComputerProfile.html">asnMgmtGetComputerProfile</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtSetComputerProfile.html">asnMgmtSetComputerProfile</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtAddGroupProfile.html">asnMgmtAddGroupProfile</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtRemoveGroupProfile.html">asnMgmtRemoveGroupProfile</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtFindGroupProfiles.html">asnMgmtFindGroupProfiles</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtSetGroupProfile.html">asnMgmtSetGroupProfile</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtAddUserProfile.html">asnMgmtAddUserProfile</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtRemoveUserProfile.html">asnMgmtRemoveUserProfile</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtGetUserProfile.html">asnMgmtGetUserProfile</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtGetUserManagerSettings.html">asnMgmtGetUserManagerSettings</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtGetAvailableLines.html">asnMgmtGetAvailableLines</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtGetNetworkInterfacePorts.html">asnMgmtGetNetworkInterfacePorts</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtSetChatSettings.html">asnMgmtSetChatSettings</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtGetChatSettings.html">asnMgmtGetChatSettings</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtSetMeshSettings.html">asnMgmtSetMeshSettings</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtGetMeshSettings.html">asnMgmtGetMeshSettings</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtSetMeshNodeConfigs.html">asnMgmtSetMeshNodeConfigs</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtGetMeshNodeConfigs.html">asnMgmtGetMeshNodeConfigs</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtGetMeshNodeStatuses.html">asnMgmtGetMeshNodeStatuses</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtSubscribeConnectionInformationChanges.html">asnMgmtSubscribeConnectionInformationChanges</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtUnSubscribeConnectionInformationChanges.html">asnMgmtUnSubscribeConnectionInformationChanges</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtDisconnectClient.html">asnMgmtDisconnectClient</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtGDPRErase.html">asnMgmtGDPRErase</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtGDPRFindContacts.html">asnMgmtGDPRFindContacts</a></p>
+        </td>
+        <td> 
+          <p>GDPR function for finding more specific GDPR contact entries.
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtDatabaseUpdateInProgress.html">asnMgmtDatabaseUpdateInProgress</a></p>
+        </td>
+        <td> 
+          <p>Check if Database Update is Running
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtGetBinaryTransferSettings.html">asnMgmtGetBinaryTransferSettings</a></p>
+        </td>
+        <td> 
+          <p>Retrieve the Settings of the BinaryTransferManager
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtSetBinaryTransferSettings.html">asnMgmtSetBinaryTransferSettings</a></p>
+        </td>
+        <td> 
+          <p>Set the Settings of the BinaryTransferManager
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtGetConnectionOptionsDNS.html">asnMgmtGetConnectionOptionsDNS</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtGetConfigurationManagerSettings.html">asnMgmtGetConfigurationManagerSettings</a></p>
+        </td>
+        <td> 
+          <p>Retrieve the Settings of the ConfigurationManager
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtSetConfigurationManagerSettings.html">asnMgmtSetConfigurationManagerSettings</a></p>
+        </td>
+        <td> 
+          <p>Set the Settings of the ConfigurationManager
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtDirectPersistDeleteSetting.html">asnMgmtDirectPersistDeleteSetting</a></p>
+        </td>
+        <td> 
+          <p>Delete the given configuration setting from storage (i.e. from xml or remote db)
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtTestConfigurationManagerDB.html">asnMgmtTestConfigurationManagerDB</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtGetUserManagerConnectionStatus.html">asnMgmtGetUserManagerConnectionStatus</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtClientPersistenceDelete.html">asnMgmtClientPersistenceDelete</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtClientPersistenceCreate.html">asnMgmtClientPersistenceCreate</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtGetConfigurationManagerStatus.html">asnMgmtGetConfigurationManagerStatus</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtGetConfigurationManagerServerList.html">asnMgmtGetConfigurationManagerServerList</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtCleanupBinaryTransferFiles.html">asnMgmtCleanupBinaryTransferFiles</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtSetPresenceDomain.html">asnMgmtSetPresenceDomain</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtGetAdminUserManagerSettings.html">asnMgmtGetAdminUserManagerSettings</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtSetAdminUserManagerSettings.html">asnMgmtSetAdminUserManagerSettings</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtGetAdminUserRights.html">asnMgmtGetAdminUserRights</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtGetEntraIdSettings.html">asnMgmtGetEntraIdSettings</a></p>
+        </td>
+        <td> 
+          <p>Set the settings for the entra id replicator
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtSetEntraIdSettings.html">asnMgmtSetEntraIdSettings</a></p>
+        </td>
+        <td> 
+          <p>Get the current settings from the entra id replicator
+</p>
+        </td>
+      </tr>
+    </table>
+    <h2>Events:</h2><a href="Management.doc.events.html"> </a><a href="Management.events.html"> </a>
+    <table>
+      <th>Name</th>
+      <th>Description</th>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtGetUserProfilesResult.html">asnMgmtGetUserProfilesResult</a></p>
+        </td>
+        <td> 
+          <p>You have called <a href="Management.asnMgmtGetUserProfiles.html">asnMgmtGetUserProfiles</a>() and get your results here (50 user profiles every this event)
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtGetUserListEvent.html">asnMgmtGetUserListEvent</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtGetGroupsEvent.html">asnMgmtGetGroupsEvent</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtComputerFoundEvent.html">asnMgmtComputerFoundEvent</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtSoftwarePacketsChanged.html">asnMgmtSoftwarePacketsChanged</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtSoftwareStatusComputerChanged.html">asnMgmtSoftwareStatusComputerChanged</a></p>
+        </td>
+        <td> 
+          <p>Software install status on a computer changed event
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtUpdateSoftwareStatusComputerChanged.html">asnMgmtUpdateSoftwareStatusComputerChanged</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtGetLineStatesEvent.html">asnMgmtGetLineStatesEvent</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtLineStateChanged.html">asnMgmtLineStateChanged</a></p>
+        </td>
+        <td> 
+          <p>Line State changed event
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtOnLineRemovedEvent.html">asnMgmtOnLineRemovedEvent</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtOnLineAddedEvent.html">asnMgmtOnLineAddedEvent</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtOnLineConfigChangedEvent.html">asnMgmtOnLineConfigChangedEvent</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtOnLineCapsChangedEvent.html">asnMgmtOnLineCapsChangedEvent</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtOnCtiLineFoundEvent.html">asnMgmtOnCtiLineFoundEvent</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtOnLineGroupAdded.html">asnMgmtOnLineGroupAdded</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtOnLineGroupConfigChangedEvent.html">asnMgmtOnLineGroupConfigChangedEvent</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtOnLineGroupRemoved.html">asnMgmtOnLineGroupRemoved</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtOnLineEvent4AdminEvent.html">asnMgmtOnLineEvent4AdminEvent</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtOnLicensesHaveChangedEvent.html">asnMgmtOnLicensesHaveChangedEvent</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtUCWebServiceStatusChanged.html">asnMgmtUCWebServiceStatusChanged</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtOnListenInterfaceStatusesEvent.html">asnMgmtOnListenInterfaceStatusesEvent</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtOnListenInterfaceStatusesChangedEvent.html">asnMgmtOnListenInterfaceStatusesChangedEvent</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtLocationChanged.html">asnMgmtLocationChanged</a></p>
+        </td>
+        <td> 
+          <p>Location changed event
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtFederationServerStatusChanged.html">asnMgmtFederationServerStatusChanged</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtFederationServerDiagnosticComplete.html">asnMgmtFederationServerDiagnosticComplete</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtUpgradeProgress.html">asnMgmtUpgradeProgress</a></p>
+        </td>
+        <td> 
+          <p>Progress Event for Upgrade
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtPushServiceDevicesResult.html">asnMgmtPushServiceDevicesResult</a></p>
+        </td>
+        <td> 
+          <p>Event that contains the results of <a href="Management.asnMgmtGetPushServiceDevices.html">asnMgmtGetPushServiceDevices</a>
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtPushServiceDeviceChanged.html">asnMgmtPushServiceDeviceChanged</a></p>
+        </td>
+        <td> 
+          <p>Event that contains changed Push Service Devices
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtRemoveComputerProfileEvent.html">asnMgmtRemoveComputerProfileEvent</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtRemoveGroupProfileEvent.html">asnMgmtRemoveGroupProfileEvent</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtRemoveUserProfileEvent.html">asnMgmtRemoveUserProfileEvent</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtMeshNodeStatusChanged.html">asnMgmtMeshNodeStatusChanged</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtMeshUpdateConnections.html">asnMgmtMeshUpdateConnections</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtConnectionInformationChanged.html">asnMgmtConnectionInformationChanged</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtUpdateDatabaseProgress.html">asnMgmtUpdateDatabaseProgress</a></p>
+        </td>
+        <td> 
+          <p>Progress Event for Database Update
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtUserManagerConnectionStatusChanged.html">asnMgmtUserManagerConnectionStatusChanged</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtConfigurationManagerStatusChanged.html">asnMgmtConfigurationManagerStatusChanged</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtConfigurationManagerServerListChanged.html">asnMgmtConfigurationManagerServerListChanged</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+    </table>
+    <h2>Types:</h2><a href="Management.doc.types.html"> </a><a href="Management.types.html"> </a>
+    <table>
+      <th>Name</th>
+      <th>Description</th>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnManagementProtocolVersion.html">AsnManagementProtocolVersion</a></p>
+        </td>
+        <td> 
+          <p>The Management protocol version
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetUserProfilesErrorEnum.html">AsnMgmtGetUserProfilesErrorEnum</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtSMSSenderAddressType.html">AsnMgmtSMSSenderAddressType</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtACUBROADCASTSENUM.html">AsnMgmtACUBROADCASTSENUM</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnUpdateAVBehaviour.html">AsnUpdateAVBehaviour</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtTapiLineSINGALCALLSONADDRESSEnum.html">AsnMgmtTapiLineSINGALCALLSONADDRESSEnum</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnSIPAVResponseCodes.html">AsnSIPAVResponseCodes</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtEnumLineType.html">AsnMgmtEnumLineType</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtDeskShareAccess.html">AsnMgmtDeskShareAccess</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtEnumUMSecurity.html">AsnMgmtEnumUMSecurity</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtEnumUMSelfInstall.html">AsnMgmtEnumUMSelfInstall</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnEUserReplicatorType.html">AsnEUserReplicatorType</a></p>
+        </td>
+        <td> 
+          <p>Represents all the availble user replicators eNONE is the default and means user replication is dissabled
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtSchemaExtensionVersion.html">AsnMgmtSchemaExtensionVersion</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtPhoneNumberFormats.html">AsnMgmtPhoneNumberFormats</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtUserManagerInterfaceType.html">AsnMgmtUserManagerInterfaceType</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtELICENSEFEATURE.html">AsnMgmtELICENSEFEATURE</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtECOMPROMISESTATUS.html">AsnMgmtECOMPROMISESTATUS</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetLicenseErrorEnum.html">AsnMgmtGetLicenseErrorEnum</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtVerifyUCWebServicesConfigError.html">AsnMgmtVerifyUCWebServicesConfigError</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtMobileAccessOption.html">AsnMgmtMobileAccessOption</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnDatabaseManagerAuthModeEnum.html">AsnDatabaseManagerAuthModeEnum</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetDatabaseManagerSettingsErrorEnum.html">AsnMgmtGetDatabaseManagerSettingsErrorEnum</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtSetDatabaseManagerSettingsErrorEnum.html">AsnMgmtSetDatabaseManagerSettingsErrorEnum</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnInterfaceTypeEnum.html">AsnInterfaceTypeEnum</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnInterfaceProtocolEnum.html">AsnInterfaceProtocolEnum</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnInterfaceStatusEnum.html">AsnInterfaceStatusEnum</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnEConnectedIdDealing.html">AsnEConnectedIdDealing</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnAVSTUNANDTURNSERVERTYPE.html">AsnAVSTUNANDTURNSERVERTYPE</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnAVSTUNANDTURNPROVIDERTYPE.html">AsnAVSTUNANDTURNPROVIDERTYPE</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnGatewayModelEnum.html">AsnGatewayModelEnum</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnGatewayTypesEnum.html">AsnGatewayTypesEnum</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMediaModesEnum.html">AsnMediaModesEnum</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnSIPConnectionTypeEnum.html">AsnSIPConnectionTypeEnum</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnAudioCodesEnum.html">AsnAudioCodesEnum</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtLoginError.html">AsnMgmtLoginError</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtUCServerType.html">AsnMgmtUCServerType</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtUCServerFeatures.html">AsnMgmtUCServerFeatures</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtLineForwardModeEnum.html">AsnMgmtLineForwardModeEnum</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtForwardControllerEnum.html">AsnMgmtForwardControllerEnum</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtForwardMode.html">AsnMgmtForwardMode</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtUpgradeStartResultEnum.html">AsnMgmtUpgradeStartResultEnum</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtPushServiceDevicesChangedArgumentEnum.html">AsnMgmtPushServiceDevicesChangedArgumentEnum</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtPhoneJournalUnansweredEnum.html">AsnMgmtPhoneJournalUnansweredEnum</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtPhoneJournalPrivateCallOptionsEnum.html">AsnMgmtPhoneJournalPrivateCallOptionsEnum</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtUnansweredOptionEnum.html">AsnMgmtUnansweredOptionEnum</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetPhoneJournalSettingsErrorEnum.html">AsnMgmtGetPhoneJournalSettingsErrorEnum</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtSetPhoneJournalSettingsErrorEnum.html">AsnMgmtSetPhoneJournalSettingsErrorEnum</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtSetGroupProfileFilter.html">AsnMgmtSetGroupProfileFilter</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtSetGroupProfileErrorEnum.html">AsnMgmtSetGroupProfileErrorEnum</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtChatSettingsErrorEnum.html">AsnMgmtChatSettingsErrorEnum</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtMeshNodeConnectionStatusEnum.html">AsnMgmtMeshNodeConnectionStatusEnum</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGDPREraseErrorEnum.html">AsnMgmtGDPREraseErrorEnum</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtSetPresenceDomainResultEnum.html">AsnMgmtSetPresenceDomainResultEnum</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtAdminUserManagerType.html">AsnMgmtAdminUserManagerType</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtAdminUserRightEnum.html">AsnMgmtAdminUserRightEnum</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtEmpty.html">AsnMgmtEmpty</a></p>
+        </td>
+        <td> 
+          <p>Empty argument/result
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetUserProfilesArgument.html">AsnMgmtGetUserProfilesArgument</a></p>
+        </td>
+        <td> 
+          <p>get all user profiles
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetUserProfilesResult.html">AsnMgmtGetUserProfilesResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetUserProfilesResultArgument.html">AsnMgmtGetUserProfilesResultArgument</a></p>
+        </td>
+        <td> 
+          <p>bLastSegment is true if this is the last deliver of user profiles
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetUsersArgument.html">AsnMgmtGetUsersArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetUsersResult.html">AsnMgmtGetUsersResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnClientConnectionDescription.html">AsnClientConnectionDescription</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetUMModeResult.html">AsnMgmtGetUMModeResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtSetUMModeArgument.html">AsnMgmtSetUMModeArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtTestUMInterfaceArgument.html">AsnMgmtTestUMInterfaceArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtUserProfileGetLargeImageArgument.html">AsnMgmtUserProfileGetLargeImageArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtUserProfileGetLargeImageResult.html">AsnMgmtUserProfileGetLargeImageResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetGroupsResult.html">AsnMgmtGetGroupsResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtRemoveGroupArgument.html">AsnMgmtRemoveGroupArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetGroupsEventArgument.html">AsnMgmtGetGroupsEventArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtAgentPublicPresenceItem.html">AsnMgmtAgentPublicPresenceItem</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetGroupAgentPublicPresenceArgument.html">AsnMgmtGetGroupAgentPublicPresenceArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetComputersResult.html">AsnMgmtGetComputersResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtRefreshComputerStatusArgument.html">AsnMgmtRefreshComputerStatusArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtClearComputerStatusArgument.html">AsnMgmtClearComputerStatusArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtRemoveComputerArgument.html">AsnMgmtRemoveComputerArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtSMSManagerSettings.html">AsnMgmtSMSManagerSettings</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtWebSMSProviderList.html">AsnMgmtWebSMSProviderList</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtSendSMSArgument.html">AsnMgmtSendSMSArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtSendSMSResult.html">AsnMgmtSendSMSResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGoogleClientID.html">AsnMgmtGoogleClientID</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetClientInstallProfileComputerNamesResult.html">AsnMgmtGetClientInstallProfileComputerNamesResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtSendBroadcastArgument.html">AsnMgmtSendBroadcastArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtClientInstallProfileAction.html">AsnMgmtClientInstallProfileAction</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtACUFileForUpdateDescription.html">AsnMgmtACUFileForUpdateDescription</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetClientInstallProfileArgument.html">AsnMgmtGetClientInstallProfileArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtUpdateServiceSettings.html">AsnMgmtUpdateServiceSettings</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtClientInstallProfilePacket.html">AsnMgmtClientInstallProfilePacket</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtConResetLineArgument.html">AsnMgmtConResetLineArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetLineSourcesResult.html">AsnMgmtGetLineSourcesResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtLineStatus.html">AsnMgmtLineStatus</a></p>
+        </td>
+        <td> 
+          <p>ProCall DataCenter only - The line status of one line at a specific server
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetLineSourceDeviceIDsArgument.html">AsnMgmtGetLineSourceDeviceIDsArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetLineSourceDeviceIDsResult.html">AsnMgmtGetLineSourceDeviceIDsResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetLinesForSourceArgument.html">AsnMgmtGetLinesForSourceArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetLineStatesArgument.html">AsnMgmtGetLineStatesArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtTapiLineConfiguration.html">AsnMgmtTapiLineConfiguration</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtTapiLineConfig4Admin.html">AsnMgmtTapiLineConfig4Admin</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtOnLineGroupRemovedArgument.html">AsnMgmtOnLineGroupRemovedArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetLineGroupsArgument.html">AsnMgmtGetLineGroupsArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetLineGroupsResult.html">AsnMgmtGetLineGroupsResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtSubscribeLineEventsArgument.html">AsnMgmtSubscribeLineEventsArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetLineConfigArgument.html">AsnMgmtGetLineConfigArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtDeleteLineArgument.html">AsnMgmtDeleteLineArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtETapiUIDllCallbackArgument.html">AsnMgmtETapiUIDllCallbackArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtETapiUIDllCallbackResult.html">AsnMgmtETapiUIDllCallbackResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtCtiFeatureCode.html">AsnMgmtCtiFeatureCode</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetLineGroupConfigArgument.html">AsnMgmtGetLineGroupConfigArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtRequestPBXLineExistsArgument.html">AsnMgmtRequestPBXLineExistsArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtRequestPBXLineExistsResult.html">AsnMgmtRequestPBXLineExistsResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtLineEventForAdmin.html">AsnMgmtLineEventForAdmin</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtUserManagerLDAPAttribute.html">AsnMgmtUserManagerLDAPAttribute</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetUMInterfaceSettingsArgument.html">AsnMgmtGetUMInterfaceSettingsArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtAddLicenseArgument.html">AsnMgmtAddLicenseArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtRemoveLicenseArgument.html">AsnMgmtRemoveLicenseArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtFeatureCount.html">AsnMgmtFeatureCount</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtSetLicenseGenuineStatusArgument.html">AsnMgmtSetLicenseGenuineStatusArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtSetLicenseGenuineStatusResult.html">AsnMgmtSetLicenseGenuineStatusResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetLicenseArgument.html">AsnMgmtGetLicenseArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetHasCurrentVersionLicensesResult.html">AsnMgmtGetHasCurrentVersionLicensesResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetNumLicensesResult.html">AsnMgmtGetNumLicensesResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetRemainingTrialDaysResult.html">AsnMgmtGetRemainingTrialDaysResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetHWIDResult.html">AsnMgmtGetHWIDResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtOnLicensesHaveChangedEventArgument.html">AsnMgmtOnLicensesHaveChangedEventArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtEUCWSCapabilities.html">AsnMgmtEUCWSCapabilities</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtEUCWebServiceConfig.html">AsnMgmtEUCWebServiceConfig</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtWebServiceAccessParams.html">AsnMgmtWebServiceAccessParams</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtSendMailArgument.html">AsnMgmtSendMailArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtSendInviteMailArgument.html">AsnMgmtSendInviteMailArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtEMailConnectorSettings.html">AsnMgmtEMailConnectorSettings</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtTapiProblemSettings.html">AsnMgmtTapiProblemSettings</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtDatabaseManagerSettings.html">AsnMgmtDatabaseManagerSettings</a></p>
+        </td>
+        <td> 
+          <p>Get DatabaseManager Settings
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetAvailableDatabasesResult.html">AsnMgmtGetAvailableDatabasesResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnListeningInterface.html">AsnListeningInterface</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnListeningInterfaceStatus.html">AsnListeningInterfaceStatus</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMediaServerLogFile.html">AsnMediaServerLogFile</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnNumberFormatRegExpressionMgmt.html">AsnNumberFormatRegExpressionMgmt</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnRuleSoftphoneEmergencyMgmt.html">AsnRuleSoftphoneEmergencyMgmt</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnELocalDialingRuleForeignPNALocalCallItem.html">AsnELocalDialingRuleForeignPNALocalCallItem</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnELCRProvider.html">AsnELCRProvider</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnELCRZone.html">AsnELCRZone</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetLocationInformationMgmtArgument.html">AsnMgmtGetLocationInformationMgmtArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtSetLocationInformationMgmtResult.html">AsnMgmtSetLocationInformationMgmtResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtDeleteLocationArgument.html">AsnMgmtDeleteLocationArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtLocationChangedArgument.html">AsnMgmtLocationChangedArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnCSTAServerSettings.html">AsnCSTAServerSettings</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnAVStunOrTurnServer.html">AsnAVStunOrTurnServer</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetSTUNandTURNConsumerConfigResult.html">AsnMgmtGetSTUNandTURNConsumerConfigResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtDBManSettings.html">AsnMgmtDBManSettings</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnXMPPSettings.html">AsnXMPPSettings</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnListenInterfaceDescription.html">AsnListenInterfaceDescription</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetSIPFEDPubIPAdrResult.html">AsnMgmtGetSIPFEDPubIPAdrResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtStartSipFedXmppDiagnosticsArgument.html">AsnMgmtStartSipFedXmppDiagnosticsArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetSIPFEDSrvStateResult.html">AsnMgmtGetSIPFEDSrvStateResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetSIPFEDNetStateResult.html">AsnMgmtGetSIPFEDNetStateResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnSIPGatewaySettingsRegisteredUser.html">AsnSIPGatewaySettingsRegisteredUser</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtSetSIPGatewaySettingsV2Result.html">AsnMgmtSetSIPGatewaySettingsV2Result</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnCallRecorderSettings.html">AsnCallRecorderSettings</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtLoginArgument.html">AsnMgmtLoginArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtLoginResult.html">AsnMgmtLoginResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtChangeLoginArgument.html">AsnMgmtChangeLoginArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtServerStatistics4Admin.html">AsnMgmtServerStatistics4Admin</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtSaveSettingsArgument.html">AsnMgmtSaveSettingsArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtStartTLSArgument.html">AsnMgmtStartTLSArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtStartTLSResult.html">AsnMgmtStartTLSResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetServerVersionArgument.html">AsnMgmtGetServerVersionArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetServerVersionResult.html">AsnMgmtGetServerVersionResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetCtiServerTypeArgument.html">AsnMgmtGetCtiServerTypeArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetIPInterfaceListResult.html">AsnMgmtGetIPInterfaceListResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtSendPushCheckResult.html">AsnMgmtSendPushCheckResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtSetUCCheckServerCookieArgument.html">AsnMgmtSetUCCheckServerCookieArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtNotificationSettingsExclusions.html">AsnMgmtNotificationSettingsExclusions</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtFetchMetaDNsArgument.html">AsnMgmtFetchMetaDNsArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtFetchMetaDNsResult.html">AsnMgmtFetchMetaDNsResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnSSLCertificateDetails.html">AsnSSLCertificateDetails</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetSoftwareProfilesResult.html">AsnMgmtGetSoftwareProfilesResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtSetSoftwareProfilesArgument.html">AsnMgmtSetSoftwareProfilesArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetGlobalGroupingAttributesResult.html">AsnMgmtGetGlobalGroupingAttributesResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtSetGlobalGroupingAttributesArgument.html">AsnMgmtSetGlobalGroupingAttributesArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetUserXmlClientContentArgument.html">AsnMgmtGetUserXmlClientContentArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetUserXmlClientContentResult.html">AsnMgmtGetUserXmlClientContentResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtSetUserXmlClientContentArgument.html">AsnMgmtSetUserXmlClientContentArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetUserDefinedCustomFieldsResult.html">AsnMgmtGetUserDefinedCustomFieldsResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtSetUserDefinedCustomFieldsArgument.html">AsnMgmtSetUserDefinedCustomFieldsArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetSIPFEDXmppDiagnosticResult.html">AsnMgmtGetSIPFEDXmppDiagnosticResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtCtiForwardEntry.html">AsnMgmtCtiForwardEntry</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetLineForwardingArgument.html">AsnMgmtGetLineForwardingArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtAvailableLanguage.html">AsnMgmtAvailableLanguage</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtUpgradeProgressArgument.html">AsnMgmtUpgradeProgressArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtUpgradeStartArgument.html">AsnMgmtUpgradeStartArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtUpgradeStartResult.html">AsnMgmtUpgradeStartResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtPushServiceDeviceProps.html">AsnMgmtPushServiceDeviceProps</a></p>
+        </td>
+        <td> 
+          <p>Push Service Device Properties
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetPushServiceDevicesArgument.html">AsnMgmtGetPushServiceDevicesArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetPushServiceDevicesResult.html">AsnMgmtGetPushServiceDevicesResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtDeletePushServiceDeviceArgument.html">AsnMgmtDeletePushServiceDeviceArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtDeletePushServiceDeviceResult.html">AsnMgmtDeletePushServiceDeviceResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtPhoneJournalSettings.html">AsnMgmtPhoneJournalSettings</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetPhoneJournalSettingsArgument.html">AsnMgmtGetPhoneJournalSettingsArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtSetPhoneJournalSettingsResult.html">AsnMgmtSetPhoneJournalSettingsResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtSetGroupProfileArgument.html">AsnMgmtSetGroupProfileArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtSetGroupProfileResult.html">AsnMgmtSetGroupProfileResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtRemoveUserProfileEventArgument.html">AsnMgmtRemoveUserProfileEventArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtRemoveGroupProfileEventArgument.html">AsnMgmtRemoveGroupProfileEventArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtRemoveComputerProfileEventArgument.html">AsnMgmtRemoveComputerProfileEventArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtChatSettings.html">AsnMgmtChatSettings</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtMeshControllerSettings.html">AsnMgmtMeshControllerSettings</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtMeshNodeConfig.html">AsnMgmtMeshNodeConfig</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtMeshNodeStatusTLS.html">AsnMgmtMeshNodeStatusTLS</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtSubscribeConnectionInformationChangesArgument.html">AsnMgmtSubscribeConnectionInformationChangesArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtSubscribeConnectionInformationChangesResult.html">AsnMgmtSubscribeConnectionInformationChangesResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtUnSubscribeConnectionInformationChangesArgument.html">AsnMgmtUnSubscribeConnectionInformationChangesArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtUnSubscribeConnectionInformationChangesResult.html">AsnMgmtUnSubscribeConnectionInformationChangesResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtDisconnectClientArgument.html">AsnMgmtDisconnectClientArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtDisconnectClientResult.html">AsnMgmtDisconnectClientResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGDPREraseArgument.html">AsnMgmtGDPREraseArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGDPREraseResult.html">AsnMgmtGDPREraseResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGDPRFindContactsArgument.html">AsnMgmtGDPRFindContactsArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGDPRFindContactsResult.html">AsnMgmtGDPRFindContactsResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtUpdateDatabaseProgressArgument.html">AsnMgmtUpdateDatabaseProgressArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtDatabaseUpdateInProgressArgument.html">AsnMgmtDatabaseUpdateInProgressArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtDatabaseUpdateInProgressResult.html">AsnMgmtDatabaseUpdateInProgressResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetBinaryTransferSettingsArgument.html">AsnMgmtGetBinaryTransferSettingsArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetBinaryTransferSettingsResult.html">AsnMgmtGetBinaryTransferSettingsResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtSetBinaryTransferSettingsArgument.html">AsnMgmtSetBinaryTransferSettingsArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtSetBinaryTransferSettingsResult.html">AsnMgmtSetBinaryTransferSettingsResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtConnectionOption.html">AsnMgmtConnectionOption</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetConnectionOptionsDNSArgument.html">AsnMgmtGetConnectionOptionsDNSArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtConfigurationManagerSettings.html">AsnMgmtConfigurationManagerSettings</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetConfigurationManagerSettingsArgument.html">AsnMgmtGetConfigurationManagerSettingsArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtSetConfigurationManagerSettingsResult.html">AsnMgmtSetConfigurationManagerSettingsResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtDirectPersistDeleteSettingArgument.html">AsnMgmtDirectPersistDeleteSettingArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtTestConfigurationManagerDBArgument.html">AsnMgmtTestConfigurationManagerDBArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtTestConfigurationManagerDBResult.html">AsnMgmtTestConfigurationManagerDBResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtUserManagerConnectionStatus.html">AsnMgmtUserManagerConnectionStatus</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetUserManagerConnectionStatusArgument.html">AsnMgmtGetUserManagerConnectionStatusArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtClientPersistenceDeleteArgument.html">AsnMgmtClientPersistenceDeleteArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtClientPersistenceDeleteResult.html">AsnMgmtClientPersistenceDeleteResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtClientPersistenceCreateArgument.html">AsnMgmtClientPersistenceCreateArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtClientPersistenceCreateResult.html">AsnMgmtClientPersistenceCreateResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtConfigurationManagerStatus.html">AsnMgmtConfigurationManagerStatus</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetConfigurationManagerStatusArgument.html">AsnMgmtGetConfigurationManagerStatusArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtConfigurationManagerServerListItem.html">AsnMgmtConfigurationManagerServerListItem</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtCleanupBinaryTransferFilesArgument.html">AsnMgmtCleanupBinaryTransferFilesArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtCleanupBinaryTransferFilesResult.html">AsnMgmtCleanupBinaryTransferFilesResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtSetPresenceDomainArgument.html">AsnMgmtSetPresenceDomainArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtSetPresenceDomainResult.html">AsnMgmtSetPresenceDomainResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtAdminUserManagerSettings.html">AsnMgmtAdminUserManagerSettings</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetAdminUserManagerSettingsArgument.html">AsnMgmtGetAdminUserManagerSettingsArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtSetAdminUserManagerSettingsResult.html">AsnMgmtSetAdminUserManagerSettingsResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtAdminUserRightStateReadWrite.html">AsnMgmtAdminUserRightStateReadWrite</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtAdminUserRightStateExecute.html">AsnMgmtAdminUserRightStateExecute</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetAdminUserRightsArgument.html">AsnMgmtGetAdminUserRightsArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtEntraIdSettings.html">AsnMgmtEntraIdSettings</a></p>
+        </td>
+        <td> 
+          <p>Represents the internal entra id replicator settings
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnClientConnectionDescriptions.html">AsnClientConnectionDescriptions</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtClientConnectionInformation.html">AsnMgmtClientConnectionInformation</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtUserProfileData.html">AsnMgmtUserProfileData</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtUserProfileDataList.html">AsnMgmtUserProfileDataList</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetUserListEventArgument.html">AsnMgmtGetUserListEventArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtAgentPublicPresenceItemList.html">AsnMgmtAgentPublicPresenceItemList</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetGroupAgentPublicPresenceResult.html">AsnMgmtGetGroupAgentPublicPresenceResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtClientInstallProfileActionList.html">AsnMgmtClientInstallProfileActionList</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtClientInstallProfileData.html">AsnMgmtClientInstallProfileData</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetClientInstallProfileResult.html">AsnMgmtGetClientInstallProfileResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtSetClientInstallProfileArgument.html">AsnMgmtSetClientInstallProfileArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtACUFileForUpdateDescriptionList.html">AsnMgmtACUFileForUpdateDescriptionList</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetAvailableUpdatesResult.html">AsnMgmtGetAvailableUpdatesResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtClientInstallProfilePacketList.html">AsnMgmtClientInstallProfilePacketList</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtSoftwareStatusComputer.html">AsnMgmtSoftwareStatusComputer</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtSoftwareStatusComputerChangedArgument.html">AsnMgmtSoftwareStatusComputerChangedArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtLineStatusList.html">AsnMgmtLineStatusList</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtLineStateChangedArgument.html">AsnMgmtLineStateChangedArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtOnLineRemovedEventArgument.html">AsnMgmtOnLineRemovedEventArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtOnLineAddedEventArgument.html">AsnMgmtOnLineAddedEventArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtOnLineConfigChangedEventArgument.html">AsnMgmtOnLineConfigChangedEventArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtOnLineCapsChangedEventArgument.html">AsnMgmtOnLineCapsChangedEventArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtOnCtiLineFoundEventArgument.html">AsnMgmtOnCtiLineFoundEventArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetLineConfigResult.html">AsnMgmtGetLineConfigResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtSetLineConfigArgument.html">AsnMgmtSetLineConfigArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtCtiFeatureCodeList.html">AsnMgmtCtiFeatureCodeList</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtTapiLineGroupConfiguration.html">AsnMgmtTapiLineGroupConfiguration</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetLineGroupConfigResult.html">AsnMgmtGetLineGroupConfigResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtSetLineGroupConfigArgument.html">AsnMgmtSetLineGroupConfigArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtOnLineEvent4AdminEventArgument.html">AsnMgmtOnLineEvent4AdminEventArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnUserManagerSettings.html">AsnUserManagerSettings</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtUserManagerLDAPAttributeList.html">AsnMgmtUserManagerLDAPAttributeList</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtUserManagerActiveDirectorySettings.html">AsnMgmtUserManagerActiveDirectorySettings</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetUMInterfaceSettingsResult.html">AsnMgmtGetUMInterfaceSettingsResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtSetUMInterfaceSettingsArgument.html">AsnMgmtSetUMInterfaceSettingsArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetUMSettingsResult.html">AsnMgmtGetUMSettingsResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtSetUMSettingsArgument.html">AsnMgmtSetUMSettingsArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtFeatureCountList.html">AsnMgmtFeatureCountList</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtLicenseDetails.html">AsnMgmtLicenseDetails</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetLicenseResult.html">AsnMgmtGetLicenseResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtEUCWSStatus.html">AsnMgmtEUCWSStatus</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtEUCWSStatusList.html">AsnMgmtEUCWSStatusList</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtEUCWebServicesStatus.html">AsnMgmtEUCWebServicesStatus</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtEUCWebServiceConfigList.html">AsnMgmtEUCWebServiceConfigList</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtEUCWebServiceConfig4Admin.html">AsnMgmtEUCWebServiceConfig4Admin</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetLocalWebServiceConfig4AdminResult.html">AsnMgmtGetLocalWebServiceConfig4AdminResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtUCConnectSettings.html">AsnMgmtUCConnectSettings</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetDatabaseManagerSettingsResult.html">AsnMgmtGetDatabaseManagerSettingsResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtSetDatabaseManagerSettingsArgument.html">AsnMgmtSetDatabaseManagerSettingsArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetAvailableDatabasesArgument.html">AsnMgmtGetAvailableDatabasesArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnListeningInterfaceList.html">AsnListeningInterfaceList</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetListeningInterfacesResult.html">AsnMgmtGetListeningInterfacesResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtSetListeningInterfacesArgument.html">AsnMgmtSetListeningInterfacesArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnListeningInterfaceStatusList.html">AsnListeningInterfaceStatusList</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetListeningInterfaceStatusesResult.html">AsnMgmtGetListeningInterfaceStatusesResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtOnListenInterfaceStatusesEventArgument.html">AsnMgmtOnListenInterfaceStatusesEventArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtOnListenInterfaceStatusesChangedEventArgument.html">AsnMgmtOnListenInterfaceStatusesChangedEventArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtLogFileSettings.html">AsnMgmtLogFileSettings</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetLogFileSettingsResult.html">AsnMgmtGetLogFileSettingsResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetLogFileSettingsArgument.html">AsnMgmtGetLogFileSettingsArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnNumberFormatRegExpressListMgmt.html">AsnNumberFormatRegExpressListMgmt</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnNumberFormatRegExpressionsMgmt.html">AsnNumberFormatRegExpressionsMgmt</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnRuleSoftphoneEmergencyMgmtListMgmt.html">AsnRuleSoftphoneEmergencyMgmtListMgmt</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnELocalDialingRuleForeignPNALocalCallItemList.html">AsnELocalDialingRuleForeignPNALocalCallItemList</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnELCRProviderList.html">AsnELCRProviderList</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnELCRZoneList.html">AsnELCRZoneList</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnLocationInformationMgmt.html">AsnLocationInformationMgmt</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetLocationInformationMgmtResult.html">AsnMgmtGetLocationInformationMgmtResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtSetLocationInformationMgmtArgument.html">AsnMgmtSetLocationInformationMgmtArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetCSTAServerSettingsResult.html">AsnMgmtGetCSTAServerSettingsResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtSetCSTAServerSettingsArgument.html">AsnMgmtSetCSTAServerSettingsArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnAVStunOrTurnServerList.html">AsnAVStunOrTurnServerList</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnAVStunOrTurnSettings.html">AsnAVStunOrTurnSettings</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetSTUNandTURNSettingsResult.html">AsnMgmtGetSTUNandTURNSettingsResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtSetSTUNandTURNSettingsArgument.html">AsnMgmtSetSTUNandTURNSettingsArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetSTUNandTURNConsumerConfigArgument.html">AsnMgmtGetSTUNandTURNConsumerConfigArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetDBManSettingsResult.html">AsnMgmtGetDBManSettingsResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetDBManSettingsArgument.html">AsnMgmtGetDBManSettingsArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetXmppSettingsResult.html">AsnMgmtGetXmppSettingsResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtSetXmppSettingsArgument.html">AsnMgmtSetXmppSettingsArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnListenInterfaceDescriptionList.html">AsnListenInterfaceDescriptionList</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnSIPFEDSettings.html">AsnSIPFEDSettings</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetSIPFEDSettingsResult.html">AsnMgmtGetSIPFEDSettingsResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtSetSIPFEDSettingsArgument.html">AsnMgmtSetSIPFEDSettingsArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnSIPGatewaySettingsRegisteredUserList.html">AsnSIPGatewaySettingsRegisteredUserList</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnSIPGatewayUASettings.html">AsnSIPGatewayUASettings</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnSIPGatewayUASettingsList.html">AsnSIPGatewayUASettingsList</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetSIPGatewaySettingsResult.html">AsnMgmtGetSIPGatewaySettingsResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtSetSIPGatewaySettingsArgument.html">AsnMgmtSetSIPGatewaySettingsArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtSetSIPGatewaySettingsV2Argument.html">AsnMgmtSetSIPGatewaySettingsV2Argument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtSetCallRecorderSettingsArgument.html">AsnMgmtSetCallRecorderSettingsArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetCallRecorderSettingsResult.html">AsnMgmtGetCallRecorderSettingsResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtServerStatistics4AdminList.html">AsnMgmtServerStatistics4AdminList</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtMonGetServerStatisticsResult.html">AsnMgmtMonGetServerStatisticsResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetCtiServerTypeResult.html">AsnMgmtGetCtiServerTypeResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtNotificationSettings.html">AsnMgmtNotificationSettings</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetNotificationSettingsResult.html">AsnMgmtGetNotificationSettingsResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtSetNotificationSettingsArgument.html">AsnMgmtSetNotificationSettingsArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnSSLCertificateDetailsList.html">AsnSSLCertificateDetailsList</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetAvailableCertificatesResult.html">AsnMgmtGetAvailableCertificatesResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtCtiForwardEntryList.html">AsnMgmtCtiForwardEntryList</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetLineForwardingResult.html">AsnMgmtGetLineForwardingResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtSetLineForwardingArgument.html">AsnMgmtSetLineForwardingArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtAvailableLanguageList.html">AsnMgmtAvailableLanguageList</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetXMLAvailableLanguagesResult.html">AsnMgmtGetXMLAvailableLanguagesResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtPushServiceDevicePropsList.html">AsnMgmtPushServiceDevicePropsList</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtPushServiceDevicesResultArgument.html">AsnMgmtPushServiceDevicesResultArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtPushServiceDeviceChangedArgument.html">AsnMgmtPushServiceDeviceChangedArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetPhoneJournalSettingsResult.html">AsnMgmtGetPhoneJournalSettingsResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtSetPhoneJournalSettingsArgument.html">AsnMgmtSetPhoneJournalSettingsArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtMeshNodeConfigs.html">AsnMgmtMeshNodeConfigs</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtSetMeshNodeConfigsArgument.html">AsnMgmtSetMeshNodeConfigsArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetMeshNodeConfigsResult.html">AsnMgmtGetMeshNodeConfigsResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtMeshNodeStatus.html">AsnMgmtMeshNodeStatus</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtMeshNodeStatuses.html">AsnMgmtMeshNodeStatuses</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetMeshNodeStatusesResult.html">AsnMgmtGetMeshNodeStatusesResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtConnectionInformationChangedArgument.html">AsnMgmtConnectionInformationChangedArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtConnectionOptions.html">AsnMgmtConnectionOptions</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetConnectionOptionsDNSResult.html">AsnMgmtGetConnectionOptionsDNSResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetConfigurationManagerSettingsResult.html">AsnMgmtGetConfigurationManagerSettingsResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtSetConfigurationManagerSettingsArgument.html">AsnMgmtSetConfigurationManagerSettingsArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetUserManagerConnectionStatusResult.html">AsnMgmtGetUserManagerConnectionStatusResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtUserManagerConnectionStatusChangedArgument.html">AsnMgmtUserManagerConnectionStatusChangedArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetConfigurationManagerStatusResult.html">AsnMgmtGetConfigurationManagerStatusResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtConfigurationManagerStatusChangedArgument.html">AsnMgmtConfigurationManagerStatusChangedArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtConfigurationManagerServerList.html">AsnMgmtConfigurationManagerServerList</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetConfigurationManagerServerListResult.html">AsnMgmtGetConfigurationManagerServerListResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtConfigurationManagerServerListChangedArgument.html">AsnMgmtConfigurationManagerServerListChangedArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetAdminUserManagerSettingsResult.html">AsnMgmtGetAdminUserManagerSettingsResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtSetAdminUserManagerSettingsArgument.html">AsnMgmtSetAdminUserManagerSettingsArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtAdminUserRightChoice.html">AsnMgmtAdminUserRightChoice</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtAdminUserRight.html">AsnMgmtAdminUserRight</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtAdminUserRights.html">AsnMgmtAdminUserRights</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetAdminUserRightsResult.html">AsnMgmtGetAdminUserRightsResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtComputerFoundEventArgument.html">AsnMgmtComputerFoundEventArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetLineStatesEventArgument.html">AsnMgmtGetLineStatesEventArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtOnLineGroupAddedArgument.html">AsnMgmtOnLineGroupAddedArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtOnLineGroupChangedArgument.html">AsnMgmtOnLineGroupChangedArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtGetUsersEventArgument.html">AsnMgmtGetUsersEventArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtUserManagerConnectionStatusList.html">AsnMgmtUserManagerConnectionStatusList</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.type.AsnMgmtConfigurationManagerStatusList.html">AsnMgmtConfigurationManagerStatusList</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

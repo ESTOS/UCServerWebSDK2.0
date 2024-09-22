@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>asnRegisterServiceAgents</h3>
+    <p>register agents to the service
+</p>
+    <p><img src="https://www.plantuml.com/plantuml/png/bLBDJiCm3BxdAQnUW8gzG4NHgeehGY1klLYfQQEbATZk16zFbXPKs2R1pSaNVt_ALXHPfy6RieH7wfmeCLGT1HKeIsEoDCCJyTvPoc1p2zbp_Nqi8CzhzBx8Sq09NmmBddQRS5cTHgJYRXhYS6NGgjkZqfhSh8LkDckeWBedknD0Qqa4s7LzD8oX1Va8YkzD65z0Um9S9EGeoK_6bEH-v05zx44chuT8vupFBwwRu6OLcS5avrMfJPUSDXdLZG5y7FzYuOvvvDyEtYOIJSYnfCLmeOlm6TcM_btl0u-7ObteJdD2h1TJ5MPBeOqVw1C0" alt="uml diagram">
+</p>
+    <p class="strong">ArgumentType: AsnRegisterServiceAgentsArgument</p>
+    <div class="typevalues">
+      <p>AsnRegisterServiceAgentsArgument is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>u8sServiceID</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>ID of the Service to distinguish the agents from different services. To us a unique string like GUID<br>
+is recommended.<br>
+The ID is used to attach to the right Agents after a connection loss to the UCServer for example.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>listAgents</p>
+          </td>
+          <td> 
+            <p><a href="AgentServices.type.AsnServiceAgentList.html">AsnServiceAgentList</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>List of agents with the needed information to register and  the inital agent state.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>bClearExistingAgents</p>
+          </td>
+          <td> 
+            <p>boolean</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>If given and set to true, pre-existing Agents of this Service will be removed<br>
+from UCServer memory and replaced with the given list of agents.
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+    <p></p>
+    <p class="strong">ResultType: AsnRegisterServiceAgentsResult</p>
+    <div class="typevalues">
+      <p>AsnRegisterServiceAgentsResult is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>u8sServiceID</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>The unique ID of the Service the agents will be registered to on the UCServer.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>bSuccess</p>
+          </td>
+          <td> 
+            <p>boolean</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>true if the call was successful. If the call fails, the AsnRequestError structure will contain the details.
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+    <p></p>
+    <p class="strong">ErrorType: AsnRequestError</p>
+    <div class="typevalues">
+      <p>AsnRequestError is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>iErrorDetail</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>A number representing the error
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sErrorString</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>A string representing the error
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

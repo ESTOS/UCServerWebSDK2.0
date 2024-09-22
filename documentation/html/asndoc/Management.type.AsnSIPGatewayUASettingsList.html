@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnSIPGatewayUASettingsList </h3>
+    <p></p>
+    <p></p>
+    <div class="typevalues">
+      <p>AsnSIPGatewayUASettingsList is an Array of AsnSIPGatewayUASettings</p>
+      <p>AsnSIPGatewayUASettings is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>iGatewayModel</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Gateway-Model
+ (Linked Type: <a href="Management.type.AsnGatewayModelEnum.html">AsnGatewayModelEnum</a>)
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iGatewayType</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Gateway-Typ
+ (Linked Type: <a href="Management.type.AsnGatewayTypesEnum.html">AsnGatewayTypesEnum</a>)
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>registeredUsers</p>
+          </td>
+          <td> 
+            <p><a href="Management.type.AsnSIPGatewaySettingsRegisteredUserList.html">AsnSIPGatewaySettingsRegisteredUserList</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Map der registrierten Benutzer. Der Schlüssel ist typischerweise der Username.<br>
+wird ignoriert, wenn diese Struktur mit asnMgmtSetSIPGatewaySettingsV2 gesendet wird
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>bTrunkRegistration</p>
+          </td>
+          <td> 
+            <p>boolean</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>TRUNK-Registrierung<br>
+Wenn gesetzt, wird nur ein Register für alle Leitungen durchgeführt.<br>
+Als AuthUserName und AuthPasswort wird das des &quot;MainTrunkUser&quot; verwendet.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sRegistrar</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Registrar oder Proxy.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iRegistrarPort</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Registrar- oder Proxy-Port.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sSTUNServer</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Angabe des STUN-/TURN-Servers. Wird momentan nicht verwendet.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sDomainRealm</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Domain-Part der Anmeldeadresse (entspricht i.d.R. der Registrar-Adresse).
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iRegisterInterval</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Zeitdauer bis zum nächsten Reregister.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iConnectionType</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Verbindungstyp, i.d.R. ESIP_UDP.
+ (Linked Type: <a href="Management.type.AsnSIPConnectionTypeEnum.html">AsnSIPConnectionTypeEnum</a>)
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sLocalInterfaceGUID</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Die GUID der zu verwendenden Netzwerkschnittstelle.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sLineGroupName</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Leitungsgruppenname der Konfiguration (Klartextname), wird zur Bildung der Leitungsadresse benutzt.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>bDoRegister</p>
+          </td>
+          <td> 
+            <p>boolean</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>muss auf true gesetzt sein, sonst registriert sich nicht der User
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sMediaGatewayName</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Eindeutiger Name des Gateways. Erscheint so in der UI.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iMediaMode</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Media Mode<br>
+Im Zusammenhang mit Kurento wird zunächst immer webrtc gesprochen
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>ilistAudioCodecs</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.SEQInteger.html">SEQInteger</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Unterstützte Audio-Codecs
+ (Linked Type: <a href="Management.type.AsnAudioCodesEnum.html">AsnAudioCodesEnum</a>)
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iPBXProperties</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>PBX Eigenschaften
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iPCAPTrace</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Gateway Trace global
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8slistPCAPTraceLines</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.UTF8StringList.html">UTF8StringList</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Gateway Trace lines
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>objFeatureCodes</p>
+          </td>
+          <td> 
+            <p><a href="Management.type.AsnMgmtCtiFeatureCodeList.html">AsnMgmtCtiFeatureCodeList</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Vom Admin definierte Feature Codes, die im ME Bereich der SipAV-line gezeigt werden.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>customProps</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.AsnStringPairList.html">AsnStringPairList</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Custom Properties for individual Line groups<br>
+Property strings are defined as ELINEPROP_XXX ies */
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iRegisterDelay</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>average delay between SIP Registrations
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iPBXTransferProperties</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>PBX Transfer Eigenschaften
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iRegisterNatRefreshInterval</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Zeitdauer bis zum naechsten NAT Refresh.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iProvider</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Handelt es sich um einen SIP-Provider?
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iMinPorts</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>min Media Ports (e.g. Softphone)
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iMaxPorts</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>max Media Ports (e.g. Softphone)
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iNoEarlyMedia</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Wurde Early Media deaktiviert?
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>bRegisteredUsersSendChanges</p>
+          </td>
+          <td> 
+            <p>boolean</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>true: Geaenderte User in registeredUsersAdded, registeredUsersChanged, registeredUsersRemoved.<br>
+false: Alle vorhandenen User in registeredUser<br>
+default beim Empfaenger (falls Wert nicht gesetzt): false
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>registeredUsersAdded</p>
+          </td>
+          <td> 
+            <p><a href="Management.type.AsnSIPGatewaySettingsRegisteredUserList.html">AsnSIPGatewaySettingsRegisteredUserList</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>Liste der hinzugefuegten registeredUser. Der Schlüssel ist typischerweise der Username.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>registeredUsersChanged</p>
+          </td>
+          <td> 
+            <p><a href="Management.type.AsnSIPGatewaySettingsRegisteredUserList.html">AsnSIPGatewaySettingsRegisteredUserList</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>Liste der geaenderten registeredUser. Der Schlüssel ist typischerweise der Username.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>registeredUsersRemoved</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.UTF8StringList.html">UTF8StringList</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>Liste der entfernten registeredUser. Aufgelistet sind die Usernamen.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sLineGroupNameOld</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>Leitungsgruppenname vor dem Umbenennen der Leitungsgruppe.
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

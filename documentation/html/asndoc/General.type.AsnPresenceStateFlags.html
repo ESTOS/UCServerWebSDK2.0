@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnPresenceStateFlags </h3>
+    <p>The addition state flags for the current presenc state.
+</p>
+    <p><p>The presence state of a contcat (or line, or appointment etc.) is a DWORD (32 Bit) bit field, where the individual Bits<br>
+are devided into two seperate spaces: the presence state (AsnPresenceStateEnum) and the presence state flags (AsnPresenceStateFlags)<br>
+which contain further deatils about the current presence state.</p>
+</p>
+    <div class="typevalues">
+      <p>AsnPresenceStateFlags is an Enumeration</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Value</th>
+        <th>Comment</th>
+        <tr>
+          <td>eWORKINGAFTERCALL</td>
+          <td>number</td>
+          <td>65536</td>
+          <td>0x00010000 - The contact is doing work after a call and should be treated as &quot;busy&quot;. (added after PCE 5.1)
+</td>
+        </tr>
+        <tr>
+          <td>eCONFERENCING</td>
+          <td>number</td>
+          <td>131072</td>
+          <td>0x00020000 - The contact is participating a conference with our conferencing product (added with PCE 7.1)
+</td>
+        </tr>
+        <tr>
+          <td>eRINGING</td>
+          <td>number</td>
+          <td>16777216</td>
+          <td>0x01000000 - The contact has a call ringing on one of his phone or A/V lines.
+</td>
+        </tr>
+        <tr>
+          <td>eAPPOINTMENT</td>
+          <td>number</td>
+          <td>33554432</td>
+          <td>0x02000000 - The contavct has currently an active appointment in &quot;absent&quot;, &quot;busy&quot; or &quot;free&quot; state.
+</td>
+        </tr>
+        <tr>
+          <td>eCALL</td>
+          <td>number</td>
+          <td>67108864</td>
+          <td>0x04000000 - The contact is in a call.
+</td>
+        </tr>
+        <tr>
+          <td>eOFFLINE</td>
+          <td>number</td>
+          <td>134217728</td>
+          <td>0x08000000 - The contact is offline.
+</td>
+        </tr>
+        <tr>
+          <td>eNOTESET</td>
+          <td>number</td>
+          <td>268435456</td>
+          <td>0x10000000 - The contact has set a note.
+</td>
+        </tr>
+        <tr>
+          <td>eIDLE</td>
+          <td>number</td>
+          <td>536870912</td>
+          <td>0x20000000 - The contact does not used his mouse or keyboard for a time or is only logged in with a mobile device.
+</td>
+        </tr>
+        <tr>
+          <td>eMOBILEAVAILABLITY</td>
+          <td>number</td>
+          <td>1073741824</td>
+          <td>0x40000000 - The contact is most likely reachable on his mobile device.
+</td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

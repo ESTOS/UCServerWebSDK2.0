@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>EnumCallDisconnectedReason </h3>
+    <p>The disconnected state may be reached by different reasons which may be interesting for the business logic or the user.
+</p>
+    <p></p>
+    <div class="typevalues">
+      <p>EnumCallDisconnectedReason is an Enumeration</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Value</th>
+        <th>Comment</th>
+        <tr>
+          <td>eDISCONNECTEDREASONUNKNOWN</td>
+          <td>number</td>
+          <td>0</td>
+          <td>Disconnect reason unknown, even if the call was successful connected and one of the participants has dropped the call.
+</td>
+        </tr>
+        <tr>
+          <td>eDISCONNECTEDREASONUNCONNECTED</td>
+          <td>number</td>
+          <td>1</td>
+          <td>The call partner did not answer the call.
+</td>
+        </tr>
+        <tr>
+          <td>eDISCONNECTEDREASONBUSY</td>
+          <td>number</td>
+          <td>2</td>
+          <td>The call partner is busy.
+</td>
+        </tr>
+        <tr>
+          <td>eDISCONNECTEDREASONREDIRECTEDUNKNOWN</td>
+          <td>number</td>
+          <td>3</td>
+          <td>Anruf wurde aus einem ECALLSTATE_OFFERING heraus mit redirect oder Pickup weggeholt<br>
+The call was redirected or picked in the state offering (eCALLSTATEOFFERING) by an unkown line or participant.
+</td>
+        </tr>
+        <tr>
+          <td>eDISCONNECTEDREASONREDIRECTEDBYLINEOWNER</td>
+          <td>number</td>
+          <td>4</td>
+          <td>The call was redirected or picked in the state offering (eCALLSTATEOFFERING) by the line owner.
+</td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

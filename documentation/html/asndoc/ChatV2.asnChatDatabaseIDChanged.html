@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>asnChatDatabaseIDChanged</h3>
+    <p>Change of database ID
+</p>
+    <p><p>Event is sent from the server to the client if the database ID changes at runtime.<br>
+This currently happens when the use of a database for chat in the server is switched off. Then one<br>
+In-memory database is used, but is deleted once a day to prevent it from being in memory<br>
+Accumulate conversations.</p>
+</p><strong>ArgumentType: AsnChatDatabaseIDChangedArgument</strong>
+    <div class="typevalues">
+      <p>AsnChatDatabaseIDChangedArgument is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>u8sDatabaseID</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Unique ID of the current server database
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<!--
+  Example code for handling CTI tasks with the UCServer.
+  - Creating a client session
+  - Getting lines to use
+  - Make Call, Answer Call, Hangup/Drop Call, Changing "Do not Disturb"
+  - Set Forward (simple), Remove Forward (simple)
+  - Logoff from server gracefully
+-->
+<html lang="en">
+
+<head>
+  <!-- make it a bit more visual appealing with bootstrap material -->
+  <link rel="stylesheet"
+    href="https://unpkg.com/bootstrap-material-design@4.1.1/dist/css/bootstrap-material-design.min.css"
+    integrity="sha384-wXznGJNEXNG1NFsbm0ugrLFMQPWswR3lds2VeinahP8N0zJw9VWSopbjv2x7WCvX" crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+    crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/popper.js@1.12.6/dist/umd/popper.js"
+    integrity="sha384-fA23ZRQ3G/J53mElWqVJEGJzU0sTs+SvzG8fXVWP+kJQ1lwFAOkcUOysnlKJC33U"
+    crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/bootstrap-material-design@4.1.1/dist/js/bootstrap-material-design.js"
+    integrity="sha384-CauSuKpEqAFajSpkdjv3z9t8E7RlpJ1UP0lKM/+NdtSarroVKu069AlsRPKkFBz9"
+    crossorigin="anonymous"></script>
+  <script>$(document).ready(function () { $('body').bootstrapMaterialDesign(); });</script>
+</head>
+
+<body>
+  <div class="container">
+    <p>
+      <a href="index.html" class="badge badge-pill badge-primary"> &lt;== Back to index</a>
+    </p>
+    <p>
+      After every step you can see what is sent and what is received at the <b>bottom</b> of this page.
+    </p>
+    <hr />
+
+    <!-- Login -->
+    <p><b>1. Login: Create a new session with credentials</b></p>
+    <form>
+      <div class="form-row">
+        <div class="form-group col-md-4">
+          <label for="serverurl">Server URL:</label>
+          <input id="serverurl" type="text" class="form-control" value="http://localhost:7224" /><br />
+        </div>
+        <div class="form-group col-md-4">
+          <label for="ucsid">UCSID:</label>
+          <input id="ucsid" type="text" class="form-control" value="local" /><br />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="from-group col-md-4">
+          <label for="userinput">Username:</label>
+          <input id="userinput" type="text" class="form-control" value="" /><br />
+        </div>
+        <div class="form-group col-md-4">
+          <label for="pass">Password:</label>
+          <input id="pass" class="form-control" value="" type="password" /><br />
+        </div>
+      </div>
+      <div class="form-row">
+        <div>
+          <button type='submit' onclick='createsession(); event.preventDefault();'>Create Session</button><br />
+        </div>
+      </div>
+    </form>
+    <hr />
+
+    <!-- Display the session id retrieved from the server -->
+    <p><b>2. On Successful login you will get a sessionid, to identify your client operation calls on the server</b></p>
+    <div class="form-group">
+      <form>
+        <div class="form-group">
+          <label for="sessionid">SessionID:</label>
+          <input id="sessionid" type="text" class="form-control" value="" /><br />
+          <p>(In this example it is only needed to create the WebSocket. All other calls are bound to the socket
+            instead)</p>
+        </div>
+      </form>
+    </div>
+    <hr />
+
+    <!-- Read the phone lines which are configurated with the user in the UCServer -->
+    <p><b>3. From your login, get your own phone lines, which were configured to your account.</b></p>
+    <div class="form-group">
+      <form>        
+        <button type='submit' onclick='getmylines(); event.preventDefault();'>Get my phone lines</button>
+        <br />
+      </form>
+    </div>
+    <hr />
+
+    <!-- Display the phone lines associated with the user -->
+    <p><b>4. From your login, get your own phone lines, which were configured to your account.</b></p>
+    <div class="form-group">
+      <form>
+        <div class="form-row">
+          <div class="col-md-2">Your phone lines:</div>
+          <textarea id="phonelines" rows="4" class="col-md-10"></textarea><br />
+        </div>
+      </form>
+    </div>
+    <hr />
+
+    <!-- Subscribe to line events -->
+    <p>
+      <b>5. With the line ids, subscribe to the lines for events and get the line features needed to see which
+        operations are available ob the lines.<br />
+        (In this example this will be done only for the first line to keep it a bit simpler)
+      </b>
+    </p>
+    <div class="form-group">
+      <form>
+        <button type='submit' onclick='subscribeToFirstLine(); event.preventDefault();'>Subscribe on the first
+          line</button>
+      </form>
+    </div>
+    <hr />
+
+    <!-- Make Call, Hangup Call, Answer Call -->
+    <p>Now login you can initiate a call, answer a call or hang up or ... </p>
+    <div class="form-group">
+      <form>
+        <div class="form-group">
+          <label for="phonenumber">Enter phone number:</label>
+          <input id="phonenumber" type="text" class="form-control" value="" /><br />
+        </div>
+        <button type='submit' class="form-group col-md-2" onclick='makecall(); event.preventDefault();'
+          id="makecallbtn">Make call</button>
+        <button type='submit' class="form-group col-md-2" onclick='hangup(); event.preventDefault();'
+          id="hangupbtn">Hangup</button>
+        <button type='submit' class="form-group col-md-2" onclick='answer(); event.preventDefault();'
+          id="answerbtn">Answer</button>
+        <button type='submit' class="form-group col-md-2" onclick='changeDoNotDisturb(); event.preventDefault();'
+          id="changedndbtn">Change DnD</button>
+      </form>
+    </div>
+    <hr />
+
+    <!-- Set Forward -->
+    <p>
+      <b>6. Here you can set a line forward to a destination number and remove it again:</b>
+    </p>
+    <div class="form-group">
+      <form>
+        <div class="form-group">
+          <label for="forwardtonumber">Enter forward destination number:</label>
+          <input id="forwardtonumber" type="text" class="form-control" value="" /><br />
+        </div>
+        <button type='submit' class="form-group col-md-2" onclick='setForward(); event.preventDefault();'
+          id="setforwardbtn">Set Forward</button>
+        <button type='submit' class="form-group col-md-2" onclick='removeForward(); event.preventDefault();'
+          id="removeforwardbtn">Remove</button>
+      </form>
+    </div>
+    <hr />
+
+    <!-- End session - Logoff -->
+    <div>
+      <p>
+        <b>7. End session and logoff from server</b>
+      </p>
+      <form>
+        <button type='submit' onclick='logoff(); event.preventDefault();'>Logoff</button><br />
+      </form>
+    </div>
+    <hr />
+    <hr />
+    <p><b>Messages sent to and received from the server:</b></p>
+    </p>
+    <p>SEND:<br />
+      <pre id="sended"></pre>
+    </p>
+    <p>RECEIVE:<br />
+      <pre id="result"></pre>
+    </p>
+  </div>
+  <script src="CtiDemoSession.js"></script>
+</body>
+
+</html>

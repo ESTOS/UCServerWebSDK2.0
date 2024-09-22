@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>EnumCallState </h3>
+    <p>States a call can have.
+</p>
+    <p></p>
+    <div class="typevalues">
+      <p>EnumCallState is an Enumeration</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Value</th>
+        <th>Comment</th>
+        <tr>
+          <td>eCALLSTATEUNKNOWN</td>
+          <td>number</td>
+          <td>0</td>
+          <td>Call is in an unknown state.
+</td>
+        </tr>
+        <tr>
+          <td>eCALLSTATEDESTROYED</td>
+          <td>number</td>
+          <td>1</td>
+          <td>Call was destroyed by dropping it.
+</td>
+        </tr>
+        <tr>
+          <td>eCALLSTATEOFFERING</td>
+          <td>number</td>
+          <td>2</td>
+          <td>Call is ringing inbound.
+</td>
+        </tr>
+        <tr>
+          <td>eCALLSTATEDIALING</td>
+          <td>number</td>
+          <td>4</td>
+          <td>User is dialing.
+</td>
+        </tr>
+        <tr>
+          <td>eCALLSTATERINGBACK</td>
+          <td>number</td>
+          <td>8</td>
+          <td>Call is ringing outbound (call number is complete)
+</td>
+        </tr>
+        <tr>
+          <td>eCALLSTATEBUSY</td>
+          <td>number</td>
+          <td>16</td>
+          <td>Call outbound is busy.
+</td>
+        </tr>
+        <tr>
+          <td>eCALLSTATECONNECTED</td>
+          <td>number</td>
+          <td>32</td>
+          <td>Call is connected (same for in- and outbound)
+</td>
+        </tr>
+        <tr>
+          <td>eCALLSTATECONFERENCED</td>
+          <td>number</td>
+          <td>64</td>
+          <td>Call is part of a call conference.
+</td>
+        </tr>
+        <tr>
+          <td>eCALLSTATEHOLD</td>
+          <td>number</td>
+          <td>128</td>
+          <td>Call is on hold.
+</td>
+        </tr>
+        <tr>
+          <td>eCALLSTATEDISCONNECTED</td>
+          <td>number</td>
+          <td>256</td>
+          <td>Call is disconnected by the call partner. The user should drop the call too, then it will get destroyed too.
+</td>
+        </tr>
+        <tr>
+          <td>eCALLSTATEPREPARECALL</td>
+          <td>number</td>
+          <td>512</td>
+          <td>Call is in a prepare state (special for procall, this is not a normal PBX state).
+</td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnRequestLargeProfileImageArgument </h3>
+    <p>Argument for <a href="PresenceV2.asnRequestLargeProfileImage.html">asnRequestLargeProfileImage</a>
+</p>
+    <p><p>To get or check an large image of a contact, the client calls <a href="PresenceV2.asnRequestContactImage.html">asnRequestContactImage</a> with the ContactID (e.g. 'tester@test.com') or the <a href="Common.type.AsnNetDatabaseContactID.html">AsnNetDatabaseContactID</a> of the contact and<br>
+the known image hash the client already has. If the client has no hash, an empty string will indicate the server that<br>
+the client does not have an image yet.</p>
+</p>
+    <div class="typevalues">
+      <p>AsnRequestLargeProfileImageArgument is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>u8sContactID</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>ContactID of the contact to get or check the image
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sKnownHash</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>If the client has an image already, it sends its hash so the server can determine if the image has changed.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>netDatabaseContactID</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.AsnNetDatabaseContactID.html">AsnNetDatabaseContactID</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>Alternatively to u8sContactID one can use the AsnNetDatabaseContactID to identify the contact.
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

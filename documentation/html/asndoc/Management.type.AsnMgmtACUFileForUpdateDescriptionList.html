@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnMgmtACUFileForUpdateDescriptionList </h3>
+    <p></p>
+    <p></p>
+    <div class="typevalues">
+      <p>AsnMgmtACUFileForUpdateDescriptionList is an Array of AsnMgmtACUFileForUpdateDescription</p>
+      <p>AsnMgmtACUFileForUpdateDescription is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>iFileID</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Eindeutige Nummer welche die entsprechende Datei referenziert
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sIdentifier</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Identifier fuer die zum Update vorgesehene Datei<br>
+Der Identifier entspricht dem im XML.<br>
+Wenn das Paket ueber den MSI UpgradeCode gesucht wurde wird mit :<br>
+die Sprache als Zahl angehaengt 1033 fuer English (United States)
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sDescription</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Beschreibung der Datei
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sProduct</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Produkt zu dem das File gehoert
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sFileName</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Dateiname wie er auf der Platte vorliegt (Alternativ ist der MSIUpgradeCode befuellt)
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iExecuteType</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Typ wie die Datei auf dem Client ausgefuehrt wird<br>
+Eine der ACU_EXECUTETYPE_PROCALLMSI Optionen
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sExecuteCommand</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Kommando fuer execute.<br>
+Das hat verschiedene Bedeutungen je nach iExecuteType
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sVersion</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Versionsnummer der Datei auf Platte.<br>
+Diese wird beim einlesen des Files in den Server bestimmt.<br>
+exe: Datei version aus resourcen<br>
+msi: productversion Property<br>
+andere: MD5
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sMSIUpgradeCode</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>MSI UpgradeCode des MSI auf Platte.<br>
+Dieser wird beim einlesen des Files in den Server bestimmt.<br>
+Dieser wird zum uninstall eines msi produktes auf dem client verwendet
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sValidationCode</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>MD5 der Datei.<br>
+Dieses wird beim einlesen der Dateio in den Server berechnet.<br>
+Der MD56 dient zum validieren des Files nach dem download durch den<br>
+ACI Service
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iFileLanguage</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Language des Files oder 0 fuer alle Sprachen (Neutral)<br>
+Muss im xml konfiguriert sein
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iLCIDsEmbedded</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.SEQInteger.html">SEQInteger</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p> 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sPlatform</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Zielplatform fuer dieses File.<br>
+Das ist entweder leer (alle) oder<br>
+x64 fuer Windows AMD 64 Platformen oder<br>
+x86 fuer Windows x86 Platformen.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sKeyInstalled</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>reg key oder file key ob das file installiert ist (int)<br>
+reg:HKEY_LOCAL_MACHINE\Software\ESTOS\UCServer4\Client\InstallCtiClient<br>
+file:%CTICLIENTDIR%\config\oeminfo.bmp
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sKeyVersion</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>reg key oder file key fuer die version.(u8sing)<br>
+reg:HKEY_LOCAL_MACHINE\Software\ESTOS\UCServer4\Client\InstallVersion<br>
+file:%CTICLIENTDIR%\config\oeminfo.bmp
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sRegPathLanguage</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>HREGKEY unter dem nach der Sprache zu suchen ist (int)<br>
+HKEY_LOCAL_MACHINE\Software\ESTOS\UCServer4\Client\Language
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iAllowUpdate</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Dieses File darf fuer Updates verwendet werden
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iAllowInstall</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Dieses File darf fuer Remote Installationen verwendet werden
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sFilePath</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p> 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnLogonErrorEnum </h3>
+    <p>These are the possible iErrorDetail values as part of the response to /ws/client/createsession.
+</p>
+    <p></p>
+    <div class="typevalues">
+      <p>AsnLogonErrorEnum is an Enumeration</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Value</th>
+        <th>Comment</th>
+        <tr>
+          <td>eNETLOGININTERNALSERVERERROR</td>
+          <td>number</td>
+          <td>100</td>
+          <td>An internal Server error occured.
+</td>
+        </tr>
+        <tr>
+          <td>eNETLOGININVALUSERNAME</td>
+          <td>number</td>
+          <td>101</td>
+          <td>User name not found or password wrong (since V6.3). Description text in error message tells now, that the user cannot be authenticated.
+</td>
+        </tr>
+        <tr>
+          <td>eNETLOGINNOMOREUSERS</td>
+          <td>number</td>
+          <td>103</td>
+          <td>No license free for user.
+</td>
+        </tr>
+        <tr>
+          <td>eNETLOGININVALIDVERSION</td>
+          <td>number</td>
+          <td>104</td>
+          <td>UCServer and UCClient version are not compatible.
+</td>
+        </tr>
+        <tr>
+          <td>eNETLOGINNEGOTIATIONREQUIRED</td>
+          <td>number</td>
+          <td>105</td>
+          <td>This is not really an error, but the server requests the next step in authentication from the client with this &quot;error&quot;.
+</td>
+        </tr>
+        <tr>
+          <td>eNETLOGININVALIDAUTHENTICATIONMETHOD</td>
+          <td>number</td>
+          <td>106</td>
+          <td>The requested authntication method is not supported by the usermanager.
+</td>
+        </tr>
+        <tr>
+          <td>eNETLOGINUSERNOTENABLED</td>
+          <td>number</td>
+          <td>107</td>
+          <td>The user is not enabled on this ucserver.
+</td>
+        </tr>
+        <tr>
+          <td>eNETLOGININVALIDCOMPUTERNAME</td>
+          <td>number</td>
+          <td>108</td>
+          <td>Computer login only: the computer name is not found.
+</td>
+        </tr>
+        <tr>
+          <td>eNETLOGINDOMAINAUTHFAILED</td>
+          <td>number</td>
+          <td>109</td>
+          <td>Domain authentication failed.
+</td>
+        </tr>
+        <tr>
+          <td>eNETLOGINMISSINGRIGHTS</td>
+          <td>number</td>
+          <td>110</td>
+          <td>The user has not enough access rights to login on the server. At the moment this occures only with a mobile client without the access right for mobiles.
+</td>
+        </tr>
+        <tr>
+          <td>eNETLOGINMISSINGRIGHTSTS</td>
+          <td>number</td>
+          <td>111</td>
+          <td>Reserved.
+</td>
+        </tr>
+        <tr>
+          <td>eNETLOGINSERVERNOTCOMPATIBLE</td>
+          <td>number</td>
+          <td>112</td>
+          <td>The requested application type (given by negotiate) is not compatible with this server.
+</td>
+        </tr>
+        <tr>
+          <td>eNETLOGINALREADYAUTHENTICATED</td>
+          <td>number</td>
+          <td>113</td>
+          <td>User is already logged in.
+</td>
+        </tr>
+        <tr>
+          <td>eNETLOGINTLSREQUIRED</td>
+          <td>number</td>
+          <td>114</td>
+          <td>The has to use a TLS connection to this server.
+</td>
+        </tr>
+        <tr>
+          <td>eNETLOGINACCOUNTPASSWORDLOCKED</td>
+          <td>number</td>
+          <td>129</td>
+          <td>User account has been locked due to too many failed login attempts.
+</td>
+        </tr>
+        <tr>
+          <td>eNETLOGINTOKENEXIRED</td>
+          <td>number</td>
+          <td>130</td>
+          <td>The given token has been expired.
+</td>
+        </tr>
+        <tr>
+          <td>eNETLOGINTOOMANYATTEMPTS</td>
+          <td>number</td>
+          <td>131</td>
+          <td>Too many failed login attempts, the user has to wait some time to try again.
+</td>
+        </tr>
+        <tr>
+          <td>eNETLOGINWRONGPACMODE</td>
+          <td>number</td>
+          <td>133</td>
+          <td>Reserved.
+</td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

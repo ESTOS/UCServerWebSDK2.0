@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+  <style>
+    span { vertical-align: top; display: inline-block; width: 200px; }
+    input { display: inline-block; width: 400px; }
+  </style>
+  <body>
+    <form>
+      <table>
+      <tr><td>Server URL:</td><td><input id="serverurl" value="http://localhost:7224"/></td></tr>
+      <tr><td>UCSID:</td><td><input id="ucsid" value="local"/></td></tr>
+      <tr><td>Username:</td><td><input id="user" value=""/></td></tr>
+      <tr><td>Password:</td><td><input id="pass" value=""/></td></tr>
+      <tr><td></td><td><button type='submit' onclick='createsession(); event.preventDefault();'>Create Session</button></td></tr>
+      </table>
+    </form>
+    <form>
+      <table>
+      <tr><td>SessionID:</td><td><input id="sessionid" value=""/></td></tr>
+      <tr><td>Function:</td><td><input id="func" value="asnGetLoggedInContact"/></td></tr>
+      <tr><td>Params:</td><td><textarea rows="7" id="params">{ }</textarea></td></tr>
+      <tr><td></td><td><button type='submit' onclick='sendcommand(); event.preventDefault();'>Send Command</button></td></tr>
+      </table>
+    </form>
+    <pre id="result"></pre>
+  <script>
+    function createsession()
+    {
+      let serverurl = document.getElementById("serverurl").value;
+      let ucsid = document.getElementById("ucsid").value;
+      let user = document.getElementById("user").value;
+      let pass = document.getElementById("pass").value;      
+	  let func = 'createsession?clientappid=15'; // since ProCall 7 you have to tell the server your application type (Web = 15)
+            
+      let oXHR = new XMLHttpRequest();   // new HttpRequest instance
+      oXHR.addEventListener("loadend", function(evt) {
+        let outtext = oXHR.responseText;
+        let response = {};
+        try {
+          response = JSON.parse(oXHR.responseText);
+          outtext = JSON.stringify(response, null, 4);        
+        } catch(e) {
+        }
+        if (oXHR.status == 0) {
+          document.getElementById("result").innerHTML = 'Failed: General Network Error';
+        } else if (outtext == '') {
+          document.getElementById("result").innerHTML = 'Failed: No response received - status: ' + oXHR.status;
+        } else if (oXHR.status == 200) {
+          document.getElementById("result").innerHTML = 'status: ' + oXHR.status + '\n' + outtext;
+          if (response.hasOwnProperty('sessionid')) {
+              document.getElementById("sessionid").value = response.sessionid;
+          }
+        } else {
+          document.getElementById("result").innerHTML = 'status: ' + oXHR.status + '\n' + outtext;
+        }
+      });
+      //epid must be unique for every createsession request
+      
+      // for ProCall 7 it is a MUST to tell the server the API Version ('70' for ProCall 7, '61' for ProCall 6)
+      // for ProCall 6 you can (and SHOULD) do it.
+      let apiVersion = 70;
+
+      oXHR.open("POST", serverurl + "/ws/client/" + func, true);
+      oXHR.setRequestHeader("Authorization", "Basic " + btoa(user + ":" + pass)); 
+      oXHR.setRequestHeader("Content-Type", "application/json;charset=utf-8");
+      oXHR.setRequestHeader("X-no401", "1");
+      oXHR.setRequestHeader("X-ucsid", ucsid);
+      oXHR.setRequestHeader("X-simple", "1");
+      oXHR.send('{ "negotiate": { "iClientProtocolVersion": '+apiVersion+' } }');    
+    }
+    function sendcommand()
+    {
+      let serverurl = document.getElementById("serverurl").value;
+      let func = document.getElementById("func").value;
+      let sessionid = document.getElementById("sessionid").value;
+      let params = document.getElementById("params").value;
+      try {
+        JSON.parse(params);
+      } catch(e) {
+        document.getElementById("result").innerHTML = 'Failed: Params are not valid JSON: ' + e;
+        return;
+      }
+      
+      let oXHR = new XMLHttpRequest();   // new HttpRequest instance
+      oXHR.addEventListener("loadend", function(evt) {
+        let outtext = oXHR.responseText;
+        try {
+          outtext = JSON.stringify(JSON.parse(oXHR.responseText), null, 4);        
+        } catch(e) {
+        }
+        if (oXHR.status == 0) {
+          document.getElementById("result").innerHTML = 'Failed: General Network Error';
+        } else if (outtext == '') {
+          document.getElementById("result").innerHTML = 'Failed: No response received';
+        } else if (oXHR.status == 200) {
+          document.getElementById("result").innerHTML = outtext;
+        } else {
+          document.getElementById("result").innerHTML = outtext;
+        }
+      });
+      oXHR.open("POST", serverurl + "/ws/client/" + func);
+      oXHR.setRequestHeader("Content-Type", "application/json;charset=utf-8");
+      oXHR.setRequestHeader("X-ucsessionid", sessionid); 
+      oXHR.setRequestHeader("X-ucsid", ucsid);
+
+      oXHR.send(params);    
+    }
+  </script>
+
+  </body>
+</html>

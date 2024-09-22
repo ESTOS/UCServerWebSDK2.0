@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnAppsRegisterPushArgument </h3>
+    <p></p>
+    <p></p>
+    <div class="typevalues">
+      <p class="private">- PRIVATE -</p>
+      <p>AsnAppsRegisterPushArgument is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>iRegisterType</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Type of Registration
+ (Linked Type: <a href="General.type.AsnAppsRegisterPushTypeFlags.html">AsnAppsRegisterPushTypeFlags</a>)
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sDeviceID</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>mandatory - DeviceID unique ID for the device (Installation Instance)<br />mandatory bei Anmeldung, sonst optional  Push ID of the Device (z.B. ios: 0124f138fc90e83bf91b6cc58815ad7a2136d7339acece26e310110713ca928e,<br />gcm: APA91bHPmxUoXJ4OXgsvOJq45qCRo8K4UB8iYqU27dR8lzzLWnEJg8NUs3mPXSqXBsjqJ4hHljGNwEjrisIg3vEw7UXHBkTR2s3fK8QVmPS9N42Vf_wagKiiaKmp9FnwFGOJbhXcIQ4O-FkFEx7HjWTQ-oZZx9UqIA
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sPushID</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>mandatory bei Anmeldung, sonst optional - Push Channel ID (z.B. ios.de.estos.apps.procallmobile.dev)
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sPushChannelID</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p> 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iEncryption</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>Tells the server to create an key for encrypting the push message payload<br>
+Type of encryption is given with the AsnAppsPushEncryption enum
+ (Linked Type: <a href="General.type.AsnAppsPushEncryption.html">AsnAppsPushEncryption</a>)
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sPushIDVoIP</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>optional - Wenn gesetzt, so sendet der Server 'avnewcall' Benachrichtigungen für Softphone Calls über diese ID.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sPushChannelIDVoIP</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>mandatory wenn u8sPushIDVoIP gesetzt ist, ansonsten optional.
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

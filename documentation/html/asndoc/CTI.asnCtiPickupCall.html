@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>asnCtiPickupCall</h3>
+    <p>Pickup a ringing call from another line on an own line.
+</p>
+    <p><p>Getting an ringing call from another line to an own line execute this operation.<br /><br>
+Picking up calls requires an appropriate configuration (rights) on the PBX.<br>
+Thus it is recommended to use <a href="CTI.asnCtiRedirectCall.html">asnCtiRedirectCall</a> if you are not aware if the configuration has been set properly.<br>
+Picking a call leads to a connected call on the extension picking the call while redirecting leads to an offering call on the new extension.</p>
+</p>
+    <p class="strong">ArgumentType: AsnCtiPickupCallArgument</p>
+    <div class="typevalues">
+      <p>AsnCtiPickupCallArgument is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>u8sContactID</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>ContactID of the contact to pickup a call from his line. Leave it empty if you just want to pickup a call by its identifier.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sConnectionID</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Connection identifier of the call to redirect.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sPhoneNumber</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>The line number to pickup to. This number can be in short or long format if you set iNumberFormat to 1.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iNumberFormat</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>The u8sPhoneNumber is the number to pickup to and normally the server would reformat the number into a dialable form. This behavior can be altered:
+<ul>
+<li>0: Server should not format the number for pickup, it shall use it like it is.</li>
+<li>Other values: Server should format the number (set prefix and area code etc.).<br>
+Hint: If you are not sure, the number should always be formatted (-&gt; use '1')</li>
+</ul>
+ (Linked Type: <a href="General.type.AsnETAPIDialNumberFormat.html">AsnETAPIDialNumberFormat</a>)
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+    <p></p>
+    <p class="strong">ResultType: AsnCtiPickupCallResult</p>
+    <div class="typevalues">
+      <p>AsnCtiPickupCallResult is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>bSuccess</p>
+          </td>
+          <td> 
+            <p>boolean</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>true/1 if the call was picked, false/0 otherwise.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>optionalParams</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.AsnOptionalParameters.html">AsnOptionalParameters</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>optionalParams Name &quot;RemoteInvokeID&quot; Value String - Some dirty internal UCServer logic Simon added and should get reworked, the interface does NOT need this property here
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+    <p></p>
+    <p class="strong">ErrorType: AsnRequestError</p>
+    <div class="typevalues">
+      <p>AsnRequestError is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>iErrorDetail</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>A number representing the error
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sErrorString</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>A string representing the error
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

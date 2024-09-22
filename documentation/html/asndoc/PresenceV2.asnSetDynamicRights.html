@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>asnSetDynamicRights</h3>
+    <p>Operation to set access rights for another contact on contact data and contcat service information.
+</p>
+    <p><p>This operation is used to grant access rights (or changing them) to other users (contacts) on contact informations and service states of this contact.</p>
+<p><strong>Note</strong>: The access rights in the ucserver are always a sum of the global, group and personal right lists and what they grant. So removing specific rights with this<br>
+operation has no effect if the same rights are granted through global or group rights.</p>
+<p>If the operation was executed successfully the result <a href="PresenceV2.type.AsnSetDynamicRightsResult.html">AsnSetDynamicRightsResult</a> is returned.</p>
+<p>If an error occured, AsnRequestError is returned.</p>
+<p><strong>The access rights list</strong><br /><br>
+If a client wants to receive contact data, its logged in contact (= user) has to have access rights granted by the other user to him.<br>
+Each user of the ucserver has a list of access rights she gives other users. If someone is in this list, he can see contact data<br>
+and/or service states of the user depending on the rights level granted.</p>
+<p>The list can be modified by <a href="PresenceV2.asnSetDynamicRights.html">asnSetDynamicRights</a> and <a href="PresenceV2.asnRemoveDynamicRights.html">asnRemoveDynamicRights</a></p>
+<p><strong>Contact rights challenge</strong><br /><br>
+In conjunction with the access rights list is the mechanic of the &quot;contact rights challenge&quot;.<br /><br>
+To get on the access list of another user, the user must request such rights from him or will get them through administrative configuration.<br>
+If there is no administrative configuration the other user will be &quot;challenged&quot; to grant or deny rights to the user.<br>
+This process is started as soon as a user (challenger) requests the ucserver by calling asnGetAndSubscribePresence on another users ContactID (challengee).<br>
+The ucserver checks if there are already given rights and if not, the challenged user gets a new entry in his challenge request list, which then will be<br>
+dispatched to all of his clients. These clients should now prompt the user to accept or deny the request and the result will be saved in his access rights list.<br>
+On the other side, the challenger will get data and service status after some time or not. There is no extra notification if the challenge was answered or not.</p>
+</p>
+    <p class="strong">ArgumentType: AsnSetDynamicRightsArgument</p>
+    <div class="typevalues">
+      <p>AsnSetDynamicRightsArgument is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>u8sOwnerContactID</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>ContactID of the contact who grants/changes the rights.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sRemoteContactID</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>ContactID of the contact to give to/change the rights.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iDynamicRights</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Valid values are (taken from AsnPresenceRightsFlags):
+<ul>
+<li>eBlocked (0)</li>
+<li>ePublic (65536, 0x0001 0000)</li>
+<li>eCompany (131072, 0x0002 0000)</li>
+<li>eTeam (262144, 0x0004 0000)</li>
+<li>ePersonal (524288, 0x0008 0000)</li>
+</ul> 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>dynamicRights</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.AsnUserDynamicRights.html">AsnUserDynamicRights</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>Only use this member to give access rights, which are not part of the predefined patterns.<br /><br>
+<strong>This is not recommended</strong>, so you can leave this optional parameter unset.<br /><br>
+If these rights are set, the parameters u8sOwnerContactID a iDynamicRights are ignored.
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+    <p></p>
+    <p class="strong">ResultType: AsnSetDynamicRightsResult</p>
+    <div class="typevalues">
+      <p>AsnSetDynamicRightsResult is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>iResult</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Should always be 0 (NO_ERROR).
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>dynamicRights</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.AsnUserDynamicRights.html">AsnUserDynamicRights</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>The resulting rights in the rights list of the contact which rightslist had to be changed. This includes NOT the rights granted by global or group rights!
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+    <p></p>
+    <p class="strong">ErrorType: AsnRequestError</p>
+    <div class="typevalues">
+      <p>AsnRequestError is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>iErrorDetail</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>A number representing the error
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sErrorString</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>A string representing the error
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

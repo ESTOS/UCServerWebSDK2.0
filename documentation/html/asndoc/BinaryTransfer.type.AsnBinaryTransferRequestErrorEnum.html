@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnBinaryTransferRequestErrorEnum </h3>
+    <p>eror values of binarytransfer
+</p>
+    <p><p>These are the possible error values in <a href="Common.type.AsnRequestError.html">AsnRequestError</a></p>
+</p>
+    <div class="typevalues">
+      <p>AsnBinaryTransferRequestErrorEnum is an Enumeration</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Value</th>
+        <th>Comment</th>
+        <tr>
+          <td>noerror</td>
+          <td>number</td>
+          <td>0</td>
+          <td>no error
+</td>
+        </tr>
+        <tr>
+          <td>serverBusy</td>
+          <td>number</td>
+          <td>1</td>
+          <td>server is currently serving to many downloads, please try again later
+</td>
+        </tr>
+        <tr>
+          <td>extensionNotAllowed</td>
+          <td>number</td>
+          <td>2</td>
+          <td>the file type (extension) is not allowed for file transfer
+</td>
+        </tr>
+        <tr>
+          <td>fileTooBig</td>
+          <td>number</td>
+          <td>3</td>
+          <td>the file size is too big
+</td>
+        </tr>
+        <tr>
+          <td>unknownTransferID</td>
+          <td>number</td>
+          <td>4</td>
+          <td>the server does not know this transferID (may occur in upload and download)
+</td>
+        </tr>
+        <tr>
+          <td>transferTerminated</td>
+          <td>number</td>
+          <td>5</td>
+          <td>the server terminated the transfer (e.g. shutting down or denied for user profile)
+</td>
+        </tr>
+        <tr>
+          <td>invalidPosition</td>
+          <td>number</td>
+          <td>6</td>
+          <td>the client was requesting a position which is not within the file beeing downloaded
+</td>
+        </tr>
+        <tr>
+          <td>filedeleted</td>
+          <td>number</td>
+          <td>7</td>
+          <td>the file was already deleted
+</td>
+        </tr>
+        <tr>
+          <td>invalidMetaData</td>
+          <td>number</td>
+          <td>8</td>
+          <td>the metaData is not allowed or invalid (may occur when initiating upload)
+</td>
+        </tr>
+        <tr>
+          <td>databaseFail</td>
+          <td>number</td>
+          <td>9</td>
+          <td>either the connection or read/write from server database failed (see server log for details)
+</td>
+        </tr>
+        <tr>
+          <td>generalServerError</td>
+          <td>number</td>
+          <td>9999</td>
+          <td>general error within server request processing (see server log for details)
+</td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

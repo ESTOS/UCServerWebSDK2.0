@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnNegotiateServerConnectionV2Result </h3>
+    <p></p>
+    <p><p>Result of the <a href="Authentication.asnNegotiateServerConnectionV2.html">asnNegotiateServerConnectionV2</a> operation</p>
+</p>
+    <div class="typevalues">
+      <p>AsnNegotiateServerConnectionV2Result is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>eServerType</p>
+          </td>
+          <td> 
+            <p><a href="Authentication.type.AsnNegotiateServerConnectionServerTypeV2.html">AsnNegotiateServerConnectionServerTypeV2</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>The type of server we are connecting to
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sServerInterfaceVersion</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>The asn1 interface version of the server
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>eAuthenticationMethod</p>
+          </td>
+          <td> 
+            <p><a href="Authentication.type.AsnNegotiateServerConnectionAuthenticationMethod.html">AsnNegotiateServerConnectionAuthenticationMethod</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Verfügbare Login Option
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>sServerAuthentication</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>A realm the server wants the client to encrypt data with
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>stServerTime</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>The server time so that the client is able to properly display times the server is providing
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sServerVersion</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Technical version of the server
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sConnectionGUID</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>The server side connection id for this connection
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sPresenceDomains</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.UTF8StringList.html">UTF8StringList</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>The list of presence domains the server is handling
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iOEM</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>The oem of the server (only set if not estos)
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sProductVersion</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>An alternative product version (user shown product version), available if it does not match the technical server version
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>bPresenceServicesDisabled</p>
+          </td>
+          <td> 
+            <p>boolean</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>presence services are disable on the server (only set if false)
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>bUserUserRightsDisabled</p>
+          </td>
+          <td> 
+            <p>boolean</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>user user rights are disable on the server (only set if false)
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>eAnonymousDetails</p>
+          </td>
+          <td> 
+            <p><a href="Authentication.type.AsnNegotiateServerConnectionAnonymousDataResult.html">AsnNegotiateServerConnectionAnonymousDataResult</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>In case the user logged in anonymous this provides details for the anonymous user
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnCtiEnumPhoneLinesArgumentEnum </h3>
+    <p>Which lines shall be listed for the user (own, additional lines, all).
+</p>
+    <p></p>
+    <div class="typevalues">
+      <p>AsnCtiEnumPhoneLinesArgumentEnum is an Enumeration</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Value</th>
+        <th>Comment</th>
+        <tr>
+          <td>userOwnLines</td>
+          <td>number</td>
+          <td>0</td>
+          <td>Own lines which the logged in user is owner of.
+</td>
+        </tr>
+        <tr>
+          <td>userMonitorLines</td>
+          <td>number</td>
+          <td>1</td>
+          <td>Own lines plus the lines, the user has special access rights for.
+</td>
+        </tr>
+        <tr>
+          <td>systemLocalLines</td>
+          <td>number</td>
+          <td>2</td>
+          <td>All lines that are local on the system.
+</td>
+        </tr>
+        <tr>
+          <td>systemGlobalLines</td>
+          <td>number</td>
+          <td>3</td>
+          <td>All local lines plus all global known lines; for future use, current its the same as systemLocalLines.
+</td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

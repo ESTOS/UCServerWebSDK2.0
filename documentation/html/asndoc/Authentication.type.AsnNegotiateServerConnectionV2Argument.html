@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnNegotiateServerConnectionV2Argument </h3>
+    <p></p>
+    <p><p>Argument for the <a href="Authentication.asnNegotiateServerConnectionV2.html">asnNegotiateServerConnectionV2</a> operation</p>
+</p>
+    <div class="typevalues">
+      <p>AsnNegotiateServerConnectionV2Argument is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>u8sMinSupportedInterfaceVersion</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>the minimum supported protocol version of the client<br>
+this is the oldest semver asn1 interface version the client is able to support
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sMaxSupportedInterfaceVersion</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>the maximum supported protocol version of the client<br>
+this is the newest semver asn1 interface version the client is able to support
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sClientDeviceId</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>A device id the client provides on his side
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sClientVersion</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>The version of the client
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>eClientAppID</p>
+          </td>
+          <td> 
+            <p><a href="Authentication.type.AsnClientAppID.html">AsnClientAppID</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>The application id of the client
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sClientDeviceName</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>A client name to show in the administrative view for this connection
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iClientCapabilities</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>The different capabilites the client is able to handle
+ (Linked Type: <a href="Authentication.type.AsnNegotiateServerConnectionClientCapabilities.html">AsnNegotiateServerConnectionClientCapabilities</a>)
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sConnectionGUID</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>In case the client is reusing a connection this is the identifier of the former connection to the server
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>eAnonymousLogin</p>
+          </td>
+          <td> 
+            <p><a href="Authentication.type.AsnNegotiateServerConnectionAnonymousDataArgument.html">AsnNegotiateServerConnectionAnonymousDataArgument</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>The client wants an anonymous login
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

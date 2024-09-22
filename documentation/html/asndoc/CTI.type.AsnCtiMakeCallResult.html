@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnCtiMakeCallResult </h3>
+    <p>Result of <a href="CTI.asnCtiMakeCall.html">asnCtiMakeCall</a>
+</p>
+    <p><p>Remark: The result will be sent if <a href="CTI.asnCtiMakeCall.html">asnCtiMakeCall</a> was successfully accepted by the server. It does NOT reflect, if the call was successfully made on the PBX! The result is sent as <a href="CTI.asnCtiNotifyMakeCallResult.html">asnCtiNotifyMakeCallResult</a> event asynchronously.</p>
+</p>
+    <div class="typevalues">
+      <p>AsnCtiMakeCallResult is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>u8sConnectionID</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Connection identifier of the call
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>optionalParams</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.AsnOptionalParameters.html">AsnOptionalParameters</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>Additional parameters for asnCtiSetCallData added here for backward compatibility.
+<ul>
+<li>Key &quot;WasProjectFound&quot;, Value bool, optional. Only initiate the call if the project (parameter in newCallParams of AsnCtiMakeCallArgument) was found.</li>
+</ul>
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

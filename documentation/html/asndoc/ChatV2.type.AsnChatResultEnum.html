@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnChatResultEnum </h3>
+    <p></p>
+    <p><p>Nachrichtenrelevante Strukturen</p>
+</p>
+    <div class="typevalues">
+      <p>AsnChatResultEnum is an Enumeration</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Value</th>
+        <th>Comment</th>
+        <tr>
+          <td>noerror</td>
+          <td>number</td>
+          <td>0</td>
+          <td>no error
+</td>
+        </tr>
+        <tr>
+          <td>forbidden</td>
+          <td>number</td>
+          <td>1</td>
+          <td>User is not allowed to perform this operation
+</td>
+        </tr>
+        <tr>
+          <td>invalidconversationid</td>
+          <td>number</td>
+          <td>2</td>
+          <td>Conversation ID is invalid
+</td>
+        </tr>
+        <tr>
+          <td>invalidmessageid</td>
+          <td>number</td>
+          <td>3</td>
+          <td>Message ID is invalid
+</td>
+        </tr>
+        <tr>
+          <td>tomanymessages</td>
+          <td>number</td>
+          <td>4</td>
+          <td>Too many messages, make a smaller request
+</td>
+        </tr>
+        <tr>
+          <td>unknownrecipient</td>
+          <td>number</td>
+          <td>5</td>
+          <td>unknown receiver
+</td>
+        </tr>
+        <tr>
+          <td>databasefail</td>
+          <td>number</td>
+          <td>6</td>
+          <td>Database error in the server
+</td>
+        </tr>
+        <tr>
+          <td>invalidcrossrefid</td>
+          <td>number</td>
+          <td>7</td>
+          <td>Request was not accepted because a CrossRefID that already existed in the database was used
+</td>
+        </tr>
+        <tr>
+          <td>federationfail</td>
+          <td>number</td>
+          <td>8</td>
+          <td>Message was not accepted by the federated server
+</td>
+        </tr>
+        <tr>
+          <td>requestfail</td>
+          <td>number</td>
+          <td>9</td>
+          <td>Request could not be processed, e.g. if a user is to be removed from a chat room but is not a member of the chat room
+</td>
+        </tr>
+        <tr>
+          <td>invalidparam</td>
+          <td>number</td>
+          <td>10</td>
+          <td>Invalid parameter
+</td>
+        </tr>
+        <tr>
+          <td>notsubscribed</td>
+          <td>number</td>
+          <td>11</td>
+          <td>If the client sends asnChatTextMessage, asnChatBinaryMessage, asnChatForwardMessage, asnChatForward, asnChatSetUserlist, asnChatUserlistModify or asnChatSetMessagesStatus without beeing subscribed (asnChatSubscribeEvents) for chat events first &quot;notsubscribed&quot; is returned. This means that the request of the client has been processed, but the client will not receive any events because of the missing subscription.
+</td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

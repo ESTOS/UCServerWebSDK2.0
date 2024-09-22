@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>EnumCallFeatures </h3>
+    <p>Bitfield of features/functions which can be executed on a call.
+</p>
+    <p><p>These bit flags describe the features/functions which can be executed on a line/call.<br>
+These flags are set by the UCServer.</p>
+</p>
+    <div class="typevalues">
+      <p>EnumCallFeatures is an Enumeration</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Value</th>
+        <th>Comment</th>
+        <tr>
+          <td>eCFEATURENONE</td>
+          <td>number</td>
+          <td>0</td>
+          <td>no features/function possible
+</td>
+        </tr>
+        <tr>
+          <td>eCFEATUREANSWER</td>
+          <td>number</td>
+          <td>1</td>
+          <td>Answer a call (state eCALLSTATEOFFERING)
+</td>
+        </tr>
+        <tr>
+          <td>eCFEATUREMAKECALL</td>
+          <td>number</td>
+          <td>2</td>
+          <td>Make call is allowed. You can call MakeCall also while having a call to setup a consultation.
+</td>
+        </tr>
+        <tr>
+          <td>eCFEATURECOMPLETECALL</td>
+          <td>number</td>
+          <td>4</td>
+          <td>Complete a busy or an unanswered call for automated callback (if supported by PBX system)
+</td>
+        </tr>
+        <tr>
+          <td>eCFEATUREMERGECALLS</td>
+          <td>number</td>
+          <td>16</td>
+          <td>Merge the active call (state eCALLSTATECONNECTED) with an on hold call (state eCALLSTATEHOLD). This will disconnect the executing client from the call.
+</td>
+        </tr>
+        <tr>
+          <td>eCFEATUREHANGUP</td>
+          <td>number</td>
+          <td>32</td>
+          <td>Terminate an active call (state eCALLSTATECONNECTED) or reject an incoming offering call (state eCALLSTATEOFFERING).
+</td>
+        </tr>
+        <tr>
+          <td>eCFEATUREBLINDTRANSFER</td>
+          <td>number</td>
+          <td>256</td>
+          <td>Blind transfer an active call (state eCALLSTATECONNECTED) to another extension.
+</td>
+        </tr>
+        <tr>
+          <td>eCFEATUREREDIRECT</td>
+          <td>number</td>
+          <td>512</td>
+          <td>Redirect an incoming offering call (state eCALLSTATEOFFERING) to another extension.
+</td>
+        </tr>
+        <tr>
+          <td>eCFEATUREMAYBEPICKUPED</td>
+          <td>number</td>
+          <td>1024</td>
+          <td>The call may be picked by another line (state eCALLSTATEOFFERING).
+</td>
+        </tr>
+        <tr>
+          <td>eCFEATURESWAPHOLD</td>
+          <td>number</td>
+          <td>4096</td>
+          <td>The active call will be swapped with a call on hold on the same line. Both calls must have set this feature in order to be able to swaphold.
+</td>
+        </tr>
+        <tr>
+          <td>eCFEATUREHOLD</td>
+          <td>number</td>
+          <td>8192</td>
+          <td>Put the active call (state eCALLSTATECONNECTED) on hold (state eCALLSTATEHOLD).
+</td>
+        </tr>
+        <tr>
+          <td>eCFEATUREUNHOLD</td>
+          <td>number</td>
+          <td>16384</td>
+          <td>Retrieve the call currently on hold (state eCALLSTATEHOLD).
+</td>
+        </tr>
+        <tr>
+          <td>eCFEATURECONFERENCESTARTEU</td>
+          <td>number</td>
+          <td>65536</td>
+          <td>Start a conference (european model; you have an active call (state eCALLSTATECONNECTED) and a hold call (state eCALLSTATEHOLD)).
+</td>
+        </tr>
+        <tr>
+          <td>eCFEATURECONFERENCEADDPARTY</td>
+          <td>number</td>
+          <td>131072</td>
+          <td>Call can be added to an existing conference.
+</td>
+        </tr>
+        <tr>
+          <td>eCFEATURECONFERENCESTARTUSA</td>
+          <td>number</td>
+          <td>262144</td>
+          <td>Start a conference (american model; you have an active call and you decide you want to setup a conference)
+</td>
+        </tr>
+        <tr>
+          <td>eCFEATUREGENERATETONE</td>
+          <td>number</td>
+          <td>1048576</td>
+          <td>A way of generating tones on the call (currently not supported by UCServer)
+</td>
+        </tr>
+        <tr>
+          <td>eCFEATUREDIALDIGITS</td>
+          <td>number</td>
+          <td>2097152</td>
+          <td>Dial DTMF tones is possible
+</td>
+        </tr>
+        <tr>
+          <td>eCFEATURESTARTCALLRECORD</td>
+          <td>number</td>
+          <td>16777216</td>
+          <td>Start call recording (see UCServer Administration for details how the UCServer is supporting call recording).
+</td>
+        </tr>
+        <tr>
+          <td>eCFEATURESTOPCALLRECORD</td>
+          <td>number</td>
+          <td>33554432</td>
+          <td>Stop call recording (see UCServer Administration for details how the UCServer is supporting call recording).
+</td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

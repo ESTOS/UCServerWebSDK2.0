@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnContactPhoneLinesV2 </h3>
+    <p>List of <a href="Common.type.AsnContactPhoneLineV2.html">AsnContactPhoneLineV2</a> objects.
+</p>
+    <p></p>
+    <div class="typevalues">
+      <p>AsnContactPhoneLinesV2 is an Array of AsnContactPhoneLineV2</p>
+      <p>AsnContactPhoneLineV2 is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>iType</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Enum for the type of the line. See AsnContactPhoneLineType for details.
+ (Linked Type: <a href="CommonSIPCTI.type.AsnContactPhoneLineType.html">AsnContactPhoneLineType</a>)
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sLinePhoneNumber</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>The identificator of a line. This could be a Phonenumber or a phone URI.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sDescriptor</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Description text for a line.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sNumber</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Phone number of the line.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>seqCalls</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.AsnContactCallInformationsV2.html">AsnContactCallInformationsV2</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Call which are currently on the line.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>seqLineForwards</p>
+          </td>
+          <td> 
+            <p><a href="CommonSIPCTI.type.AsnLineForwards.html">AsnLineForwards</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Line forwardings currently set on the line.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iState</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.AsnContactPhoneLineState.html">AsnContactPhoneLineState</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>The line state. See AsnContactPhoneLineState for details (eLINEOFFLINE, eLINEONLINE, etc.)
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>bDoNotDisturb</p>
+          </td>
+          <td> 
+            <p>boolean</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Do not disturb flag for this line. TRUE do not disturb is active, FALSE not.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iForwardFeaturesPBX</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Which sort of call forward is available on this line. See AsnForwardMode for details.
+ (Linked Type: <a href="General.type.AsnForwardMode.html">AsnForwardMode</a>)
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sAddressNames</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.UTF8StringList.html">UTF8StringList</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>The line adresses on this line
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sAddressCaps</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>XML with the capabilities of the line
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sCTIFeatureCodes</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>XML with the feature codes available for this line
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>bIsPrivateLine</p>
+          </td>
+          <td> 
+            <p>boolean</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>the line has to be treated as private
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>bIsVoiceServicesLine</p>
+          </td>
+          <td> 
+            <p>boolean</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>true if the line is a voiceservices line
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>sipLineDetails</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.AsnSIPLineDetails.html">AsnSIPLineDetails</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>Details of a SIP line
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

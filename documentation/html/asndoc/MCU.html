@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h1 class="private">MCU - PRIVATE - </h1>
+    <p>Media Control Unit interface
+</p>
+    <p><p class='strong'>Module description</p>
+<p>This module defines structures and operations for controlling a MCU.<br>
+The operations are used from the UCServer. It is not used by the clients.<br>
+Actually this interface is used by the UCServer to control the Kurento Media Server.</p>
+</p><a href="MCU.doc.html"> </a>
+    <h2>Operations:</h2><a href="MCU.doc.operations.html"> </a><a href="MCU.operations.html"> </a>
+    <table>
+      <th>Name</th>
+      <th>Description</th>
+      <tr>
+        <td>
+          <p><a href="MCU.asnMCUCreatePipeline.html">asnMCUCreatePipeline</a></p>
+        </td>
+        <td> 
+          <p class="private">- PRIVATE - Create a WebRtcToRTP Relay Channel
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="MCU.asnMCUCreateMediaElement.html">asnMCUCreateMediaElement</a></p>
+        </td>
+        <td> 
+          <p class="private">- PRIVATE - Create an additional Endpoint in an existing MediaPipeline
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="MCU.asnMCUElementProcessAnswer.html">asnMCUElementProcessAnswer</a></p>
+        </td>
+        <td> 
+          <p class="private">- PRIVATE - Process sdp Answer for a Element
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="MCU.asnMCUElementRenegotiate.html">asnMCUElementRenegotiate</a></p>
+        </td>
+        <td> 
+          <p class="private">- PRIVATE - Process new sdp Offer for existing endpoint, new endpointID may be generated in Result
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="MCU.asnMCUElementGetStats.html">asnMCUElementGetStats</a></p>
+        </td>
+        <td> 
+          <p class="private">- PRIVATE - get Stats or set stats signaling behavior
+</p>
+        </td>
+      </tr>
+    </table>
+    <h2>Events:</h2><a href="MCU.doc.events.html"> </a><a href="MCU.events.html"> </a>
+    <table>
+      <th>Name</th>
+      <th>Description</th>
+      <tr>
+        <td>
+          <p><a href="MCU.asnMCUServerStatus.html">asnMCUServerStatus</a></p>
+        </td>
+        <td> 
+          <p class="private">- PRIVATE - WebService reports the MCU Server Status to the UCServer
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="MCU.asnMCUiceCandidate.html">asnMCUiceCandidate</a></p>
+        </td>
+        <td> 
+          <p class="private">- PRIVATE - Invoked (Event) signalling a new ice candidate
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="MCU.asnMCURemovePipeline.html">asnMCURemovePipeline</a></p>
+        </td>
+        <td> 
+          <p class="private">- PRIVATE - Remove a MediaElement or if no elementID given the pipeline
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="MCU.asnMCUError.html">asnMCUError</a></p>
+        </td>
+        <td> 
+          <p class="private">- PRIVATE - Invoked (Event) signalling a MCU Error message
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="MCU.asnMCUElementStatsEvent.html">asnMCUElementStatsEvent</a></p>
+        </td>
+        <td> 
+          <p class="private">- PRIVATE - Invoked (Event) signalling a statistics message
+</p>
+        </td>
+      </tr>
+    </table>
+    <h2>Types:</h2><a href="MCU.doc.types.html"> </a><a href="MCU.types.html"> </a>
+    <table>
+      <th>Name</th>
+      <th>Description</th>
+      <tr>
+        <td>
+          <p><a href="MCU.type.AsnMCUPipelineType.html">AsnMCUPipelineType</a></p>
+        </td>
+        <td> 
+          <p class="private">- PRIVATE - </p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="MCU.type.AsnMCUServerStatus.html">AsnMCUServerStatus</a></p>
+        </td>
+        <td> 
+          <p class="private">- PRIVATE - </p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="MCU.type.AsnMCUCreatePipelineArgument.html">AsnMCUCreatePipelineArgument</a></p>
+        </td>
+        <td> 
+          <p class="private">- PRIVATE - </p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="MCU.type.AsnMCUCreatePipelineResult.html">AsnMCUCreatePipelineResult</a></p>
+        </td>
+        <td> 
+          <p class="private">- PRIVATE - </p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="MCU.type.AsnMCUCreateMediaElementArgument.html">AsnMCUCreateMediaElementArgument</a></p>
+        </td>
+        <td> 
+          <p class="private">- PRIVATE - </p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="MCU.type.AsnMCUCreateMediaElementResult.html">AsnMCUCreateMediaElementResult</a></p>
+        </td>
+        <td> 
+          <p class="private">- PRIVATE - </p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="MCU.type.AsnMCUElementProcessAnswerArgument.html">AsnMCUElementProcessAnswerArgument</a></p>
+        </td>
+        <td> 
+          <p class="private">- PRIVATE - </p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="MCU.type.AsnMCUElementProcessAnswerResult.html">AsnMCUElementProcessAnswerResult</a></p>
+        </td>
+        <td> 
+          <p class="private">- PRIVATE - </p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="MCU.type.AsnMCUElementRenegotiateArgument.html">AsnMCUElementRenegotiateArgument</a></p>
+        </td>
+        <td> 
+          <p class="private">- PRIVATE - </p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="MCU.type.AsnMCUElementRenegotiateResult.html">AsnMCUElementRenegotiateResult</a></p>
+        </td>
+        <td> 
+          <p class="private">- PRIVATE - </p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="MCU.type.AsnMCUiceCandidateArgument.html">AsnMCUiceCandidateArgument</a></p>
+        </td>
+        <td> 
+          <p class="private">- PRIVATE - </p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="MCU.type.AsnMCURemovePipelineArgument.html">AsnMCURemovePipelineArgument</a></p>
+        </td>
+        <td> 
+          <p class="private">- PRIVATE - </p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="MCU.type.AsnMCUErrorArgument.html">AsnMCUErrorArgument</a></p>
+        </td>
+        <td> 
+          <p class="private">- PRIVATE - </p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="MCU.type.AsnMCUElementGetStatsArgument.html">AsnMCUElementGetStatsArgument</a></p>
+        </td>
+        <td> 
+          <p class="private">- PRIVATE - </p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="MCU.type.AsnMCUElementGetStatsResult.html">AsnMCUElementGetStatsResult</a></p>
+        </td>
+        <td> 
+          <p class="private">- PRIVATE - </p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="MCU.type.AsnMCUServerStatusList.html">AsnMCUServerStatusList</a></p>
+        </td>
+        <td> 
+          <p class="private">- PRIVATE - </p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="MCU.type.AsnMCUServerStatusArgument.html">AsnMCUServerStatusArgument</a></p>
+        </td>
+        <td> 
+          <p class="private">- PRIVATE - </p>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h1>ClientCapabilities</h1>
+    <p>Module Version: 8.0.0</p>
+    <p>Data structures and methods to transport and notify client capabilities between clients and the server
+</p>
+    <p><p>Each client has certain capabilities he is able to handle. They are used to tell other clients the kind of interactions each client is able to process.<br>
+If a client wants to start an audio call to another client both clients have to be able to process audio (speakers and microphone present).<br>
+As soon as a client is capable to handle audio it tells the server and thus other clients that the client is now ready to process audio requests.<br>
+Beside well known capabilities clients may exchange customs capabilities. (e.g. client is capable for some sort of sharing and the appropriate sharing resource id)</p>
+</p><a href="ClientCapabilities.doc.html"> </a>
+    <h2>Events:</h2><a href="ClientCapabilities.doc.events.html"> </a><a href="ClientCapabilities.events.html"> </a>
+    <table>
+      <th>Name</th>
+      <th>Description</th>
+      <tr>
+        <td>
+          <p><a href="ClientCapabilities.asnClientCapabilitiesV2Changed.html">asnClientCapabilitiesV2Changed</a></p>
+        </td>
+        <td> 
+          <p>Event the server will send if client capabilites have changed
+</p>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

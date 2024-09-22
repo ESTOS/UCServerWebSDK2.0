@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnClientContentItem </h3>
+    <p>AsnClientContentItem describes the item which will be displayed in the UI.
+</p>
+    <p><p>These items are the structural placeholder for the contact data which should be displayed.<br>
+It contains a 'pointer' to the data in form of the presence ID which should match a contact entry in the contacts list of the client content.</p>
+<p>Noteable is, that the <a href="Common.type.AsnNetDatabaseContactIDList.html">AsnNetDatabaseContactIDList</a> can contain more than one reference to a contact (AsnNetDatabaseContactID)</p>
+<ul>
+<li>this makes it possible in the future, that contacts with more than one dataset from different databases can be &quot;merged&quot; in the UI.<br>
+This feature ist not implemented yet.</li>
+</ul>
+</p>
+    <div class="typevalues">
+      <p>AsnClientContentItem is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>u8sID</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Unique ID of the item in the client content, not of the contact it represents.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sPresenceID</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Presence ID (aka sip:-address) of the contact, which presence state should be displayed on this item. This makes it possible, that contacts from external databases can have presence information without copying the internal dataset to the contact.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iIsEditable</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Ignore for now, may be removed in the future.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>listNetDatabaseContactIDs</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.AsnNetDatabaseContactIDList.html">AsnNetDatabaseContactIDList</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>List of AsnNetDatabaseContactID s which can be merged in the UI. As for now, there will be only one supported.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>selectedNetDatabaseContactID</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.AsnNetDatabaseContactID.html">AsnNetDatabaseContactID</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Last selected contact in the UI. This makes it possible, that this item could be displayed on every client. Makes only sense in desktop clients.
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

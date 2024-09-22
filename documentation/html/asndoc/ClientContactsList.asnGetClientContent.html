@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>asnGetClientContent</h3>
+    <p>Get the client content data and structure with a single request without any event subscriptions.
+</p>
+    <p><p>For some use cases only the transfer of the client content and structure is needed. In this case one can use this request and get the content synchronously.</p>
+</p>
+    <p class="strong">ArgumentType: AsnGetClientContentArgument</p>
+    <div class="typevalues">
+      <p>AsnGetClientContentArgument is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>iContactFilter</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Filter the results - mainly for suppressing the piuctures in the result.
+ (Linked Type: <a href="ClientContactsList.type.AsnClientContentContactFilter.html">AsnClientContentContactFilter</a>)
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+    <p></p>
+    <p class="strong">ResultType: AsnGetClientContentResult</p>
+    <div class="typevalues">
+      <p>AsnGetClientContentResult is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>u8sContentRevision</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Actual revision of the client content on the server.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>contactList</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.AsnNetDatabaseContactList.html">AsnNetDatabaseContactList</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>List of the contacts in this client content.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>contentstructure</p>
+          </td>
+          <td> 
+            <p><a href="ClientContactsList.type.AsnClientContentStructure.html">AsnClientContentStructure</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Tree structure of the items in this client content; the leave items of the tree are pointing to the contact objects in the contacts-list.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>optionalParams</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.AsnOptionalParameters.html">AsnOptionalParameters</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>If the server cannot open the client content for this user in the optional parameters:<br />
+<ul>
+<li>key &quot;ClientContentXMLError&quot;, value error number 0xffffff01 - The XML file cannot be read on the server side.</li>
+<li>key &quot;FileErrorCode&quot;, value is the file access error code</li>
+</ul>
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+    <p></p>
+    <p class="strong">ErrorType: AsnRequestError</p>
+    <div class="typevalues">
+      <p>AsnRequestError is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>iErrorDetail</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>A number representing the error
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sErrorString</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>A string representing the error
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

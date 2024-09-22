@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnAVCallMessageV2Argument </h3>
+    <p></p>
+    <p><ul>
+<li>send end to end messages</li>
+</ul>
+</p>
+    <div class="typevalues">
+      <p>AsnAVCallMessageV2Argument is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>u8sCallID</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p> 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>endpointIDTo</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p> 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>endpointIDFrom</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p> 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>messageType</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>MessageTypes<br /><br>
+e.g. for stream renegotiation (like Hold over federation) EAV_MESSTYPE_RENEGOTIATE_OFFER (6), EAV_MESSTYPE_RENEGOTIATE_ANSWER (7), EAV_MESSTYPE_RENEGOTIATE_DECLINE (8)<br>
+e.g. for Softphone EAV_MESSTYPE_REINVITE_OFFER (9), EAV_MESSTYPE_REINVITE_ANSWER (10), EAV_MESSTYPE_PRANSWER (11)<br>
+or for ICE candidate handling EAV_MESSTYPE_ICE_CANDIDATE_SDP (2), last candidate EAV_MESSTYPE_ICE_CANDIDATE_END (5)<br>
+or for remote device control (e.g. camera) EAV_MESSTYPE_CAM_CONTROL (3) with arguments in u8sBody like STR_CAMCONTROL_PANLEFT (&quot;PANLEFT&quot;)<br>
+EDataStructuresAVMessages.h
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sUriTo</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Uri des Message Empfaengers - UriFrom sollte dem Message Empfaenger schon bekannt sein
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sContentType</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>derzeit L&quot;application/camcontrol&quot; oder L&quot;application/mediastate&quot;
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sBody</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>EAVCallMessageArgument::STR_...
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iceCandidate</p>
+          </td>
+          <td> 
+            <p><a href="Audio-Video.type.AsnAVCallMessageICEV2.html">AsnAVCallMessageICEV2</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p> 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sConnectedNumberSC</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>the remote number in supercanonic notation
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>asnConnectedContact</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.AsnNetDatabaseContact.html">AsnNetDatabaseContact</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>the resolved contact for the remote number
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sRedirectingNumberSC</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>the redirecting number in supercanonic notation
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>asnRedirectingContact</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.AsnNetDatabaseContact.html">AsnNetDatabaseContact</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>the resolved contact for the redirecting number
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

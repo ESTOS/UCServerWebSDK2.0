@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnCERFileOperationStatusEnum </h3>
+    <p></p>
+    <p><hr>
+<p>damit updatet der client den Server ueber aktuelle Filetransfers (z.b. logs uploaden). negative stati sind fehler.</p>
+</p>
+    <div class="typevalues">
+      <p class="private">- PRIVATE -</p>
+      <p>AsnCERFileOperationStatusEnum is an Enumeration</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Value</th>
+        <th>Comment</th>
+        <tr>
+          <td>noError</td>
+          <td>number</td>
+          <td>0</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>zipping</td>
+          <td>number</td>
+          <td>1</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>transfering</td>
+          <td>number</td>
+          <td>2</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>cannotFindTarget</td>
+          <td>number</td>
+          <td>-1</td>
+          <td>datei nicht gefunden
+</td>
+        </tr>
+        <tr>
+          <td>cannotFindSource</td>
+          <td>number</td>
+          <td>-2</td>
+          <td>datei nicht gefunden
+</td>
+        </tr>
+        <tr>
+          <td>cannotWriteToTarget</td>
+          <td>number</td>
+          <td>-3</td>
+          <td>accessrights/speicherplatz voll
+</td>
+        </tr>
+        <tr>
+          <td>failedToPrepare</td>
+          <td>number</td>
+          <td>-4</td>
+          <td>fehler beim logdateien preparen
+</td>
+        </tr>
+        <tr>
+          <td>failedToZip</td>
+          <td>number</td>
+          <td>-5</td>
+          <td>fehler im zipper
+</td>
+        </tr>
+        <tr>
+          <td>generalError</td>
+          <td>number</td>
+          <td>-10</td>
+          <td>fehlerfreitext beachten
+</td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

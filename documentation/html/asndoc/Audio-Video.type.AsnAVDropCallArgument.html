@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnAVDropCallArgument </h3>
+    <p></p>
+    <p><hr>
+<p>*********************** AVDropCall ***********************</p>
+<hr>
+<ul>
+<li>Drop an AV Connection<br>
+to drop/reject an incoming call it is recommended to use iAvDropReason BUSY (1) or REJECT (16)<br>
+to hang up an active call it is recommended to use iAvDropReason NORMAL_CALL_CLEARING (0)<br>
+to hang up an outgoing call pending (e.g. ringback) it is recommended to use iAvDropReason CANCEL (2) or NORMAL_CALL_CLEARING (0)<br>
+further cause definitions in: http://svnserver:8080/svn/devprocall/trunk/estos/common/libs/enetctilib/include/EAVCause.h (and the EAVCause.cpp file)</li>
+</ul>
+</p>
+    <div class="typevalues">
+      <p>AsnAVDropCallArgument is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>dropTarget</p>
+          </td>
+          <td> 
+            <p><a href="Audio-Video.type.AsnAVCallOrConnection.html">AsnAVCallOrConnection</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>will man alle Endpoints ausloesen muss man die CallID schicken (ohne  connectionID)<br />will man alle LogEndpoints eines Endpoints ausloesen muss man die EndpointID schicken
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sCause</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>g_EAVCause.GetASNCauseStrFromEAVCause(iAvDropReason) sollte benutzt werden - String zur besseren Lesbarkeit im Trace
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iAvDropReason</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>EAVCause::dropCause
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

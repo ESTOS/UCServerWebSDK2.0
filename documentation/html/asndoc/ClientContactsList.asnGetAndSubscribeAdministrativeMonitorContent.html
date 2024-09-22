@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>asnGetAndSubscribeAdministrativeMonitorContent</h3>
+    <p>Client gets the contacts especial for a attendant console and can subscribe to events if the groups are changing.
+</p>
+    <p><p>For fast call transfer or agent consulting it must be possible to get contact for this purpose, because that<br>
+enables additional, specialized features for them in the UI for this use case.</p>
+<p>The UCServer will gather the groups and the user IDs according the configuration set by the admin.</p>
+</p>
+    <p class="strong">ArgumentType: AsnGetAndSubscribeAdministrativeMonitorContentArgument</p>
+    <div class="typevalues">
+      <p>AsnGetAndSubscribeAdministrativeMonitorContentArgument is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>iEventFlagsToSubscribe</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>Optional parameter. If left out the UCServer assume eAdministrativeMonitorContentGroupChanges (1) as default.<br>
+This parmameter can be set to eAdministrativeMonitorContentGroupNoEvents (0) for requesting the actual content list but not to subscribe to events.
+ (Linked Type: <a href="ClientContactsList.type.AsnAdministrativeMonitorContentSubscriptionFlags.html">AsnAdministrativeMonitorContentSubscriptionFlags</a>)
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+    <p></p>
+    <p class="strong">ResultType: AsnGetAndSubscribeAdministrativeMonitorContentResult</p>
+    <div class="typevalues">
+      <p>AsnGetAndSubscribeAdministrativeMonitorContentResult is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>listAdministrativeMonitorGroups</p>
+          </td>
+          <td> 
+            <p><a href="ClientContactsList.type.AsnAdministrativeMonitorGroupList.html">AsnAdministrativeMonitorGroupList</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>List of AsnAdministrativeMonitorGroup objects the clients user is configured for on the UCServer.
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+    <p></p>
+    <p class="strong">ErrorType: AsnRequestError</p>
+    <div class="typevalues">
+      <p>AsnRequestError is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>iErrorDetail</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>A number representing the error
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sErrorString</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>A string representing the error
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

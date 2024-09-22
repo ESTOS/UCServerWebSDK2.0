@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnCtiLineInfoList </h3>
+    <p></p>
+    <p><p>List of <a href="CTI.type.AsnCtiLineInfo.html">AsnCtiLineInfo</a></p>
+</p>
+    <div class="typevalues">
+      <p>AsnCtiLineInfoList is an Array of AsnCtiLineInfo</p>
+      <p>AsnCtiLineInfo is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>iType</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Indicates if this is the primary (first) line of the user or not.
+ (Linked Type: <a href="CommonSIPCTI.type.AsnContactPhoneLineType.html">AsnContactPhoneLineType</a>)
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iLineOpenStatus</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>The line open status of the line.
+ (Linked Type: <a href="CTI.type.AsnCtiLineOpenStatus.html">AsnCtiLineOpenStatus</a>)
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sLinePhoneNumber</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Contains the line identifier. This can be a phone number or (if the line is monitored by the UCServer) a LineURI beginning with 'tel:'.<br>
+This identifier will be used throughout the API for referencing a line. Exceptions are described if needed.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sDescriptor</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Descriptive text if available.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sPhoneNumber</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>This is the phone number of the line in a dialable format, if possible beginning with &quot;+&quot;, e.g. &quot;+49815136856177&quot;
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sLineLocationID</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>ID of the PBX/Line location information to fetch it from the server. With this information, it is possible to<br>
+transform phone numbers.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iLineFeatures</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Current features/function available on the line.
+ (Linked Type: <a href="CTI.type.EnumLineFeatures.html">EnumLineFeatures</a>)
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iForwardFeaturesPBX</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Available line forwarding PBX features/modes on this line
+ (Linked Type: <a href="General.type.AsnForwardMode.html">AsnForwardMode</a>)
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iForwardFeaturesSERVER</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Available line forwarding UCServer features/modes on this line.<br /><br>
+At the moment the UCServer can only set a time based redirect on the lines.
+ (Linked Type: <a href="General.type.AsnForwardMode.html">AsnForwardMode</a>)
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iForwardFeaturesUSER</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Available user defined line forwarding features/modes on this line.<br /><br>
+Currently not used.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>optionalParams</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.AsnOptionalParameters.html">AsnOptionalParameters</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>Additionally line fields added later in the key-value-field for backward compatibility.
+<ul>
+<li>key &quot;AddressNames&quot;, Type AsnString, ';' separated strings with the address names of the line.</li>
+<li>key &quot;CTIFeatureCodes&quot;, Type AsnString, List of features codes available on the line. These can be configured in the UCServer.</li>
+<li>key &quot;PrivateLine&quot;, Type AsnBool, Indicates, that this line is flagged as &quot;private&quot;.</li>
+</ul>
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnJournalEntryChangedList </h3>
+    <p>List of <a href="Journal.type.AsnJournalEntryChangedArgument.html">AsnJournalEntryChangedArgument</a>
+</p>
+    <p></p>
+    <div class="typevalues">
+      <p>AsnJournalEntryChangedList is an Array of AsnJournalEntryChangedArgument</p>
+      <p>AsnJournalEntryChangedArgument is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>iFlags</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Journal entry added(1), modified(2), deleted(3), added or modified(4).<br /><br>
+If the event was triggered by a differential update the server will set 'added or modified'(4)<br>
+because it cannot differentiate between added or modified.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>journalEntry</p>
+          </td>
+          <td> 
+            <p><a href="Journal.type.AsnNetDatabaseJournal.html">AsnNetDatabaseJournal</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Journal entry (at least with connection id in case of delete)
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>optionalParams</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.AsnOptionalParameters.html">AsnOptionalParameters</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p><ul>
+<li>optionalParams Name &quot;iTransactionID&quot; Value String, transaction ID of the entrys, so older desktop clients can support diff updates.</li>
+</ul>
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

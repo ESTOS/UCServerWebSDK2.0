@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>asnAVNewCallV2</h3>
+    <p></p>
+    <p></p><strong>ArgumentType: AsnAVNewCallV2Argument</strong>
+    <div class="typevalues">
+      <p>AsnAVNewCallV2Argument is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>callAndConnectionID</p>
+          </td>
+          <td> 
+            <p><a href="Audio-Video.type.AsnAVCallAndConnectionID.html">AsnAVCallAndConnectionID</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>IDs fuer den Angerufenen (called party)
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sCTIConnectionID</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>CID des erzeugten EVirtualSIPAVCall-Objekts im Line-Call-Model. Nach Rücksprache mit RB leider nicht mit der AV-ConnectionID vereinbar.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>callType</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Media Type
+ (Linked Type: <a href="Audio-Video.type.AsnAVMediaType.html">AsnAVMediaType</a>)
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sUriFrom</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>SIP-Identität des Anrufenden
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>endpointIDFrom</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>EndpointIDs des Anrufenden (calling party)
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sUriTo</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>SIP-Identität des Angerufenen
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sContentType</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>application/sdp
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sBody</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Session Description Protocol Daten (SDP Offer)
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>newCallParams</p>
+          </td>
+          <td> 
+            <p><a href="CommonSIPCTI.type.AsnCtiNewCallParams.html">AsnCtiNewCallParams</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>Additional data for the call
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sAssociatedTextChatConversationID</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p> 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sCaps</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>capability strings: HOLD, EBTRANS, BTRANS , CTRANS , CANNOT_REJECT (details see EDataStructuresAVMessages.h)
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sCTITrackerID</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>Associated call tracker id
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>asnLocalContact</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.AsnNetDatabaseContact.html">AsnNetDatabaseContact</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>the resolved contact for the hold number
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sHoldContactNumberSC</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>the hold number in supercanonic notation
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>asnHoldContact</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.AsnNetDatabaseContact.html">AsnNetDatabaseContact</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>the resolved contact for the hold number
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sRedirectingNumberSC</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>the hold number in supercanonic notation
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>asnRedirectingContact</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.AsnNetDatabaseContact.html">AsnNetDatabaseContact</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>the resolved contact for the hold number
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>bIsRemoteControlCallOut</p>
+          </td>
+          <td> 
+            <p>boolean</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p> 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>bIsRemoteControlCallIn</p>
+          </td>
+          <td> 
+            <p>boolean</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p> 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

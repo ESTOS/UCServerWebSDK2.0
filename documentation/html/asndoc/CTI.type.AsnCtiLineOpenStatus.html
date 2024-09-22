@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnCtiLineOpenStatus </h3>
+    <p>Line Open State (identical to ECTILineStatusEnum)
+</p>
+    <p><p>In order to get line and call states or to use remote call control you have to &quot;open&quot; a line with <a href="CTI.asnCtiLineMonitorStart.html">asnCtiLineMonitorStart</a></p>
+</p>
+    <div class="typevalues">
+      <p>AsnCtiLineOpenStatus is an Enumeration</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Value</th>
+        <th>Comment</th>
+        <tr>
+          <td>lineStatusDisconnected</td>
+          <td>number</td>
+          <td>0</td>
+          <td>line ready
+</td>
+        </tr>
+        <tr>
+          <td>lineStatusClosed</td>
+          <td>number</td>
+          <td>1</td>
+          <td>line is closed
+</td>
+        </tr>
+        <tr>
+          <td>lineStatusOpen</td>
+          <td>number</td>
+          <td>2</td>
+          <td>line is opened and ready for usage
+</td>
+        </tr>
+        <tr>
+          <td>lineStatusOpenNoPhoneConnected</td>
+          <td>number</td>
+          <td>3</td>
+          <td>line is opened but out of service; e.g. no phone connected
+</td>
+        </tr>
+        <tr>
+          <td>lineStatusOpenNoPBXConnection</td>
+          <td>number</td>
+          <td>4</td>
+          <td>line is opened but the connection to the PBX is broken
+</td>
+        </tr>
+        <tr>
+          <td>lineStatusOpenPBXLoginFailed</td>
+          <td>number</td>
+          <td>5</td>
+          <td>line is opened but the login on the PBX has failed
+</td>
+        </tr>
+        <tr>
+          <td>lineStatusOpenPBXNoLicense</td>
+          <td>number</td>
+          <td>6</td>
+          <td>line is opened but there is a license missing on the PBX
+</td>
+        </tr>
+        <tr>
+          <td>lineStatusOpenPBXSessionCountExceeded</td>
+          <td>number</td>
+          <td>7</td>
+          <td>line is opened but the CSTA session counter on the PBX exceeded
+</td>
+        </tr>
+        <tr>
+          <td>lineStatusFailedNoLicense</td>
+          <td>number</td>
+          <td>8</td>
+          <td>line cannot be opened because of missing license on the UCServer
+</td>
+        </tr>
+        <tr>
+          <td>lineStatusFailedNoECSTALicense</td>
+          <td>number</td>
+          <td>9</td>
+          <td>line cannot be opened because of missing license on the ECSTA driver
+</td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnPresenceCall </h3>
+    <p>This structure describes the information about a call on a phone line.
+</p>
+    <p><p>This structure describes the information about a call on a phone line of a contact including the last action taken<br>
+by the call (added, removed, changed), the current call state, features/functions available on the call, call type and<br>
+if available the remote contact.</p>
+</p>
+    <div class="typevalues">
+      <p class="private">- DEPRECATED -</p>
+      <p>AsnPresenceCall is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>iAction</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>add/remove/change
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sConnectionID</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Die ID des Calls
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sLinePhoneNumber</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>LineURI der Leitung auf der der Call statt findet
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sLineNumber</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Lesbare Nummer der Leitung (extrahiert aus der LineURI)
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sCurrentNumberSC</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Rufnummer des Anrufers
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iCallState</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Zustand des Calls
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iFeatures</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Was darf der Eventgempfänger mit dem Call machen
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iOutbound</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>1: Abgehend, 0: Ankommend
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iInternal</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>1: Interner Gesprächspartner, 0: externer Gesprächspartner
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iCallType</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>erstmal nur fuer unterscheidung controller oder nicht-controller
+ (Linked Type: <a href="General.type.EAsnCallType.html">EAsnCallType</a>)
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>remoteContact</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.AsnNetDatabaseContact.html">AsnNetDatabaseContact</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>Das nötigste über den Anrufer soweit bekannt
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>optionalParams</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.AsnOptionalParameters.html">AsnOptionalParameters</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>optionalParams Name &quot;TrackerID&quot; Value String<br>
+optionalParams Name &quot;eJournalCallType&quot; Value Number
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

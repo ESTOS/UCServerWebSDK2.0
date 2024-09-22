@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnRedisRemoteInvoke </h3>
+    <p>This is an exteded version of ROSEInvoke that is used for passing an invoke received from a client to another UCServer via redis
+</p>
+    <p><p>IMPORTS<br>
+ROSEInvoke FROM SNACC-ROSE<br>
+;<br>
+wird nur zwischen 2 ucservern ueber redis verschickt.<br>
+Die Antwort ist ein <a href="General.type.AsnRemoteInvokeCompleteArgument.html">AsnRemoteInvokeCompleteArgument</a> aus der ENetRoseInterface, das auch zum Client weitergeschickt werden kann</p>
+</p>
+    <div class="typevalues">
+      <p class="private">- PRIVATE -</p>
+      <p>AsnRedisRemoteInvoke is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>sessionID</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>copy from ROSEInvoke
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>invokeID</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>copy from ROSEInvoke
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>linked-ID</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p> 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>operationName</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>copy from ROSEInvoke
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>authentication</p>
+          </td>
+          <td> 
+            <p>[UNKNOWN BASIC TYPE] AsnAny</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>copy from ROSEInvoke - authentication originally is of type ROSEAuthRequest
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>operationID</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>copy from ROSEInvoke
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>argument</p>
+          </td>
+          <td> 
+            <p>[UNKNOWN BASIC TYPE] AsnAny</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>copy from ROSEInvoke - originally it didn't have an index
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sInvoker</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>meant for the remoteinvoke guid, but not filled / evaluated<br>
+u8sInvokeID			UTF8String,<br>
+the identity (=SIP address in format sip:user@presencedomain.com) of the original invoking user
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sInvokingServer</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>the identitiy (=FQDN, HomeServer name) of the originating UCServer
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

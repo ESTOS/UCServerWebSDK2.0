@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnContactV2List </h3>
+    <p>List of <a href="Common.type.AsnContactV2.html">AsnContactV2</a> objects.
+</p>
+    <p></p>
+    <div class="typevalues">
+      <p>AsnContactV2List is an Array of AsnContactV2</p>
+      <p>AsnContactV2 is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>u8sContactId</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>The ID of the contact, which is used to get the presence infromations and updates form the server. Note: This ID is only unique for the presence information.<br>
+The contact data behind this is depending on the data source, where the data is copied from while adding the contact to the active user managment.<br>
+This means, a contact may have the same contact ID but different contact data if it is read from another database. To distiguish the different contact<br>
+informations of the same contact see the fields u8sEntryIDDB, u8sEntryIDStore and u8sEntryID of AsnNetDatabaseContact.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iContactFeatureSet</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>FeatureSet of the contact on the UCServer. See AsnContactFeatureSetEnum for more details.
+ (Linked Type: <a href="General.type.AsnContactFeatureSetEnum.html">AsnContactFeatureSetEnum</a>)
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iPresenceState</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>The presence state of the contact. This is a 32 Bit field assembled with values from AsnPresenceStateEnum and bits of AsnPresenceStateFlags.
+ (Linked Type: <a href="General.type.AsnPresenceStateEnum.html">AsnPresenceStateEnum</a>)
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iStaticRights</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>The active contact may use services and features of the UCServer. The iStaticRights are corresponding rights the admin granted. See AsnUserStaticRights for more details.
+ (Linked Type: <a href="Common.type.AsnUserStaticRights.html">AsnUserStaticRights</a>)
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iStaticRights2</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p> 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iMonitorAccessRights</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>These are the rights, the active contact has on the additional lines the administrator configured for him in the user manager.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>asnRemoteContact</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.AsnNetDatabaseContact.html">AsnNetDatabaseContact</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>The static contact data of this contact.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>seqPhoneLines</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.AsnContactPhoneLines.html">AsnContactPhoneLines</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>The actual line/call state of the contact. Each line may contain the actual calls a contact currently has.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>asnAbsentState</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.AsnAbsentStateV2.html">AsnAbsentStateV2</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>The actual absent state of the contact. The absent state is the presence state of the user he set manually.<br>
+This may be overwritten by changes on the different services, the presence of the contact is calculated from (phone, appointment etc.)
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>asnCustomNote</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.AsnCustomNote.html">AsnCustomNote</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>The contact can set a short note for other users.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>seqActualAppointments</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.SEQAppointmentList.html">SEQAppointmentList</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>List of the currently active appointments of the contact.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>asnNextAppointment</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.AsnAppointmentEntry.html">AsnAppointmentEntry</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>The next appointment the contact will have. (Helps to display an information like &quot;free for the next x hours&quot;)<br>
+Der n�chste Termin der aktiv wird
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>asnUserPropertyBag</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.AsnUserPropertyBag.html">AsnUserPropertyBag</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Additional information for this contact added for special use cases.
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

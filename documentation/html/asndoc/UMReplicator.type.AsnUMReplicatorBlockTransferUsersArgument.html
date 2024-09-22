@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnUMReplicatorBlockTransferUsersArgument </h3>
+    <p></p>
+    <p><p>REQUEST: asnUMReplicatorBlockTransferUsers<br>
+Funktion startet Transaction, added/updated/deleted die Nutzer in einem Block und<br>
+committet in einem. Fehler werden im Server abgehandelt und entsprechend der Rollback<br>
+ausgelöst. Der Replikator-Client bekommt dann nur noch das Ergebnis.</p>
+</p>
+    <div class="typevalues">
+      <p class="private">- PRIVATE -</p>
+      <p>AsnUMReplicatorBlockTransferUsersArgument is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>enuOperationmode</p>
+          </td>
+          <td> 
+            <p><a href="UMReplicator.type.AsnUMReplicatorBlockTransferUsersArgumentEnum.html">AsnUMReplicatorBlockTransferUsersArgumentEnum</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Blocktransfer startet intern eine Transaction für die die nicht optionalen Parameter<br>
+benötigt werden.<br>
+Operationmode
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iSourceType</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Datenbanktyp (Analog DATABASETYPE aus edbeproviderdatabasesettings.h)<br>
+eDATABASE_TYPELDAPACTIVEDIRECTORY = 7, oder<br>
+eDATABASE_TYPELDAPMETADIRECTORY = 9
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sSourceComputerName</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Rechner von dem die Datenbank kommt
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>sequ8sObjectUIDsToDelete</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.UTF8StringList.html">UTF8StringList</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>Was transferiert wird ist optional. Wird nichts übertragen, wird wrongparameter zurückgemeldet.<br>
+Liste der GUIDs der Benutzer die gelöscht werden sollen
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>userProfileListToTransfer</p>
+          </td>
+          <td> 
+            <p><a href="UMReplicator.type.AsnUserReplicateList.html">AsnUserReplicateList</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>Liste der Benutzerdaten die transferiert werden sollen
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>userDefaultProfile</p>
+          </td>
+          <td> 
+            <p><a href="UMReplicator.type.AsnUserReplicate.html">AsnUserReplicate</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>Default-Werte für Felder von Benutzern
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnMgmtSetGroupProfileFilter </h3>
+    <p></p>
+    <p><p>Groupprofile speichern<br>
+Die Gruppe wird im Server modifiziert; die Gruppe wird dabei durch die GUID referenziert (stimmt diese nicht, schlägt der Aufruf fehl).<br>
+Die Daten, die Übernommen werden hängen vom Backend ab.<br>
+Änderungen von Datenfeldern, die vom AD verwaltet werden (ObjectSID, GUID, DNPath, Member-Liste, Gruppenname) werden NICHT übernommen.<br>
+iGroupProfileVersion kann auch nicht geändert werden, da dies von der UCServer Version abhängig ist.</p>
+</p>
+    <div class="typevalues">
+      <p>AsnMgmtSetGroupProfileFilter is an Enumeration</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Value</th>
+        <th>Comment</th>
+        <tr>
+          <td>groupName</td>
+          <td>number</td>
+          <td>0</td>
+          <td>Spezifischer Gruppenname
+</td>
+        </tr>
+        <tr>
+          <td>objectGUID</td>
+          <td>number</td>
+          <td>1</td>
+          <td>Spezifische  ObjectGUID
+</td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

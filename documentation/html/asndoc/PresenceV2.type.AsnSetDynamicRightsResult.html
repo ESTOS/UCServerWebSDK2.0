@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnSetDynamicRightsResult </h3>
+    <p>Result of <a href="PresenceV2.asnSetDynamicRights.html">asnSetDynamicRights</a> if the operation was successful.
+</p>
+    <p><p>If <a href="PresenceV2.asnSetDynamicRights.html">asnSetDynamicRights</a> was executed successful, this result will be returned and it will contain the resulting access rights list.</p>
+</p>
+    <div class="typevalues">
+      <p>AsnSetDynamicRightsResult is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>iResult</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Should always be 0 (NO_ERROR).
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>dynamicRights</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.AsnUserDynamicRights.html">AsnUserDynamicRights</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>The resulting rights in the rights list of the contact which rightslist had to be changed. This includes NOT the rights granted by global or group rights!
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h1>Authentication</h1>
+    <p>Module Version: 8.0.20240821</p>
+    <p>Authentication interface.
+</p>
+    <p><p class='strong'>Module description</p>
+<p>This module defines structures and functions for negotiation and authentication on the UCServer.</p>
+<p>Clients connecting to the UCServer Webservices don't need to negotiate and login by themselfes, they should use &quot;createsession&quot; instead.<br>
+See the &quot;Web Service Overview&quot; section of this documentation for more details.</p>
+</p><a href="Authentication.doc.html"> </a>
+    <h2>Operations:</h2><a href="Authentication.doc.operations.html"> </a><a href="Authentication.operations.html"> </a>
+    <table>
+      <th>Name</th>
+      <th>Description</th>
+      <tr>
+        <td>
+          <p><a href="Authentication.asnNegotiateServerConnectionV2.html">asnNegotiateServerConnectionV2</a></p>
+        </td>
+        <td> 
+          <p>Negotiate server and client versions (current version)
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Authentication.asnLoginV2.html">asnLoginV2</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Authentication.asnGetUserTokenV2.html">asnGetUserTokenV2</a></p>
+        </td>
+        <td> 
+          <p>Request a user token to identify the user for other services.
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Authentication.asnGetLoggedInContactV2.html">asnGetLoggedInContactV2</a></p>
+        </td>
+        <td> 
+          <p>Get Properties of Loggedin User
+</p>
+        </td>
+      </tr>
+    </table>
+    <h2>Events:</h2><a href="Authentication.doc.events.html"> </a><a href="Authentication.events.html"> </a>
+    <table>
+      <th>Name</th>
+      <th>Description</th>
+      <tr>
+        <td>
+          <p><a href="Authentication.asnLogoff.html">asnLogoff</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+    </table>
+    <h2>Types:</h2><a href="Authentication.doc.types.html"> </a><a href="Authentication.types.html"> </a>
+    <table>
+      <th>Name</th>
+      <th>Description</th>
+      <tr>
+        <td>
+          <p><a href="Authentication.type.AsnClientAppID.html">AsnClientAppID</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Authentication.type.AsnNegotiateServerConnectionClientCapabilities.html">AsnNegotiateServerConnectionClientCapabilities</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Authentication.type.AsnNegotiateServerConnectionServerTypeV2.html">AsnNegotiateServerConnectionServerTypeV2</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Authentication.type.AsnNegotiateServerConnectionAuthenticationMethod.html">AsnNegotiateServerConnectionAuthenticationMethod</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Authentication.type.AsnLogonErrorEnum.html">AsnLogonErrorEnum</a></p>
+        </td>
+        <td> 
+          <p>These are the possible iErrorDetail values as part of the response to /ws/client/createsession.
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Authentication.type.AsnUserTokenType.html">AsnUserTokenType</a></p>
+        </td>
+        <td> 
+          <p>Type of AsnUserToken to request.
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Authentication.type.AsnAdminLoginChoice.html">AsnAdminLoginChoice</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Authentication.type.AsnNegotiateServerConnectionAnonymousDataArgument.html">AsnNegotiateServerConnectionAnonymousDataArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Authentication.type.AsnNegotiateServerConnectionAnonymousDataResult.html">AsnNegotiateServerConnectionAnonymousDataResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Authentication.type.AsnNegotiateServerConnectionV2ServerBusy.html">AsnNegotiateServerConnectionV2ServerBusy</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Authentication.type.AsnNegotiateServerConnectionV2IncompatibleInterfaceVersion.html">AsnNegotiateServerConnectionV2IncompatibleInterfaceVersion</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Authentication.type.AsnLogoffArgument.html">AsnLogoffArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Authentication.type.AsnGetUserTokenV2Result.html">AsnGetUserTokenV2Result</a></p>
+        </td>
+        <td> 
+          <p>Result of <a href="Authentication.asnGetUserTokenV2.html">asnGetUserTokenV2</a>
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Authentication.type.AsnProfileAttribute.html">AsnProfileAttribute</a></p>
+        </td>
+        <td> 
+          <p>Profile values added as public claim as [Service_type]/[Profile elementname] : [Profile elementvalue] used by asnGetUserToken.
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Authentication.type.AsnGetLoggedInContactArgument.html">AsnGetLoggedInContactArgument</a></p>
+        </td>
+        <td> 
+          <p>Argument for asnGetLoggedInContact.
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Authentication.type.AsnGetLoggedInContactV2Result.html">AsnGetLoggedInContactV2Result</a></p>
+        </td>
+        <td> 
+          <p>Result of AsnGetLoggedInContactV2.
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Authentication.type.AsnNegotiateServerConnectionV2Argument.html">AsnNegotiateServerConnectionV2Argument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Authentication.type.AsnNegotiateServerConnectionV2Result.html">AsnNegotiateServerConnectionV2Result</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Authentication.type.AsnNegotiateServerConnectionV2ResultChoice.html">AsnNegotiateServerConnectionV2ResultChoice</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Authentication.type.AsnAdminLogin.html">AsnAdminLogin</a></p>
+        </td>
+        <td> 
+          <p>UCServer administrator login credentials used as optional by <a href="Authentication.type.AsnGetUserTokenArgument.html">AsnGetUserTokenArgument</a>
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Authentication.type.AsnProfileAttributeList.html">AsnProfileAttributeList</a></p>
+        </td>
+        <td> 
+          <p>List of <a href="Authentication.type.AsnProfileAttribute.html">AsnProfileAttribute</a>
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Authentication.type.AsnGetUserTokenArgument.html">AsnGetUserTokenArgument</a></p>
+        </td>
+        <td> 
+          <p>Argument for asnGetUserToken.
+</p>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

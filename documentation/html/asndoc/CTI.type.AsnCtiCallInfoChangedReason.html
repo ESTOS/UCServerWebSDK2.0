@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnCtiCallInfoChangedReason </h3>
+    <p>Possible reasons for a call information changed event.
+</p>
+    <p></p>
+    <div class="typevalues">
+      <p>AsnCtiCallInfoChangedReason is an Enumeration</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Value</th>
+        <th>Comment</th>
+        <tr>
+          <td>reasonCallOffering</td>
+          <td>number</td>
+          <td>0</td>
+          <td>New incoming call.
+</td>
+        </tr>
+        <tr>
+          <td>reasonCallDialing</td>
+          <td>number</td>
+          <td>1</td>
+          <td>New outgoing call, dialing.
+</td>
+        </tr>
+        <tr>
+          <td>reasonCallRingback</td>
+          <td>number</td>
+          <td>2</td>
+          <td>Outgoing call is now ringing.
+</td>
+        </tr>
+        <tr>
+          <td>reasonCallConnected</td>
+          <td>number</td>
+          <td>3</td>
+          <td>Call is now connected.
+</td>
+        </tr>
+        <tr>
+          <td>reasonCallConferenced</td>
+          <td>number</td>
+          <td>4</td>
+          <td>Call is now member of a conference.
+</td>
+        </tr>
+        <tr>
+          <td>reasonCallHold</td>
+          <td>number</td>
+          <td>5</td>
+          <td>Call is now on hold.
+</td>
+        </tr>
+        <tr>
+          <td>reasonRemotePartyChanged</td>
+          <td>number</td>
+          <td>6</td>
+          <td>The call's remote party has changed.
+</td>
+        </tr>
+        <tr>
+          <td>reasonRemoteContactChanged</td>
+          <td>number</td>
+          <td>7</td>
+          <td>The call's remote party contact data has changed.
+</td>
+        </tr>
+        <tr>
+          <td>reasonProjectOrPrivateChanged</td>
+          <td>number</td>
+          <td>8</td>
+          <td>The call's project settings or private state has changed.
+</td>
+        </tr>
+        <tr>
+          <td>reasonCallMemoChanged</td>
+          <td>number</td>
+          <td>9</td>
+          <td>The call's note has changed.
+</td>
+        </tr>
+        <tr>
+          <td>reasonCallBusy</td>
+          <td>number</td>
+          <td>10</td>
+          <td>The remote party of an outgoing call is busy.
+</td>
+        </tr>
+        <tr>
+          <td>reasonCallDisconnect</td>
+          <td>number</td>
+          <td>11</td>
+          <td>The call has been disconnected on the other side.
+</td>
+        </tr>
+        <tr>
+          <td>reasonCallDestroyed</td>
+          <td>number</td>
+          <td>12</td>
+          <td>The call has been destroyed - local line is now idle.
+</td>
+        </tr>
+        <tr>
+          <td>reasonHoldContactChanged</td>
+          <td>number</td>
+          <td>13</td>
+          <td>The call's hold contact data has been changed.
+</td>
+        </tr>
+        <tr>
+          <td>reasonOther</td>
+          <td>number</td>
+          <td>14</td>
+          <td>Other reasons, not specified.
+</td>
+        </tr>
+        <tr>
+          <td>reasonCallDataChanged</td>
+          <td>number</td>
+          <td>15</td>
+          <td>The call information has been updated as a whole. No specified reason.
+</td>
+        </tr>
+        <tr>
+          <td>reasonConnectionToPhoneDestroyed</td>
+          <td>number</td>
+          <td>16</td>
+          <td>The connection to the phone has been destroyed, therefore the active call has been updated. (Bluetooth disconnected)
+</td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

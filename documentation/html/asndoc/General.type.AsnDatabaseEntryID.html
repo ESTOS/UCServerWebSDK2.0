@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnDatabaseEntryID </h3>
+    <p></p>
+    <p><p>ID der Datenbanken (EntryIDDB) Stand 23.09.2015<br>
+Aktuell immer in \global\include\EDBEntryIDs.h, da Produktübergreifend (z.B. Meta) verwendet<br>
+DatabaseID der in ProCall Express 2.2 integrierten Datenbank.<br>
+Wird im Moment in ProCall 3.0 nicht verwendet<br>
+EntryIDDB: DB01<br>
+EntryIDStore:<br>
+EntryID:</p>
+<p>DatabaseID für Windows Addressbook.<br>
+Das ist das Addressbuch von Outlook Express.<br>
+EntryIDDB: DB02<br>
+EntryIDStore: WAB Store EntryID (wie Exchange)<br>
+EntryID: EntryID</p>
+<p>DatabaseID für Exchange (Mapi)<br>
+EntryIDDB: DB03<br>
+EntryIDStore: Message Store EntryID<br>
+EntryID: EntryID</p>
+<p>DatabaseID für Mapi Addressbook (Personal Adressbook)<br>
+EntryIDDB: DB04<br>
+EntryIDStore: Addressbook Store EntryID<br>
+EntryID: EntryID</p>
+<p>DatabaseID für Lotus Notes<br>
+EntryIDDB: DB05<br>
+EntryIDStore: selbstgebauter String aus &quot;Server DatabaseName&quot; z.B. &quot;avalon&quot;<br>
+EntryID: Notes UniversalID des Eintrags</p>
+<p>DatabaseID für ODBC Datenquellen<br>
+EntryIDDB: DB06<br>
+EntryIDStore: selbstgebauter String<br>
+EntryID: Inhalt des konfigurierten IndexFelds (UUID oder Zahl)</p>
+<p>DatabaseID für LDAP Datenquellen<br>
+EntryIDDB: DB07<br>
+EntryIDStore: selbstgebauter string &quot;ldap://server:port/baseDN&quot; z.b. &quot;ldap://avalon:712/dc=meta&quot;<br>
+EntryID: dn des Eintrags z.B. &quot;cn=Stefan Eckbauer,dc=estos,dc=de&quot;</p>
+<p>DatabaseID für ActiveDirectory (LDAP)<br>
+EntryIDDB: DB08<br>
+EntryIDStore: selbstgebauter string &quot;ldap://server:port/baseDN&quot; z.b. &quot;ldap://avalon:712/dc=meta&quot;<br>
+EntryID: dn des Eintrags z.B. &quot;cn=Stefan Eckbauer,dc=estos,dc=de&quot;</p>
+<p>DatabaseID für Tobit David<br>
+EntryIDDB: DB09<br>
+EntryIDStore: tobit / undefined<br>
+EntryID: Voller Pfad zum Eintrag &quot;ArchiveID\ID&quot; z.B. &quot;\WHOOP\DAVID\ARCHIVE\ADDRESS\1\3E\3&quot;</p>
+<p>DatabaseID für ADO Datenquellen<br>
+Momentan nicht verwendet<br>
+EntryIDDB: DB10<br>
+EntryIDStore:<br>
+EntryID:</p>
+<p>DatabaseID für CtiServer3 interne Daten<br>
+Zeigt an, dass der Kontakt aus der CtiServer-Benutzerverwaltung kommt.<br>
+Dabei ist zu beachten, dass die Felder EntryID und EntryIDStore aber<br>
+unterschiedliche Bedeutung haben wenn unterschiedliche Backends verwendet werden!<br>
+Leitungen:<br>
+EntryIDDB: DB11<br>
+EntryIDStore: &quot;lines&quot;<br>
+EntryID: l:leitungsrufnummer z.b. &quot;l:+49815136856110&quot;<br>
+User:<br>
+EntryIDDB: DB11<br>
+EntryIDStore: &quot;users&quot;<br>
+EntryID: u:username z.b. &quot;u:ste@estos.de&quot;</p>
+<p>DatabaseID für Abacus Addressen<br>
+EntryIDDB: DB12<br>
+EntryIDStore: mandant (nr des mandanten) z.B. &quot;5&quot;<br>
+EntryID: Datensatz ID z.b. &quot;588&quot;</p>
+<p>DatabaseID für Abacus Kontakte<br>
+EntryIDDB: DB13<br>
+EntryIDStore: mandant (nr des mandanten) z.B. &quot;5&quot;<br>
+EntryID: Datensatz ID z.b. &quot;588&quot;</p>
+<p>DatabaseID für Microsoft CRM 1 (SOAP)<br>
+EntryIDDB: DB14<br>
+EntryIDStore: &quot;host:port typ&quot; z.B. &quot;avalon:80 ACCOUNT&quot; ACCOUNT und CONTACT<br>
+EntryID: Datensatz ID z.b. &quot;588&quot;</p>
+<p>DatabaseID für gefakte Kontakte<br>
+Wird für URL links verwendet, damit die nicht zu lang werden<br>
+z.B. phone:<br>
+Diese dient dazu, in Links den Kontakt dann einfach nochmal zu suchen.<br>
+EntryIDDB: DB15<br>
+EntryIDStore: Rufnummer des Kontaktes (kodiert)<br>
+EntryID: Name des Kontaktes (kodiert)</p>
+<p>DatabaseID für Telefonbücher<br>
+EntryIDDB: DB16<br>
+EntryIDStore: ID des Telefonbuchs<br>
+IID_PCSTOREIDKLICKTEL				_T(&quot;00000001&quot;)<br>
+IID_PCSTOREIDDETEMEDIEN				_T(&quot;00000002&quot;)<br>
+IID_PCSTOREIDTWIXTEL				_T(&quot;00000003&quot;)<br>
+IID_PCSTOREIDHEROLDWHITEPAGES		_T(&quot;00000004&quot;)<br>
+IID_PCSTOREIDHEROLDYELLOWPAGES		_T(&quot;00000005&quot;)<br>
+IID_PCSTOREIDDETEMEDIENWEBSERVICE	_T(&quot;00000006&quot;)<br>
+IID_PCSTOREIDSWISSCOM				_T(&quot;00000007&quot;)<br>
+EntryID: Name des Kontaktes (kodiert)</p>
+<p>DatabaseID für StepAhead<br>
+EntryIDDB: DB17<br>
+EntryIDStore: undefined<br>
+EntryID: Index des Kontaktes</p>
+<p>DatabaseID für Special DB: Funktionen in einem Client<br>
+EntryIDDB: DB18<br>
+EntryIDStore: undefined<br>
+EntryID: undefined</p>
+<p>DatabaseID für Datev<br>
+EntryIDDB: DB19<br>
+EntryIDStore: undefined<br>
+EntryID: primärschlüssel des Eintrags</p>
+<p>DatabaseID für Datev Eigenorganisation<br>
+EntryIDDB: DB20<br>
+EntryIDStore: undefined<br>
+EntryID: primärschlüssel des Eintrags</p>
+<p>DatabaseID für Datev Eigenorganisation Komfort<br>
+EntryIDDB: DB21<br>
+EntryIDStore: undefined<br>
+EntryID: primärschlüssel des Eintrags</p>
+<p>DatabaseID für Kontakte die aus der TAPI Information der Telefonanlage generiert wurden<br>
+EntryIDDB: DB22<br>
+EntryIDStore: undefined<br>
+EntryID: Primärschlüssel, vollkanonische Nummer des Kontaktes</p>
+<p>DatabaseID für Kontakte die von einem anderen Server verwaltet werden, der eine Federation-Verbindung hat.<br>
+EntryIDDB: DB23<br>
+EntryIDStore: Kann (wenn bekannt) die Verwaltungsdomain sein<br>
+EntryID: s:<URI></p>
+<p>DatabaseID für das SDK. das SDK selbst hat natuerlich KEINE contacte ABER jedes AddIn wird als Store abgebildet<br>
+EntryIDDB: DB24<br>
+EntryIDStore: AddInName als DisplayName eines Monikers<br>
+EntryID: s: bleibt dem implementierer des AddIn ueberlassen</p>
+<p>DatabaseID für Datev SDD<br>
+EntryIDDB: DB25<br>
+EntryIDStore: undefined<br>
+EntryID: primärschlüssel des Eintrags</p>
+<p>DatabaseID für die Favoriten-Kontakte. Dies sind alle Kontakte, die im DataModel vorhanden sind.<br>
+Diese ID wird nur gebraucht, um den Favoriten-Suchknoten &quot;sauber&quot; in die RegisteredSearchNodes<br>
+einfügen zu können. Die Kontakte im DataModel haben niemals diese DatenbankID, sondern tragen<br>
+ausschließlich die EntryIDs der Quelldatenbank (z.B. IID_PCDBEXCHANGE; IID_PCDBTAPISERVER; IID_PCDBREMOTESIP etc).<br>
+Das Verhalten ist damit vergleichbar zu einem MetaDirectory, das auch immer die Original-EntryIDs zurückgibt,<br>
+also die EntryIDs der Datenquelle, die vom MetaDirectory repliziert wurde.<br>
+EntryIDDB: DB26<br>
+EntryIDStore: undefined<br>
+EntryID: undefined.</p>
+<p>DatabaseID für Private/Lokale SQLite Datenbanken<br>
+EntryIDDB: DB27<br>
+EntryIDStore: File Name des Source files.<br>
+EntryID: id</p>
+<p>DatabaseID für integrierte Meta4 Datenbank<br>
+EntryIDDB: DB28<br>
+EntryIDStore: selbstgebauter string &quot;ldap://server:port/dc=users&quot;<br>
+EntryID: dn des Eintrags z.B. &quot;cn=al,dc=users,dc=de&quot;</p>
+<p>DatabaseID für lokales Adressbuch auf MobilePhone-Device<br>
+EntryIDDB: DB29<br>
+EntryIDStore: selbstgebauter string z.B. &quot;mobile phone device address book&quot;<br>
+EntryID: id des Eintrags</p>
+<p>DatabaseID für Kontakte, die aus VCFs generiert wurden<br>
+EntryIDDB: DB30<br>
+EntryIDStore: undefined (empty)<br>
+EntryID: Dateipfad der VCF</p>
+<p>DatabaseID für Kontakte, die von exact online<br>
+EntryIDDB: DB31<br>
+EntryIDStore: host-url<br>
+EntryID: GUID des Eintrags in der Quelle</p>
+<p>DatabaseID für alle EComContact-basierten Replikatoren<br>
+EntryIDDB: DB32<br>
+EntryIDStore: CLASSID d. IECOMContact-Implementierung<br>
+EntryID: undefined</p>
+<p>DatabaseID für Ferrari-WebService.<br>
+EntryIDDB: DB33<br>
+EntryIDStore: Postfach<br>
+EntryID: JobID</p>
+<p>DatabaseID für Merge-Contacts.<br>
+EntryIDDB: DB34<br>
+EntryIDStore: DB34<br>
+EntryID: rowID</p>
+<p>DatabaseID für anonyme Kontakte (temporär erzeugt).<br>
+Bildet die anonyme Anrufer aus dem Web ab.<br>
+Typischerweise: go.estos.de<br>
+EntryIDDB: DB35<br>
+EntryIDStore: Domäne (bsp. &quot;go.estos.de&quot;)<br>
+EntryID: GUID@domain.de</p>
+<p>DatabaseID für Mobile Devices (Bluetooth)<br>
+EntryIDDB: DB36<br>
+EntryIDStore: Bluetooth Address des Devices<br>
+EntryID: Name des Kontaktes (kodiert)</p>
+<p>DatabaseID für das EWS AddIn im UCClient<br>
+EntryIDDB: DB37<br>
+EntryIDStore: E-Mail<br>
+EntryID: EWS-ID</p>
+<p>DatabaseID für Kontakte die aus einem TextFile (Meta) gelesen wurden<br>
+EntryIDDB: DB99<br>
+EntryIDStore: File Name des Source files.<br>
+EntryID: EntryID des Kontaktes (aus Quelle)</p>
+</p>
+    <div class="typevalues">
+      <p class="private">- PRIVATE -</p>
+      <p>AsnDatabaseEntryID is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>u8sEntryIDDB</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p> 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sEntryIDStore</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p> 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sEntryID</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p> 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

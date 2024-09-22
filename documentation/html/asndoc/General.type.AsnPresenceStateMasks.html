@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnPresenceStateMasks </h3>
+    <p>Helper masks to distinguish the presence state from the presence state flags.
+</p>
+    <p></p>
+    <div class="typevalues">
+      <p>AsnPresenceStateMasks is an Enumeration</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Value</th>
+        <th>Comment</th>
+        <tr>
+          <td>ePresenceStateMask</td>
+          <td>number</td>
+          <td>255</td>
+          <td>0x000000ff - Currently the lower byte contains the presence state
+</td>
+        </tr>
+        <tr>
+          <td>ePresenceStateFlagsMaskAdd</td>
+          <td>number</td>
+          <td>16711680</td>
+          <td>0x00ff0000 - Additional flags introduced later in the development process of ProCall after Version 5.1.
+</td>
+        </tr>
+        <tr>
+          <td>ePresenceStateFlagsMask</td>
+          <td>number</td>
+          <td>2130706432</td>
+          <td>0x7f000000 - Currently the top most byte of the DWORD contains the presence state flags. Addendum: a technical constraint in the c# library prevents the usage of the top most bit.
+</td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Token Authentication</title>
+    <link rel="stylesheet" type="text/css" href="../stylesheet.css">
+    
+  </head>
+  <body>
+    <h2>Token Authentication</h2>
+    <p>A token is a piece of data created by the server that contains information about a particular user and validity. 
+    To get a token, the user must authenticate using username and password.</p>
+
+    <p class="strong">Token types</p> 
+    <p>There are two different kinds of tokens:</p>
+    <ul>
+    <li><strong>Login Tokens</strong></br>
+    A login token can be used to login a user or authenticate services. The token can be used instead of submitting username and password.
+    </li>
+    <li><strong>Identification Tokens</strong></br>
+    An identification token can be used to verify the identity of a user. It can not be used to login to the server.
+    The purpose of these tokens is to allow third party services to verify a logged in user.
+    </li>
+    </ul>
+
+    <p class="strong">Obtain a login token</p> 
+    <p>A token can be obtained with <a href="../asndoc/Authentication.asnGetUserToken.html">asnGetUserToken</a>.
+    Here is an example using the /ws/direct route:</p>
+    <pre><code>GET /ws/direct/asnGetUserToken?user=username&pass=password&ucsid=local&iType=1</code></pre>
+    or
+    <pre><code>POST /ws/direct/asnGetUserToken?user=username&pass=password
+x-ucsid="local"
+{
+  "iType": 1
+}
+</code></pre>    
+    <pre><code>200 OK
+{
+    "sToken":"aabbcceeddeeff"
+}</code></pre>
+
+    
+  </body>
+</html>

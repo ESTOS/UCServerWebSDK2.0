@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>EnumRemoteContactSource </h3>
+    <p>Contact data source for call <a href="CTI.type.AsnCtiCallInformation.html">AsnCtiCallInformation</a>
+</p>
+    <p><p>In a call information it can be necessary to know, where the contact data of the remote contact was found.<br /><br>
+For example with this information, a client can decide not to overwrite a contact in a call, if the source is another client of the same user.</p>
+</p>
+    <div class="typevalues">
+      <p>EnumRemoteContactSource is an Enumeration</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Value</th>
+        <th>Comment</th>
+        <tr>
+          <td>eUNKNOWN</td>
+          <td>number</td>
+          <td>0</td>
+          <td>Data source is unknown/not set
+</td>
+        </tr>
+        <tr>
+          <td>eSERVERPROVIDED</td>
+          <td>number</td>
+          <td>1</td>
+          <td>Server provided the contact data
+</td>
+        </tr>
+        <tr>
+          <td>eCLIENTPROVIDED</td>
+          <td>number</td>
+          <td>2</td>
+          <td>The client provided the contact data
+</td>
+        </tr>
+        <tr>
+          <td>eOTHERCLIENTPROVIDED</td>
+          <td>number</td>
+          <td>3</td>
+          <td>Another client provided the contact data (if the same user has more than one client running)
+</td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

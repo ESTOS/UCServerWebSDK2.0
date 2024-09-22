@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>EnumRequestImageResult </h3>
+    <p>This enumeration describes the values possible returned by <a href="PresenceV2.asnRequestContactImage.html">asnRequestContactImage</a> and <a href="PresenceV2.asnRequestLargeProfileImage.html">asnRequestLargeProfileImage</a>
+</p>
+    <p><p>This are the possible returning values from getting an image from the server and the call was successful.<br>
+The values represent that the result contains an image, the image has not changed and therefore there is no<br>
+image data sent or there is no image for the given contact.</p>
+</p>
+    <div class="typevalues">
+      <p>EnumRequestImageResult is an Enumeration</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Value</th>
+        <th>Comment</th>
+        <tr>
+          <td>eIMAGEATTACHED</td>
+          <td>number</td>
+          <td>0</td>
+          <td>The requested image is attached in the result.
+</td>
+        </tr>
+        <tr>
+          <td>eIMAGEHASHNOTCHANGED</td>
+          <td>number</td>
+          <td>1</td>
+          <td>The image has not changed according to the given hash and therefore there is no image in the result.
+</td>
+        </tr>
+        <tr>
+          <td>eNOIMAGEFOUND</td>
+          <td>number</td>
+          <td>2</td>
+          <td>There is no image fopr the given contact.
+</td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

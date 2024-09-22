@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>asnAgentLogin</h3>
+    <p>Login for the agent/ACD functionality on a line or group.
+</p>
+    <p><p>This function ensures that the user is logged in to the agent or ACD group.</p>
+</p>
+    <p class="strong">ArgumentType: AsnAgentLoginArgument</p>
+    <div class="typevalues">
+      <p>AsnAgentLoginArgument is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>u8sAgentURI</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Group agent URI (LineURI or ContactURI) e.g. &quot;tel:&quot; or &quot;sip:&quot;.<br>
+If the URI starts with &quot;tel:&quot;, the login is transferred to the specified line and then to the telephone system.<br>
+&quot;sip:&quot; indicates that the user is logging in for the contact portal/business card.<br>
+The information can be obtained from the AsnGroupInfo
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sGroupURI</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Group URI (e.g. &quot;pbxg:601@ECSTA for Panasonic&quot; or &quot;sip:mygroup@estos.de&quot;).<br>
+This identifies the group to which the user is to be logged in to.<br>
+The information can be obtained from the AsnGroupInfo.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>acdLoginData</p>
+          </td>
+          <td> 
+            <p><a href="AgentServices.type.AsnAgentACDLoginData.html">AsnAgentACDLoginData</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>For PBX ACD, additional data may be required for login. See AsnAgentACDLoginData for details.
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+    <p></p>
+    <p class="strong">ResultType: AsnAgentLoginResult</p>
+    <div class="typevalues">
+      <p>AsnAgentLoginResult is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+      </table>
+      <!-- include typesample-->
+    </div>
+    <p></p>
+    <p class="strong">ErrorType: AsnRequestError</p>
+    <div class="typevalues">
+      <p>AsnRequestError is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>iErrorDetail</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>A number representing the error
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sErrorString</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>A string representing the error
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

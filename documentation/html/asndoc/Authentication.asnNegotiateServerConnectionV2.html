@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>asnNegotiateServerConnectionV2</h3>
+    <p>Negotiate server and client versions (current version)
+</p>
+    <p><p>Handshaking the core details for the client and the server</p>
+</p>
+    <p class="strong">ArgumentType: AsnNegotiateServerConnectionV2Argument</p>
+    <div class="typevalues">
+      <p>AsnNegotiateServerConnectionV2Argument is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>u8sMinSupportedInterfaceVersion</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>the minimum supported protocol version of the client<br>
+this is the oldest semver asn1 interface version the client is able to support
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sMaxSupportedInterfaceVersion</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>the maximum supported protocol version of the client<br>
+this is the newest semver asn1 interface version the client is able to support
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sClientDeviceId</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>A device id the client provides on his side
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sClientVersion</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>The version of the client
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>eClientAppID</p>
+          </td>
+          <td> 
+            <p><a href="Authentication.type.AsnClientAppID.html">AsnClientAppID</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>The application id of the client
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sClientDeviceName</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>A client name to show in the administrative view for this connection
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iClientCapabilities</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>The different capabilites the client is able to handle
+ (Linked Type: <a href="Authentication.type.AsnNegotiateServerConnectionClientCapabilities.html">AsnNegotiateServerConnectionClientCapabilities</a>)
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sConnectionGUID</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>In case the client is reusing a connection this is the identifier of the former connection to the server
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>eAnonymousLogin</p>
+          </td>
+          <td> 
+            <p><a href="Authentication.type.AsnNegotiateServerConnectionAnonymousDataArgument.html">AsnNegotiateServerConnectionAnonymousDataArgument</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>The client wants an anonymous login
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+    <p></p>
+    <p class="strong">ResultType: AsnNegotiateServerConnectionV2ResultChoice</p>
+    <div class="typevalues">
+      <p>AsnNegotiateServerConnectionV2ResultChoice is a Choice</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Comment</th>
+        <tr>
+          <td>result</td>
+          <td> 
+            <p><a href="Authentication.type.AsnNegotiateServerConnectionV2Result.html">AsnNegotiateServerConnectionV2Result</a></p>
+          </td>
+          <td>regular result for the request
+</td>
+        </tr>
+        <tr>
+          <td>busy</td>
+          <td> 
+            <p><a href="Authentication.type.AsnNegotiateServerConnectionV2ServerBusy.html">AsnNegotiateServerConnectionV2ServerBusy</a></p>
+          </td>
+          <td>server busy, please try again later
+</td>
+        </tr>
+        <tr>
+          <td>incompatible</td>
+          <td> 
+            <p><a href="Authentication.type.AsnNegotiateServerConnectionV2IncompatibleInterfaceVersion.html">AsnNegotiateServerConnectionV2IncompatibleInterfaceVersion</a></p>
+          </td>
+          <td>incompatible interface version
+</td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+    <p></p>
+    <p class="strong">ErrorType: AsnRequestError</p>
+    <div class="typevalues">
+      <p>AsnRequestError is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>iErrorDetail</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>A number representing the error
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sErrorString</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>A string representing the error
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

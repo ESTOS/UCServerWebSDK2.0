@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnMgmtCtiForwardEntryList </h3>
+    <p></p>
+    <p></p>
+    <div class="typevalues">
+      <p>AsnMgmtCtiForwardEntryList is an Array of AsnMgmtCtiForwardEntry</p>
+      <p>AsnMgmtCtiForwardEntry is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>iInternalID</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Identifier dieses Eintrags in der Liste
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iForwardController</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Ist es eine Rufumleitung in der PBX oder im TapiServer
+ (Linked Type: <a href="Management.type.AsnMgmtForwardControllerEnum.html">AsnMgmtForwardControllerEnum</a>)
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iForwardMode</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Forward Mode
+ (Linked Type: <a href="Management.type.AsnMgmtForwardMode.html">AsnMgmtForwardMode</a>)
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iBackEndSpecific</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Backend specific Forwarding (used if m_dwForwardMode = ICTI_BACKENDSPECIFIC)<br>
+Bei Tapi enthält das die eLINEFORWARDMODE_ konstanten
+ (Linked Type: <a href="Management.type.AsnMgmtLineForwardModeEnum.html">AsnMgmtLineForwardModeEnum</a>)
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iNoAnswerTime</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Zeit (Sekunden) für Umleitung bei NoAnswer (Wenn 0 wird die default Zeit verwendet)
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sDestinationSC</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Destination Rufnummer
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8slistCallerIDs</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.UTF8StringList.html">UTF8StringList</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Liste der Anrufer CallerIDs (superkanonisch, lang), falls es sich um eine spezifische Umleitung handelt
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

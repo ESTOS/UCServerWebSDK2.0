@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnNetDatabaseTaskFindFlagsV2 </h3>
+    <p></p>
+    <p><p>Filter flags to retrieve tasks from the server</p>
+</p>
+    <div class="typevalues">
+      <p>AsnNetDatabaseTaskFindFlagsV2 is an Enumeration</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Value</th>
+        <th>Comment</th>
+        <tr>
+          <td>onlywithstartdate</td>
+          <td>number</td>
+          <td>1</td>
+          <td>0x00000001 - Nur die Tasks, die ein Startdatum haben
+</td>
+        </tr>
+        <tr>
+          <td>onlywithoutstartdate</td>
+          <td>number</td>
+          <td>2</td>
+          <td>0x00000002 - Nur die Tasks, die kein Startdatum haben
+</td>
+        </tr>
+        <tr>
+          <td>onlynotfinished</td>
+          <td>number</td>
+          <td>4</td>
+          <td>0x00000004 - Nur die Tasks, die noch nicht erledigt sind
+</td>
+        </tr>
+        <tr>
+          <td>onlynotstarted</td>
+          <td>number</td>
+          <td>8</td>
+          <td>0x00000008 - Nur die Tasks, die noch nicht begonnen wurden
+</td>
+        </tr>
+        <tr>
+          <td>allnormal</td>
+          <td>number</td>
+          <td>16</td>
+          <td>0x00000010 - Alle Tasks, die Privacy Normal haben
+</td>
+        </tr>
+        <tr>
+          <td>delegateaccepted</td>
+          <td>number</td>
+          <td>32</td>
+          <td>0x00000020 - Delegate status accepted
+</td>
+        </tr>
+        <tr>
+          <td>delegatedeclined</td>
+          <td>number</td>
+          <td>64</td>
+          <td>0x00000040 - Delegate status declined
+</td>
+        </tr>
+        <tr>
+          <td>delegatewaiting</td>
+          <td>number</td>
+          <td>128</td>
+          <td>0x00000080 - Delegate status waiting
+</td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

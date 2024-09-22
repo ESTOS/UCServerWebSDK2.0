@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnUserStaticRights </h3>
+    <p>Bitfield with access rights for the user to use specific services/functions on the UCserver.
+</p>
+    <p><p>The bitfield is configured by the administrator on the UCServer in the usermanagement section, mainly on the services tabs of the user, computer or group editors.</p>
+<p>Some of the flags are only set for specific objects or have only an effect for these objects.</p>
+<p>Some of the flags can be set for user AND groups, so a user can get the right from his own configuration or from a group she is member of.</p>
+<p>For more flags see <a href="Common.type.AsnUserStaticRights2.html">AsnUserStaticRights2</a></p>
+</p>
+    <div class="typevalues">
+      <p>AsnUserStaticRights is an Enumeration</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Value</th>
+        <th>Comment</th>
+        <tr>
+          <td>eUSERRIGHTSSENDUSERUSER</td>
+          <td>number</td>
+          <td>1</td>
+          <td>0x00000001 - User may use text chat.
+</td>
+        </tr>
+        <tr>
+          <td>eUSERRIGHTSSENDSMS</td>
+          <td>number</td>
+          <td>2</td>
+          <td>0x00000002 - User may use the SMS service.
+</td>
+        </tr>
+        <tr>
+          <td>eUSERRIGHTSEMPTY</td>
+          <td>number</td>
+          <td>4</td>
+          <td>0x00000004 - User may login via WebServices.
+</td>
+        </tr>
+        <tr>
+          <td>eUSERRIGHTSUSEPROCALL</td>
+          <td>number</td>
+          <td>8</td>
+          <td>0x00000008 - User may use the UCClient; should always be set.
+</td>
+        </tr>
+        <tr>
+          <td>eUSERRIGHTSSELFADMIN</td>
+          <td>number</td>
+          <td>32</td>
+          <td>0x00000020 - User may change his account settings with the &quot;Workstation settings&quot; program.
+</td>
+        </tr>
+        <tr>
+          <td>eUSERRIGHTSUSERCTI</td>
+          <td>number</td>
+          <td>64</td>
+          <td>0x00000040 - User may use CTI lines.
+</td>
+        </tr>
+        <tr>
+          <td>eDONOTUSE</td>
+          <td>number</td>
+          <td>128</td>
+          <td>0x00000080 - Reserved.
+</td>
+        </tr>
+        <tr>
+          <td>eUSERRIGHTSOFFLINEMAIL</td>
+          <td>number</td>
+          <td>256</td>
+          <td>0x00000100 - User may get email for calls while he was absent.
+</td>
+        </tr>
+        <tr>
+          <td>eUSERRIGHTSCALLRECORDING</td>
+          <td>number</td>
+          <td>512</td>
+          <td>0x00000200 - User may use call recorder.
+</td>
+        </tr>
+        <tr>
+          <td>eUSERRIGHTSUSEPHONEBOOK</td>
+          <td>number</td>
+          <td>1024</td>
+          <td>0x00000400 - User may use the search in phonebooks.
+</td>
+        </tr>
+        <tr>
+          <td>eUSERRIGHTSUSERPRESENCE</td>
+          <td>number</td>
+          <td>2048</td>
+          <td>0x00000800 - User is a CTI/Presence user (should always be set).
+</td>
+        </tr>
+        <tr>
+          <td>eUSERRIGHTSGROUPALLINMONITOR</td>
+          <td>number</td>
+          <td>4096</td>
+          <td>0x00001000 - Users of the group can see all other users in his monitor (available only for groups).
+</td>
+        </tr>
+        <tr>
+          <td>eUSERRIGHTSGROUPNOCHANGEMONITOR</td>
+          <td>number</td>
+          <td>8192</td>
+          <td>0x00002000 - Users of the group cannot change the content of their monitor (available only for groups).
+</td>
+        </tr>
+        <tr>
+          <td>eUSERRIGHTSGROUPVIEWJOURNAL</td>
+          <td>number</td>
+          <td>16384</td>
+          <td>0x00004000 - Users of the group may see the Journal/History of other group members (available only for groups).
+</td>
+        </tr>
+        <tr>
+          <td>eUSERRIGHTSGROUPVIEWJOURNALLEADER</td>
+          <td>number</td>
+          <td>32768</td>
+          <td>0x00008000 - The group leader may see the Journal/History of all group members (available only for groups).
+</td>
+        </tr>
+        <tr>
+          <td>eUSERRIGHTSGROUPEDITJOURNAL</td>
+          <td>number</td>
+          <td>65536</td>
+          <td>0x00010000 - Users of a group may edit Journal/History of other group members (available only for groups).
+</td>
+        </tr>
+        <tr>
+          <td>eDONOTUSE2</td>
+          <td>number</td>
+          <td>131072</td>
+          <td>0x00020000 - Reserved.
+</td>
+        </tr>
+        <tr>
+          <td>eDONOTUSE3</td>
+          <td>number</td>
+          <td>262144</td>
+          <td>0x00040000 - Reserved.
+</td>
+        </tr>
+        <tr>
+          <td>eUSERRIGHTSUSERVIEWJOURNAL</td>
+          <td>number</td>
+          <td>524288</td>
+          <td>0x00080000 - Journal/History functions are available for the user; if not, acces to the journal database is not available for this user.
+</td>
+        </tr>
+        <tr>
+          <td>eUSERRIGHTSGLOBALDELETEJOURNAL</td>
+          <td>number</td>
+          <td>1048576</td>
+          <td>0x00100000 - Every user of the system may delete Journal/History entries.
+</td>
+        </tr>
+        <tr>
+          <td>eUSERRIGHTSOFFLINESMS</td>
+          <td>number</td>
+          <td>2097152</td>
+          <td>0x00200000 - User may get SMS messages for calls whjile he is absent.
+</td>
+        </tr>
+        <tr>
+          <td>eUSERRIGHTSDESKSHAREACCEPT</td>
+          <td>number</td>
+          <td>4194304</td>
+          <td>0x00400000 - User may accept desktop sharing invitaions but cannot initiate own session.
+</td>
+        </tr>
+        <tr>
+          <td>eUSERRIGHTSDESKSHAREFULL</td>
+          <td>number</td>
+          <td>8388608</td>
+          <td>0x00800000 - User may accept or initiate desktop sharing session.
+</td>
+        </tr>
+        <tr>
+          <td>eDONOTUSE4</td>
+          <td>number</td>
+          <td>16777216</td>
+          <td>0x01000000 - Reserved.
+</td>
+        </tr>
+        <tr>
+          <td>eUSERRIGHTSAVAUDIO</td>
+          <td>number</td>
+          <td>33554432</td>
+          <td>0x02000000 - User may use audio communication features without video.
+</td>
+        </tr>
+        <tr>
+          <td>eUSERRIGHTSAVVIDEO</td>
+          <td>number</td>
+          <td>67108864</td>
+          <td>0x04000000 - User may use audio and video communication features.
+</td>
+        </tr>
+        <tr>
+          <td>eUSERRIGHTSFEDDESKSHARE</td>
+          <td>number</td>
+          <td>134217728</td>
+          <td>0x08000000 - User may use desktop sharing over federation connections (experimental!).
+</td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

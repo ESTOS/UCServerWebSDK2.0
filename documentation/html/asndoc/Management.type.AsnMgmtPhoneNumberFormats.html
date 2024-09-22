@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnMgmtPhoneNumberFormats </h3>
+    <p></p>
+    <p><p>Plain = superkanonisch<br>
+Plain w ext = superkanonisch mit extension - erlaubt<br>
+Internal = gekürzt auf rein interne Nummern<br>
+Readable = +49(8151)36856-162<br>
+DIN 5008:2005 = +49 8151 36856-162<br>
+Dialable = durch Rufnummernformatierung wählbar gemacht</p>
+</p>
+    <div class="typevalues">
+      <p>AsnMgmtPhoneNumberFormats is an Enumeration</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Value</th>
+        <th>Comment</th>
+        <tr>
+          <td>ePHONENUMBERFORMATPLAIN</td>
+          <td>number</td>
+          <td>0</td>
+          <td>Supercanonisch -&gt; +49815136856116
+</td>
+        </tr>
+        <tr>
+          <td>ePHONENUMBERFORMATPLAININTERNAL</td>
+          <td>number</td>
+          <td>1</td>
+          <td>Supercanonisch, intern gekürzt -&gt; 116
+</td>
+        </tr>
+        <tr>
+          <td>ePHONENUMBERFORMATREADABLE</td>
+          <td>number</td>
+          <td>2</td>
+          <td>Lesbar, ungekürzt -&gt; +49 (8151) 36856-116
+</td>
+        </tr>
+        <tr>
+          <td>ePHONENUMBERFORMATREADABLEINTERNAL</td>
+          <td>number</td>
+          <td>3</td>
+          <td>Lesbar, intern gekürzt -&gt; 116
+</td>
+        </tr>
+        <tr>
+          <td>ePHONENUMBERFORMATDIALABLE</td>
+          <td>number</td>
+          <td>4</td>
+          <td>Wählbar -&gt; 0049815136856116
+</td>
+        </tr>
+        <tr>
+          <td>ePHONENUMBERFORMATDIN</td>
+          <td>number</td>
+          <td>5</td>
+          <td>entsprechend DIN 5008:2005 -&gt; +49 8151 36856-116
+</td>
+        </tr>
+        <tr>
+          <td>ePHONENUMBERFORMATDININTERNAL</td>
+          <td>number</td>
+          <td>6</td>
+          <td>entsprechend DIN 5008:2005, intern gekürzt -&gt; 116
+</td>
+        </tr>
+        <tr>
+          <td>ePHONENUMBERFORMATPLAINWEXT</td>
+          <td>number</td>
+          <td>7</td>
+          <td>Supercanonisch '-' erlaubt -&gt; +49815136856-116
+</td>
+        </tr>
+        <tr>
+          <td>ePHONENUMBERFORMATPLAINWEXTINTERNAL</td>
+          <td>number</td>
+          <td>8</td>
+          <td>Supercanonisch '-' erlaubt -&gt; 116
+</td>
+        </tr>
+        <tr>
+          <td>ePHONENUMBERFORMATUNFORMATTED</td>
+          <td>number</td>
+          <td>9</td>
+          <td>Übergebener String wird nicht formatiert
+</td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

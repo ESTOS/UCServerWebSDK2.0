@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnMgmtUserManagerActiveDirectorySettings </h3>
+    <p></p>
+    <p></p>
+    <div class="typevalues">
+      <p>AsnMgmtUserManagerActiveDirectorySettings is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>u8sHost</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Active Directory Server
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iPort</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Active Directory Server LDAP Port
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sDomain</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Domain
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sUsername</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Username (Administrator@estos.de)
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sPassword</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Password
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iForceLDAPS</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>LDAPS erzwingen
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sBaseDNUsers</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>User BaseDN aus der Konfiguration.<br>
+Wenn dieser leer ist wird er automatisch bestimmt. (defaultNamingContext)
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sBaseDNComputers</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Computer BaseDN aus der Konfiguration.<br>
+Wenn dieser leer ist wird er automatisch bestimmt. (defaultNamingContext)
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sBaseDNGroups</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Group BaseDN aus der Konfiguration.<br>
+Wenn dieser leer ist wird er automatisch bestimmt. (defaultNamingContext)
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>bLDAPBaseAttributeWriteBackEnabled</p>
+          </td>
+          <td> 
+            <p>boolean</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Zurückschreiben von LDAP Basisattributen wird unterstützt */
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>objAttributeMapping</p>
+          </td>
+          <td> 
+            <p><a href="Management.type.AsnMgmtUserManagerLDAPAttributeList.html">AsnMgmtUserManagerLDAPAttributeList</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Attributmapping für die CtiServer LDAP Attribute (Welches Benutzerprofilfeld wird aus welchem LDAP Feld geholt...)
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iPhoneNumberPreformatFormat</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Rufnummernformat welches der Admin beim zuweisen von Leitungen automatisch anwendet.<br>
+Unabhängig davon werden die Rufnummern genau so in die Benutzerverwaltung geschrieben<br>
+wie diese im Admin im Benutzerprofil eingegeben wurden. Es ist eine reine Vorformatierung.
+ (Linked Type: <a href="Management.type.AsnMgmtPhoneNumberFormats.html">AsnMgmtPhoneNumberFormats</a>)
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iExtensionVersion</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Dieses Property ist kein Settings Property sondern ein Laufzeit Property.<br>
+Es ist in den Settings hinterlegt da das generische Interface zu den Benutzerverwaltungen für ein Property kein weitere Methode erhält.<br>
+Schema Erweiterungsversion
+ (Linked Type: <a href="Management.type.AsnMgmtSchemaExtensionVersion.html">AsnMgmtSchemaExtensionVersion</a>)
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iLastErrorCode</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Dieses Property ist kein Settings Property sondern ein Laufzeit Property.<br>
+Es ist in den Settings hinterlegt da das generische Interface zu den Benutzerverwaltungen für ein Property kein weitere Methode erhält.<br>
+Letzter Error Code
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sLDAPFilterUsers</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>LDAP Filter fuer User-Objekte
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sLDAPFilterGroups</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>LDAP Filter fuer Gruppen-Objekte
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sLDAPFilterComputers</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>LDAP Filter fuer Computer-Objekte
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

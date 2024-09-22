@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>/ws/public</title>
+    <link rel="stylesheet" type="text/css" href="../stylesheet.css">
+  </head>
+  <body>
+    <h2>/ws/public</h2>
+    <p>The public route is used display presence information for anonymous clients without authentication.
+    </p>
+    <p class="strong">First Steps</p> 
+    <p>The most simple example is to get the list of public available users (<a href="http://localhost:7224/ws/public/contacts?ucsid=local">http://localhost:7224/ws/public/contacts?ucsid=local</a>). 
+    </p>
+    <pre><code>GET /ws/public/contacts?ucsid=local
+
+200 OK
+{
+	"contacts" : {
+		"sip:hansi@testestos.de" : {
+			"asnRemoteContact" : {
+				"optionalParams" : {
+					"jpegPhoto" : {
+						"binarydata" : "base64encodedjpeg"
+					},
+				},
+				"u8sDisplayName" : "Hansi Meier",
+				"u8sEMail" : "ste@estos.de",
+				"u8sFirstName" : "Hansi",
+				"u8sLastName" : "Meier",
+				"u8sSIPAddress" : "sip:hansi@testestos.de"
+			},
+			"iMonitorAccessRights" : 1,
+			"iPresenceState" : 1610612739,
+		}
+	}
+}
+</code></pre>
+    
+  </body>
+</html>

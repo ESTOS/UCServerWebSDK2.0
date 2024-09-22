@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>asnMgmtGetUserProfilesResult</h3>
+    <p>You have called <a href="Management.asnMgmtGetUserProfiles.html">asnMgmtGetUserProfiles</a>() and get your results here (50 user profiles every this event)
+</p>
+    <p></p><strong>ArgumentType: AsnMgmtGetUserProfilesResultArgument</strong>
+    <div class="typevalues">
+      <p>AsnMgmtGetUserProfilesResultArgument is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>listUserProfiles</p>
+          </td>
+          <td> 
+            <p><a href="Administration.type.AsnUserProfileList.html">AsnUserProfileList</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>List of user profiles (max 50 in one segment)
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sCrossRefID</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>CrossrefID from AsnMgmtGetPushServiceDevicesResult.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>bLastSegment</p>
+          </td>
+          <td> 
+            <p>boolean</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>last Segment for this u8sCrossRefID, TRUE, wenn dieses Segment das Ende der Liste ist.
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

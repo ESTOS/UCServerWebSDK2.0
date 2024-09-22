@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnMgmtAdminUserManagerSettings </h3>
+    <p></p>
+    <p></p>
+    <div class="typevalues">
+      <p>AsnMgmtAdminUserManagerSettings is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>iAdminUserManagerType</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>type of AdminUserManager
+ (Linked Type: <a href="Management.type.AsnMgmtAdminUserManagerType.html">AsnMgmtAdminUserManagerType</a>)
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>bUseUserManagerLDAPSettings</p>
+          </td>
+          <td> 
+            <p>boolean</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>if true the ldap settings of usermanagement are used<br>
+(only relevant if type is eACTIVEDIRECTORY)
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sHost</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Active Directory Server<br>
+(only relevant if iAdminUserManagerType = eACTIVEDIRECTORY and bUseUserManagerLDAPSettings = false)
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iPort</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Active Directory Server LDAP Port<br>
+(only relevant if iAdminUserManagerType = eACTIVEDIRECTORY and bUseUserManagerLDAPSettings = false)
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sUsername</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Username for AD access (Administrator@estos.de)<br>
+(only relevant if iAdminUserManagerType = eACTIVEDIRECTORY and bUseUserManagerLDAPSettings = false)
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sPassword</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Password for AD access<br>
+(only relevant if iAdminUserManagerType = eACTIVEDIRECTORY and bUseUserManagerLDAPSettings = false)
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iForceLDAPS</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>LDAPS erzwingen<br>
+(only relevant if iAdminUserManagerType = eACTIVEDIRECTORY and bUseUserManagerLDAPSettings = false)
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sBaseDNUsers</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>User BaseDN in the AD<br>
+If empty it will be automatically defined by the defaultNamingContext<br>
+(only relevant if iAdminUserManagerType = eACTIVEDIRECTORY and bUseUserManagerLDAPSettings = false)
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

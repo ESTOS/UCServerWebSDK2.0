@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>asnUnregisterServiceAgents</h3>
+    <p>unregister agents from the service
+</p>
+    <p><img src="https://www.plantuml.com/plantuml/png/ZPB1JeH038RlynGD5vMuBq34B25xzR1cRroQeSB4eMXRDlhs8X1buv9uwypVwVV_pUpLK6peeijpEB5G4zH8e6Y8JI7FdKkc6fv9pi5J0hj7I4xbpp63D2qnnYnD0PL_PomTywIARujDiP1cwCRYpg6tS4QZDS6jQG-xjPH1sP9_LK3lIHKaDEte6ha6_MJ3Zuhx5x2M01U4_ebpEN6AyzHBXn6Ef4EqxrpRrkUU-ueXp22TrSdHcr4zNTOqFnQqq3F4iVoFZuD8BvSsZlG-aDgaNA5wv1jRs9lacgwksUs9w_4dV040" alt="uml diagram">
+</p>
+    <p class="strong">ArgumentType: AsnUnregisterServiceAgentsArgument</p>
+    <div class="typevalues">
+      <p>AsnUnregisterServiceAgentsArgument is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>u8sServiceID</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>The unique ID of the Service the agents will be unregistered from the UCService.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>listAgents</p>
+          </td>
+          <td> 
+            <p><a href="AgentServices.type.AsnServiceAgentList.html">AsnServiceAgentList</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>List of agents with the needed information to unregister from the UCService.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>bClearExistingAgents</p>
+          </td>
+          <td> 
+            <p>boolean</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>If given and set to true, all agents will be removed, the AsnServiceAgentList can be left empty then.
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+    <p></p>
+    <p class="strong">ResultType: AsnUnregisterServiceAgentsResult</p>
+    <div class="typevalues">
+      <p>AsnUnregisterServiceAgentsResult is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>bSuccess</p>
+          </td>
+          <td> 
+            <p>boolean</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>true if the call was successful. If the call fails, the AsnRequestError structure will contain the details.
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+    <p></p>
+    <p class="strong">ErrorType: AsnRequestError</p>
+    <div class="typevalues">
+      <p>AsnRequestError is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>iErrorDetail</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>A number representing the error
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sErrorString</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>A string representing the error
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

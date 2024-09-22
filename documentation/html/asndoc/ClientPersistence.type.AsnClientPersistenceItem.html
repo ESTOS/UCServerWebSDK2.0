@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnClientPersistenceItem </h3>
+    <p>Definition of persistence items
+</p>
+    <p><p>An ItemStore can hold any persistence items. A persistence item always belongs to exactly one ItemStore.<br>
+The key of a persistence item (u8sItemStoreID) must be unique within the ItemStore.<br>
+If the client does not specify a u8sItemStoreID when creating an item, the server generates this key itself.<br>
+The client itself is responsible for managing the payload in an appropriate way.</p>
+</p>
+    <div class="typevalues">
+      <p>AsnClientPersistenceItem is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>u8sItemStore</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Item store name, e.g. &quot;FAQEntry&quot;, &quot;usersettings&quot;
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sItemStoreID</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Key of an item, it must be unique in an item store
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>data</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Value data of the item
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iRevision</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>Revision of the item
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

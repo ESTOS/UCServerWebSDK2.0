@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h1>Agent</h1>
+    <p>Module Version: 8.0.0</p>
+    <p>Agent/AgentGroup/ACD interface.
+</p>
+    <p><p class='strong'>Module description</p>
+<p>This module describes the functions for agents for ACD and contact portal functionalities.</p>
+<p>A client represents a user who can be an member in any number of agent groups.<br /><br>
+An agent is described by the ContactURI of the user (SIP address incl. &quot;sip:&quot; before) or a LineURI (Cti line, format &quot;tel:xyz@pbx text&quot;).<br>
+To login to a group, for example, you usually need the AgencyURI and the GroupURI. This allows the UCServer to identify exactly which agent should be used in which group.<br /><br>
+The client receives the necessary values when it gets them back as a result of asnAgentMonitorStart.</p>
+<p class='strong'>Requirements for using the interface</p>
+<p>A user gets access to the agent interface:</p>
+<ul>
+<li>If the user has activated the service &quot;Business card for anonymous users&quot; via his own or global profile in the UCServer administration.</li>
+<li>If he is a member of one or more groups that have been activated in the UCServer administration as an &quot;agent group&quot;.</li>
+<li>If (identified by line ID) he has a line known to be part of an ACD group at the corresponding ECSTA.</li>
+</ul>
+<p class='strong'>Functions</p>
+<p>A user can set the following status on the interface:</p>
+<ul>
+<li>&quot;login&quot;/&quot;logout&quot;</li>
+<li>&quot;Working after call&quot;</li>
+<li>&quot;ready&quot;/&quot;not ready&quot; (still a &quot;work in progress&quot;)</li>
+</ul>
+<p>ProCall 5.1 supports ACD functionality only for Panasonic telephone systems.<br /><br>
+As of ProCall 6, the agent interface is used for the contact portal and business card. Further PBX's are in development.</p>
+<p class='strong'>Simple procedure if the agent groups are to be used</p>
+<ol>
+<li>The user must only call asnAgentMonitorStart; this registers the agent's events and supplies the list of groups in which the user is agent.</li>
+<li>From this point on, the UCServer sends events if the status of the user in these groups changes.</li>
+<li>Change the state of the agent:<br>
+3.1. asnAgentLogin - Sets the status of the user to &quot;login&quot;. Note: replaces asnAgentSetState(not ready).<br>
+More parameters may be required for the login. These can be found in the AgentGroupInfos<br>
+3.2. asnAgentLogoff - Sets the status of the user to &quot;logoff&quot;. Note: replaces asAgentSetState(noagent).<br>
+3.3. asnAgentSetState - With this you can set the status to &quot;ready&quot;, &quot;not ready&quot; and &quot;working after call&quot;. Which states can be set is provided by the server in the result of asnAgentMonitorStart. See also AsnAgentGroupInfo.</li>
+<li>Log off events with asnAgentMonitorStop.</li>
+</ol>
+<p>With these five functions it is possible to operate the ACD/presence groups on the UCServer.</p>
+<p class='strong'>AsnAgentGroupInfo</p>
+<p>AsnAgentGroupInfo structures are usually exchanged in the analysis and results. This structure contains the description of an agent/ACD group.<br /><br>
+AsnAgentGroupInfo contains the data about an agent group. The following are important:</p>
+<ul>
+<li>iGroupCapabilities: This shows which status changes are supported. See also AsnAgentGroupCapabilitiesEnum. If the highest bit is set (0x80000000), this group is a PBX/ACD group. If the bit is not set, the group is managed by the UCServer.</li>
+<li>iAgentState: The current status of the agent, i.e. the user in this group.</li>
+<li>optionalParams,key &quot;AgentLoginRequiredParameters&quot;: In the case of a PBX/ACD group, this integer contains information about which parameters are required for logging on to the ACD group. The values (bit field) are described in AsnAgentLoginRequiredParametersEnum.</li>
+</ul>
+<p class='strong'>Events</p>
+<p>For any changes to the agent groups and agent status, two events are sent by the UCServer to the registered clients:</p>
+<ul>
+<li>asnAgentNotifyGroupsChanged - There have been some changes in the user's available groups</li>
+<li>asnAgentNotifyStateChanged - The user's status in a group has changed.</li>
+</ul>
+<p class='strong'>Comment</p>
+<p>The API is user centered. This means if the server is asked for the AgentGroupInfos,<br>
+the server displays the information concerning its group membership in a simple list.<br>
+The most simple for the normal user.</p>
+<p class='strong'>Supervisor Interface</p>
+<p>Not implemented yet.</p>
+<p class='strong'>Anonymous users</p>
+<p>Anonymous users can query which groups are available, including users, and then display the corresponding presence and login/logoff status based on the use case.</p>
+</p><a href="Agent.doc.html"> </a>
+    <h2>Operations:</h2><a href="Agent.doc.operations.html"> </a><a href="Agent.operations.html"> </a>
+    <table>
+      <th>Name</th>
+      <th>Description</th>
+      <tr>
+        <td>
+          <p><a href="Agent.asnAgentMonitorStart.html">asnAgentMonitorStart</a></p>
+        </td>
+        <td> 
+          <p>Agent Monitor Start
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Agent.asnAgentMonitorStop.html">asnAgentMonitorStop</a></p>
+        </td>
+        <td> 
+          <p>Agent Monitor Stop
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Agent.asnAgentLogin.html">asnAgentLogin</a></p>
+        </td>
+        <td> 
+          <p>Login for the agent/ACD functionality on a line or group.
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Agent.asnAgentLogoff.html">asnAgentLogoff</a></p>
+        </td>
+        <td> 
+          <p>Logoff agent for ACD(Automatic Call Distribution)
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Agent.asnAgentSetState.html">asnAgentSetState</a></p>
+        </td>
+        <td> 
+          <p>Agent for setting the ACD status (call distribution)
+</p>
+        </td>
+      </tr>
+    </table>
+    <h2>Events:</h2><a href="Agent.doc.events.html"> </a><a href="Agent.events.html"> </a>
+    <table>
+      <th>Name</th>
+      <th>Description</th>
+      <tr>
+        <td>
+          <p><a href="Agent.asnAgentNotifyGroupsChanged.html">asnAgentNotifyGroupsChanged</a></p>
+        </td>
+        <td> 
+          <p>The event for changes to the user's agent groups.
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Agent.asnAgentNotifyStateChanged.html">asnAgentNotifyStateChanged</a></p>
+        </td>
+        <td> 
+          <p>Event when the state of the agent in a group has changed.
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Agent.asnAgentNotifyBlockedRTCChanged.html">asnAgentNotifyBlockedRTCChanged</a></p>
+        </td>
+        <td> 
+          <p>Event dispatched if blocked state was changed for anonymous user<br>
+The argument contains all anonymous user URIs which are currently blocked for the notified agent
+</p>
+        </td>
+      </tr>
+    </table>
+    <h2>Types:</h2><a href="Agent.doc.types.html"> </a><a href="Agent.types.html"> </a>
+    <table>
+      <th>Name</th>
+      <th>Description</th>
+      <tr>
+        <td>
+          <p><a href="Agent.type.AsnAgentLoginRequiredParametersEnum.html">AsnAgentLoginRequiredParametersEnum</a></p>
+        </td>
+        <td> 
+          <p>Bit field values for the OptionalParameter &quot;AgentLoginRequiredParameters&quot; in <a href="Agent.type.AsnAgentGroupInfo.html">AsnAgentGroupInfo</a>
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Agent.type.AsnSupportedAgentStatesEnum.html">AsnSupportedAgentStatesEnum</a></p>
+        </td>
+        <td> 
+          <p>Bit field values for the optional parameter &quot;SupportedAgentStates&quot; in <a href="Agent.type.AsnAgentGroupInfo.html">AsnAgentGroupInfo</a>
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Agent.type.AsnAgentStateEnum.html">AsnAgentStateEnum</a></p>
+        </td>
+        <td> 
+          <p>The possible states the agent can have.
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Agent.type.AsnAgentGroupCapabilitiesEnum.html">AsnAgentGroupCapabilitiesEnum</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Agent.type.AsnAgentGroupInfo.html">AsnAgentGroupInfo</a></p>
+        </td>
+        <td> 
+          <p>AsnAgentGroupInfo encapsulates the data for an agent (ACD) group from the agent's point of view.
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Agent.type.AsnAgentMonitorStartArgument.html">AsnAgentMonitorStartArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Agent.type.AsnAgentMonitorStopArgument.html">AsnAgentMonitorStopArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Agent.type.AsnAgentMonitorStopResult.html">AsnAgentMonitorStopResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Agent.type.AsnAgentLoginArgument.html">AsnAgentLoginArgument</a></p>
+        </td>
+        <td> 
+          <p>Parameters for Agent Login
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Agent.type.AsnAgentLoginResult.html">AsnAgentLoginResult</a></p>
+        </td>
+        <td> 
+          <p>Result for agent login
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Agent.type.AsnAgentLogoffArgument.html">AsnAgentLogoffArgument</a></p>
+        </td>
+        <td> 
+          <p>Argument for agent logoff(Automatic Call Distribution)
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Agent.type.AsnAgentLogoffResult.html">AsnAgentLogoffResult</a></p>
+        </td>
+        <td> 
+          <p>Result for agent logoff<br>
+This structure is only returned if successful. If the call is unsuccessful, an <a href="Common.type.AsnRequestError.html">AsnRequestError</a> is returned.
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Agent.type.AsnAgentSetStateArgument.html">AsnAgentSetStateArgument</a></p>
+        </td>
+        <td> 
+          <p>Set new Agent State
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Agent.type.AsnAgentSetStateResult.html">AsnAgentSetStateResult</a></p>
+        </td>
+        <td> 
+          <p>Result for AsnAgentSetState<br>
+This structure is only returned if successful. If the call is unsuccessful, an <a href="Common.type.AsnRequestError.html">AsnRequestError</a> is returned.
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Agent.type.AsnAgentNotifyStateChangedArgument.html">AsnAgentNotifyStateChangedArgument</a></p>
+        </td>
+        <td> 
+          <p>Argument for AgentNotifyStateChanged. Included is the CrossRefID for which the event is transmitted, the AgencyURI and GroupURI (unique agent group assignment) and the new agent state.
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Agent.type.AsnAgentNotifyBlockedRTCChangedArgument.html">AsnAgentNotifyBlockedRTCChangedArgument</a></p>
+        </td>
+        <td> 
+          <p>Argument for AgentNotifyAnonymousBlockedChanged.
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Agent.type.AsnAgentGroupInfoList.html">AsnAgentGroupInfoList</a></p>
+        </td>
+        <td> 
+          <p>List of Agent Groups
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Agent.type.AsnAgentMonitorStartResult.html">AsnAgentMonitorStartResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Agent.type.AsnAgentNotifyGroupsChangedArgument.html">AsnAgentNotifyGroupsChangedArgument</a></p>
+        </td>
+        <td> 
+          <p>Argument contains the CrossRefID for which the event is sent and the list of the user's agent groups.
+</p>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

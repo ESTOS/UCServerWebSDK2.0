@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<!--
+  Example for creating a session and call simple functions, retrieving results and errors.
+  
+
+
+-->
+<html>
+
+<head>
+  <!-- make it a bit more visual appealing with bootstrap material -->
+  <link rel="stylesheet"
+    href="https://unpkg.com/bootstrap-material-design@4.1.1/dist/css/bootstrap-material-design.min.css"
+    integrity="sha384-wXznGJNEXNG1NFsbm0ugrLFMQPWswR3lds2VeinahP8N0zJw9VWSopbjv2x7WCvX" crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+    crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/popper.js@1.12.6/dist/umd/popper.js"
+    integrity="sha384-fA23ZRQ3G/J53mElWqVJEGJzU0sTs+SvzG8fXVWP+kJQ1lwFAOkcUOysnlKJC33U"
+    crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/bootstrap-material-design@4.1.1/dist/js/bootstrap-material-design.js"
+    integrity="sha384-CauSuKpEqAFajSpkdjv3z9t8E7RlpJ1UP0lKM/+NdtSarroVKu069AlsRPKkFBz9"
+    crossorigin="anonymous"></script>
+  <script>$(document).ready(function () { $('body').bootstrapMaterialDesign(); });</script>
+
+</head>
+<!-- <style>
+    span { vertical-align: top; display: inline-block; width: 200px; }
+    input { display: inline-block; width: 400px; }
+  </style> -->
+
+<body onload="onload()">
+  <div class="container">
+    <p>
+      <a href="index.html" class="badge badge-pill badge-primary"> &lt;== Back to index</a>
+    </p>
+    <p>
+      After every step you can see what is sent and what is received at the bottom of this page.
+    </p>
+    <hr />
+    <form>
+      <div class="form-row">
+        <div class="form-group col-md-4">
+          <label for="serverurl">Server URL:</label>
+          <input id="serverurl" type="text" class="form-control" value="http://localhost:7224" /><br />
+        </div>
+
+        <div class="form-group col-md-4">
+          <label for="ucsid">UCSID:</label>
+          <input id="ucsid" type="text" class="form-control" value="local" /><br />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="from-group col-md-4">
+          <label for="user">Username:</label>
+          <input id="user" type="text" class="form-control" value="" /><br />
+        </div>
+        <div class="form-group col-md-4">
+          <label for="pass">Password:</label>
+          <input id="pass" class="form-control" value="" type="password" /><br />
+        </div>
+      </div>
+      <div class="form-row">
+        <div>
+          <button type='submit' onclick='createsession(); event.preventDefault();'>Create Session</button><br />
+        </div>
+      </div>
+      <div class="form-row">
+        <div>
+          <button id='btndestroysession' type='submit' onclick='destroysession(); event.preventDefault();'>Destroy Session</button><br />
+        </div>
+      </div>
+    </form>
+
+    <!-- Anzeige der SessionID -->
+    <form>
+      <div class="form-group col-md-8">
+        <label for="sessionid">SessionID</label>
+        <input id="sessionid" class="form-control" type="text " value="" /><br />
+      </div>
+    </form>
+    <!-- Eingabemöglichkeit für einen Funktionsnamen -->
+    <form>
+      <div class="form-group col-md-8">
+        <label for="func">Function:</label>
+        <input id="func" class="form-control" type="text" value="asnGetLoggedInContact" /><br />
+      </div>
+      <div class="form-group col-md-8">
+        <label for="params">Params:</label>
+        <textarea rows="3" class="form-control" id="params">{ }</textarea><br />
+      </div>
+    </form>
+    <form>
+      <button type='submit' onclick='sendcommand(); event.preventDefault();'>Send Command</button><br />
+    </form>
+    <hr />
+
+    <!-- Area to show the messages going to and coming from the server -->
+    <p>SEND:<br />
+      <pre id="sended"></pre>
+    </p>
+    <hr />
+    <p>RECEIVE:<br />
+      <pre id="result"></pre>
+    </p>    
+  </div>
+</body>
+<script>
+  // onload diable destriy session button
+  function onload() {
+    document.getElementById("btndestroysession").disabled = true;
+  }
+
+  function destroysession() {
+    const serverurl = document.getElementById("serverurl").value;    
+    const sessionid = document.getElementById("sessionid").value;
+    const func = 'destroysession?ucsessionid=' + sessionid;
+
+    let oXHR = new XMLHttpRequest();   // new HttpRequest instance
+    oXHR.addEventListener("loadend", function (evt) {
+      let outtext = oXHR.responseText;
+      try {
+        const response = JSON.parse(oXHR.responseText);
+        outtext = "Response: " + oXHR.status + "<br />" + JSON.stringify(response, null, 4);
+      } catch (e) {
+      }
+
+      if (oXHR.status == 0) {
+        document.getElementById("result").innerHTML = 'Failed: General Network Error';
+      } else if (outtext == '') {
+        document.getElementById("result").innerHTML = 'Failed: No response received';
+      } else if (oXHR.status == 200) {
+        document.getElementById("result").innerHTML = outtext;
+      } else {
+        document.getElementById("result").innerHTML = outtext;
+      }
+
+      // clear sessionid and disable button
+      document.getElementById("sessionid").value ='';
+      document.getElementById("btndestroysession").disabled = true;
+    });
+
+    document.getElementById("sended").innerHTML = 'GET ' + serverurl + '/ws/client/' + func + '<br/>'
+    oXHR.open("GET", serverurl + "/ws/client/" + func, true);
+    oXHR.send('');
+  }
+
+  // first step, create a sessionid giving credentials
+  function createsession() {
+    const serverurl = document.getElementById("serverurl").value;
+    const ucsid = document.getElementById("ucsid").value;
+    const user = document.getElementById("user").value;
+    const pass = document.getElementById("pass").value;
+    const func = 'createsession?clientappid=15'; // since ProCall 7 you have to tell the server your application type (Web = 15)
+
+    let oXHR = new XMLHttpRequest();   // new HttpRequest instance
+    oXHR.addEventListener("loadend", function (evt) {
+      let outtext = oXHR.responseText;
+      let response = {}
+      try {
+        response = JSON.parse(oXHR.responseText);
+        outtext = "Response: " + oXHR.status + "<br />" + JSON.stringify(response, null, 4);
+      } catch (e) {
+      }
+      if (oXHR.status == 0) {
+        document.getElementById("result").innerHTML = 'Failed: General Network Error';
+      } else if (outtext == '') {
+        document.getElementById("result").innerHTML = 'Failed: No response received';
+      } else if (oXHR.status == 200) {
+        document.getElementById("result").innerHTML = outtext;
+        if (response.hasOwnProperty('sessionid')) {
+          document.getElementById("sessionid").value = response.sessionid;
+          document.getElementById("btndestroysession").disabled = false;
+
+          // with the help of the sessionid, we start the websocket now
+          // createwebsocket(serverurl, response.sessionid);
+        }
+      } else {
+        document.getElementById("result").innerHTML = outtext;
+      }
+    });
+
+    // for ProCall 7 it is a MUST to tell the server the API Version ('70' for ProCall 7, '61' for ProCall 6)
+    // for ProCall 6 you can (and SHOULD) do it.
+    const apiVersion = 70; // 70 for ProCall 7 upwards, 61 for Procall 6
+
+    // since the post is not going to be "stringified", just put the string equivalent to the output
+    document.getElementById("sended").innerHTML = 'POST ' + serverurl + '/ws/client/' + func + '<br/>'
+      + "Authorization" + " Basic " + btoa(user + ":" + pass)
+      + '<br />'
+      + "Content-Type" + " application/json;charset=utf-8"
+      + '<br />'
+      + "X-no401" + " 1"
+      + '<br />'
+      + "X-ucsid " + ucsid
+      + '<br />'
+      + "X-simple" + " 1"
+      + '<br />'
+      + '<br />'
+      + '{ "negotiate": { "iClientProtocolVersion": ' + apiVersion + ' } }';
+
+    oXHR.open("POST", serverurl + "/ws/client/" + func, true);
+    oXHR.setRequestHeader("Authorization", "Basic " + btoa(user + ":" + pass));
+    oXHR.setRequestHeader("Content-Type", "application/json;charset=utf-8");
+    oXHR.setRequestHeader("X-no401", "1");
+    oXHR.setRequestHeader("X-ucsid", ucsid);
+    oXHR.setRequestHeader("X-simple", "1");
+    oXHR.send('{ "negotiate": { "iClientProtocolVersion": ' + apiVersion + ' } }');
+  }
+
+  function sendcommand() {
+    const serverurl = document.getElementById("serverurl").value;
+    const func = document.getElementById("func").value;
+    const ucsid = document.getElementById("ucsid").value;
+    const sessionid = document.getElementById("sessionid").value;
+    const params = document.getElementById("params").value;
+    try {
+      JSON.parse(params);
+    } catch (e) {
+      document.getElementById("result").innerHTML = 'Failed: Params are not valid JSON: ' + e;
+      return;
+    }
+
+    var oXHR = new XMLHttpRequest();   // new HttpRequest instance
+    oXHR.addEventListener("loadend", function (evt) {
+      let outtext = oXHR.responseText;
+      try {
+        let text = JSON.stringify(JSON.parse(oXHR.responseText), null, 4);
+        outtext = "Response: " + oXHR.status + "<br />" + text;
+      } catch (e) {
+      }
+      if (oXHR.status == 0) {
+        document.getElementById("result").innerHTML = 'Failed: General Network Error';
+      } else if (outtext == '') {
+        document.getElementById("result").innerHTML = 'Failed: No response received';
+      } else if (oXHR.status == 200) {
+        document.getElementById("result").innerHTML = outtext;
+      } else {
+        document.getElementById("result").innerHTML = outtext;
+      }
+    });
+
+    document.getElementById("sended").innerHTML = 'POST ' + serverurl + '/ws/client/' + func + '<br/>'
+      + "Content-Type" + " application/json;charset=utf-8"
+      + '<br />'
+      + "X-ucsessionid " + sessionid
+      + '<br />'
+      + "X-ucsid " + ucsid
+      + '<br />'
+      + '<br />'
+      + params;
+    oXHR.open("POST", serverurl + "/ws/client/" + func);
+    oXHR.setRequestHeader("Content-Type", "application/json;charset=utf-8");
+    oXHR.setRequestHeader("X-ucsessionid", sessionid);
+    oXHR.setRequestHeader("X-ucsid", ucsid);
+
+    oXHR.send(params);
+  }
+
+</script>
+
+</html>

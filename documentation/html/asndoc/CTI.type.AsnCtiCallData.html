@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnCtiCallData </h3>
+    <p>Data structure (key value pair) to associate additional information with call objects.
+</p>
+    <p><p>Data structure to associate additional information with call objects, which can be<br>
+transferred together with a call to another client.<br /><br>
+The data consists of key/value pairs. The keys can be used for different use cases and should be named in such a way,<br>
+so that they do not conflict with other uses.<br /></p>
+<p>The <a href="CTI.type.AsnCtiCallDataList.html">AsnCtiCallDataList</a> is part of the following OptionalParams of these data structs:</p>
+<ul>
+<li <a href="CTI.type.AsnCtiCallInformation.html">AsnCtiCallInformation</a></li>
+<li <a href="CommonSIPCTI.type.AsnCtiNewCallParams.html">AsnCtiNewCallParams</a><br>
+The Key of the <a href="CTI.type.AsnCtiCallDataList.html">AsnCtiCallDataList</a> is &quot;calldata&quot;.</li>
+</ul>
+</p>
+    <div class="typevalues">
+      <p>AsnCtiCallData is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>key</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p> 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>value</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>the string length of 'value' should be limited to a reasonable number because callData is a part of the call information and<br>
+is delivered from server to the clients with every call status change. If the data is big in size it is recommended<br>
+to only store sort of a reference  in 'value'
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

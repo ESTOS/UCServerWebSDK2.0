@@ -1,0 +1,1132 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnLocationInformationMgmt </h3>
+    <p></p>
+    <p></p>
+    <div class="typevalues">
+      <p>AsnLocationInformationMgmt is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>u8sLocationCheckSum</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Checksum<br>
+Prüfsumme für die Location um Änderungen ermitteln zu können
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iCountryID</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Country
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sCountryCode</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Country code
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sLocalPrefix</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Wert aus ELocationCountryList gesetzt mit SetCountry
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sNationalPrefix</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Wert aus ELocationCountryList gesetzt mit SetCountry
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sInternationalPrefix</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Wert aus ELocationCountryList gesetzt mit SetCountry
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sLocalDialingRule</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Die Wahlregel für Ortsgespräche. Diese kann unwirksam werden, wenn LocalSpecial Dialing Rules definiert sind
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sNationalDialingRule</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Die Wahlregel für Ferngespräche
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sInternationalDialingRule</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Die Wahlregel für Internetionale Gespräche
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sLocalDialingRuleHomePNALocal</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>WahlRegeln speziell Nord Amerika<br>
+Dort existieren verschiedene Wahlregeln für kostenfreie und kostenpflichtige Gespräche<br>
+Diese Wahlregeln sind in jeder Area (Vorwahl) unterschiedlich.<br>
+Diese Wahlregeln werden aus den m_LocalDialingRuleMap gelesen bei der Konfiguration<br>
+Selbe Vorwahl, kostenfreies Gespräch (gleiche LATA) - ELOCALDIALINGRULE_HOMEPNALOCAL
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sLocalDialingRuleHomePNAToll</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Selbe Vorwahl, kostenpflichtiges Gespräch (andere LATA) - ELOCALDIALINGRULE_HOMEPNATOLL
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sLocalDialingRuleForeignPNALocal</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Andere Vorwahl, kostenfreies Gespräch (gleiche LATA) - ELOCALDIALINGRULE_FOREIGNPNALOCAL
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iLanguage</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Sprache als LANG_id<br>
+Verwendet Primary LANGID z.B. LANG_GERMAN<br>
+und SUB LangID z.B. SUBLANG_DEFAULT
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sCityCodeNoPrefix</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Vorwahl immer ohne nationalen access code.<br>
+Wenn es keine m_strNationalDialingRule gibt, ist der<br>
+CityCode immer leer
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>bNoLocalDialing</p>
+          </td>
+          <td> 
+            <p>boolean</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Flag welches ermöglicht das auch im Ortsnetz mit Vorwahl gewählt wird
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sVanityNumbers</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Liste der Vanity Vorwahlen (, getrennt)
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>bUseVanity</p>
+          </td>
+          <td> 
+            <p>boolean</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Use Vanity?
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iRemoteTapiNumberFormat</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Remote Tapi Treiber Rufnummern Formatierung
+ (Linked Type: <a href="General.type.AsnERemoteTapiNumberFormat.html">AsnERemoteTapiNumberFormat</a>)
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iRemoteTapiDialFormat</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Remote Tapi Treiber Rufnummern Wahl Formatierung
+ (Linked Type: <a href="General.type.AsnERemoteTapiDialFormat.html">AsnERemoteTapiDialFormat</a>)
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iRemoteTapiLineNames</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>MultiLine TAPI Treiber - Name der Leitungen
+ (Linked Type: <a href="General.type.AsnERemoteTapiLineNames.html">AsnERemoteTapiLineNames</a>)
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iDialingNumberFormat</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Dialing Number Format
+ (Linked Type: <a href="General.type.AsnETAPIDialNumberFormat.html">AsnETAPIDialNumberFormat</a>)
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>bFixedNumberLenExtensionDTMFDialing</p>
+          </td>
+          <td> 
+            <p>boolean</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Automatische Nachwahl von Nebenstellennummern bei Ländern mit fixer Rufnummernlänge<br>
+Bei Ländern mit fixer Rufnummernlänge werden Nebenstellennummern nach der Verbindungsherstellung automatisch nachgewählt
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>bMobileDeviceLocation</p>
+          </td>
+          <td> 
+            <p>boolean</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Dies ist ein Mobile Device Standort
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>bShowExtendedSettings</p>
+          </td>
+          <td> 
+            <p>boolean</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>In dieser Location werden die erweiterten Einstellungen angezeigt<br>
+damit sind alle Settings sichtbar, ansonsten nur elementar wichtige für 95% der Installationen
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>bMultiLocationSupport</p>
+          </td>
+          <td> 
+            <p>boolean</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Dieser Standort steht für den MuliLocationSupport bereit
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>bAutoCreateOtherLocationRules</p>
+          </td>
+          <td> 
+            <p>boolean</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Automatisch Regeln zum umformatieren kurzer Rufnummern in die Lange Notation erstellen
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>bAllowNumberSearchOtherLocations</p>
+          </td>
+          <td> 
+            <p>boolean</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Rufnummernauflösung über die Suche Standortübergreifend erlauben
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>bShortenOtherLocationSCNumbersForDialing</p>
+          </td>
+          <td> 
+            <p>boolean</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Superkanonische Rufnummern anderer Standorte bei der Wahl entsprechend verkürzen
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>bUseTkSystem</p>
+          </td>
+          <td> 
+            <p>boolean</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Telefonanlage wird benutzt
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sTKAnschlussNr</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Anschlussnummer bei Anlagenanschluss (z.B. 36856)
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sDDIRangeBegin</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Gesplitetter Bereich für Anschlussnummer (36856 [0-2])<br>
+In Deutschland kann ein Anlagenanschluss eingeschränkte Durchwahlbereiche haben<br>
+Die folgende Variablen schänken den Bereich für die Anschlussnummer ein.<br>
+Default ist leer (alle)<br>
+Wir verwendet um festzustellen von welchen internen Rufnummern es externe Repräsentierungen gibt
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sDDIRangeEnd</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p> 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sTKLocalAccessCode</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Amtskennziffer im Ort (z.B. 0)
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sTKLongDistanceAccessCode</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Amtskennziffer National (z.B. 0)
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sTKInternationalAccessCode</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Amtskennziffer International (z.B. 0)
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sTKPrivateAccessCode</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Amtskennziffer Privatgespräch (z.B. 0)<br>
+Kann ? und % als platzhalter für persönliche PIN enthalten.<br>
+?: eine Ziffer<br>
+%: n Ziffern
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sTKForwardingAccessCode</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Amtskennziffer für Rufumleitung setzen
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iTKMinLenInternalNumbers</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Minimale Länge interner Nummern
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iTKMaxLenInternalNumbers</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Maximale Länge interner Nummern
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8slistTKAkzListRemoveIn</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.UTF8StringList.html">UTF8StringList</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Amtskennziffer(n) bei ankommend gemeldeter Nummer abschneiden
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8slistTKAkzListRemoveOut</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.UTF8StringList.html">UTF8StringList</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Amtskennziffer(n) bei abgehend gemeldeter Nummer abschneiden
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8slistTKAkzListRemoveForwarding</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.UTF8StringList.html">UTF8StringList</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Amtskennziffer(n) bei Meldung einer Rufumleitung abschneiden
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iConnectedIDDealing</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Spezielle Behandlung der ConnectedID, normal, formatieren, ignorieren
+ (Linked Type: <a href="Management.type.AsnEConnectedIdDealing.html">AsnEConnectedIdDealing</a>)
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8slistTKAkzListRemoveConnectedIDIn</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.UTF8StringList.html">UTF8StringList</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Amtskennziffer(n) bei abgehend gemeldeter Nummer ConnecteID
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8slistTKAkzListRemoveConnectedIDOut</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.UTF8StringList.html">UTF8StringList</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Amtskennziffer(n) bei ankommende gemeldeter Nummer ConnecteID
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>numberFormatInternal</p>
+          </td>
+          <td> 
+            <p><a href="Management.type.AsnNumberFormatRegExpressionsMgmt.html">AsnNumberFormatRegExpressionsMgmt</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Reguläre Ausdrücke zur erweiterten Erkennung interner Rufnummern<br>
+Dient zur Erkennung interner Rufnummern, formatiert, sofern ein Replace Ausdruck hinterlegt ist, die Rufnummer automatisch um
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>numberFormatExternal</p>
+          </td>
+          <td> 
+            <p><a href="Management.type.AsnNumberFormatRegExpressionsMgmt.html">AsnNumberFormatRegExpressionsMgmt</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Reguläre Ausdrücke zur erweiterten Erkennung externer Rufnummern<br>
+Das sind meist wohl die selben wie SpecialNumbers.<br>
+Allerdings nur dann, wenn man nicht selbige auch als interne Rufnummern hat. */<br>
+Dient zur Erkennung externer Rufnummern, formatiert, sofern ein Replace Ausdruck hinterlegt ist, die Rufnummer automatisch um
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>numberFormatAutomaticOtherLocationsDDItoSC</p>
+          </td>
+          <td> 
+            <p><a href="Management.type.AsnNumberFormatRegExpressionsMgmt.html">AsnNumberFormatRegExpressionsMgmt</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Liste mit Ausdrücken zur automatischen Standortrufnummernmanipulation.<br>
+Gefuellt wenn m_bMultiLocationEnabled &amp;&amp; m_bAutoCreateOtherLocationRules gesetzt ist nach dem Laden aller Standorteinstellungen
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>numberFormatAutomaticOtherLocationsSCtoDDI</p>
+          </td>
+          <td> 
+            <p><a href="Management.type.AsnNumberFormatRegExpressionsMgmt.html">AsnNumberFormatRegExpressionsMgmt</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Liste mit Ausdrücken zur automatischen Standortrufnummernmanipulation.<br>
+Gefüllt wenn m_bMultiLocationEnabled &amp;&amp; m_bShortenOtherLocationSCNumbersForDialing gesetzt ist nach dem Laden aller Standorteinstellungen
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>numberFormatRegExpressListIn</p>
+          </td>
+          <td> 
+            <p><a href="Management.type.AsnNumberFormatRegExpressionsMgmt.html">AsnNumberFormatRegExpressionsMgmt</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Rufnummern Formatierung (Reguläre Ausdrücke oder direktes Suchen Ersetzen (abhängig von internem Flag)
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>numberFormatRegExpressListOut</p>
+          </td>
+          <td> 
+            <p><a href="Management.type.AsnNumberFormatRegExpressionsMgmt.html">AsnNumberFormatRegExpressionsMgmt</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Rufnummern Formatierung (Reguläre Ausdrücke oder direktes Suchen Ersetzen (abhängig von internem Flag)
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>numberFormatRegExpressListDial</p>
+          </td>
+          <td> 
+            <p><a href="Management.type.AsnNumberFormatRegExpressionsMgmt.html">AsnNumberFormatRegExpressionsMgmt</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Rufnummern Formatierung (Reguläre Ausdrücke oder direktes Suchen Ersetzen (abhängig von internem Flag)<br>
+Diese Liste wird verarbeitet, nachdem die Rufnummer superkanonisch gemacht wurde.<br>
+Hat das Ergebnis ein + am Anfang, wird weiterformatiert,<br>
+sonst direkt gewählt
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>numberFormatRegExpressListFinalDial</p>
+          </td>
+          <td> 
+            <p><a href="Management.type.AsnNumberFormatRegExpressionsMgmt.html">AsnNumberFormatRegExpressionsMgmt</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Rufnummern Formatierung (Reguläre Ausdrücke oder direktes Suchen Ersetzen (abhängig von internem Flag)<br>
+Diese Liste wird verarbeitet, nachdem alle Formattierung abgeschlossen ist.<br>
+Diese Regel wird auch für die Remote Tapi Treiber angewendet
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>numberFormatRegExpressLinePhoneNumbers</p>
+          </td>
+          <td> 
+            <p><a href="Management.type.AsnNumberFormatRegExpressionsMgmt.html">AsnNumberFormatRegExpressionsMgmt</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Reguläre Ausdrücke um eine Leitungsrufnummer zu formen.<br>
+Im Admin kann man hier in den erweiterten Einstellungen reguläre Ausdrücke hinterlegen nach denen Leitungsrufnummern formatiert werden<br>
+Diese Ausdrücke müssen aus der Rufnummer eine superkanonische Rufnummer machen. Sobald ein Ausdruck hinterlegt ist wird in diesem Standort<br>
+nurnoch über diese Regulären Ausdrücke gearbeitet. Die Ausdrücke werden NUR für Leitungsrufnummer verwendet
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sLocationID</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Location Identifier (z.B. Default)
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iLocalDialingRuleHomePNAFlag</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Flag, welche Ausnahmen für die Eigene Vorwahl gilt.<br>
+Alle im eigenen Ortsnetz sind kostenfrei<br>
+Kostenfreie Konfigurieren (die anderen sind kostenpflichtig)<br>
+Kostenpflichtige Konfigurieren (die anderen sind kostenfrei)
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8slistLocalDialingRulesHomePNALocalCalls</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.UTF8StringList.html">UTF8StringList</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Liste der NXX Nummern in der eigenen Vorwahl, die als Local Call gelten
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8slistLocalDialingRulesHomePNATollCalls</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.UTF8StringList.html">UTF8StringList</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Liste der NXX Nummern in der eigenen Vorwahl,die als Local Call gelten
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iLocalDialingRuleForeignPNAFlag</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Flag, welche Ausnahmen für fremde Vorwahlen gelten.<br>
+Alle in anderen Ortsnetzen sind Ferngespräche<br>
+Es gibt kostenfreie Gespräche
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>localDialingRuleForeignPNALocalCallItemList</p>
+          </td>
+          <td> 
+            <p><a href="Management.type.AsnELocalDialingRuleForeignPNALocalCallItemList.html">AsnELocalDialingRuleForeignPNALocalCallItemList</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Liste der Vorwahlen mit NXX Nummern aus anderen Vorwahlen,die als Local Call gelten
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>bUseAdvancedLCR</p>
+          </td>
+          <td> 
+            <p>boolean</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>LeastCostRouting verwenden
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>lCRProviderVector</p>
+          </td>
+          <td> 
+            <p><a href="Management.type.AsnELCRProviderList.html">AsnELCRProviderList</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Liste der Provider
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>lCRZoneList</p>
+          </td>
+          <td> 
+            <p><a href="Management.type.AsnELCRZoneList.html">AsnELCRZoneList</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Liste der Provider
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>projectPINRules</p>
+          </td>
+          <td> 
+            <p><a href="CommonSIPCTI.type.AsnProjectPinRuleList.html">AsnProjectPinRuleList</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Projektkennziffern
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>bRulesSoftphoneEmergencyEnabled</p>
+          </td>
+          <td> 
+            <p>boolean</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>rules for emergency numbers enabled
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>bRulesSoftphoneEmergencyClientWarningEnabled</p>
+          </td>
+          <td> 
+            <p>boolean</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Client Warnings enabled
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>rulesSoftphoneEmergency</p>
+          </td>
+          <td> 
+            <p><a href="Management.type.AsnRuleSoftphoneEmergencyMgmtListMgmt.html">AsnRuleSoftphoneEmergencyMgmtListMgmt</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>rules for emergency numbers dialed from softphone
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

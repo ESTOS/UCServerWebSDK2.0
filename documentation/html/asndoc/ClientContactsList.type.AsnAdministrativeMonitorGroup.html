@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnAdministrativeMonitorGroup </h3>
+    <p>A group of contact IDs to display as a contact group of a administrative Monitor
+</p>
+    <p><p>This structure describes a group of UCServer users (identified by SIP-Adresses) and the group itself.</p>
+</p>
+    <div class="typevalues">
+      <p>AsnAdministrativeMonitorGroup is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>u8sGroupURI</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>ID of the Group in the usermanagement
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sGroupName</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Name of the Group (for display)
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>listContactIDs</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.UTF8StringList.html">UTF8StringList</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>List of ContactIDs (SIP-URIs) of the users in the Group
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>listFunctionKeys</p>
+          </td>
+          <td> 
+            <p><a href="ClientContactsList.type.AsnAdministrativeFunctionKeyList.html">AsnAdministrativeFunctionKeyList</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>List of administrative defined function keys for every user in the group
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>optionalParams</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.AsnOptionalParameters.html">AsnOptionalParameters</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>optionalParams Name &quot;flags&quot; Value number
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

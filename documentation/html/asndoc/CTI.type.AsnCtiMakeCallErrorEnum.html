@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnCtiMakeCallErrorEnum </h3>
+    <p>Error codes in case <a href="Common.type.AsnRequestError.html">AsnRequestError</a> is returned by <a href="CTI.asnCtiMakeCall.html">asnCtiMakeCall</a>
+</p>
+    <p></p>
+    <div class="typevalues">
+      <p>AsnCtiMakeCallErrorEnum is an Enumeration</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Value</th>
+        <th>Comment</th>
+        <tr>
+          <td>success</td>
+          <td>number</td>
+          <td>0</td>
+          <td>There was no error; for completeness only. If the call was successful, AsnCtiLineSetRemoteOfficeResult will be returned.
+</td>
+        </tr>
+        <tr>
+          <td>generalerror</td>
+          <td>number</td>
+          <td>1</td>
+          <td>General error; this error code will be sent of the call cannot be made on the line or the project settings in newCallParams are wrong (if given).
+</td>
+        </tr>
+        <tr>
+          <td>accessdenied</td>
+          <td>number</td>
+          <td>2</td>
+          <td>The user has no access rights to perform asnCtiLineSetRemoteOffice.
+</td>
+        </tr>
+        <tr>
+          <td>invalidline</td>
+          <td>number</td>
+          <td>3</td>
+          <td>The line given in the argument is not known.
+</td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

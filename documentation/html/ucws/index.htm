@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UCServer WebService Overview</title>
+    <link rel="stylesheet" type="text/css" href="../stylesheet.css">
+  </head>
+  <body>
+	<h2 class="strong" style="color:red">Disclaimer: Work in progress - not for public release!</h2>
+	<p style="color:red">
+		THE DOCUMENT IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+	AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	OUT OF OR IN CONNECTION WITH THE DOCUMENT OR THE USE OR OTHER DEALINGS IN
+	THE DOCUMENT.</p>
+	<p>
+	This document is automatically generated.
+	</p>
+	<p>
+	If you find any mistakes or if you have suggestens to 
+	improve this doument please feel free to report back to estos GmbH.
+	</p>
+    <h2>UCServer WebService Overview</h2>
+    <p>The UCServer WebService is an integral component of the estos UCServer. It can be reached via the following methods:</p>
+	<ul>
+		<li><strong>http</strong><br />
+			The default listen port for http is 7224. You can open the UCWS Web page on http://localhost:7224/ .
+		</li>
+		<li><strong>https</strong><br />
+			The default listen port for https is 7225. You can open the UCWS Web page on https://localhost:7225/ .
+			The SSL certificate is self signed by default. It is recommended to configure a real trusted ssl certificate.
+		</li>
+	</ul>
+    <p class="strong">WebService API</p>
+    <p>The WebService offers an JSON API for talking with the estos UCServer.</p>
+    <p class="strong">Calling conventions</p>
+    <p>All API endpoints may be called with GET or POST.</p>
+    <p class="strong">Available routes</p>
+    <ul>
+      <li><strong><a href="wsdirect.htm">/ws/direct</a></strong><br/>
+        Using this route, all functions are called with authentication. No user session is created. This route can be used only for simple methods that do not require events.
+        Calling functions in this route has a significant overhead, because the user must be authenticated for every function call. (http://servername:7224/ws/direct/) 
+      </li>
+      <li><strong><a href="wsclient.htm">/ws/client</a></strong><br/>
+        This is the default route for clients.
+        In this route it is always required to create a user session.
+        To create a user session authentication is required.
+        The user session authenticates the further function calls. 
+        The user session also contains an event channel to receive events from the server. (http://servername:7224/ws/client/)
+      </li>
+      <li><strong><a href="wspublic.htm">/ws/public</a></strong><br/>
+        This is the default route for anonymous (public) clients. The functions in this route do not require authentication.
+        This route is used to display public available presence. (http://servername:7224/ws/public/) 
+      </li>
+    </ul>
+    <p>All API endpoints may be called with GET or POST. Jsonp is supported.</p>      
+  </body>
+</html>

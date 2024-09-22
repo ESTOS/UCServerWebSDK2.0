@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h1>Administration</h1>
+    <p>Module Version: 8.0.0</p>
+    <p>Administration interface (workstation setup)
+</p>
+    <p><p class='strong'>Module description</p>
+<p>This module defines structures and functions for administration the UCServer.<br>
+These structures are used by the administrative console (UCServer Administration) and the ClnInst.exe (Workstation settings) on the client.<br>
+These operations need an administrative login on the UCServer.</p>
+</p><a href="Administration.doc.html"> </a>
+    <h2>Operations:</h2><a href="Administration.doc.operations.html"> </a><a href="Administration.operations.html"> </a>
+    <table>
+      <th>Name</th>
+      <th>Description</th>
+      <tr>
+        <td>
+          <p><a href="Administration.asnAdminLogin.html">asnAdminLogin</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.asnAdminGetUserProfile.html">asnAdminGetUserProfile</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.asnAdminGetUserProfiles.html">asnAdminGetUserProfiles</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.asnAdminSetUserProfile.html">asnAdminSetUserProfile</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.asnAdminRemoveUserProfile.html">asnAdminRemoveUserProfile</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.asnAdminAddUserProfile.html">asnAdminAddUserProfile</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.asnAdminGetComputerProfile.html">asnAdminGetComputerProfile</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.asnAdminSetComputerProfile.html">asnAdminSetComputerProfile</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.asnAdminAddComputerProfile.html">asnAdminAddComputerProfile</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.asnAdminFindUser.html">asnAdminFindUser</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.asnAdminFindGroupProfiles.html">asnAdminFindGroupProfiles</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.asnAdminSetGroupProfile.html">asnAdminSetGroupProfile</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.asnAdminAddGroupProfile.html">asnAdminAddGroupProfile</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.asnAdminRemoveGroupProfile.html">asnAdminRemoveGroupProfile</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.asnGetDatabaseManagerSettings.html">asnGetDatabaseManagerSettings</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.asnGetNetworkInterfacePorts.html">asnGetNetworkInterfacePorts</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.asnGetAvailableLines.html">asnGetAvailableLines</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.asnGetUserManagerSettings.html">asnGetUserManagerSettings</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.asnAdminGetPhoneJournalSettings.html">asnAdminGetPhoneJournalSettings</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.asnAdminSetAnonymousUserAccessToken.html">asnAdminSetAnonymousUserAccessToken</a></p>
+        </td>
+        <td> 
+          <p>Update accessToken for PublicUsers
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.asnAdminSetAnonymousUserContactData.html">asnAdminSetAnonymousUserContactData</a></p>
+        </td>
+        <td> 
+          <p>create or update contactdata for PublicUsers
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.asnAdminRemoveAnonymousUser.html">asnAdminRemoveAnonymousUser</a></p>
+        </td>
+        <td> 
+          <p>remove PublicUser from userdatabase
+</p>
+        </td>
+      </tr>
+    </table>
+    <h2>Types:</h2><a href="Administration.doc.types.html"> </a><a href="Administration.types.html"> </a>
+    <table>
+      <th>Name</th>
+      <th>Description</th>
+      <tr>
+        <td>
+          <p><a href="Administration.type.AsnAdminLoginResultEnum.html">AsnAdminLoginResultEnum</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.type.AsnAdminGetUserProfileErrorEnum.html">AsnAdminGetUserProfileErrorEnum</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.type.AsnAdminUserOnlineStateFilter.html">AsnAdminUserOnlineStateFilter</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.type.AsnAdminGetUserProfilesErrorEnum.html">AsnAdminGetUserProfilesErrorEnum</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.type.AsnAdminSetUserProfileErrorEnum.html">AsnAdminSetUserProfileErrorEnum</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.type.AsnAdminRemoveUserProfileErrorEnum.html">AsnAdminRemoveUserProfileErrorEnum</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.type.AsnAdminAddUserProfileErrorEnum.html">AsnAdminAddUserProfileErrorEnum</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.type.AsnAdminGetComputerProfileErrorEnum.html">AsnAdminGetComputerProfileErrorEnum</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.type.AsnAdminSetComputerProfileErrorEnum.html">AsnAdminSetComputerProfileErrorEnum</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.type.AsnAdminAddComputerProfileErrorEnum.html">AsnAdminAddComputerProfileErrorEnum</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.type.AsnAdminFindUserErrorEnum.html">AsnAdminFindUserErrorEnum</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.type.AsnAdminFindGroupProfilesFilter.html">AsnAdminFindGroupProfilesFilter</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.type.AsnAdminFindGroupProfilesErrorEnum.html">AsnAdminFindGroupProfilesErrorEnum</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.type.AsnAdminSetGroupProfileErrorEnum.html">AsnAdminSetGroupProfileErrorEnum</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.type.AsnAdminAddGroupProfileErrorEnum.html">AsnAdminAddGroupProfileErrorEnum</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.type.AsnAdminRemoveGroupProfileErrorEnum.html">AsnAdminRemoveGroupProfileErrorEnum</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.type.AsnGetDatabaseManagerSettingsErrorEnum.html">AsnGetDatabaseManagerSettingsErrorEnum</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.type.AsnGetAvailableLinesErrorEnum.html">AsnGetAvailableLinesErrorEnum</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.type.AsnGetUserManagerSettingsErrorEnum.html">AsnGetUserManagerSettingsErrorEnum</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.type.AsnAdminPhoneJournalUnansweredEnum.html">AsnAdminPhoneJournalUnansweredEnum</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.type.AsnAdminGetPhoneJournalSettingsErrorEnum.html">AsnAdminGetPhoneJournalSettingsErrorEnum</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.type.AsnAdminFindUserArgumentChoice.html">AsnAdminFindUserArgumentChoice</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.type.AsnAdminGetUserProfileArgumentChoice.html">AsnAdminGetUserProfileArgumentChoice</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.type.AsnAdminLoginArgumentChoice.html">AsnAdminLoginArgumentChoice</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.type.AsnUserMonitorLine.html">AsnUserMonitorLine</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.type.AsnSetUserProfilesErrorListItem.html">AsnSetUserProfilesErrorListItem</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.type.AsnAdminGetUserProfilesArgument.html">AsnAdminGetUserProfilesArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.type.AsnAdminSetUserProfileResult.html">AsnAdminSetUserProfileResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.type.AsnAdminRemoveUserProfileResult.html">AsnAdminRemoveUserProfileResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.type.AsnAdminAddUserProfileResult.html">AsnAdminAddUserProfileResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.type.AsnAdminGetComputerProfileArgument.html">AsnAdminGetComputerProfileArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.type.AsnAdminSetComputerProfileResult.html">AsnAdminSetComputerProfileResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.type.AsnAdminAddComputerProfileResult.html">AsnAdminAddComputerProfileResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.type.AsnAdminFindUserProfile.html">AsnAdminFindUserProfile</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.type.AsnGroupProfile.html">AsnGroupProfile</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.type.AsnAdminFindGroupProfilesArgument.html">AsnAdminFindGroupProfilesArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.type.AsnAdminSetGroupProfileResult.html">AsnAdminSetGroupProfileResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.type.AsnAdminAddGroupProfileResult.html">AsnAdminAddGroupProfileResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.type.AsnAdminRemoveGroupProfileResult.html">AsnAdminRemoveGroupProfileResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.type.AsnGetDatabaseManagerSettingsArgument.html">AsnGetDatabaseManagerSettingsArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.type.AsnGetDatabaseManagerSettingsResult.html">AsnGetDatabaseManagerSettingsResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.type.AsnGetNetworkInterfacePortsArgument.html">AsnGetNetworkInterfacePortsArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.type.AsnGetNetworkInterfacePortsResult.html">AsnGetNetworkInterfacePortsResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.type.AsnGetAvailableLinesArgument.html">AsnGetAvailableLinesArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.type.AsnAvailableLineDetails.html">AsnAvailableLineDetails</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.type.AsnGetUserManagerSettingsArgument.html">AsnGetUserManagerSettingsArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.type.AsnGetUserManagerSettingsResult.html">AsnGetUserManagerSettingsResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.type.AsnAdminGetPhoneJournalSettingsArgument.html">AsnAdminGetPhoneJournalSettingsArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.type.AsnAdminGetPhoneJournalSettingsResult.html">AsnAdminGetPhoneJournalSettingsResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.type.AsnAdminSetAnonymousUserAccessTokenArgument.html">AsnAdminSetAnonymousUserAccessTokenArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.type.AsnAdminSetAnonymousUserAccessTokenResult.html">AsnAdminSetAnonymousUserAccessTokenResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.type.AsnAdminSetAnonymousUserContactDataArgument.html">AsnAdminSetAnonymousUserContactDataArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.type.AsnAdminSetAnonymousUserContactDataResult.html">AsnAdminSetAnonymousUserContactDataResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.type.AsnAdminRemoveAnonymousUserArgument.html">AsnAdminRemoveAnonymousUserArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.type.AsnAdminRemoveAnonymousUserResult.html">AsnAdminRemoveAnonymousUserResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.type.AsnAdminLoginArgument.html">AsnAdminLoginArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.type.AsnAdminLoginResult.html">AsnAdminLoginResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.type.AsnUserMonitorLineList.html">AsnUserMonitorLineList</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.type.AsnUserProfile.html">AsnUserProfile</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.type.AsnUserProfileList.html">AsnUserProfileList</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.type.AsnSetUserProfilesErrorList.html">AsnSetUserProfilesErrorList</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.type.AsnAdminGetUserProfileArgument.html">AsnAdminGetUserProfileArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.type.AsnAdminGetUserProfileResult.html">AsnAdminGetUserProfileResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.type.AsnAdminGetUserProfilesResult.html">AsnAdminGetUserProfilesResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.type.AsnAdminSetUserProfileArgument.html">AsnAdminSetUserProfileArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.type.AsnAdminRemoveUserProfileArgument.html">AsnAdminRemoveUserProfileArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.type.AsnAdminAddUserProfileArgument.html">AsnAdminAddUserProfileArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.type.AsnComputerProfile.html">AsnComputerProfile</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.type.AsnAdminGetComputerProfileResult.html">AsnAdminGetComputerProfileResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.type.AsnAdminSetComputerProfileArgument.html">AsnAdminSetComputerProfileArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.type.AsnAdminAddComputerProfileArgument.html">AsnAdminAddComputerProfileArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.type.AsnAdminFindUserProfileList.html">AsnAdminFindUserProfileList</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.type.AsnAdminFindUserArgument.html">AsnAdminFindUserArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.type.AsnAdminFindUserResult.html">AsnAdminFindUserResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.type.AsnGroupProfileList.html">AsnGroupProfileList</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.type.AsnAdminFindGroupProfilesResult.html">AsnAdminFindGroupProfilesResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.type.AsnAdminSetGroupProfileArgument.html">AsnAdminSetGroupProfileArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.type.AsnAdminAddGroupProfileArgument.html">AsnAdminAddGroupProfileArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.type.AsnAdminRemoveGroupProfileArgument.html">AsnAdminRemoveGroupProfileArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.type.AsnAvailableLineDetailsList.html">AsnAvailableLineDetailsList</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.type.AsnGetAvailableLinesResult.html">AsnGetAvailableLinesResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.type.AsnAdminSetUserProfilesListArgument.html">AsnAdminSetUserProfilesListArgument</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.type.AsnAdminSetUserProfilesListResult.html">AsnAdminSetUserProfilesListResult</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Administration.type.AsnComputerProfileList.html">AsnComputerProfileList</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

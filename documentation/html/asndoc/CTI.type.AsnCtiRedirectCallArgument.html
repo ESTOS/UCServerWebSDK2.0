@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnCtiRedirectCallArgument </h3>
+    <p>Arguments for <a href="CTI.asnCtiRedirectCall.html">asnCtiRedirectCall</a>
+</p>
+    <p></p>
+    <div class="typevalues">
+      <p>AsnCtiRedirectCallArgument is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>u8sContactID</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>ContactID of the contact to redirect a call from his line. Leave it empty if you just want to redirect a call by its identifier.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sConnectionID</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Connection identifier of the call to redirect.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sPhoneNumber</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>The line number to redirect to. This number can be in short or long format if you set iNumberFormat to 1.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iNumberFormat</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>The u8sPhoneNumber is the number to redirect to and normally the server would reformat the number into a dialable form. This behavior can be altered:
+<ul>
+<li>0: Server should not format the number for redirecting, it shall use it like it is.</li>
+<li>Other values: Server should format the number (set prefix and area code etc.).<br>
+Hint: If you are not sure, the number should always be formatted (-&gt; use '1')</li>
+</ul>
+ (Linked Type: <a href="General.type.AsnETAPIDialNumberFormat.html">AsnETAPIDialNumberFormat</a>)
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

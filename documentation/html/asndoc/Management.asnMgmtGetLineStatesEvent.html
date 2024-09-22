@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>asnMgmtGetLineStatesEvent</h3>
+    <p></p>
+    <p></p><strong>ArgumentType: AsnMgmtGetLineStatesEventArgument</strong>
+    <div class="typevalues">
+      <p>AsnMgmtGetLineStatesEventArgument is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>iDumpMessage</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p> 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iDumpType</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p> 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sLineID</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p> 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iOpenState</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p> (Linked Type: <a href="CTI.type.AsnCtiLineOpenStatus.html">AsnCtiLineOpenStatus</a>)
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iNumCalls</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p> 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iSipResponseCode</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p> 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sReasonPhrase</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p> 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sEffectiveHomeServer</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>ProCall DataCenter only. This is the effective home server identification of the UCServer that (currently) provides this line.<br>
+For SIPAV lines and TAPI lines not enabled by the &quot;use lines automatically&quot; feature, this is usually the same as the<br>
+home server in the line's configuration. However, when moving a line between two servers, this may differ for a short period of time.<br>
+For TAPI lines that are enabled by the &quot;use lines automatically&quot; feature this might (temporarily) contain multiple servers in the format (2)server1.domain.de;server2.domain.de<br>
+Important: The format &quot;(count)server1;server2;servern&quot; is only a temporary workaround. do not try to parse!
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>lineStatusList</p>
+          </td>
+          <td> 
+            <p><a href="Management.type.AsnMgmtLineStatusList.html">AsnMgmtLineStatusList</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>ProCall DataCenter only: List of line status from several servers
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

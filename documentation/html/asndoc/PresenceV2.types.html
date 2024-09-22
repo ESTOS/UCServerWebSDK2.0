@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h1>PresenceV2</h1>
+    <p>Module Version: 8.0.20240916</p>
+    <p>Presence interface (Version 2)
+</p>
+    <p><p class='strong'>Module description</p>
+<p>This module defines structures and operations for the presence V2 interface.<br>
+A version 2 of the presence interface was necessary to improve the amount of contact and service data.<br>
+The presence shows at any time the current availability of the person you wish to communicate with. For a detailed description see the help of the UCClient.<br>
+The following presence states are available:</p>
+<ul>
+<li>Available (green)</li>
+<li>Busy (red)</li>
+<li>Absent (yellow)</li>
+<li>Inactive (green/yellow)</li>
+<li>Don't disturb  (red with a white stripe)</li>
+<li>Offline (gray)</li>
+</ul>
+<p>Additionally the API delivers information in form of contact data, service states and much more.<br>
+With all these infromations, it is possible to create an application, which give user the ability to see a detailed picture of a contact enriched with live state changes.</p>
+<p>The live changes are results of the different services the UCServer combines the presence state of the user:</p>
+<ul>
+<li>Telephone (via CTI)</li>
+<li>Calendar</li>
+<li>Audio/Video</li>
+<li>Softphone</li>
+<li>Bluetooth device (locally attached to a client of the user).</li>
+<li>Manual input of the user</li>
+</ul>
+<p class='strong'>Prerequisite for using the interface</p>
+<ul>
+<li>The client needs a socket for secure data Transmission between client-server and vise versa.</li>
+<li>Installation of ProCall Software in advance</li>
+<li>Then create a user for testing purposes</li>
+<li>login in this user name and check the functionality of this interface practically</li>
+</ul>
+<p class='strong'>Functionalities</p>
+<ul>
+<li>The status for client will be driven from various sources like:</li>
+<li>Digital Telephone, Mobile, Calender(ms outlook), Audio/Video Chat, Manually changing Status and Computer system(login/logout).</li>
+<li>The user has the permission to manually change the status</li>
+<li>The user can set a user-defined status (ex: Coffee Break)</li>
+<li>The user can set a couple of notices (ex: listing the daily appointments)</li>
+<li>The user can change status and notice</li>
+<li>The user can remove status and notice</li>
+</ul>
+<p class='strong'>Events</p>
+<p>The Events that the client receives from the server are:</p>
+<p>- <strong><a href="PresenceV2.asnUpdatePresence.html">asnUpdatePresence(V2)</a></strong> :</p>
+<ul>
+<li>It delivers the responses from Server to Client as per Client request</li>
+<li>The Server receives the specific request like <a href="Common.type.AsnCustomNote.html">asnCustomNote</a> from Client</li>
+<li>The Client reciprocally receives an <a href="PresenceV2.asnUpdatePresence.html">asnUpdatePresence(V2)</a> from Server</li>
+<li>The Update-Event will also be sent to those clients who are in touch with this client in the same Server</li>
+<li>It receives the Event from server in two forms whether an Argument or an Error</li>
+<li>As Argument: It handles the <strong>Presence</strong> and <strong>iChangedFlags</strong> events<br>
+- <a href="PresenceV2.type.AsnUpdatePresenceArgument.html">Presence</a> : it shows updated data of the present-contact.<br>
+- <a href="PresenceV2.type.AsnUpdatePresenceArgument.html">iChangedFlags</a> : it indicates that which area triggers the event and it's included because later on the server fills the fields<br>
+* check the <a href="PresenceV2.type.AsnPresence.html">AsnPresence</a>(Active details) for more details</li>
+</ul>
+<p>- <strong><a href="PresenceV2.asnRemovePresence.html">asnRemovePresence</a></strong> :</p>
+<ul>
+<li>It needs a contact id to remove the presence state</li>
+<li>It has an optionalParams for further implementation</li>
+</ul>
+<p class='strong'>How the API works</p>
+<p>Here is a very simple diagram of how the presence API works</p>
+<img src="https://www.plantuml.com/plantuml/png/ZLCzRuCm4DtzAqvCOGYLEbPL5KIZgajLDIMxWm-mPEp8TwH_lmOK82f4tUpplVFxi7V4qdFR615bHgDbI2FOla2KPmVq5_JH4qYoRyYfLOVsH8NN9_pqI6WBtAIhHwclsYRCY-U3dxStWzVHNqYjOM4T8nWiMMJIc3j4G7BeayI2QuJCMPO5lxyIk1AwIZ5KQDZqV8Gcq9OnJ61Km0ugP6ZFIZ8IbDurYK2heECWaYIvesD_t7zyzpxbFNoqv_WOTnRTLYTdUdbULpMBHIn8Zu2Nq3iGwiLHVolyQAwXgAMja1wkh1kfC2WHCyapnL1B0hfQrqbUL_Zt2UIMbk9VAFyp-WNaQkmBlL0wBxhZCTlDb7iCarM2QjSQ1SJk3ANsg6qrkkhyp8DTM8Mly0i0" alt="uml diagram">
+</p><a href="PresenceV2.doc.html"> </a>
+    <h2>Types:</h2><a href="PresenceV2.doc.types.html"> </a><a href="PresenceV2.types.html"> </a>
+    <table>
+      <th>Name</th>
+      <th>Description</th>
+      <tr>
+        <td>
+          <p><a href="PresenceV2.type.AsnPresenceSubscriptionFlags.html">AsnPresenceSubscriptionFlags</a></p>
+        </td>
+        <td> 
+          <p>This enum is for selecting the events and direct return values in which the client is interested when it calls asnGetAndSubscribePresence.
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="PresenceV2.type.AsnSetDynamicRightsErrorEnum.html">AsnSetDynamicRightsErrorEnum</a></p>
+        </td>
+        <td> 
+          <p>This enumeration describes the possible iErrorDetail values of <a href="Common.type.AsnRequestError.html">AsnRequestError</a> if an error occured in the operation <a href="PresenceV2.asnSetDynamicRights.html">asnSetDynamicRights</a>
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="PresenceV2.type.AsnRemoveDynamicRightsErrorEnum.html">AsnRemoveDynamicRightsErrorEnum</a></p>
+        </td>
+        <td> 
+          <p>This enumeration describes possible values returning from the server calling <a href="PresenceV2.asnRemoveDynamicRights.html">asnRemoveDynamicRights</a>
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="PresenceV2.type.EnumRequestImageResult.html">EnumRequestImageResult</a></p>
+        </td>
+        <td> 
+          <p>This enumeration describes the values possible returned by <a href="PresenceV2.asnRequestContactImage.html">asnRequestContactImage</a> and <a href="PresenceV2.asnRequestLargeProfileImage.html">asnRequestLargeProfileImage</a>
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="PresenceV2.type.AsnPresenceLine.html">AsnPresenceLine</a></p>
+        </td>
+        <td> 
+          <p>The structure is used to describe a phone line of a contact.
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="PresenceV2.type.AsnPresenceCallV2.html">AsnPresenceCallV2</a></p>
+        </td>
+        <td> 
+          <p>This structure describes the information about a call on a phone line.
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="PresenceV2.type.AsnPresenceForward.html">AsnPresenceForward</a></p>
+        </td>
+        <td> 
+          <p>This strutures describes the phone forward state of a phone line.
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="PresenceV2.type.AsnActualUserDynamicRights.html">AsnActualUserDynamicRights</a></p>
+        </td>
+        <td> 
+          <p>Structure for AsnPresence to give the client a hint, whcih access rights are effective to set on an contact.
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="PresenceV2.type.AsnAgentState.html">AsnAgentState</a></p>
+        </td>
+        <td> 
+          <p>Struture for AsnPresence of the actual agent state of the contact
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="PresenceV2.type.AsnRemovePresenceArgument.html">AsnRemovePresenceArgument</a></p>
+        </td>
+        <td> 
+          <p>Argument for the event <a href="PresenceV2.asnRemovePresence.html">asnRemovePresence</a>
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="PresenceV2.type.AsnGetAndSubscribePresenceArgument.html">AsnGetAndSubscribePresenceArgument</a></p>
+        </td>
+        <td> 
+          <p>Call this operation to get information about and events of another contact.
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="PresenceV2.type.AsnUnsubscribePresenceArgument.html">AsnUnsubscribePresenceArgument</a></p>
+        </td>
+        <td> 
+          <p>Argument for stopping contact subscrptions on the ucserver.
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="PresenceV2.type.AsnUnsubscribePresenceResult.html">AsnUnsubscribePresenceResult</a></p>
+        </td>
+        <td> 
+          <p>Result of <a href="PresenceV2.asnUnsubscribePresence.html">asnUnsubscribePresence</a> if the operation was executed successfully
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="PresenceV2.type.AsnSetDynamicRightsArgument.html">AsnSetDynamicRightsArgument</a></p>
+        </td>
+        <td> 
+          <p>Argument for <a href="PresenceV2.asnSetDynamicRights.html">asnSetDynamicRights</a> to set/change access rights to contact data and its service informations
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="PresenceV2.type.AsnSetDynamicRightsResult.html">AsnSetDynamicRightsResult</a></p>
+        </td>
+        <td> 
+          <p>Result of <a href="PresenceV2.asnSetDynamicRights.html">asnSetDynamicRights</a> if the operation was successful.
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="PresenceV2.type.AsnRemoveDynamicRightsArgument.html">AsnRemoveDynamicRightsArgument</a></p>
+        </td>
+        <td> 
+          <p>Argument for <a href="PresenceV2.asnRemoveDynamicRights.html">asnRemoveDynamicRights</a>
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="PresenceV2.type.AsnRemoveDynamicRightsResult.html">AsnRemoveDynamicRightsResult</a></p>
+        </td>
+        <td> 
+          <p>Result of <a href="PresenceV2.asnRemoveDynamicRights.html">asnRemoveDynamicRights</a>
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="PresenceV2.type.AsnRequestLargeProfileImageArgument.html">AsnRequestLargeProfileImageArgument</a></p>
+        </td>
+        <td> 
+          <p>Argument for <a href="PresenceV2.asnRequestLargeProfileImage.html">asnRequestLargeProfileImage</a>
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="PresenceV2.type.AsnRequestLargeProfileImageResult.html">AsnRequestLargeProfileImageResult</a></p>
+        </td>
+        <td> 
+          <p>Result of <a href="PresenceV2.asnRequestLargeProfileImage.html">asnRequestLargeProfileImage</a>
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="PresenceV2.type.AsnRequestContactImageArgument.html">AsnRequestContactImageArgument</a></p>
+        </td>
+        <td> 
+          <p>Argument for <a href="PresenceV2.asnRequestContactImage.html">asnRequestContactImage</a>
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="PresenceV2.type.AsnRequestContactImageResult.html">AsnRequestContactImageResult</a></p>
+        </td>
+        <td> 
+          <p>Result of <a href="PresenceV2.asnRequestContactImage.html">asnRequestContactImage</a>
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="PresenceV2.type.AsnMonitorGroupingAttribute.html">AsnMonitorGroupingAttribute</a></p>
+        </td>
+        <td> 
+          <p>Future use
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="PresenceV2.type.AsnPresenceLines.html">AsnPresenceLines</a></p>
+        </td>
+        <td> 
+          <p>List of <a href="PresenceV2.type.AsnPresenceLine.html">AsnPresenceLine</a> structures.
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="PresenceV2.type.AsnPresenceCallsV2.html">AsnPresenceCallsV2</a></p>
+        </td>
+        <td> 
+          <p>List of <a href="PresenceV2.type.AsnPresenceCallV2.html">AsnPresenceCallV2</a> structures.
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="PresenceV2.type.AsnPresenceForwards.html">AsnPresenceForwards</a></p>
+        </td>
+        <td> 
+          <p>List of <a href="PresenceV2.type.AsnPresenceForward.html">AsnPresenceForward</a> structures.
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="PresenceV2.type.AsnPresenceV2.html">AsnPresenceV2</a></p>
+        </td>
+        <td> 
+          <p>This sequence contains the data and service states of a contact, called its 'presence'.
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="PresenceV2.type.AsnPresenceV2List.html">AsnPresenceV2List</a></p>
+        </td>
+        <td> 
+          <p>List of AsnPresenceEx sequences
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="PresenceV2.type.AsnUpdatePresenceV2Argument.html">AsnUpdatePresenceV2Argument</a></p>
+        </td>
+        <td> 
+          <p>Argument of asnUpdatePresence
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="PresenceV2.type.AsnGetAndSubscribePresenceV2Result.html">AsnGetAndSubscribePresenceV2Result</a></p>
+        </td>
+        <td> 
+          <p>Result of asnGetAndSubscribePresence with the list of successfully subscribed contacts.
+</p>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

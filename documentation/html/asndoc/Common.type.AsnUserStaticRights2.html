@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnUserStaticRights2 </h3>
+    <p>Bitfield with access rights for the user to use specific services/functions on the UCserver.
+</p>
+    <p><p>The bitfield is configured by the administrator on the UCServer in the usermanagement section, mainly on the services tabs of the user, computer or group editors.</p>
+<p>Some of the flags are only set for specific objects or have only an effect for these objects.</p>
+<p>Some of the flags can be set for user AND groups, so a user can get the right from his own configuration or from a group she is member of.</p>
+<p>For more flags see <a href="Common.type.AsnUserStaticRights.html">AsnUserStaticRights</a></p>
+</p>
+    <div class="typevalues">
+      <p>AsnUserStaticRights2 is an Enumeration</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Value</th>
+        <th>Comment</th>
+        <tr>
+          <td>eUSERRIGHTS2ENABLEFORANONYMOUSAPI</td>
+          <td>number</td>
+          <td>1</td>
+          <td>0x00000001 - User is visible for anonymous users (like web site vistors of LiveChat).
+</td>
+        </tr>
+        <tr>
+          <td>eUSERRIGHTS2LOGINOVERINTERNET</td>
+          <td>number</td>
+          <td>2</td>
+          <td>0x00000002 - User may login from outside the company network (e.g. from mobile network GSM).
+</td>
+        </tr>
+        <tr>
+          <td>eUSERRIGHTS2LOGINBYMOBILE</td>
+          <td>number</td>
+          <td>4</td>
+          <td>0x00000004 - User may login from a mobile device.
+</td>
+        </tr>
+        <tr>
+          <td>eUSERRIGHTS2ENABLEAGENTMANAGER</td>
+          <td>number</td>
+          <td>8</td>
+          <td>0x00000008 - User is availible for the agent managemtn system; see Agent API for more details. Available for users and groups.
+</td>
+        </tr>
+        <tr>
+          <td>eUSERRIGHTS2ISAGENTSUPERVISOR</td>
+          <td>number</td>
+          <td>16</td>
+          <td>0x00000010 - User is agent subervisor and may change state of other agents.
+</td>
+        </tr>
+        <tr>
+          <td>eUSERRIGHTS2GROUPFORPUBLICCHAT</td>
+          <td>number</td>
+          <td>32</td>
+          <td>0x00000020  - Group contains agents who may receive PUBLIC_CHATs and PUBLIC_CALLs.
+</td>
+        </tr>
+        <tr>
+          <td>eUSERRIGHTS2GROUPFORPORTAL</td>
+          <td>number</td>
+          <td>64</td>
+          <td>0x00000040 - Group contains agents who may be visible on the contact protal. (Named &quot;portal groups&quot; in the admin UI).
+</td>
+        </tr>
+        <tr>
+          <td>eUSERRIGHTS2GROUPFORMONITOR</td>
+          <td>number</td>
+          <td>128</td>
+          <td>0x00000080 - Group is available for administrative monitor content.
+</td>
+        </tr>
+        <tr>
+          <td>eUSERRIGHTS2ENABLECONTENTSHARINGFILES</td>
+          <td>number</td>
+          <td>512</td>
+          <td>Content Sharing<br>
+0x00000200 - User is allowed to send binary data via the BinaryTransfer interface (default: allowed)
+</td>
+        </tr>
+        <tr>
+          <td>eUSERRIGHTS2ENABLECONTENTSHARINGLOCATION</td>
+          <td>number</td>
+          <td>1024</td>
+          <td>0x00000400 - User is allowed to share his location via the BinaryTransfer interface (default: allowed)
+</td>
+        </tr>
+        <tr>
+          <td>eUSERRIGHTS2ENABLECONTENTSHARINGCONTACTS</td>
+          <td>number</td>
+          <td>2048</td>
+          <td>0x00000800 - User is allowed to share a contact via the BinaryTransfer interface (default: allowed)
+</td>
+        </tr>
+        <tr>
+          <td>eUSERRIGHTS2USECONFERENCING</td>
+          <td>number</td>
+          <td>4096</td>
+          <td>0x00001000 - User may use conferencing functionality - (default: off - needs seperate license!)
+</td>
+        </tr>
+        <tr>
+          <td>eUSERRIGHTS2USETEAMS</td>
+          <td>number</td>
+          <td>8192</td>
+          <td>0x00002000 - User may use MS Teams App
+</td>
+        </tr>
+        <tr>
+          <td>eUSERRIGHTS2ALLOWLOGININTERNETDESKTOP</td>
+          <td>number</td>
+          <td>16384</td>
+          <td>0x00004000 - User may use ProCall Client via Internet (vpnless connection)
+</td>
+        </tr>
+        <tr>
+          <td>eUSERRIGHTS2USEWEBAPP</td>
+          <td>number</td>
+          <td>32768</td>
+          <td>0x00008000 - User may use ProCall WebApp (PWA)
+</td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

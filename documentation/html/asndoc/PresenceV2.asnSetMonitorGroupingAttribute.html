@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>asnSetMonitorGroupingAttribute</h3>
+    <p>Set attributes for possible grouping in the client monitor.
+</p>
+    <p><p>The grouping attribute (or main attribute) of a contact gives the user the possibility to arrange contacts in the clients monitor<br>
+by skills or other defineable texts.</p>
+<p>The admin of the UCServer can define a set of attributes a user can select one for himself, which is then dispatched to other users in the presence system.<br>
+All users with the same attribute set can then be grouped together in the favorites monitor of the client.</p>
+<p>A attribute consists of a attribute string and a string with a corresponding abbrevation of it (short form).<br>
+It is possible to set a free text for an additional, user defined attribute, which can also be displayed in the client.</p>
+</p>
+    <p class="strong">ArgumentType: AsnSetMonitorGroupingAttributeArgument</p>
+    <div class="typevalues">
+      <p class="private">- PRIVATE -</p>
+      <p>AsnSetMonitorGroupingAttributeArgument is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>attribute</p>
+          </td>
+          <td> 
+            <p><a href="PresenceV2.type.AsnMonitorGroupingAttribute.html">AsnMonitorGroupingAttribute</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>Send a grouping attribute struct to the server to set texts or to change them. If you have am ID you can use attributeid to set the attribute.
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+    <p></p>
+    <p class="strong">ResultType: AsnSetMonitorGroupingAttributeResult</p>
+    <div class="typevalues">
+      <p class="private">- PRIVATE -</p>
+      <p>AsnSetMonitorGroupingAttributeResult is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>bSuccess</p>
+          </td>
+          <td> 
+            <p>boolean</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p> 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+    <p></p>
+    <p class="strong">ErrorType: AsnRequestError</p>
+    <div class="typevalues">
+      <p>AsnRequestError is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>iErrorDetail</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>A number representing the error
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sErrorString</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>A string representing the error
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

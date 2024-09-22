@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnCtiNewCallParams </h3>
+    <p>Additional information about a call, especial for initiate a call.
+</p>
+    <p><p <a href="CTI.asnCtiMakeCall.html">asnCtiMakeCall</a> can be used to give the UCServer more information/hints about how to handle a make call with <a href="CommonSIPCTI.type.AsnCtiNewCallParams.html">AsnCtiNewCallParams</a><br>
+It is possible to give data of a project or pin to use to dial the number, hide the own callerid, attach contact data to the call a.s.o.</p>
+</p>
+    <div class="typevalues">
+      <p>AsnCtiNewCallParams is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>projectPinRule</p>
+          </td>
+          <td> 
+            <p><a href="CommonSIPCTI.type.AsnProjectPinRule.html">AsnProjectPinRule</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Projekt informationen
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>bHideMyCallerID</p>
+          </td>
+          <td> 
+            <p>boolean</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Rufnummer unterdrücken (true) oder übertragen (false/DEFAULT)
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>asnRemoteContact</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.AsnNetDatabaseContact.html">AsnNetDatabaseContact</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>Optional NetDatabaseContact, wenn der Client gleich einen mitübergeben will
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>optionalParams</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.AsnOptionalParameters.html">AsnOptionalParameters</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>Additionally fields added later in the key-value-field for backward compatibility.<br>
+Additionally fields added later in the key-value-field for backward compatibility.
+<ul>
+<li>key &quot;Address&quot;, Type DWORD, TAPI Adresse auf der gewählt werden soll</li>
+<li>key &quot;FeatureCodeDialing&quot;, Type bool, Diese Wahl ist für einen FeatureCode, die Wahl soll nicht sichtbar sein</li>
+<li>key &quot;FindAndValidateProject&quot;, Type UTF8String, Projekt anhand des übergebenen Namens suchen</li>
+<li>key &quot;ProjectErrorHandling&quot;, Type Integer, Fehlerbehandlung wenn der übergebene Projektname nicht gefunden wird</li>
+<li>key &quot;DialRemoteOffice&quot;, Type Integer, Diese Wahl soll als Remote Office Wahl durchgeführt werden (assozierte Wahl, RemoteOffice Nummer, Vermitteln auf Zielrufnummer)</li>
+<li>key &quot;RemoteOfficeNumber&quot;, Type UTF8String, RemoteOffice Rufnummer die für die RemoteOffice Wahl verwendet werden soll</li>
+</ul>
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

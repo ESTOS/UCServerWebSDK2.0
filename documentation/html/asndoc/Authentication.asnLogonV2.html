@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>asnLogonV2</h3>
+    <p></p>
+    <p><p>Used to login to the UCServer<br>
+This function supersedes the former <a href="Authentication.asnLogon.html">asnLogon</a> which was using a custom Error object<br>
+The new implementation uses the standard <a href="Common.type.AsnRequestError.html">AsnRequestError</a> and puts renegotiation into the <a href="Authentication.type.AsnLogonResultChoice.html">AsnLogonResultChoice</a> object</p>
+</p>
+    <p class="strong">ArgumentType: AsnLogonArgument</p>
+    <div class="typevalues">
+      <p>AsnLogonArgument is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>iVersion</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>version of the protocol
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sVersion</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Client Version (z.B. 3.0.0.100)
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iAttachToContact</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Event notification Option
+ (Linked Type: <a href="Authentication.type.AsnAttachToContactOptions.html">AsnAttachToContactOptions</a>)
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sClientComputerName</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Computer Name - for Display Purposes
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>authentication</p>
+          </td>
+          <td> 
+            <p><a href="Authentication.type.AsnAuthenticationChoice.html">AsnAuthenticationChoice</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Authentication Options
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>optionalParams</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.AsnOptionalParameters.html">AsnOptionalParameters</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>optionalParams Name &quot;CompletedEventID&quot; Value string
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+    <p></p>
+    <p class="strong">ResultType: AsnLogonResultChoice</p>
+    <div class="typevalues">
+      <p>AsnLogonResultChoice is a Choice</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Comment</th>
+        <tr>
+          <td>success</td>
+          <td> 
+            <p><a href="Authentication.type.AsnLogonResultSuccess.html">AsnLogonResultSuccess</a></p>
+          </td>
+          <td>Logon has succeeded the client receives the result of the operation
+</td>
+        </tr>
+        <tr>
+          <td>renegotiation</td>
+          <td> 
+            <p><a href="Authentication.type.AsnAuthenticationSimpleCrypt.html">AsnAuthenticationSimpleCrypt</a></p>
+          </td>
+          <td>Logon requires a renegotiation
+</td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+    <p></p>
+    <p class="strong">ErrorType: AsnRequestError</p>
+    <div class="typevalues">
+      <p>AsnRequestError is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>iErrorDetail</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>A number representing the error
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sErrorString</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>A string representing the error
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

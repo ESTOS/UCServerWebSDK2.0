@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h1>Management</h1>
+    <p>Module Version: 8.0.20240715</p>
+    <p>Administration interface (UCServer administration)
+</p>
+    <p><p class='strong'>Module description</p>
+<p>This module defines the structures and operations operationsfor the UCServer management software.<br>
+It should be used by the UCServer Administrator, Web based administration tools or automatic provisioning applications.<br>
+Several operations are a copy of operations in ENetUC_Admin.asn1 and renamed &quot;asnAdmin...&quot; -&gt; &quot;asnMgmt...&quot;<br>
+(for having a clearer separation of the interfaces)</p>
+<p class='strong'>Versioning</p>
+<p>It is important to increment the version of the protocol, whenever there are incompatible changes.<br>
+The admin and the server must have an equal version to communicate.<br>
+The protocol version defined with the field named AsnManagementProtocolVersion</p>
+<p class='strong'>Management operations</p>
+</p><a href="Management.doc.html"> </a>
+    <h2>Events:</h2><a href="Management.doc.events.html"> </a><a href="Management.events.html"> </a>
+    <table>
+      <th>Name</th>
+      <th>Description</th>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtGetUserProfilesResult.html">asnMgmtGetUserProfilesResult</a></p>
+        </td>
+        <td> 
+          <p>You have called <a href="Management.asnMgmtGetUserProfiles.html">asnMgmtGetUserProfiles</a>() and get your results here (50 user profiles every this event)
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtGetUserListEvent.html">asnMgmtGetUserListEvent</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtGetGroupsEvent.html">asnMgmtGetGroupsEvent</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtComputerFoundEvent.html">asnMgmtComputerFoundEvent</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtSoftwarePacketsChanged.html">asnMgmtSoftwarePacketsChanged</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtSoftwareStatusComputerChanged.html">asnMgmtSoftwareStatusComputerChanged</a></p>
+        </td>
+        <td> 
+          <p>Software install status on a computer changed event
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtUpdateSoftwareStatusComputerChanged.html">asnMgmtUpdateSoftwareStatusComputerChanged</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtGetLineStatesEvent.html">asnMgmtGetLineStatesEvent</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtLineStateChanged.html">asnMgmtLineStateChanged</a></p>
+        </td>
+        <td> 
+          <p>Line State changed event
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtOnLineRemovedEvent.html">asnMgmtOnLineRemovedEvent</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtOnLineAddedEvent.html">asnMgmtOnLineAddedEvent</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtOnLineConfigChangedEvent.html">asnMgmtOnLineConfigChangedEvent</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtOnLineCapsChangedEvent.html">asnMgmtOnLineCapsChangedEvent</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtOnCtiLineFoundEvent.html">asnMgmtOnCtiLineFoundEvent</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtOnLineGroupAdded.html">asnMgmtOnLineGroupAdded</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtOnLineGroupConfigChangedEvent.html">asnMgmtOnLineGroupConfigChangedEvent</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtOnLineGroupRemoved.html">asnMgmtOnLineGroupRemoved</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtOnLineEvent4AdminEvent.html">asnMgmtOnLineEvent4AdminEvent</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtOnLicensesHaveChangedEvent.html">asnMgmtOnLicensesHaveChangedEvent</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtUCWebServiceStatusChanged.html">asnMgmtUCWebServiceStatusChanged</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtOnListenInterfaceStatusesEvent.html">asnMgmtOnListenInterfaceStatusesEvent</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtOnListenInterfaceStatusesChangedEvent.html">asnMgmtOnListenInterfaceStatusesChangedEvent</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtLocationChanged.html">asnMgmtLocationChanged</a></p>
+        </td>
+        <td> 
+          <p>Location changed event
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtFederationServerStatusChanged.html">asnMgmtFederationServerStatusChanged</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtFederationServerDiagnosticComplete.html">asnMgmtFederationServerDiagnosticComplete</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtUpgradeProgress.html">asnMgmtUpgradeProgress</a></p>
+        </td>
+        <td> 
+          <p>Progress Event for Upgrade
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtPushServiceDevicesResult.html">asnMgmtPushServiceDevicesResult</a></p>
+        </td>
+        <td> 
+          <p>Event that contains the results of <a href="Management.asnMgmtGetPushServiceDevices.html">asnMgmtGetPushServiceDevices</a>
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtPushServiceDeviceChanged.html">asnMgmtPushServiceDeviceChanged</a></p>
+        </td>
+        <td> 
+          <p>Event that contains changed Push Service Devices
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtRemoveComputerProfileEvent.html">asnMgmtRemoveComputerProfileEvent</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtRemoveGroupProfileEvent.html">asnMgmtRemoveGroupProfileEvent</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtRemoveUserProfileEvent.html">asnMgmtRemoveUserProfileEvent</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtMeshNodeStatusChanged.html">asnMgmtMeshNodeStatusChanged</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtMeshUpdateConnections.html">asnMgmtMeshUpdateConnections</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtConnectionInformationChanged.html">asnMgmtConnectionInformationChanged</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtUpdateDatabaseProgress.html">asnMgmtUpdateDatabaseProgress</a></p>
+        </td>
+        <td> 
+          <p>Progress Event for Database Update
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtUserManagerConnectionStatusChanged.html">asnMgmtUserManagerConnectionStatusChanged</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtConfigurationManagerStatusChanged.html">asnMgmtConfigurationManagerStatusChanged</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="Management.asnMgmtConfigurationManagerServerListChanged.html">asnMgmtConfigurationManagerServerListChanged</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

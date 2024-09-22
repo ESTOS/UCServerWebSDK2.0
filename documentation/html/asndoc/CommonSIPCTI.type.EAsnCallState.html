@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>EAsnCallState </h3>
+    <p></p>
+    <p><p>The internal call states</p>
+</p>
+    <div class="typevalues">
+      <p>EAsnCallState is an Enumeration</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Value</th>
+        <th>Comment</th>
+        <tr>
+          <td>unknown</td>
+          <td>number</td>
+          <td>0</td>
+          <td>unknown
+</td>
+        </tr>
+        <tr>
+          <td>destroyed</td>
+          <td>number</td>
+          <td>1</td>
+          <td>the call was destroyed, we did finally hang up
+</td>
+        </tr>
+        <tr>
+          <td>offering</td>
+          <td>number</td>
+          <td>2</td>
+          <td>inbound ringing
+</td>
+        </tr>
+        <tr>
+          <td>dialing</td>
+          <td>number</td>
+          <td>4</td>
+          <td>dialtone outbound
+</td>
+        </tr>
+        <tr>
+          <td>ringback</td>
+          <td>number</td>
+          <td>8</td>
+          <td>outbound, the destination is ringing, the number is complete
+</td>
+        </tr>
+        <tr>
+          <td>busy</td>
+          <td>number</td>
+          <td>16</td>
+          <td>outbound, destination is busy
+</td>
+        </tr>
+        <tr>
+          <td>connected</td>
+          <td>number</td>
+          <td>32</td>
+          <td>we are connected (inbound and outbound)
+</td>
+        </tr>
+        <tr>
+          <td>conferenced</td>
+          <td>number</td>
+          <td>64</td>
+          <td>call is party in a conference (we hold the conference)
+</td>
+        </tr>
+        <tr>
+          <td>hold</td>
+          <td>number</td>
+          <td>128</td>
+          <td>call is hold
+</td>
+        </tr>
+        <tr>
+          <td>disconnected</td>
+          <td>number</td>
+          <td>256</td>
+          <td>the destination did hangup, we hear the beep beep as the call has been teriminated on the other side
+</td>
+        </tr>
+        <tr>
+          <td>preparecall</td>
+          <td>number</td>
+          <td>512</td>
+          <td>the call is in preparation, no phone action has been executed so far
+</td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

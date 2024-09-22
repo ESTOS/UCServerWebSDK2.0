@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h1>Agent</h1>
+    <p>Agent/AgentGroup/ACD interface.
+</p>
+    <p><p class='strong'>Module description</p>
+<p>This module describes the functions for agents for ACD and contact portal functionalities.</p>
+<p>A client represents a user who can be an member in any number of agent groups.<br /><br>
+An agent is described by the ContactURI of the user (SIP address incl. &quot;sip:&quot; before) or a LineURI (Cti line, format &quot;tel:xyz@pbx text&quot;).<br>
+To login to a group, for example, you usually need the AgencyURI and the GroupURI. This allows the UCServer to identify exactly which agent should be used in which group.<br /><br>
+The client receives the necessary values when it gets them back as a result of asnAgentMonitorStart.</p>
+<p class='strong'>Requirements for using the interface</p>
+<p>A user gets access to the agent interface:</p>
+<ul>
+<li>If the user has activated the service &quot;Business card for anonymous users&quot; via his own or global profile in the UCServer administration.</li>
+<li>If he is a member of one or more groups that have been activated in the UCServer administration as an &quot;agent group&quot;.</li>
+<li>If (identified by line ID) he has a line known to be part of an ACD group at the corresponding ECSTA.</li>
+</ul>
+<p class='strong'>Functions</p>
+<p>A user can set the following status on the interface:</p>
+<ul>
+<li>&quot;login&quot;/&quot;logout&quot;</li>
+<li>&quot;Working after call&quot;</li>
+<li>&quot;ready&quot;/&quot;not ready&quot; (still a &quot;work in progress&quot;)</li>
+</ul>
+<p>ProCall 5.1 supports ACD functionality only for Panasonic telephone systems.<br /><br>
+As of ProCall 6, the agent interface is used for the contact portal and business card. Further PBX's are in development.</p>
+<p class='strong'>Simple procedure if the agent groups are to be used</p>
+<ol>
+<li>The user must only call asnAgentMonitorStart; this registers the agent's events and supplies the list of groups in which the user is agent.</li>
+<li>From this point on, the UCServer sends events if the status of the user in these groups changes.</li>
+<li>Change the state of the agent:<br>
+3.1. asnAgentLogin - Sets the status of the user to &quot;login&quot;. Note: replaces asnAgentSetState(not ready).<br>
+More parameters may be required for the login. These can be found in the AgentGroupInfos<br>
+3.2. asnAgentLogoff - Sets the status of the user to &quot;logoff&quot;. Note: replaces asAgentSetState(noagent).<br>
+3.3. asnAgentSetState - With this you can set the status to &quot;ready&quot;, &quot;not ready&quot; and &quot;working after call&quot;. Which states can be set is provided by the server in the result of asnAgentMonitorStart. See also AsnAgentGroupInfo.</li>
+<li>Log off events with asnAgentMonitorStop.</li>
+</ol>
+<p>With these five functions it is possible to operate the ACD/presence groups on the UCServer.</p>
+<p class='strong'>AsnAgentGroupInfo</p>
+<p>AsnAgentGroupInfo structures are usually exchanged in the analysis and results. This structure contains the description of an agent/ACD group.<br /><br>
+AsnAgentGroupInfo contains the data about an agent group. The following are important:</p>
+<ul>
+<li>iGroupCapabilities: This shows which status changes are supported. See also AsnAgentGroupCapabilitiesEnum. If the highest bit is set (0x80000000), this group is a PBX/ACD group. If the bit is not set, the group is managed by the UCServer.</li>
+<li>iAgentState: The current status of the agent, i.e. the user in this group.</li>
+<li>optionalParams,key &quot;AgentLoginRequiredParameters&quot;: In the case of a PBX/ACD group, this integer contains information about which parameters are required for logging on to the ACD group. The values (bit field) are described in AsnAgentLoginRequiredParametersEnum.</li>
+</ul>
+<p class='strong'>Events</p>
+<p>For any changes to the agent groups and agent status, two events are sent by the UCServer to the registered clients:</p>
+<ul>
+<li>asnAgentNotifyGroupsChanged - There have been some changes in the user's available groups</li>
+<li>asnAgentNotifyStateChanged - The user's status in a group has changed.</li>
+</ul>
+<p class='strong'>Comment</p>
+<p>The API is user centered. This means if the server is asked for the AgentGroupInfos,<br>
+the server displays the information concerning its group membership in a simple list.<br>
+The most simple for the normal user.</p>
+<p class='strong'>Supervisor Interface</p>
+<p>Not implemented yet.</p>
+<p class='strong'>Anonymous users</p>
+<p>Anonymous users can query which groups are available, including users, and then display the corresponding presence and login/logoff status based on the use case.</p>
+</p>
+  </body>
+</html>

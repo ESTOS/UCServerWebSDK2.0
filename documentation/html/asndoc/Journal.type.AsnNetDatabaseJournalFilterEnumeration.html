@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnNetDatabaseJournalFilterEnumeration </h3>
+    <p>Flags for filtering journal entries in the result list of asnGetJournalEntries. These are used in AsnNetDatabaseJournalFindOptions in the optionalParams key &quot;iAdditionalFlags&quot;.<br>
+These Bits can be used to set the filter flags in a more convenient way mit normal Bit operations in an integer value.
+</p>
+    <p><p>Addionally newer Flags are only to be set with this Method. These flags are: NoUnknown, TextChats, AudioChats, VideoChats, PhoneCalls, DeskShare.</p>
+</p>
+    <div class="typevalues">
+      <p>AsnNetDatabaseJournalFilterEnumeration is an Enumeration</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Value</th>
+        <th>Comment</th>
+        <tr>
+          <td>flagIntern</td>
+          <td>number</td>
+          <td>1</td>
+          <td>0x00000001 -	Internal calls
+</td>
+        </tr>
+        <tr>
+          <td>flagExtern</td>
+          <td>number</td>
+          <td>2</td>
+          <td>0x00000002 -	External calls
+</td>
+        </tr>
+        <tr>
+          <td>flagInbound</td>
+          <td>number</td>
+          <td>4</td>
+          <td>0x00000004 -	Inbound calls
+</td>
+        </tr>
+        <tr>
+          <td>flagOutbound</td>
+          <td>number</td>
+          <td>8</td>
+          <td>0x00000008 -	Outbound calls
+</td>
+        </tr>
+        <tr>
+          <td>flagConnected</td>
+          <td>number</td>
+          <td>16</td>
+          <td>0x00000010 -	Connected calls
+</td>
+        </tr>
+        <tr>
+          <td>flagNotConnected</td>
+          <td>number</td>
+          <td>32</td>
+          <td>0x00000020 -	Not connected calls
+</td>
+        </tr>
+        <tr>
+          <td>flagHasMemo</td>
+          <td>number</td>
+          <td>64</td>
+          <td>0x00000040 -	The memo field contains text
+</td>
+        </tr>
+        <tr>
+          <td>flagHasNoMemo</td>
+          <td>number</td>
+          <td>128</td>
+          <td>0x00000080 -	The memo field is empty
+</td>
+        </tr>
+        <tr>
+          <td>flagUnreadOnly</td>
+          <td>number</td>
+          <td>256</td>
+          <td>0x00000100 -	Only entries, which are not marked as &quot;read&quot;
+</td>
+        </tr>
+        <tr>
+          <td>flagNoUnknown</td>
+          <td>number</td>
+          <td>512</td>
+          <td>0x00000200 -	Exclude all calls without a caller number (clipped numbers)
+</td>
+        </tr>
+        <tr>
+          <td>flagTextChats</td>
+          <td>number</td>
+          <td>1024</td>
+          <td>0x00000400 -	Include text chats	(default: TBD)
+</td>
+        </tr>
+        <tr>
+          <td>flagAudioChats</td>
+          <td>number</td>
+          <td>2048</td>
+          <td>0x00000800 -	Include audio chats (default: TBD)
+</td>
+        </tr>
+        <tr>
+          <td>flagVideoChats</td>
+          <td>number</td>
+          <td>4096</td>
+          <td>0x00001000 -	Include video chats (default: TBD)
+</td>
+        </tr>
+        <tr>
+          <td>flagPhoneCalls</td>
+          <td>number</td>
+          <td>8192</td>
+          <td>0x00002000 -	Include phone calls (default: set)
+</td>
+        </tr>
+        <tr>
+          <td>flagDeskShare</td>
+          <td>number</td>
+          <td>16384</td>
+          <td>0x00004000 -	Include screen-/deskshare chats
+</td>
+        </tr>
+        <tr>
+          <td>flagIncludeAllPublic</td>
+          <td>number</td>
+          <td>65536</td>
+          <td>0x00010000 -	Include all entries, which are marked as &quot;public&quot; and the user has access rights on.
+</td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

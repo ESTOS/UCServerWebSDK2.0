@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>asnCtiSetCallData</h3>
+    <p>Add some data to the call which will be transferred to other clients.
+</p>
+    <p><p>For some use cases it will be necessary to transfer business data attached to a call to other clients with the call, e.g. while transferring it.<br /><br>
+With this operation this data can be added to the call information of a call without setting the whole information structure again.<br /><br>
+This operation only executes successfully if the user is the line owner.<br /><br>
+[TODO: MORE DETAILS NEEDED! Especial for CallDataAnnouncement (ConnectionID unknown)]</p>
+</p>
+    <p class="strong">ArgumentType: AsnCtiSetCallDataArgument</p>
+    <div class="typevalues">
+      <p>AsnCtiSetCallDataArgument is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>u8sConnectionID</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Connection identifier of the call to set data for. If this is unknown (empty), the additional parameters in optionalParams are needed.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>callDataList</p>
+          </td>
+          <td> 
+            <p><a href="CTI.type.AsnCtiCallDataList.html">AsnCtiCallDataList</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Call data key value map
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>optionalParams</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.AsnOptionalParameters.html">AsnOptionalParameters</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>Additional parameters for asnCtiSetCallData added here for backward compatibility.<br>
+These parameters are only needed, if the connection identifier is unknown.
+<ul>
+<li>Key &quot;calledNumber&quot;, Value String</li>
+<li>Key &quot;transferringNumber&quot;, Value String</li>
+<li>Key &quot;callStateMask&quot;, Value double</li>
+<li>Key &quot;hostCallID&quot;, Value double</li>
+</ul>
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+    <p></p>
+    <p class="strong">ResultType: AsnCtiSetCallDataResult</p>
+    <div class="typevalues">
+      <p>AsnCtiSetCallDataResult is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>bSuccess</p>
+          </td>
+          <td> 
+            <p>boolean</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Data was accepted<br>
+true/1 if successful set, false/0 otherwise
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+    <p></p>
+    <p class="strong">ErrorType: AsnRequestError</p>
+    <div class="typevalues">
+      <p>AsnRequestError is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>iErrorDetail</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>A number representing the error
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sErrorString</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>A string representing the error
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

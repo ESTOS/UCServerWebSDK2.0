@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnClientPersistenceReadWildcardTypeEnum </h3>
+    <p>Enumeration for iItemKeyWildcardType in <a href="ClientPersistence.type.AsnClientPersistenceReadArgument.html">AsnClientPersistenceReadArgument</a>
+</p>
+    <p></p>
+    <div class="typevalues">
+      <p>AsnClientPersistenceReadWildcardTypeEnum is an Enumeration</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Value</th>
+        <th>Comment</th>
+        <tr>
+          <td>noWildcard</td>
+          <td>number</td>
+          <td>0</td>
+          <td>no wildcard read - key has to match exactly (DEFAULT)
+</td>
+        </tr>
+        <tr>
+          <td>prefixKey</td>
+          <td>number</td>
+          <td>1</td>
+          <td>the given key is used as prefix for result key(s)<br>
+example: given key &quot;apple&quot; will receive elements like &quot;apple&quot; &quot;applesauce&quot; &quot;applejack&quot; but not &quot;pineapple&quot;
+</td>
+        </tr>
+        <tr>
+          <td>postfixKey</td>
+          <td>number</td>
+          <td>2</td>
+          <td>the given key is used as postfix for result key(s)<br>
+example: given key &quot;apple&quot; will receive elements like &quot;apple&quot; &quot;pineappleapple&quot; &quot;crabapple&quot; but not &quot;applesauce&quot;
+</td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

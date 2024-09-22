@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>asnSetClientXMLContent</h3>
+    <p></p>
+    <p></p>
+    <p class="strong">ArgumentType: AsnSetClientXMLContentArgument</p>
+    <div class="typevalues">
+      <p class="private">- PRIVATE -</p>
+      <p class="private">- DEPRECATED -</p>
+      <p>AsnSetClientXMLContentArgument is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>content</p>
+          </td>
+          <td> 
+            <p><a href="General.type.AsnXMLClientContent.html">AsnXMLClientContent</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p> 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+    <p></p>
+    <p class="strong">ResultType: AsnSetClientXMLContentResult</p>
+    <div class="typevalues">
+      <p class="private">- PRIVATE -</p>
+      <p class="private">- DEPRECATED -</p>
+      <p>AsnSetClientXMLContentResult is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>optionalParams</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.AsnOptionalParameters.html">AsnOptionalParameters</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>&quot;NewClientContentRevision&quot; (UTF8String):<br>
+If Save was successful, it will return 'NewClientContentRevision' in optional Parameters, which contains<br>
+the new Revision which must be saved by the Client for the next call to asnSetClientXMLContent.<br>
+(Introduced with PCE 4.1)
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+    <p></p>
+    <p class="strong">ErrorType: AsnXMLClientContentRequestError</p>
+    <div class="typevalues">
+      <p class="private">- DEPRECATED -</p>
+      <p>AsnXMLClientContentRequestError is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>iErrorDetail</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>A number representing the error
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sErrorString</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>A string representing the error
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>optionalParams</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.AsnOptionalParameters.html">AsnOptionalParameters</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>optionalParams Name &quot;ClientContentOutOfDate&quot; Value number<br>
+Will be returned if the attempt failes because the server already has a newer version of the client content. Update the client content to the actual version is recommended. The value can be ignored and is always 0xffffff02 (CLIENTCONTENT_XML_OUTOFDATE). (Introduced with PCE 4.1)<br>
+optionalParams Name &quot;ClientContentXMLError&quot; Value number<br>
+Will be returned if the attempt failes because of a XML-Error in the transmitted XML-String. The value can be ignored and is always 0xffffff01 (CLIENTCONTENT_XML_ERROR). (Introduced with PCE 4.1)<br>
+optionalParams Name &quot;FileErrorCode&quot; Value number<br>
+Will be returned if the XML-String can't be saved on the server because of a DOS error. The Value contains the Error Code described in http://msdn.microsoft.com/en-us/library/t3ayayh1(VS.80).aspx (Introduced with PCE 4.0.2)
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

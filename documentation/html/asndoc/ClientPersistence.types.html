@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h1>ClientPersistence</h1>
+    <p>Module Version: 8.0.0</p>
+    <p>Client persistence interface
+</p>
+    <p><p class='strong'>Module description</p>
+<p>This module defines structures and operations for a CRUD item store and its eventing.<br>
+With these operations, each client can persist client specific data on the UCServer and can attach to the according change notify interface.</p>
+</p><a href="ClientPersistence.doc.html"> </a>
+    <h2>Types:</h2><a href="ClientPersistence.doc.types.html"> </a><a href="ClientPersistence.types.html"> </a>
+    <table>
+      <th>Name</th>
+      <th>Description</th>
+      <tr>
+        <td>
+          <p><a href="ClientPersistence.type.AsnClientPersistenceResultDetailsEnum.html">AsnClientPersistenceResultDetailsEnum</a></p>
+        </td>
+        <td> 
+          <p>ResultDetails
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ClientPersistence.type.AsnClientPersistenceReadWildcardTypeEnum.html">AsnClientPersistenceReadWildcardTypeEnum</a></p>
+        </td>
+        <td> 
+          <p>Enumeration for iItemKeyWildcardType in <a href="ClientPersistence.type.AsnClientPersistenceReadArgument.html">AsnClientPersistenceReadArgument</a>
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ClientPersistence.type.AsnClientPersistenceSubscribeTypeEnum.html">AsnClientPersistenceSubscribeTypeEnum</a></p>
+        </td>
+        <td> 
+          <p>Enumeration for iSubscribeType of <a href="ClientPersistence.type.AsnClientPersistenceSubscribeArgument.html">AsnClientPersistenceSubscribeArgument</a>
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ClientPersistence.type.AsnClientPersistenceItem.html">AsnClientPersistenceItem</a></p>
+        </td>
+        <td> 
+          <p>Definition of persistence items
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ClientPersistence.type.AsnClientPersistenceCreateArgument.html">AsnClientPersistenceCreateArgument</a></p>
+        </td>
+        <td> 
+          <p>Argument for <a href="ClientPersistence.asnClientPersistenceCreate.html">asnClientPersistenceCreate</a>
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ClientPersistence.type.AsnClientPersistenceCreateResult.html">AsnClientPersistenceCreateResult</a></p>
+        </td>
+        <td> 
+          <p>Result of <a href="ClientPersistence.asnClientPersistenceCreate.html">asnClientPersistenceCreate</a>
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ClientPersistence.type.AsnClientPersistenceReadArgument.html">AsnClientPersistenceReadArgument</a></p>
+        </td>
+        <td> 
+          <p>Argument for <a href="ClientPersistence.asnClientPersistenceRead.html">asnClientPersistenceRead</a>
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ClientPersistence.type.AsnClientPersistenceReadResult.html">AsnClientPersistenceReadResult</a></p>
+        </td>
+        <td> 
+          <p>Result of <a href="ClientPersistence.asnClientPersistenceRead.html">asnClientPersistenceRead</a>
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ClientPersistence.type.AsnClientPersistenceUpdateArgument.html">AsnClientPersistenceUpdateArgument</a></p>
+        </td>
+        <td> 
+          <p>Argument for <a href="ClientPersistence.asnClientPersistenceUpdate.html">asnClientPersistenceUpdate</a>
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ClientPersistence.type.AsnClientPersistenceUpdateResult.html">AsnClientPersistenceUpdateResult</a></p>
+        </td>
+        <td> 
+          <p>Result of <a href="ClientPersistence.asnClientPersistenceUpdate.html">asnClientPersistenceUpdate</a>
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ClientPersistence.type.AsnClientPersistenceDeleteArgument.html">AsnClientPersistenceDeleteArgument</a></p>
+        </td>
+        <td> 
+          <p>Argument for <a href="ClientPersistence.asnClientPersistenceDelete.html">asnClientPersistenceDelete</a>
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ClientPersistence.type.AsnClientPersistenceDeleteResult.html">AsnClientPersistenceDeleteResult</a></p>
+        </td>
+        <td> 
+          <p>Result of <a href="ClientPersistence.asnClientPersistenceDelete.html">asnClientPersistenceDelete</a>
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ClientPersistence.type.AsnClientPersistenceSubscribeArgument.html">AsnClientPersistenceSubscribeArgument</a></p>
+        </td>
+        <td> 
+          <p>Argument for <a href="ClientPersistence.asnClientPersistenceSubscribe.html">asnClientPersistenceSubscribe</a>
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ClientPersistence.type.AsnClientPersistenceSubscribeResult.html">AsnClientPersistenceSubscribeResult</a></p>
+        </td>
+        <td> 
+          <p>Result of <a href="ClientPersistence.asnClientPersistenceSubscribe.html">asnClientPersistenceSubscribe</a>
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ClientPersistence.type.AsnClientPersistenceGetDatabaseIDArgument.html">AsnClientPersistenceGetDatabaseIDArgument</a></p>
+        </td>
+        <td> 
+          <p>Argument for <a href="ClientPersistence.asnClientPersistenceGetDatabaseID.html">asnClientPersistenceGetDatabaseID</a>
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ClientPersistence.type.AsnClientPersistenceGetDatabaseIDResult.html">AsnClientPersistenceGetDatabaseIDResult</a></p>
+        </td>
+        <td> 
+          <p>Result of <a href="ClientPersistence.asnClientPersistenceGetDatabaseID.html">asnClientPersistenceGetDatabaseID</a>
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ClientPersistence.type.AsnClientPersistenceItemList.html">AsnClientPersistenceItemList</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ClientPersistence.type.AsnClientPersistenceEventArgument.html">AsnClientPersistenceEventArgument</a></p>
+        </td>
+        <td> 
+          <p>Argument for <a href="ClientPersistence.asnClientPersistenceEvent.html">asnClientPersistenceEvent</a>
+</p>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

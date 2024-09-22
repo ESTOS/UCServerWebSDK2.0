@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnBinaryTransferMetaData </h3>
+    <p>Data structure describing binary transfer settings
+</p>
+    <p><p>This data structure is used to inform the clients about the configuration for binary transfer.</p>
+</p>
+    <div class="typevalues">
+      <p>AsnBinaryTransferMetaData is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>u8sFileNameWithExtension</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>The original filename with extension<br>
+(not available if data is only transported within the osMetaData)
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sMimeType</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>Mime-Type<br>
+(always available, even if data is only transported within the osMetaData)
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iDataSize</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>Binary data size in bytes (may contain a 64bit value)<br>
+(only available, if a file is existing / not filled if data is only transported within osMetaData)
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sChecksum</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>Sha256 Checksum of the file<br>
+(only available, if a file is existing / not filled if data is only transported within osMetaData)
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iMediaDuration</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>Playtime audio, video in milliseconds<br>
+(only available, if a media content which has a duration is transported (e.g. voice or video recording)
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>eMetaDataType</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>Defines which kind of embedded meta data is stored in osMetaData<br>
+available if osMetaData is filled
+ (Linked Type: <a href="BinaryTransfer.type.AsnBinaryTransferMetaDataTypeEnum.html">AsnBinaryTransferMetaDataTypeEnum</a>)
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>osMetaData</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>the binary meta data (content described by the eMetaDataType value)<br>
+available if eMetaDataType is filled
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sDescriptionText</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>Description text for the file
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sBinaryTransferID</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>TransferID für binarymessage (wird vom Server bei asnInitBinaryTransferUpload erzeugt)
+ (Linked Type: <a href="BinaryTransfer.type.AsnInitBinaryTransferUploadResult.html">AsnInitBinaryTransferUploadResult</a>)
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

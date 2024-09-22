@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>asnCtiNotifyLineSortOrderChanged</h3>
+    <p>Event from the server that a monitoring point has changed position from the configurative view<br>
+In order to get these events the line must be monitored with <a href="CTI.asnCtiLineMonitorStart.html">asnCtiLineMonitorStart</a><br>
+This event is send to the client if the sort order of the lines has changed (line added, config lines have swapped positions, (no event is dispatched if a line was removed))<br>
+This event is only dispatched for the userOwnLines (see <a href="CTI.type.AsnCtiEnumPhoneLinesArgument.html">AsnCtiEnumPhoneLinesArgument</a>)
+</p>
+    <p></p><strong>ArgumentType: AsnCtiNotifyLineSortOrderChangedArgument</strong>
+    <div class="typevalues">
+      <p>AsnCtiNotifyLineSortOrderChangedArgument is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>u8sMonitorCrossRefID</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>CrossrefID for the corresponding asnCtiLineMonitorStart.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sLineURISortOrder</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.UTF8StringList.html">UTF8StringList</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Line sort order based on the user configuration, CTI/SIP LineURIs, AV LineURI, additional lines (not server configured line uris like mobile lines)
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

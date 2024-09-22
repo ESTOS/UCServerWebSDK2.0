@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnNetDatabaseContactID </h3>
+    <p>A three tuple to identify contact data.
+</p>
+    <p><p>The three tuple EntryID, EntryIDDB and EntryIDStore identifies contact data including its<br>
+source database, so that contact data from different data sources can be differentiated from each other.<br>
+It is an own sequence, so it can be tranferred without any concrete contact data to save bandwidth.</p>
+<p>The <a href="Common.type.AsnNetDatabaseContact.html">AsnNetDatabaseContact</a> does not contain a <a href="Common.type.AsnNetDatabaseContactID.html">AsnNetDatabaseContactID</a> object, it contains the three<br>
+members by itself.</p>
+</p>
+    <div class="typevalues">
+      <p>AsnNetDatabaseContactID is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>u8sEntryID</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>ID of the contact data in the source database.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sEntryIDDB</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>ID of the database (type).
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sEntryIDStore</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Additional ID of a store in the database (if needed).
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

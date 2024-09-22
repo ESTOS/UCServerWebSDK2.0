@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnETAPIDialNumberFormat </h3>
+    <p>Enum to indicated how phone numbers should be formatted.
+</p>
+    <p></p>
+    <div class="typevalues">
+      <p>AsnETAPIDialNumberFormat is an Enumeration</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Value</th>
+        <th>Comment</th>
+        <tr>
+          <td>eTAPIDIALNUMBERFORMATNORMAL</td>
+          <td>number</td>
+          <td>0</td>
+          <td>Normal formatting, all rules apply
+</td>
+        </tr>
+        <tr>
+          <td>eTAPIDIALNUMBERFORMATSUPERCANONIC</td>
+          <td>number</td>
+          <td>1</td>
+          <td>Make all numbers upercanoncal (e.g. +49815136856177)
+</td>
+        </tr>
+        <tr>
+          <td>eTAPIDIALNUMBERFORMATPLAIN</td>
+          <td>number</td>
+          <td>2</td>
+          <td>No rules apply, numbers will be dialed like they were entered; only special character will be removed
+</td>
+        </tr>
+        <tr>
+          <td>eTAPIDIALNUMBERFORMATDIALABLEPLAIN</td>
+          <td>number</td>
+          <td>3</td>
+          <td>Plain numbers will be dialed like they were entered, supercanonical numbers will be formatted. The PBX will always get dialable numbers.
+</td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

@@ -84,7 +84,6 @@ Folder | Contents
 [interface/esnacc-compiler](interface/esnacc-compiler) | the esnacc compiler to transpile the ASN.1 files
 [openAPI](openAPI) | A swagger ui like client to test functions
 [node-client](node-client) | A node sample client
-[browser-client](browser-client) | A vanilla html sample client
 
 ### Connection setup
 There are several ways to establish a connection to UCServe as a client.
@@ -95,3 +94,63 @@ If you take a closer look at the following plantUML diagram it should also answe
 ![Client connection setup](Client_connection_setup.png)
 
 We plan to provide this connection setup functionality in a dedicated npm module before finally releasing this SDK.
+
+### ROSE messages
+
+Once the connection is established, client and server uses ROSE messages to exchange data. The ROSE protocol supports synchronous invokes and events. The following message types are defined
+
+- Invoke
+- Result
+- Reject
+- Error
+
+An Invoke is used for synchronous calls and creates a result, reject or error. The result is create if the called side was able to process the request. An error is created if the function call failed. In case the argument was not deocdable or the called function is not implemented a reject is returned.
+
+The [core rose messages](interface\esnacc-compiler\ROSE\SNACCROSE.asn1) are also described in asn1.
+
+#### Lets take a look at some example ROSE messages
+
+##### Invoke from the client to the server
+(the argument is empty as not beeing relevant)
+```json
+{
+  "invoke": {
+    "argument": {}
+    "invokeID": 3,
+    "operationID": 1510,
+    "operationName": "asnCustomNoteSet"
+  }
+}
+```
+
+##### Result from the server to the client
+(the result is empty as not beeing relevant)
+The result reused the invokeID and thus let´s the caller associate a response with the original invoke. (This allows to implement the request completion logic)
+```json
+{
+  "result": {
+    "invokeID": 3,
+    "result": {
+      "result": {},
+      "resultValue": 0
+    }
+  }
+}
+```
+
+##### Event from the server to the client
+(the argument is empty as not beeing relevant)
+Events simply use 99999 as invokeID.
+```json
+{
+  "invoke": {
+    "argument": {}
+    "invokeID": 99999,
+    "operationID": 1511,
+    "operationName": "asnUpdateMyCustomNote"
+  }
+}
+```
+
+Messages were shown in JSON. The same applies if BER encoding is used.
+The stubs are able to write transport logs in readable notation (also if BER encoding is used). This make diagnosing issues pretty convenient.

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h1>CTI</h1>
+    <p>CTI interface
+</p>
+    <p><p class='strong'>CTI Modul</p>
+<p class='strong'>Module description</p>
+<p>This module contains structures and operations for CTI (remote call control) on TAPI or Bluetooth phone lines in the server.</p>
+<p>A client program has access to all lines owned by the logged in user and to additional lines it has dedicated access.<br /><br>
+It is possible to monitor all actions on these lines and to call operations to initiate new calls, set forwards, change states and so on.</p>
+<p class='strong'>Prerequisites</p>
+<p>In order to use the operations described in this document you have to make sure:</p>
+<ul>
+<li>The server has lines configured and activated. (Install an appropriate TAPI-driver for your PBX system.)</li>
+<li>There is at least one user activated on the server, who has lines configured to use.</li>
+<li>The client program is connected to the server via UCServer Web Services using a websocket or directly to the server on the client port (default port 7222).</li>
+<li>The client program encodes the data structures as estos JSON or ASN.1 BER.</li>
+<li>The client program is logged in to the server with a user who has access to lines.</li>
+</ul>
+<p>Additional prerequisites for a operation on the PBX and or the TAPI driver may be necessary.</p>
+<p class='strong'>Description of the Line-Call-Model</p>
+<p>The remote call control and monitoring of the server is based on a line-call-model. This means, that users, lines and calls are organized in a tree like hierarchy.<br>
+Each node in this tree contains configuration data and dynamic data, which can be accessed and observed.</p>
+<p>The Nodes are:</p>
+<ul>
+<li>The user. This a more a kind of &quot;meta&quot; node, it just holds the list of lines, a client has access to if it is logged in as this user.</li>
+<li>The line(s). Defined with the logged in user, a client can retrieve a list of lines, the user has access to. With these lines, the client can (one time) pull information or can attach itself on to get initial data and events if these data changes over time (get-and-subscribe mechanism).<br>
+The line information contains configuration information and dynamic data about the lines status, including current calls.<br>
+<em>Note:</em> A line is identified by its URI tel:number@pbxsystem. The parameter is often named as &quot;u8sLinePhoneNumber&quot;.<br />The &quot;u8sPhoneNumber&quot; is the phone number of a line, but for technical reasons that is not a distinct property of a line. It is possible to have multiple lines with the same phone number!</li>
+<li>The call(s). A line has a list of current calls, which are currently &quot;on&quot; the line. If the client is attached to a line for events, new calls will be announced via events. Changes to these calls are also announced via events.<br>
+There is no need to attach to calls explicitly, this is already done by attaching to the line. Call changing events are then sent to the client too.<br>
+<em>Note:</em> A call is identified by its connection identifier often named as &quot;ConnectionID&quot;.</li>
+</ul>
+<p class='strong'>Remarks</p>
+<p>Some operations return an empty result object if they are executed successfully. So in this cases, the business logic should wait for result/error before do additional actions.<br>
+Phone numbers are normally used and provided in a so called supercanonic notation containing a full qualified number including country, city, main and extension number: +49815136856177<br>
+For operations affecting multiple calls be sure to check that all calls affected have the corresponding feature set. To merge two calls both calls have to have the feature eCFEATUREMERGECALLS set.</p>
+<p class='strong'>Example: Monitoring lines</p>
+<ol>
+<li>Get the lines the client has access to with asnCtiEnumPhoneLines. If you wish to get events if the line list changes afterwards, set the parameter &quot;attachChangeNotify&quot; to 1.</li>
+<li>Use the lines URI to start monitoring for initial data and events on it. asnCtiLineMonitorStart will result in a monitor cross reference id to distinguish between events for different line monitors easier.<br>
+This is useful, if the client has the requirement to monitor the same line multiple times for different use cases.</li>
+<li>With the line URI you can call functions e.g. asnCtiMakeCall, asnCtiAnswerCall a.s.o. With the line monitoring on, you will get the according changes on the line and its calls as events back.</li>
+<li>To stop monitoring a line, call asnCtiLineMonitorStop with the corresponding monitor cross reference id.</li>
+</ol>
+<p class='strong'>Example: Call data transfer</p>
+<p class='strong'>Phone number formats</p>
+<p>The whole system tries to use supercanonic numbers (+country city main and extension number / +49815136856177) whereever possible.<br>
+As long as the number is used in supercanonic notation all components can format the number as required (for dialing, for display, etc.)<br>
+You likely won´t need to format numbers as the system always provides supercanonic numbers.</p>
+</p>
+  </body>
+</html>

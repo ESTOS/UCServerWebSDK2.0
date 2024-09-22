@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnPresence </h3>
+    <p>This sequence contains the data and service states of a contact, called its 'presence'.
+</p>
+    <p><p <a href="PresenceV2.type.AsnPresence.html">AsnPresence</a> contains all the data and service states which represents the 'presence' of a contact.<br /><br>
+A client subscribing to the presence of a contact (via <a href="PresenceV2.asnGetAndSubscribePresence.html">asnGetAndSubscribePresence</a> ), will get back this structure filled according to his needs and access rights given.<br>
+This structure is also used for update events ( asnUpdatePresence(V2) ) and in this case only the changed values or sections will be enclosed.</p>
+</p>
+    <div class="typevalues">
+      <p class="private">- DEPRECATED -</p>
+      <p>AsnPresence is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>u8sContactId</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>ContactID of the contact which is responsible for this data
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iPresenceState</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>Calculated presence of the contact. This is the over all presence of all the services which have an influnce on the current presence state of the contact (line, appointments, absent state a.s.o.)
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>asnRemoteContact</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.AsnNetDatabaseContact.html">AsnNetDatabaseContact</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>The contact data of the contact
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>asnUserPropertyBag</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.AsnUserPropertyBag.html">AsnUserPropertyBag</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>If the contact is an ucserver user, this may contain additional information about the user filtered by access rights.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iContactFeatureSet</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>Feature set on the contact. Bitfield with flags, which actions are possible on the contact (like &quot;set forwards&quot;).
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iStaticRights</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>Access rights on the contact.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iMonitorAccessRights</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>Access rights on the probably configured, additional lines of the contact.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>asnAbsentState</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.AsnAbsentState.html">AsnAbsentState</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>Actual set absent state.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>asnCustomNote</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.AsnCustomNote.html">AsnCustomNote</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>Actual set note.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>seqActualAppointments</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.SEQAppointmentList.html">SEQAppointmentList</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>Actual appointments of the contact.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>asnNextAppointment</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.AsnAppointmentEntry.html">AsnAppointmentEntry</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>First appointment in the future of the contact in a given time frame of 30 days.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>seqPhoneLines</p>
+          </td>
+          <td> 
+            <p><a href="PresenceV2.type.AsnPresenceLines.html">AsnPresenceLines</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>The phone lines of the contact.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>seqCalls</p>
+          </td>
+          <td> 
+            <p><a href="PresenceV2.type.AsnPresenceCalls.html">AsnPresenceCalls</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>The current calls of the contact.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>seqLineForwards</p>
+          </td>
+          <td> 
+            <p><a href="PresenceV2.type.AsnPresenceForwards.html">AsnPresenceForwards</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>The currently set phone forwards of the contact.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>asnContactCapabilities</p>
+          </td>
+          <td> 
+            <p><a href="PresenceV2.type.AsnContactCapabilities.html">AsnContactCapabilities</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p> 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>asnContactCapabilitiesEx</p>
+          </td>
+          <td> 
+            <p><a href="ClientCapabilities.type.AsnClientCapabilitiesV2.html">AsnClientCapabilitiesV2</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>Capabilities in a simpler to expand format of the connected clients of the contact (audio, video, calendar replication etc.)
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>asnCurrentUserDynamicRights</p>
+          </td>
+          <td> 
+            <p><a href="PresenceV2.type.AsnActualUserDynamicRights.html">AsnActualUserDynamicRights</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>Minimum and maximum of the user dynamic rights which can be set to the contact.<br /><br>
+If there are administrative contact rights set, the client can only modify it in a such a way, that he can grant additional<br>
+rights. This field helps the client to show the user the remaining options.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iStaticRights2</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>Additional static user rights. See AsnUserStaticRights2.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>asnAgentState</p>
+          </td>
+          <td> 
+            <p><a href="PresenceV2.type.AsnAgentState.html">AsnAgentState</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>Actual state of the user if he is an agent (via PBX/ACD or LiveChat-Modules)
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>asnMonitorGroupingAttribute</p>
+          </td>
+          <td> 
+            <p><a href="PresenceV2.type.AsnMonitorGroupingAttribute.html">AsnMonitorGroupingAttribute</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>Future use - If the user has a monitor grouping attribute set, it will be delivered here.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>optionalParams</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.AsnOptionalParameters.html">AsnOptionalParameters</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>Optional Params:
+<ul>
+<li>Key &quot;iStaticRights2&quot; Value DWORD - Additional static user rights. See AsnUserStaticRights2.</li>
+<li>Key &quot;NextAppointments&quot; Value SEQAppointmentList - The next appointments of this user (binary encoded)</li>
+</ul>
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

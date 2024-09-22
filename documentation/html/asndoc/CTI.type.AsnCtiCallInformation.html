@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnCtiCallInformation </h3>
+    <p>In depth information about a call
+</p>
+    <p></p>
+    <div class="typevalues">
+      <p>AsnCtiCallInformation is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>u8sLinePhoneNumber</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Contains the line identifier of the line the call is attached to.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sConnectionID</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>A GUID of the connection the call is assigned to. This is used to identify the call throughout the API (Journal, Search etc.).
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iCallState</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>The call state described in EnumCallState.
+ (Linked Type: <a href="General.type.EnumCallState.html">EnumCallState</a>)
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iCallType</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Type of the call described in EAsnCallType (normal, consult, callback etc.).
+ (Linked Type: <a href="General.type.EAsnCallType.html">EAsnCallType</a>)
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iDisconnectedReason</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Disconnect reason described in EnumCallDisconnectedReason.
+ (Linked Type: <a href="General.type.EnumCallDisconnectedReason.html">EnumCallDisconnectedReason</a>)
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iFeatures</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>The call features available, described in EnumCallFeatures. These features are dynamic and will change with the call state.
+ (Linked Type: <a href="CTI.type.EnumCallFeatures.html">EnumCallFeatures</a>)
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>bOutbound</p>
+          </td>
+          <td> 
+            <p>boolean</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>The call is outbound (1, true) or inbound (0, false)
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>bInternal</p>
+          </td>
+          <td> 
+            <p>boolean</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>The call is an internal call (1, true) or an external call (0, false).<br>
+Internal calls are calls within the same location.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>bCallerIDBlocked</p>
+          </td>
+          <td> 
+            <p>boolean</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>The caller id is blocked on this call.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iCallRecordingState</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>The recording state of this call described in EnumCallRecordingState.
+ (Linked Type: <a href="General.type.EnumCallRecordingState.html">EnumCallRecordingState</a>)
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>bConferenceCtlr</p>
+          </td>
+          <td> 
+            <p>boolean</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>If this is true, this call is the conference controller call
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sConferenceCtlrID</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>If the call is part of a conference, this field contains the conference controller ID
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sLocalNumberSC</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Number of local line<br>
+In case of an incoming call, it is the called number.<br>
+In case of an outgoing call, it is the number of the line.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sRemoteNumberSC</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Number of remote party
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iRemoteContactSource</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>The contact data source as described in EnumRemoteContactSource. Only valid if the optional field pRemoteContact is set.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>projectPinRule</p>
+          </td>
+          <td> 
+            <p><a href="CommonSIPCTI.type.AsnProjectPinRule.html">AsnProjectPinRule</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Description of the current project/pin rules applied to the call
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sNote</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Free text field (memo) for the call
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sTrackerID</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>The ID of the CallTracker, this call is part of. CallTracker gathers all calls which belong to the same call scenario. (e.g. All calls in a group call carry the same TrackerID)
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>utcCallCreated</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Creation time stamp of the call.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>utcCallConnected</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Time stamp of the call when it is connected. (0 if it was never connected)
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>utcCallDisconnected</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Time stamp of the call when it is disconnected. (0 if the call is not yet discsonnected)
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>bIsUnknownHoldContact</p>
+          </td>
+          <td> 
+            <p>boolean</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>This is true, if a hold contact has no known number.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>pLocalContact</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.AsnNetDatabaseContact.html">AsnNetDatabaseContact</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>The contact data of the owner of the call.<br>
+In case of an incoming call, it is the contact of the called number.<br>
+In case of an outgoing call, it is the contact of the line owner.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>pRemoteContact</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.AsnNetDatabaseContact.html">AsnNetDatabaseContact</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>If it is available, this contains the contact data of the remote party.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>pu8sHoldNumberSC</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>If there is a call on hold, this contains its number (if the number is unknown bIsUnknownHoldContact is set)
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>pHoldContact</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.AsnNetDatabaseContact.html">AsnNetDatabaseContact</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>If there is a call on hold and if data is available, this contains contact data of the contact on hold.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>pu8sRedirectingNumber</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>If the call was redirected, this number indicate who has redirected it.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>pRedirectingContact</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.AsnNetDatabaseContact.html">AsnNetDatabaseContact</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>If available and applicable, this contains the contact data of the redirecting party.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>optionalParams</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.AsnOptionalParameters.html">AsnOptionalParameters</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>Additional information which were added later (for backward compatibility):
+<ul>
+<li>Key &quot;PBXCallID&quot; Value AsnString - CallID of the call in the PBX</li>
+<li>Key &quot;AddressID&quot; Value int - The AddressID the call is currently processed on the TAPI line.</li>
+<li>Key &quot;CallLinkageID&quot; Value AsnString - CallLinkageID of the Call from the ECSTA (only available on PBX systems supporting it).</li>
+</ul>
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>callDataList</p>
+          </td>
+          <td> 
+            <p><a href="CTI.type.AsnCtiCallDataList.html">AsnCtiCallDataList</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>If available this is the list of key/value pairs with additional information provided by clients for special use cases (so called CallData).<br>
+(New optional with PCE 6.1)
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

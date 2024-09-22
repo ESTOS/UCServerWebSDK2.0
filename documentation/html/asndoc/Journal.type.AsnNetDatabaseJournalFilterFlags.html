@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnNetDatabaseJournalFilterFlags </h3>
+    <p>Flags for filtering journal entries in the result list of <a href="Journal.asnGetJournalEntries.html">asnGetJournalEntries</a> These are used in <a href="Journal.type.AsnNetDatabaseJournalFindOptions.html">AsnNetDatabaseJournalFindOptions</a>
+</p>
+    <p><p>This Structure is a BIT STRING, means that every bit in this string has a &quot;name&quot; (== number with a symbolic name in source code).</p>
+<p>In JSON encoding we transfer that as a string of 0 and 1 characters; see the values for the corresponding string.<br>
+To set more than one bit, the corresponding character should be a &quot;1&quot;.</p>
+<p>Example: &quot;0011000001&quot; =&gt; Inbound + Outbound + IncludeAllPublic</p>
+<p>Since this is not very handy to use, a optionalParam &quot;iAdditionalFlags&quot; was introduced, where this flags can be set in the more<br>
+convenient way of Bits using normal Bit-logic. See <a href="Journal.type.AsnNetDatabaseJournalFilterEnumeration.html">AsnNetDatabaseJournalFilterEnumeration</a> for the Bits to set/read.</p>
+</p>
+    <div class="typevalues">
+      <p class="private">- DEPRECATED -</p>
+      <table>
+        <th>Symbolic Name</th>
+        <th>Name Value</th>
+        <th>Comment</th>
+        <tr>
+          <td>flagIntern</td>
+          <td>0</td>
+          <td>&quot;1_________&quot;	Internal calls
+</td>
+        </tr>
+        <tr>
+          <td>flagExtern</td>
+          <td>1</td>
+          <td>&quot;01________&quot;	External calls
+</td>
+        </tr>
+        <tr>
+          <td>flagInbound</td>
+          <td>2</td>
+          <td>&quot;001_______&quot;	Inbound calls
+</td>
+        </tr>
+        <tr>
+          <td>flagOutbound</td>
+          <td>3</td>
+          <td>&quot;0001______&quot;	Outbound calls
+</td>
+        </tr>
+        <tr>
+          <td>flagConnected</td>
+          <td>4</td>
+          <td>&quot;00001_____&quot;	Connected calls
+</td>
+        </tr>
+        <tr>
+          <td>flagNotConnected</td>
+          <td>5</td>
+          <td>&quot;000001____&quot;	Not connected calls
+</td>
+        </tr>
+        <tr>
+          <td>flagHasMemo</td>
+          <td>6</td>
+          <td>&quot;0000001___&quot;	The memo field contains text
+</td>
+        </tr>
+        <tr>
+          <td>flagHasNoMemo</td>
+          <td>7</td>
+          <td>&quot;00000001__&quot;	The memo field is empty
+</td>
+        </tr>
+        <tr>
+          <td>flagUnreadOnly</td>
+          <td>8</td>
+          <td>&quot;000000001_&quot;	Only entries, which are not marked as &quot;read&quot;
+</td>
+        </tr>
+        <tr>
+          <td>flagIncludeAllPublic</td>
+          <td>32</td>
+          <td>&quot;0000000001&quot; Include all entries, which are marked as &quot;public&quot; and the user has access rights on.
+</td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

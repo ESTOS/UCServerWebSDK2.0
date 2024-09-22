@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnAgentLoginArgument </h3>
+    <p>Parameters for Agent Login
+</p>
+    <p><p>Parameters for logging in to the agent/ACD functionality of the PC server (business card, contact portal) or the telephone system.</p>
+</p>
+    <div class="typevalues">
+      <p>AsnAgentLoginArgument is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>u8sAgentURI</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Group agent URI (LineURI or ContactURI) e.g. &quot;tel:&quot; or &quot;sip:&quot;.<br>
+If the URI starts with &quot;tel:&quot;, the login is transferred to the specified line and then to the telephone system.<br>
+&quot;sip:&quot; indicates that the user is logging in for the contact portal/business card.<br>
+The information can be obtained from the AsnGroupInfo
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sGroupURI</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Group URI (e.g. &quot;pbxg:601@ECSTA for Panasonic&quot; or &quot;sip:mygroup@estos.de&quot;).<br>
+This identifies the group to which the user is to be logged in to.<br>
+The information can be obtained from the AsnGroupInfo.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>acdLoginData</p>
+          </td>
+          <td> 
+            <p><a href="AgentServices.type.AsnAgentACDLoginData.html">AsnAgentACDLoginData</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>For PBX ACD, additional data may be required for login. See AsnAgentACDLoginData for details.
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

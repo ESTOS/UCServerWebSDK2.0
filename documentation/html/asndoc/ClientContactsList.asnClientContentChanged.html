@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>asnClientContentChanged</h3>
+    <p>Event from the server to the client if the client content was changed.
+</p>
+    <p><p>The server send an event to all connected client for this user to update the client content if one of the clients has changed it.</p>
+</p><strong>ArgumentType: AsnClientContentChangedArgument</strong>
+    <div class="typevalues">
+      <p>AsnClientContentChangedArgument is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>iRevision</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Actual revision of the client content.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>addedOrChangedContacts</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.AsnNetDatabaseContactList.html">AsnNetDatabaseContactList</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>List of added or changed contacts.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>removedContacts</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.AsnNetDatabaseContactIDList.html">AsnNetDatabaseContactIDList</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>List of contact IDs of removed contacts.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>listContentstructure</p>
+          </td>
+          <td> 
+            <p><a href="ClientContactsList.type.AsnClientContentGroupClusterList.html">AsnClientContentGroupClusterList</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>New layout of the client content tree.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iFlags</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>If 0 replace the transmitted data with the current one in the client. The contacts will change independently, the structure always as a whole. In the future other values will be possible.
+ (Linked Type: <a href="ClientContactsList.type.AsnClientContentChangedFlags.html">AsnClientContentChangedFlags</a>)
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

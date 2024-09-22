@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnNetDatabaseTaskList </h3>
+    <p></p>
+    <p></p>
+    <div class="typevalues">
+      <p>AsnNetDatabaseTaskList is an Array of AsnNetDatabaseTask</p>
+      <p>AsnNetDatabaseTask is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>u8sTaskID</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>ID of the Taskentry
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sSubject</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Subject of the Task
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>contactData</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.AsnNetDatabaseContact.html">AsnNetDatabaseContact</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>NetDatabaseContact Information of the Contact to call
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sCallNumber</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Number to call
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>projectPinRule</p>
+          </td>
+          <td> 
+            <p><a href="CommonSIPCTI.type.AsnProjectPinRule.html">AsnProjectPinRule</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Projekt informationen
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>stUTCStartDate</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Starttime of the Task
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>stUTCDueDate</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Deadline for the Task
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>eState</p>
+          </td>
+          <td> 
+            <p><a href="Tasks.type.AsnTaskState.html">AsnTaskState</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>State of the Task
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>ePriority</p>
+          </td>
+          <td> 
+            <p><a href="Tasks.type.AsnTaskPriority.html">AsnTaskPriority</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Priority of the Task
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>eDelegationState</p>
+          </td>
+          <td> 
+            <p><a href="Tasks.type.AsnTaskDelegationState.html">AsnTaskDelegationState</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>State of the Delegation (if needed)
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>bReminderActive</p>
+          </td>
+          <td> 
+            <p>boolean</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Reminder will appear if true
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>stUTCReminderTime</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Date and Time for Reminder
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sReminderFile</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Soundfilename for Reminder
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sListOwners</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.UTF8StringList.html">UTF8StringList</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Name(s) of responsible Contact(s)
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sCreator</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Creator of the Task
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>stUTCCreationTime</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Creation Timestamp of the Task
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sBody</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Bodytext of the Task
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>stUTCDateCompleted</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Timestamp for State &quot;Done&quot;
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sCompletedFrom</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Contact who finished the Task
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>ePrivacy</p>
+          </td>
+          <td> 
+            <p><a href="Tasks.type.AsnTaskPrivacy.html">AsnTaskPrivacy</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Privacy Level of the Task
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>optionalParams</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.AsnOptionalParameters.html">AsnOptionalParameters</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>optionalParams Name &quot;OwnersWhoDeletedTheTask&quot; Value String
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

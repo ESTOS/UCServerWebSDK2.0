@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+  <style>
+    span { vertical-align: top; display: inline-block; width: 200px; }
+    input { display: inline-block; width: 400px; }
+  </style>
+  <body>
+    <form>
+      <table>
+      <tr><td>Server URL:</td><td><input id="serverurl" value="http://localhost:7224"/></td></tr>
+      <tr><td>UCSID:</td><td><input id="ucsid" value="local"/></td></tr>
+      <tr><td>Username:</td><td><input id="user" value=""/></td></tr>
+      <tr><td>Password:</td><td><input id="pass" value=""/></td></tr>
+      <tr><td>Function:</td><td><input id="func" value="asnGetLoggedInContact"/></td></tr>
+      <tr><td>Params:</td><td><textarea rows="7" id="params">{ }</textarea></td></tr>
+      <tr><td></td><td><button type='submit' onclick='sendcommand(); event.preventDefault();'>Send Command</button></td></tr>
+      </table>
+    </form>
+    <pre id="result"></pre>
+  <script>
+    function sendcommand()
+    {
+      var serverurl = document.getElementById("serverurl").value;
+      var ucsid = document.getElementById("ucsid").value;
+      var user = document.getElementById("user").value;
+      var pass = document.getElementById("pass").value;
+      var func = document.getElementById("func").value;
+      var params = document.getElementById("params").value;
+      try {
+        JSON.parse(params);
+      } catch(e) {
+        document.getElementById("result").innerHTML = 'Failed: Params are not valid JSON: ' + e;
+        return;
+      }
+      
+      var oXHR = new XMLHttpRequest();   // new HttpRequest instance
+      oXHR.addEventListener("loadend", function(evt) {
+        var outtext = oXHR.responseText;
+        try {
+          outtext = JSON.stringify(JSON.parse(oXHR.responseText), null, 4);        
+        } catch(e) {
+        }
+        if (oXHR.status == 0) {
+          document.getElementById("result").innerHTML = 'Failed: General Network Error';
+        } else if (outtext == '') {
+          document.getElementById("result").innerHTML = 'Failed: No response received';
+        } else if (oXHR.status == 200) {
+          document.getElementById("result").innerHTML = outtext;
+        } else {
+          document.getElementById("result").innerHTML = outtext;
+        }
+      });
+
+      oXHR.open("POST", serverurl + "/ws/direct/" + func, true);
+      oXHR.setRequestHeader("Authorization", "Basic " + btoa(user + ":" + pass)); 
+      oXHR.setRequestHeader("Content-Type", "application/json;charset=utf-8");
+      oXHR.setRequestHeader("X-no401", "1");
+      oXHR.setRequestHeader("X-ucsid", ucsid);
+      oXHR.send(params);    
+    }
+  </script>
+  </body>
+</html>

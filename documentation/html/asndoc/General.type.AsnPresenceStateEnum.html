@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnPresenceStateEnum </h3>
+    <p>Enumeration of possible presence states of a contact.
+</p>
+    <p><p>The presence state of a contcat (or line, or appointment etc.) is a DWORD (32 Bit) bit field, where the individual Bits<br>
+are devided into two seperate spaces: the presence state (AsnPresenceStateEnum) and the presence state flags (AsnPresenceStateFlags)<br>
+which contain further deatils about the current presence state.</p>
+</p>
+    <div class="typevalues">
+      <p>AsnPresenceStateEnum is an Enumeration</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Value</th>
+        <th>Comment</th>
+        <tr>
+          <td>eUNCONTROLLED</td>
+          <td>number</td>
+          <td>0</td>
+          <td>Presence is not available, contact is unknown.
+</td>
+        </tr>
+        <tr>
+          <td>eAVAILABLE</td>
+          <td>number</td>
+          <td>1</td>
+          <td>Contact is available.
+</td>
+        </tr>
+        <tr>
+          <td>eBUSY</td>
+          <td>number</td>
+          <td>2</td>
+          <td>Contact is busy.
+</td>
+        </tr>
+        <tr>
+          <td>eABSENT</td>
+          <td>number</td>
+          <td>3</td>
+          <td>Contact is absent.
+</td>
+        </tr>
+        <tr>
+          <td>eDONOTDISTURB</td>
+          <td>number</td>
+          <td>4</td>
+          <td>Contact wished to not being disturbed.
+</td>
+        </tr>
+        <tr>
+          <td>eOUTOFORDER</td>
+          <td>number</td>
+          <td>7</td>
+          <td>Something does not work, line is not connected, device is broken etc. Contact may not get into this state.
+</td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnSubscribeClientContentFlags </h3>
+    <p>Flags how to subscribe on client content.
+</p>
+    <p></p>
+    <div class="typevalues">
+      <p>AsnSubscribeClientContentFlags is an Enumeration</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Value</th>
+        <th>Comment</th>
+        <tr>
+          <td>eALL</td>
+          <td>number</td>
+          <td>0</td>
+          <td>eALL = eCONTACTS | eSTRUCTURE | eJPEGPHOTO
+</td>
+        </tr>
+        <tr>
+          <td>eCONTACTS</td>
+          <td>number</td>
+          <td>1</td>
+          <td>Get events for changes in the contacts.
+</td>
+        </tr>
+        <tr>
+          <td>eSTRUCTURE</td>
+          <td>number</td>
+          <td>2</td>
+          <td>Get events for changes in the structure.
+</td>
+        </tr>
+        <tr>
+          <td>eJPEGPHOTO</td>
+          <td>number</td>
+          <td>4</td>
+          <td>If set, the result includes all existing contact photos. If not set the result contains only the hash values of the photos, and the client can decide if it wants to fetch the photos with asnRequestContactImage.
+</td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

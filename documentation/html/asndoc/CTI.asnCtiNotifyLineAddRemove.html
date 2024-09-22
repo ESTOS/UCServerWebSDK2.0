@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>asnCtiNotifyLineAddRemove</h3>
+    <p>Event from the server if <a href="CTI.asnCtiEnumPhoneLines.html">asnCtiEnumPhoneLines</a> was called to monitor the lines of the user.<br>
+In order to get this event the line must be monitored via <a href="CTI.asnCtiEnumPhoneLines.html">asnCtiEnumPhoneLines</a>
+</p>
+    <p><p>With <a href="CTI.asnCtiEnumPhoneLines.html">asnCtiEnumPhoneLines</a> the client defined, which sort of lines it wants to monitor.<br>
+If there are changes to the corresponding line list, this event will reflect the changes to the client.<br /></p>
+</p><strong>ArgumentType: AsnCtiNotifyLineAddRemoveArgument</strong>
+    <div class="typevalues">
+      <p>AsnCtiNotifyLineAddRemoveArgument is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>u8sLineMonitorCrossRefID</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>CrossRefID the client got from the corresponding asnCtiLineMonitorStart.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sLinePhoneNumber</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Line identifier for the line where the changes happened.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>addremove</p>
+          </td>
+          <td> 
+            <p><a href="CTI.type.AsnCtiNotifyLineAddRemoveArgumentEnum.html">AsnCtiNotifyLineAddRemoveArgumentEnum</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Line was added (0) or removed (1).
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>lineInfo</p>
+          </td>
+          <td> 
+            <p><a href="CTI.type.AsnCtiLineInfo.html">AsnCtiLineInfo</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>The current line information set.
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

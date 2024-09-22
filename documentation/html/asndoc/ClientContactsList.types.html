@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h1>ClientContactsList</h1>
+    <p>Module Version: 8.0.0</p>
+    <p>Client content interface (Favorite/Monitor contacts) aka &quot;ClientContent&quot;
+</p>
+    <p><p class='strong'>Module description</p>
+<p>This module describes the interface for the client content, which are the contacts in the &quot;Favorites&quot; tab in the main window and the contacts in the contact monitor.</p>
+<p class='strong'>Client content data model</p>
+<p>The client content consists of contact data (the data shown to the user, mainly AsnNetDatabaseContact objects) and the arragment of the contacts in the favorites/monitor, the data structure.</p>
+<p>The data is devided in a list of contacts and a tree structure of groupclusters, groups and items.<br /><br>
+The root is the &quot;contentstruture&quot; which contains a list of groupclusters (AsnClientContentGroupCluster).<br /><br>
+Each groupcluster contains groups (AsnClientContentGroup) and each group contains items (AsnClientContentItem).<br /><br>
+Finally the item contains the reference to the contact data in the contactlist.</p>
+<pre>
+contactlist
+contentstructure
+|+- listGroupClusters
+|   +- listGroups
+|   |   +- listItems
+|   |   |   +- item (== only a reference to the contact in the contactlist; normally its ENetDatabaseContactID.
+|   |   |   +- item
+|   |   |   +- item
+|   |   .
+|   .
+.
+</pre>
+<p class='strong'>How to use the API</p>
+<p>This API is highly flexible - it can be used to get client content with contact data and/or content structure and with/without eventing for updates.<br>
+<br /></p>
+<p class='strong'>Synchronoously without any events:</p>
+<p>Example for a new client, getting all the content (incl. photos) for the first time without any eventing. It is using asnGetClientContent, which is always sending<br>
+back all the contacts und structure. Onyl the pictures can be left out to save bandwidth.<br /></p>
+<img src="https://www.plantuml.com/plantuml/png/SoWkIImgAStDuL8ATNREoKpDAr5IqBLJ0FA2KulAKekKE470IY6nECyzjGIYmZa_hmH8QQJw-Rjv-eIu1caYwxRHnTJjYAaxABMuDAT4eoYrBBCuCpzFHo4PA9wON5Aier1SKbIQN59QbAh9vP2Qbm9q7G00" alt="uml diagram">
+<p class='strong'>Asynchronously and with eventing:</p>
+<p>Example for a client, getting all the content and subscribe for events using asnSubscribeClientContent.<br /><br>
+This Call subscribes to all Events and is asynchronous. The client content will be sent from the server by the change event asnClientContentChanged.<br>
+The event will then always occure if there are changes to the client content data or structure. What has changed is described in asnClientContentChanged.</p>
+<img src="https://www.plantuml.com/plantuml/png/XT3D2i8m30VmitsAqjCAM_4iJZPwtSdX0tHTd8Mk7MswvxSgWX-8kII1Fpz2ceWgO9ejOISfhG67Z5O7chSUmWg1RMwreogwFWrH1pF08oUzmzoA0Ak9nhjwMzApLLEieUqw_Whkgs-m_GKU8IQBXTAObALFdHCXn3yp7_b6oOjo4uoVLacrdnSB27cu1pbfm8tv3LS0" alt="uml diagram">
+<p class='strong'>Subscibe for events with differential update:</p>
+<p>If a client has already a cached version of the client content, it can request a differential update from the server by sending his last known revision.<br>
+The resulting event contains only the changed entries (see AsnClientContentChangedArgument for Details) and the client has to update its state/cache accordingly.<br /></p>
+<img src="https://www.plantuml.com/plantuml/png/SoWkIImgAStDuL8ATNREoKpDAr5IqBLJ0FA2KulAKekKE470IY6nE2-uDAaukIWpAHMYpZa_hmH8QHIbbcKMP-RdsHeQ6PkOcfbRw2YavIIc5zkcElhuQ2ARQwEBQQuZBdE3KejBSqeq4fDBIXDp562MQ7BfwUaHCXFeLXIZd3CIyz9JKr1TQcPWOA2Za9APbgQG356coUMGcfS230i0" alt="uml diagram">
+<br />
+The synchronous and asynchronous can be used together, e.g. if it makes sense to fetch the complete content at first and then subscribe to the events later on.<br />
+<p class='strong'>Remarks:</p>
+<p>&quot;Changecounter&quot; or &quot;Revision&quot; of the client content, a 64 Bit Integer.</p>
+<ul>
+<li>For historical reasons the same data ist stored sometimes in strings &quot;u8sContentRevision&quot; or &quot;u8sRevision&quot; and mostly as a 64 bit integer in &quot;iRevision&quot;.<br>
+It is the same value, just transported with a different representation.</li>
+<li>The revision is a timestamp and will be defined by the server; the client cannot alter this value on the server directly, only by changing parts of the client content.</li>
+<li>A new revision from the server is alwyays higher than an old one.</li>
+</ul>
+<p>Setting the iEventFlagsToSubscribe parameter to</p>
+<ul>
+<li>eCONTACTS will only result in contact data events</li>
+<li>eSTRUCTURE will only result in structure events</li>
+<li>eJPEGPHOTO will include the jpeg photos directly in the events; if not set, the contact data will only contain hash values kor the pictures and the client gan request the pictures via asnRequestContactImage if needed.</li>
+</ul>
+<p class='strong'>Details on GroupCluster- and Group-IDs</p>
+<ul>
+<li>GroupCluster IDs</li>
+<li>The GroupCluster ID is a normal number, starting with '100' and counting up.</li>
+<li>Reserved numbers are between 0-199:</li>
+<li>&quot;0&quot; to &quot;99&quot; -&gt; Reserved</li>
+<li>&quot;100&quot; -&gt; The favorites tab in the Windows client main window.</li>
+<li>&quot;101&quot; -&gt; First group cluster of the Windoes client which will be shown in the monitor window.</li>
+<li>&quot;150&quot; to &quot;199&quot; -&gt; Reserved for possible adminstrative purposes.</li>
+<li>&quot;200&quot; -&gt; First group the user can define by himself, so make sure new groupclusters has an id greater or euqals than that.</li>
+<li>Group IDs</li>
+<li>A Group ID is formatted like this &quot;g:G[number]&quot;, but with the exception of the following reserved IDs they can be any unique string inside a group cluster.<br>
+It is recommended to follow the naming convention and make the IDs unique over the whole structure.</li>
+<li>Following the standard formatting of the Group ids, new ones should start at &quot;g:G800&quot; and upwards.</li>
+<li>GroupID &quot;g:G770&quot; - &quot;g:G778&quot;: reserved for special groups.</li>
+<li>&quot;g:G770&quot; - Group with additional phone line items of the user; only visisble in the windows client if enabled in the client settings.</li>
+<li>&quot;g:G771&quot; - Group for the administrative &quot;Jeder sieht jeden im Monitor&quot; setting in the windows client monitor window.</li>
+<li>&quot;g:G772&quot; - Reserved.</li>
+<li>GroupID &quot;g:G779&quot; is the first freely usable group ID inside a group cluster.<br>
+For historical reasons the Windows client is always starting with &quot;g:G779&quot; in every group cluster, which is possible, but makes it a bit harder to distinct between the groups over the whole structure.</li>
+</ul>
+<p class='strong'>Client Content Tagging</p>
+<p>A client can &quot;tag&quot; contacts if changes on these contacts (presence, data etc.) are of special interest for the user.<br>
+Technically the &quot;tags&quot; are just the contact IDs in a list. The API provided here makes it possible to change the list on the UCServer and get events, if another client of the same user makes changes to the list.<br>
+In the Windows client it is used to inform the user of specific presence state changes of the contacts the user tagged in the UI (e.g. available again, has a call to pickup etc.).</p>
+</p><a href="ClientContactsList.doc.html"> </a>
+    <h2>Types:</h2><a href="ClientContactsList.doc.types.html"> </a><a href="ClientContactsList.types.html"> </a>
+    <table>
+      <th>Name</th>
+      <th>Description</th>
+      <tr>
+        <td>
+          <p><a href="ClientContactsList.type.AsnClientContentContactFilter.html">AsnClientContentContactFilter</a></p>
+        </td>
+        <td> 
+          <p>Filter for the content data sent in the result.
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ClientContactsList.type.AsnSubscribeClientContentFlags.html">AsnSubscribeClientContentFlags</a></p>
+        </td>
+        <td> 
+          <p>Flags how to subscribe on client content.
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ClientContactsList.type.AsnChangeClientContentFlags.html">AsnChangeClientContentFlags</a></p>
+        </td>
+        <td> 
+          <p>Enumeration for the field iFlags in <a href="ClientContactsList.type.AsnChangeClientContentArgument.html">AsnChangeClientContentArgument</a>
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ClientContactsList.type.AsnClientContentChangedFlags.html">AsnClientContentChangedFlags</a></p>
+        </td>
+        <td> 
+          <p>Enumeration for iFlags in <a href="ClientContactsList.type.AsnClientContentChangedArgument.html">AsnClientContentChangedArgument</a>
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ClientContactsList.type.AsnAdministrativeFunctionKeyTypes.html">AsnAdministrativeFunctionKeyTypes</a></p>
+        </td>
+        <td> 
+          <p>Flags describing the type of a function key
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ClientContactsList.type.AsnAdministrativeMonitorContentSubscriptionFlags.html">AsnAdministrativeMonitorContentSubscriptionFlags</a></p>
+        </td>
+        <td> 
+          <p>Flags describing which events (if so) the client wants to get from the server according to changes to the administrative Monitor Groups.
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ClientContactsList.type.AsnGetClientContentArgument.html">AsnGetClientContentArgument</a></p>
+        </td>
+        <td> 
+          <p>Argument for <a href="ClientContactsList.asnGetClientContent.html">asnGetClientContent</a>
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ClientContactsList.type.AsnSubscribeClientContentArgument.html">AsnSubscribeClientContentArgument</a></p>
+        </td>
+        <td> 
+          <p>Argument for <a href="ClientContactsList.asnSubscribeClientContent.html">asnSubscribeClientContent</a>
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ClientContactsList.type.AsnSubscribeClientContentResult.html">AsnSubscribeClientContentResult</a></p>
+        </td>
+        <td> 
+          <p>Result of <a href="ClientContactsList.asnSubscribeClientContent.html">asnSubscribeClientContent</a>
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ClientContactsList.type.AsnUnsubscribeClientContentArgument.html">AsnUnsubscribeClientContentArgument</a></p>
+        </td>
+        <td> 
+          <p>Argument for <a href="ClientContactsList.asnUnsubscribeClientContent.html">asnUnsubscribeClientContent</a>
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ClientContactsList.type.AsnUnsubscribeClientContentResult.html">AsnUnsubscribeClientContentResult</a></p>
+        </td>
+        <td> 
+          <p>Result of <a href="ClientContactsList.asnUnsubscribeClientContent.html">asnUnsubscribeClientContent</a>
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ClientContactsList.type.AsnChangeClientContentResult.html">AsnChangeClientContentResult</a></p>
+        </td>
+        <td> 
+          <p>Result of <a href="ClientContactsList.asnChangeClientContent.html">asnChangeClientContent</a><br>
+Event vom Client zum Server, dass sich die ClientDaten geaendert haben
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ClientContactsList.type.AsnClientContentItem.html">AsnClientContentItem</a></p>
+        </td>
+        <td> 
+          <p>AsnClientContentItem describes the item which will be displayed in the UI.
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ClientContactsList.type.AsnClientContentSubscribeToTagsArgument.html">AsnClientContentSubscribeToTagsArgument</a></p>
+        </td>
+        <td> 
+          <p>Argument for <a href="ClientContactsList.asnClientContentSubscribeToTags.html">asnClientContentSubscribeToTags</a>
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ClientContactsList.type.AsnClientContentSubscribeToTagsResult.html">AsnClientContentSubscribeToTagsResult</a></p>
+        </td>
+        <td> 
+          <p>Rsult of <a href="ClientContactsList.asnClientContentSubscribeToTags.html">asnClientContentSubscribeToTags</a>
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ClientContactsList.type.AsnClientContentTaggedIDsChangedArgument.html">AsnClientContentTaggedIDsChangedArgument</a></p>
+        </td>
+        <td> 
+          <p>Argument for event <a href="ClientContactsList.asnClientContentTaggedIDsChanged.html">asnClientContentTaggedIDsChanged</a>
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ClientContactsList.type.AsnClientContentSaveTagsArgument.html">AsnClientContentSaveTagsArgument</a></p>
+        </td>
+        <td> 
+          <p>Argument for <a href="ClientContactsList.asnClientContentSaveTags.html">asnClientContentSaveTags</a>
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ClientContactsList.type.AsnClientContentSaveTagsResult.html">AsnClientContentSaveTagsResult</a></p>
+        </td>
+        <td> 
+          <p>Result of <a href="ClientContactsList.asnClientContentSaveTags.html">asnClientContentSaveTags</a>
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ClientContactsList.type.AsnAdministrativeFunctionKey.html">AsnAdministrativeFunctionKey</a></p>
+        </td>
+        <td> 
+          <p>Defines a function key: type (e.g. dialing) and type-dependant value
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ClientContactsList.type.AsnGetAndSubscribeAdministrativeMonitorContentArgument.html">AsnGetAndSubscribeAdministrativeMonitorContentArgument</a></p>
+        </td>
+        <td> 
+          <p>Arguments for <a href="ClientContactsList.asnGetAndSubscribeAdministrativeMonitorContent.html">asnGetAndSubscribeAdministrativeMonitorContent</a> The content will be generated by the UCServer using the logged in user.
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ClientContactsList.type.AsnUnsubscribeAdministrativeMonitorContentArgument.html">AsnUnsubscribeAdministrativeMonitorContentArgument</a></p>
+        </td>
+        <td> 
+          <p>Argumment for <a href="ClientContactsList.asnUnsubscribeAdministrativeMonitorContent.html">asnUnsubscribeAdministrativeMonitorContent</a>
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ClientContactsList.type.AsnUnsubscribeAdministrativeMonitorContentResult.html">AsnUnsubscribeAdministrativeMonitorContentResult</a></p>
+        </td>
+        <td> 
+          <p>Result of <a href="ClientContactsList.asnUnsubscribeAdministrativeMonitorContent.html">asnUnsubscribeAdministrativeMonitorContent</a>
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ClientContactsList.type.AsnClientContentItemList.html">AsnClientContentItemList</a></p>
+        </td>
+        <td> 
+          <p>List of <a href="ClientContactsList.type.AsnClientContentItem.html">AsnClientContentItem</a> objects.
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ClientContactsList.type.AsnAdministrativeFunctionKeyList.html">AsnAdministrativeFunctionKeyList</a></p>
+        </td>
+        <td> 
+          <p>List of <a href="ClientContactsList.type.AsnAdministrativeFunctionKey.html">AsnAdministrativeFunctionKey</a> objects.
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ClientContactsList.type.AsnClientContentGroup.html">AsnClientContentGroup</a></p>
+        </td>
+        <td> 
+          <p>AsnClientContentGroup object contains the list of <a href="ClientContactsList.type.AsnClientContentItem.html">AsnClientContentItem</a> objects and some meta data for displaying groups in the UI.
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ClientContactsList.type.AsnClientContentGroupList.html">AsnClientContentGroupList</a></p>
+        </td>
+        <td> 
+          <p>List of <a href="ClientContactsList.type.AsnClientContentGroup.html">AsnClientContentGroup</a> objects.
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ClientContactsList.type.AsnAdministrativeMonitorGroup.html">AsnAdministrativeMonitorGroup</a></p>
+        </td>
+        <td> 
+          <p>A group of contact IDs to display as a contact group of a administrative Monitor
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ClientContactsList.type.AsnAdministrativeMonitorGroupList.html">AsnAdministrativeMonitorGroupList</a></p>
+        </td>
+        <td> 
+          <p>List of <a href="ClientContactsList.type.AsnAdministrativeMonitorGroup.html">AsnAdministrativeMonitorGroup</a> objects.
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ClientContactsList.type.AsnGetAndSubscribeAdministrativeMonitorContentResult.html">AsnGetAndSubscribeAdministrativeMonitorContentResult</a></p>
+        </td>
+        <td> 
+          <p>Results of <a href="ClientContactsList.asnGetAndSubscribeAdministrativeMonitorContent.html">asnGetAndSubscribeAdministrativeMonitorContent</a>
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ClientContactsList.type.AsnAdministrativeMonitorContentGroupAddedArgument.html">AsnAdministrativeMonitorContentGroupAddedArgument</a></p>
+        </td>
+        <td> 
+          <p>Argument for event <a href="ClientContactsList.asnAdministrativeMonitorContentGroupAdded.html">asnAdministrativeMonitorContentGroupAdded</a>
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ClientContactsList.type.AsnAdministrativeMonitorContentGroupChangedArgument.html">AsnAdministrativeMonitorContentGroupChangedArgument</a></p>
+        </td>
+        <td> 
+          <p>Argument for event <a href="ClientContactsList.asnAdministrativeMonitorContentGroupChanged.html">asnAdministrativeMonitorContentGroupChanged</a>
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ClientContactsList.type.AsnAdministrativeMonitorContentGroupRemovedArgument.html">AsnAdministrativeMonitorContentGroupRemovedArgument</a></p>
+        </td>
+        <td> 
+          <p>Argument for event <a href="ClientContactsList.asnAdministrativeMonitorContentGroupRemoved.html">asnAdministrativeMonitorContentGroupRemoved</a>
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ClientContactsList.type.AsnClientContentGroupCluster.html">AsnClientContentGroupCluster</a></p>
+        </td>
+        <td> 
+          <p>AsnClientContentGroupCluster object contains a list of <a href="ClientContactsList.type.AsnClientContentGroup.html">AsnClientContentGroup</a> objects and some meta data for displaying groups in the UI.
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ClientContactsList.type.AsnClientContentGroupClusterList.html">AsnClientContentGroupClusterList</a></p>
+        </td>
+        <td> 
+          <p>List of <a href="ClientContactsList.type.AsnClientContentGroupCluster.html">AsnClientContentGroupCluster</a> objects.
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ClientContactsList.type.AsnClientContentStructure.html">AsnClientContentStructure</a></p>
+        </td>
+        <td> 
+          <p>AsnClientContentStructure is the root of the client content structure object.
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ClientContactsList.type.AsnGetClientContentResult.html">AsnGetClientContentResult</a></p>
+        </td>
+        <td> 
+          <p>Result of <a href="ClientContactsList.asnGetClientContent.html">asnGetClientContent</a>
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ClientContactsList.type.AsnChangeClientContentArgument.html">AsnChangeClientContentArgument</a></p>
+        </td>
+        <td> 
+          <p>Argument for <a href="ClientContactsList.asnChangeClientContent.html">asnChangeClientContent</a>
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ClientContactsList.type.AsnClientContentChangedArgument.html">AsnClientContentChangedArgument</a></p>
+        </td>
+        <td> 
+          <p>Argument for <a href="ClientContactsList.asnClientContentChanged.html">asnClientContentChanged</a> event.
+</p>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

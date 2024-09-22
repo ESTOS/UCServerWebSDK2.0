@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnUserManagerSettings </h3>
+    <p></p>
+    <p></p>
+    <div class="typevalues">
+      <p>AsnUserManagerSettings is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>iUMSecurity</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Security for User Authentication
+ (Linked Type: <a href="Management.type.AsnMgmtEnumUMSecurity.html">AsnMgmtEnumUMSecurity</a>)
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iUMSelfInstall</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Security for User Self Installation
+ (Linked Type: <a href="Management.type.AsnMgmtEnumUMSelfInstall.html">AsnMgmtEnumUMSelfInstall</a>)
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iComputerIsDomainMember</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Ist der Computer Mitglied einer Domain?<br>
+Statische Konfiguration, die beim Start des Servers bestimmt wird.<br>
+Nicht konfigurierbar
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sComputerDomainNT</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>NT Domain Name des Computers (ESTOS)<br>
+Statische Konfiguration, die beim Start des Servers bestimmt wird.<br>
+Nicht konfigurierbar
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sComputerDomainFQ</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Full Qualified domain name (estos.de)<br>
+Statische Konfiguration, die beim Start des Servers bestimmt wird.<br>
+Nicht konfigurierbar
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sDomainController</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Hostname des Domain controller (AVALON)<br>
+Statische Konfiguration, die beim Start des Servers bestimmt wird.<br>
+Nicht konfigurierbar
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>objGlobalUserRightDetails</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.AsnUserDynamicRights.html">AsnUserDynamicRights</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Nutzerrechte die für alle Nutzer gleich gelten.<br>
+Die Rechte sind additiv, d.h., wenn hier ein Recht gesetzt wird,<br>
+kann es einem Nutzer nicht mehr genommen werden. Soll es keine<br>
+globalen Rechte geben, einfach alle Flags auf 0 setzen.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iShowAllUsersInAllMonitors</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>1 Wenn alle Benutzer alle Benutzer in den Monitor eingeblendet bekommen.<br>
+0 Wenn nicht.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iDisableAllMonitorConfiguration</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>1 Wenn kein Benutzer seine Monitorkonfiguration ändern darf.<br>
+0 Wenn die Benutzer ihre Konfiguration ändern dürfen.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>bAllJournalEntriesVisible</p>
+          </td>
+          <td> 
+            <p>boolean</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>true: Clients können das gesamte Journal einsehen,<br>
+false (default): Clients können das Journal nicht komplett sehen
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iFeatures</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Bitfeld für speziell unterstützte Features des UserManagers. Ermöglicht das<br>
+Aktivieren und Deaktivieren von Funktionen z.B. auf Basis des Lizenzschlüssels oder<br>
+Gegebenheiten, auf die nur der Server direkt Zugriff hat.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>bDeleteJournalEntriesEnabled</p>
+          </td>
+          <td> 
+            <p>boolean</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>true: Benutzer dürfen Journaleinträge löschen.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>bAutoBindLinesForUsersPhoneNumbers</p>
+          </td>
+          <td> 
+            <p>boolean</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>true: Leitungen zu den Rufnummern des Benutzers automatisch suchen und zuweisen
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8slistPresenceDomains</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.UTF8StringList.html">UTF8StringList</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Die LIste der Domänen, für die dieser Server auch Präsenzinformationen bereit stellt
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sHomeServerIdentification</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Server Identifikation als Homeserver für Benutzerprofile
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>bInternalChatDisabled</p>
+          </td>
+          <td> 
+            <p>boolean</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Unterbindet das Chaten im lokalen Netzwerk. Einstellung kann auch von der Registry beeinflusst werden.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iDeskShareAccess</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p> (Linked Type: <a href="Management.type.AsnMgmtDeskShareAccess.html">AsnMgmtDeskShareAccess</a>)
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>bPresenceDisabled</p>
+          </td>
+          <td> 
+            <p>boolean</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>true: Presence ist für alle Clients abgeschalten; false oder nicht existent: Presence ist an (default).
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>bUserUserRightsDisabled</p>
+          </td>
+          <td> 
+            <p>boolean</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>true: Benutzer dürfen keine Rechte über den Client vergeben; false oder nicht existent: Benutzer dürfen (default).
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>bChatDatabaseDisabled</p>
+          </td>
+          <td> 
+            <p>boolean</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>true: Chats werden nicht in der Datenbank persistiert; false oder nicht existent: Chats werden in der Datenbank persistiert (default).
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>bAVAudioDisabled</p>
+          </td>
+          <td> 
+            <p>boolean</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>true: Audio Chat ist für alle User abgeschalten; default ist an (false).
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>bAVVideoDisabled</p>
+          </td>
+          <td> 
+            <p>boolean</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>true: Video Chat ist für alle User abgeschalten; default ist an (false).
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>bDeskshareFedDisabled</p>
+          </td>
+          <td> 
+            <p>boolean</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>true: Deskshare über Federartion für alle User abgeschalten; default ist an (false).
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>bLoginByMobile</p>
+          </td>
+          <td> 
+            <p>boolean</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>true: Benutzer darf sich per Mobile App anmelden
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>bLoginOverInternet</p>
+          </td>
+          <td> 
+            <p>boolean</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>true: Benutzer darf sich von ausserhalb des Intranets (mit Mobile) anmelden
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>bEnableForAnonymousApi</p>
+          </td>
+          <td> 
+            <p>boolean</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>true: Benutzer ist für Anonyme Benutzer sichtbar, z.B. per suche
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>bProfilePageVisible</p>
+          </td>
+          <td> 
+            <p>boolean</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>true: Die Profilseite des Benutzers wird dargestellt
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>bEnableUserdefinedCustomFields</p>
+          </td>
+          <td> 
+            <p>boolean</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>userdefined customfields aktivieren
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>bEnableBinaryTransferSend</p>
+          </td>
+          <td> 
+            <p>boolean</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>binarytransfer enabled; default ist an (true)
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>mapUserDefinedCustomFields</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.AsnStringPairList.html">AsnStringPairList</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Liste der UserDefined CustomFields (Key-Value-Liste, Key=Feldbezeichner, Value=Anzeigename)
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>objGlobalObserverGroupUserRightDetails</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.AsnUserDynamicRights.html">AsnUserDynamicRights</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>globale userrechte fuer user die ueber monitorgruppen andere user im monitor haben. optional wegen kompatibilitaet
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>bEnableTeamsIntegration</p>
+          </td>
+          <td> 
+            <p>boolean</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Die naechsten Settings werden in GetCallParams()/PutCallParams() nicht uebertragen<br>
+-&gt; also auch nicht ueber Asn<br>
+alle Properties wurden in den Settings gefunden -&gt; Seite im Admin im WizardFall nicht anzeigen<br>
+bool m_bFullyConfigured,<br>
+Voreinstellung zur Verwendung von Kontaktdaten d. CtiUser<br>
+iDefaultPhonebookFlags,<br>
+die liste der domänen, fuer die web2procall presence geleakt wird<br>
+FIVE-1351<br>
+mapWebPresenceDomains		AsnUserDynamicRights,<br>
+use anonymous user management mit lazy initialization<br>
+LC-593<br>
+bUseLazyAnonymousUserManager		BOOLEAN,<br>
+MS-TeamsIntegration enabled; default ist aus (false)
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>bLoginOverInternetAllowDesktop</p>
+          </td>
+          <td> 
+            <p>boolean</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>true: Benutzer darf sich von ausserhalb des Intranets auch mit Desktop Clients anmelden
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>bUseWebAppEnabled</p>
+          </td>
+          <td> 
+            <p>boolean</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>true: Benutzer darf sich mit der WebApp (PWA) anmelden
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>eUserReplicator</p>
+          </td>
+          <td> 
+            <p><a href="Management.type.AsnEUserReplicatorType.html">AsnEUserReplicatorType</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>Wich user replicator should be used (defaults to eNONE)
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

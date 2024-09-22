@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>asnCtiNotifyConferenceCreated</h3>
+    <p>Event from the server if there is a conference established on a line.<br>
+In order to get these events the line must be monitored via <a href="CTI.asnCtiLineMonitorStart.html">asnCtiLineMonitorStart</a>
+</p>
+    <p><p>This event will inform the client, if a conference was established and with whom.<br /><br>
+In this way, the client gets detailed information about the participants and the conference controller.<br /></p>
+</p><strong>ArgumentType: AsnCtiNotifyConferenceCreatedArgument</strong>
+    <div class="typevalues">
+      <p>AsnCtiNotifyConferenceCreatedArgument is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>u8sLineMonitorCrossRefID</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>CrossrefID for the corresponding asnCtiLineMonitorStart
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sLinePhoneNumber</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Line identifier for the line where the changes happened.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>conferenceControllerCallInfo</p>
+          </td>
+          <td> 
+            <p><a href="CTI.type.AsnCtiCallInformation.html">AsnCtiCallInformation</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Information about the conference controller call. See AsnCtiCallInformation for details.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>conferenceMemberCallInfoList</p>
+          </td>
+          <td> 
+            <p><a href="CTI.type.AsnCtiCallInformationList.html">AsnCtiCallInformationList</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Information about the current participating calls in this conference.
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

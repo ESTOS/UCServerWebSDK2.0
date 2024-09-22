@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h1>ClientCapabilities</h1>
+    <p>Module Version: 8.0.0</p>
+    <p>Data structures and methods to transport and notify client capabilities between clients and the server
+</p>
+    <p><p>Each client has certain capabilities he is able to handle. They are used to tell other clients the kind of interactions each client is able to process.<br>
+If a client wants to start an audio call to another client both clients have to be able to process audio (speakers and microphone present).<br>
+As soon as a client is capable to handle audio it tells the server and thus other clients that the client is now ready to process audio requests.<br>
+Beside well known capabilities clients may exchange customs capabilities. (e.g. client is capable for some sort of sharing and the appropriate sharing resource id)</p>
+</p><a href="ClientCapabilities.doc.html"> </a>
+    <h2>Types:</h2><a href="ClientCapabilities.doc.types.html"> </a><a href="ClientCapabilities.types.html"> </a>
+    <table>
+      <th>Name</th>
+      <th>Description</th>
+      <tr>
+        <td>
+          <p><a href="ClientCapabilities.type.AsnClientCapabilityEnum.html">AsnClientCapabilityEnum</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ClientCapabilities.type.AsnClientCapabilitiesV2.html">AsnClientCapabilitiesV2</a></p>
+        </td>
+        <td> 
+          <p>Data structure to transport capabilities a client/connection is capable to handle
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ClientCapabilities.type.AsnSetClientCapabilitiesV2Result.html">AsnSetClientCapabilitiesV2Result</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ClientCapabilities.type.AsnGetClientCapabilitiesV2Argument.html">AsnGetClientCapabilitiesV2Argument</a></p>
+        </td>
+        <td> 
+          <p>Argument for the <a href="ClientCapabilities.asnGetClientCapabilitiesV2.html">asnGetClientCapabilitiesV2</a> event
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ClientCapabilities.type.AsnClientCapabilitiesV2ByID.html">AsnClientCapabilitiesV2ByID</a></p>
+        </td>
+        <td> 
+          <p>Client Capabilities with the user identifier to whom they belong
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ClientCapabilities.type.AsnClientCapabilitiesV2ByIDList.html">AsnClientCapabilitiesV2ByIDList</a></p>
+        </td>
+        <td> 
+          <p>List of client capabilities with user identifier
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ClientCapabilities.type.AsnSetClientCapabilitiesV2Argument.html">AsnSetClientCapabilitiesV2Argument</a></p>
+        </td>
+        <td> 
+          <p>Argument for the <a href="ClientCapabilities.asnSetClientCapabilitiesV2.html">asnSetClientCapabilitiesV2</a> event
+</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ClientCapabilities.type.AsnGetClientCapabilitiesV2Result.html">AsnGetClientCapabilitiesV2Result</a></p>
+        </td>
+        <td> 
+          <p></p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p><a href="ClientCapabilities.type.AsnClientCapabilitiesV2ChangedArgument.html">AsnClientCapabilitiesV2ChangedArgument</a></p>
+        </td>
+        <td> 
+          <p>Argument for the <a href="ClientCapabilities.asnClientCapabilitiesV2Changed.html">asnClientCapabilitiesV2Changed</a> method
+</p>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>SEQContactStatusRequest </h3>
+    <p></p>
+    <p></p>
+    <div class="typevalues">
+      <p class="private">- PRIVATE -</p>
+      <p>SEQContactStatusRequest is an Array of AsnContactStatusRequestEntry</p>
+      <p>AsnContactStatusRequestEntry is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>iClientSearchID</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>ID der Suchanfrage um z.B. mehrere, gleichzeitige Suchfenster am Client unterscheiden zu können
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iClientRowID</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>ID der Zeile in der oben angegebenen Suchanfrage sollte bei 1 beginnen um 0 bei listDeactivateNotify verwenden zu können
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>listSearchParameter</p>
+          </td>
+          <td> 
+            <p><a href="General.type.SEQContactStatusParameter.html">SEQContactStatusParameter</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Liste der Suchparameter (email/rufnummer/entryid)
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>bActivateNotify</p>
+          </td>
+          <td> 
+            <p>boolean</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Sollen die Ergebnisse als Notifies registriert werden ? true = ja, false = nein (Not Null)
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>listDeactivateNotify</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.SEQInteger.html">SEQInteger</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Liste von RowIDs, die von der Notifylist am Server gelöscht werden sollen (Not Null), muss mind. ein ASNInterger beinhalten
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

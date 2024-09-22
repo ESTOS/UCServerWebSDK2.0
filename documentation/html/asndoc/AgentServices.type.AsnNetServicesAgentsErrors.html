@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnNetServicesAgentsErrors </h3>
+    <p>Error return codes used in the API
+</p>
+    <p></p>
+    <div class="typevalues">
+      <p>AsnNetServicesAgentsErrors is an Enumeration</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Value</th>
+        <th>Comment</th>
+        <tr>
+          <td>noerror</td>
+          <td>number</td>
+          <td>0</td>
+          <td>all went fine
+</td>
+        </tr>
+        <tr>
+          <td>accessdenied</td>
+          <td>number</td>
+          <td>1</td>
+          <td>access to interface denied, maybe not logged in or with wrong account
+</td>
+        </tr>
+        <tr>
+          <td>agentidmissing</td>
+          <td>number</td>
+          <td>2</td>
+          <td>missing agent id where it is needed
+</td>
+        </tr>
+        <tr>
+          <td>groupidmissing</td>
+          <td>number</td>
+          <td>3</td>
+          <td>missing group id where it is needed
+</td>
+        </tr>
+        <tr>
+          <td>agentstatemissing</td>
+          <td>number</td>
+          <td>4</td>
+          <td>missing agent state where it is needed
+</td>
+        </tr>
+        <tr>
+          <td>agentcapabilitiesmissing</td>
+          <td>number</td>
+          <td>5</td>
+          <td>capabilities missing where needed
+</td>
+        </tr>
+        <tr>
+          <td>serviceidmissing</td>
+          <td>number</td>
+          <td>6</td>
+          <td>service id missing where it is needed
+</td>
+        </tr>
+        <tr>
+          <td>wrongserviceid</td>
+          <td>number</td>
+          <td>7</td>
+          <td>the service id given was not correct
+</td>
+        </tr>
+        <tr>
+          <td>servicealreadyconnected</td>
+          <td>number</td>
+          <td>8</td>
+          <td>the service given has already a running connection
+</td>
+        </tr>
+        <tr>
+          <td>serviceallocationfailed</td>
+          <td>number</td>
+          <td>9</td>
+          <td>the service cannot be allocated in the ucserver
+</td>
+        </tr>
+        <tr>
+          <td>noagentsregistered</td>
+          <td>number</td>
+          <td>10</td>
+          <td>the service has no registered agents
+</td>
+        </tr>
+        <tr>
+          <td>noagentsgiven</td>
+          <td>number</td>
+          <td>11</td>
+          <td>the agent list expected was empty
+</td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

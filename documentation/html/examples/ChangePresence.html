@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+
+<!--
+  Example for creating a session and calling functions, retrieving results and errors.
+  This is a very simplified example of an ASN.1/ROSE communication over websockets.
+  It shows the basic principles, of how to connect to the UCServer via 7224/HTTP 
+  (7225/HTTPS needs a bit more code -> but strongly consider this for production use!)
+
+  In this sample, a connection will be established and the logged in contact data will be fetched from the server.
+  With the ContactID of this user, the presence will be subscribed to get state change events from the server.
+
+  Each change of the users presence state will be displayed on the page by showing the contents of the corresponding events.
+  (To change the State of the user, login a windows or mobile client with the same credentials and switch its presence state).
+-->
+
+<html>
+
+<head>
+  <!-- make it a bit more visual appealing with bootstrap material -->
+  <link rel="stylesheet"
+    href="https://unpkg.com/bootstrap-material-design@4.1.1/dist/css/bootstrap-material-design.min.css"
+    integrity="sha384-wXznGJNEXNG1NFsbm0ugrLFMQPWswR3lds2VeinahP8N0zJw9VWSopbjv2x7WCvX" crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+    crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/popper.js@1.12.6/dist/umd/popper.js"
+    integrity="sha384-fA23ZRQ3G/J53mElWqVJEGJzU0sTs+SvzG8fXVWP+kJQ1lwFAOkcUOysnlKJC33U"
+    crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/bootstrap-material-design@4.1.1/dist/js/bootstrap-material-design.js"
+    integrity="sha384-CauSuKpEqAFajSpkdjv3z9t8E7RlpJ1UP0lKM/+NdtSarroVKu069AlsRPKkFBz9"
+    crossorigin="anonymous"></script>
+
+<body>
+  <div class="container">
+    <p>
+      <a href="index.html" class="badge badge-pill badge-primary"> &lt;== Back to index</a>
+    </p>
+    <h1>
+      Session with events example including set and reset of absent state.
+    </h1>
+    <p>
+      After every step you can see what was sent and what was received at the bottom of this page.
+    </p>
+    <hr />
+    <p><strong>1. Login: Create a new session with credentials, get logged in contact and subscribe to events</strong>
+    </p>
+    <form>
+      <div class="form-row">
+        <div class="form-group col-md-4">
+          <label for="serverurl">Server URL:</label>
+          <input id="serverurl" type="text" class="form-control" value="http://localhost:7224" /><br />
+        </div>
+        <div class="form-group col-md-4">
+          <label for="ucsid">UCSID:</label>
+          <input id="ucsid" type="text" class="form-control" value="local" /><br />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="from-group col-md-4">
+          <label for="user">Username:</label>
+          <input id="user" type="text" class="form-control" value="" /><br />
+        </div>
+        <div class="form-group col-md-4">
+          <label for="pass">Password:</label>
+          <input id="pass" class="form-control" value="" type="password" /><br />
+        </div>
+      </div>
+      <div class="form-row">
+        <div>
+          <button class="btn btn-raised btn-info" type='submit'
+            onclick='createsession(); event.preventDefault();'>Create Session</button><br />
+        </div>
+      </div>
+      <form class="form-group">
+        <label for="sessionid">SessionID:</label>
+        <input id="sessionid" class="form-control" value="" readonly/><br />
+      </form>
+      <form>
+        <label for="contactid">ContactID</label>
+        <input id="contactid" type="text" class="form-control" value="" readonly>
+      </form>
+    </form>
+    <hr />
+    <p><strong>2. Change the absent state of the logged in user</strong></p>
+    <form>
+      <button class="btn btn-raised btn-success" type='submit'
+        onclick='setNewPresence("notabsent"); event.preventDefault();'>Set not absent</button><br />
+      <button class="btn btn-raised btn-warning" type='submit'
+        onclick='setNewPresence("outofoffice"); event.preventDefault();'>Set out of office</button><br />
+      <button class="btn btn-raised btn-danger" type='submit'
+        onclick='setNewPresence("busy"); event.preventDefault();'>Set busy</button><br />
+      <button class="btn btn-outline-danger" type='submit'
+        onclick='setNewPresence("donotdisturb"); event.preventDefault();'>Set do not disturb</button><br />
+      <button class="btn btn-raised btn-secondary" type='submit' onclick='resetState(); event.preventDefault();'>Reset
+        state</button><br />
+    </form>
+    <hr />
+    <p><strong>3. See the resulting absent and presence state of the user</strong></p>
+    <form class="form-group">
+      <label for="actualabsentstate">Resulting absent state:</label>
+      <input id="actualabsentstate" class="form-control" value="" /><br />
+    </form>
+    <form class="form-group">
+      <label for="actualpresence">Actual calculated presence:</label>
+      <input id="actualpresence" class="form-control" value="" /><br />
+    </form>
+    <p>
+      If the presence state is not changing the result of the presence calculation has not changed.<br />
+      The server sends only an updated AsnAbsentState object but no new iPresenceState value.
+    </p>
+    <hr />
+    <p>Messages sent to and received from the server:</p>
+    </p>
+    <hr />
+    <p>SEND:<br />
+    <pre id="sended"></pre>
+    </p>
+    <hr />
+    <p>RECEIVE:<br />
+    <pre id="result"></pre>
+    </p>
+    <div id="output-area"></div>
+  </div>
+</body>
+
+<!-- --------------------------- -->
+<!-- END of HTML / Start of Code -->
+<!-- --------------------------- -->
+
+<script>
+
+  let invokeid = 2;
+  let client = null;
+  let user_contactid = '';
+
+  // Socket handlers for the WebSocket
+  let sockethandlers = {
+    // Handler for a socket error
+    onError: function (err) {
+      console.log('error: ' + err);
+    },
+
+    // Handler for a successful connect
+    onConnect: function () {
+      console.log('connect');
+      getmycontact();
+    },
+
+    // Handler for a closed socket connection
+    onClose: function () {
+      console.log('close');
+    },
+
+    // ----------------- Get and parse Protocoll Packages --------------------
+
+    // Handler for data received from the server
+    // It differentiates the four differnet messages:
+    // - Result: the result of a remote procedure call; can be received asynchronous to the corresponding call.
+    // - Invoke: A remote procedure call received; on client side it is mostly used for events from the server.
+    // - Error: An error object is received on client side, when the business logic of an remote procedure detects an error.
+    // - Reject: The remote procedure call is not known by the called server.
+    // All other messages are treated as protocoll errors.
+    onMessage: function (data) {
+
+      // Transform data to objects
+      let outtext = data.data;
+      let rosemsg = null;
+      try {
+        rosemsg = JSON.parse(outtext)[0]; // Get the JavaScript object
+        outtext = JSON.stringify(rosemsg, null, 4); // Make a readable form to display on HTML Page
+      } catch (e) {
+      }
+
+      // ROSE Result Object
+      if ('result' in rosemsg) {
+        if ('result' in rosemsg.result) {
+          if ('result' in rosemsg.result.result) {
+            // then it is a normal result of the function call
+            document.getElementById("result").innerHTML = '<b>Result-Message</b><br />' + outtext + '<br/>';
+            parseResult(rosemsg);
+          }
+        }
+
+      // ROSE Invoke Object
+      } else if ('invoke' in rosemsg) {
+        // Events are ROSE invokes from the server to the client, only with arguments und the special invokeID 99999
+        if ('invokeID' in rosemsg.invoke) {
+          if (rosemsg.invoke.invokeID === 99999) {
+            // Events will be concatinated in the output view as long nothing else happens
+            document.getElementById("result").innerHTML += '<b>Event-Message</b><br />' + outtext + '<br />';
+            parseEventFromServer(rosemsg);
+          }
+        }
+
+      // ROSE Error Object
+      } else if ('error' in rosemsg) {
+        document.getElementById("result").innerHTML = '<b>Error-Message</b><br />' + outtext + '<br />';
+
+      // ROSE Reject Object
+      } else if ('reject' in rosemsg) {
+        document.getElementById("result").innerHTML = '<b>Reject-Message</b><br />' + outtext + '<br />';
+        
+      // Anything else is not specified in ROSE, so it is a protocoll error
+      } else {
+        document.getElementById("result").innerHTML = '<b>Protocoll Error?!</b><br />' + outtext + '<br />';
+      }
+    }
+  }
+
+  // Parser for ROSE-Result objects for our demo here. It detects an AsnGetLoggedInContactResult
+  // Message and starts an subscripton for events on the contact.
+  function parseResult(rosemsg) {
+    // As results can be asynchronous the corresponding calls normally check now,
+    // which call's invokeID is corresponding to this result's invokeID to 
+    // find the waiting caller-object and close its call with this result.
+    // In this case we wait for one result only; we ignore all others.
+    let rose_result = rosemsg.result.result.result;
+
+    // Just react to the result of asnGetLoggedInContact only
+    if (rose_result._type === "AsnGetLoggedInContactResult") {
+      user_contactid = rose_result.ownContact.u8sContactId;
+      document.getElementById("contactid").value = user_contactid;
+      subscribeToContact();
+    }
+  }
+
+  // Parse events (Invokes with invokeID=99999)
+  function parseEventFromServer(rosemsg) {
+    let event_argument = rosemsg.invoke.argument;
+    /* do what you need to do with the event data */
+
+    // In this demo we only react on asnUpdatePresence events
+    if (event_argument._type === "AsnUpdatePresenceArgument") {
+      setResultingPresence(event_argument.presence);
+    }
+  }
+
+  // ----------------- Build the WebSocket Connection --------------------
+
+  // once created a session, you can start a websocket
+  function createwebsocket(serverurl, sessionid) {
+    // ws://localhost:7224/ws/client/websocket?x-ucsessionid=<sessionid>
+    socketurl = serverurl.replace('http', 'ws') + '/ws/client/websocket?x-ucsessionid=' + sessionid;
+    client = new WebSocket(socketurl);
+
+    // connect to the handlers for some calls from the socket
+    client.onclose = sockethandlers.onClose;
+    client.onerror = sockethandlers.onError;
+    client.onopen = sockethandlers.onConnect;
+    client.onmessage = sockethandlers.onMessage;
+  }
+
+  // first step, create a sessionid giving credentials
+  function createsession() {
+    let serverurl = document.getElementById("serverurl").value;
+    let ucsid = document.getElementById("ucsid").value;
+    let user = document.getElementById("user").value;
+    let pass = document.getElementById("pass").value;
+    let func = 'createsession?clientappid=15'; // since ProCall 7 you have to tell the server your application type (Web = 15)
+
+    let oXHR = new XMLHttpRequest();   // new HttpRequest instance
+    oXHR.addEventListener("loadend", function (evt) {
+      let outtext = oXHR.responseText;
+      let response = {};
+      try {
+        response = JSON.parse(oXHR.responseText);
+        outtext = JSON.stringify(response, null, 4);
+      } catch (e) {
+      }
+      if (oXHR.status == 0) {
+        document.getElementById("result").innerHTML = 'Failed: General Network Error';
+      } else if (outtext == '') {
+        document.getElementById("result").innerHTML = 'Failed: No response received';
+      } else if (oXHR.status == 200) {
+        document.getElementById("result").innerHTML = outtext;
+        if (response.hasOwnProperty('sessionid')) {
+          document.getElementById("sessionid").value = response.sessionid;
+
+          // with the help of the sessionid, we start the websocket now
+          createwebsocket(serverurl, response.sessionid);
+          // getmycontact();
+        }
+      } else {
+        document.getElementById("result").innerHTML = outtext;
+      }
+    });
+
+    // Since ProCall 7 it is a MUST to tell the server the API Version
+    let apiVersion = 70; // 70 for ProCall 7 upwards
+
+    // since the post is not going to be "stringified", just put the string equivalent to the output
+    document.getElementById("sended").innerHTML = 'POST ' + serverurl + '/ws/client/' + func + '<br/>'
+      + "Authorization" + " Basic " + btoa(user + ":" + pass)
+      + '<br />'
+      + "Content-Type" + " application/json;charset=utf-8"
+      + '<br />'
+      + "X-no401" + " 1"
+      + '<br />'
+      + "X-ucsid " + ucsid
+      + '<br />'
+      + "X-simple" + " 1"
+      + '<br />'
+      + '<br />'
+      + '{ "negotiate": { "iClientProtocolVersion": ' + apiVersion + ' } }';
+
+    oXHR.open("POST", serverurl + "/ws/client/" + func, true);
+    oXHR.setRequestHeader("Authorization", "Basic " + btoa(user + ":" + pass));
+    oXHR.setRequestHeader("Content-Type", "application/json;charset=utf-8");
+    oXHR.setRequestHeader("X-no401", "1");
+    oXHR.setRequestHeader("X-ucsid", ucsid);
+    oXHR.setRequestHeader("X-simple", "1");
+    oXHR.send('{ "negotiate": { "iClientProtocolVersion": ' + apiVersion + ' } }');
+  }
+
+  // -------------- Build ASN.1 Protocoll Packages -----------------------
+
+  function rose_invoke(operationname, argument) {
+    let rose_function = {
+      "invoke": {
+        "argument": argument,
+        "invokeID": invokeid++, // each invoke must have a unique ID, to check which
+        // message from the server is an answer to a call.
+        // Since the server is highly multithreaded, the messages
+        // from the server may come in a different order than the messages
+        // sent to the server. So it is neccessary to match the calling processes/objects
+        // with their corresponding answers
+        "operationID": 0, // for JSON-Encoded ASN.1 (estos) set this to 0
+        "operationName": operationname
+      }
+    }
+    let outtext = JSON.stringify(rose_function, null, 4);
+    document.getElementById("sended").innerHTML = outtext;
+    client.send(outtext);
+  }
+
+  // Argument object for the asnGetLoggedInContact call
+  function AsnGetLoggedInContactArgument() {
+    this._type = 'AsnGetLoggedInContactArgument';
+  }
+
+  function getmycontact() {
+    // asnGetLoggedInContact does not contain parameters in the argument
+    rose_invoke("asnGetLoggedInContact", new AsnGetLoggedInContactArgument());
+  }
+
+  // Flags for optional parameters in AsnGetAndSubscribePresenceArgument
+  // Description see below.
+  // let AsnPresenceSubscriptionFlags = {
+  //   ePresenceSubscriptionPresence: 1,
+  //   ePresenceSubscriptionData: 2,
+  //   ePresenceSubscriptionDataIncludeImage: 4,
+  //   ePresenceSubscriptionConfiguration: 8,
+  //   ePresenceSubscriptionAbsentstate: 16,
+  //   ePresenceSubscriptionNote: 32,
+  //   ePresenceSubscriptionAppointment: 64,
+  //   ePresenceSubscriptionPhoneLines: 128,
+  //   ePresenceSubscriptionPhoneCalls: 256,
+  //   ePresenceSubscriptionPhoneForwards: 512,
+  //   ePresenceSubscriptionMyChallengeUpdates: 1024,
+  //   ePresenceSubscriptionDynamicRightsUpdate: 2048,
+  //   ePresenceSubscriptionDynamicGroupRightsUpdate: 4096,
+  //   ePresenceSubscriptionDynamicGlobalRightsUpdate: 8192,
+  //   ePresenceSubscriptionContactCapabilities: 16384,
+  //   ePresenceSubscriptionAgentStatus: 32768,
+  //   ePresenceSubScriptionMonitorGroupingAttribute: 65536
+  // };
+
+  function AsnGetAndSubscribePresenceArgument() {
+    this._type = 'AsnGetAndSubscribePresenceArgument';
+    this.seqContactIDs = []; // type: UTF8StringList}, Array with the contact URIs (e.g. 'sip:tester@estos.de') 
+    // of the contacts of which the presence events should be sent from the server.
+    // In this example, it will be set to the own contact URI dynamically.
+
+    // some optional parameters for subscribing events
+    // this.iEventFlagsToSubscribe = 0; // leave this undefinied, the server will send every change as an event; 
+    // The Flags are described in AsnPresenceSubscriptionFlags (default: all)
+    // this.iContactDetailsReturnFilter = 0; // leave this undefined, the server should not filter anything besides of access rights
+    // The Flags are described in AsnPresenceSubscriptionFlags (default: all)
+    // this.bOpenOnlyInternalContacts = false; // boolean}, if set to true, ony contacts of this server will be subscribed and
+    // federation services will not be included for the presence subscription (defautl: false)
+    // this.bDontRequestPermissions = false; // boolean}, if set to true, the subscribed contact will be asked about permission 
+    // (access rights) if neccessary (default: true)
+
+    // this.optionalParams = {}; //  type: AsnOptionalParameters}; leave this undefined
+  }
+
+  function subscribeToContact() {
+    let arg = new AsnGetAndSubscribePresenceArgument();
+    arg.seqContactIDs.push(user_contactid);
+    rose_invoke("asnGetAndSubscribePresence", arg);
+  }
+
+  const AsnAbsentStateEnum = {
+    eABSENTSTATENOTABSENT: 0,
+    eABSENTSTATEOUTOFOFFICE: 1,
+    eABSENTSTATEBUSY: 2,
+    eABSENTSTATEDONOTDISTURB: 3,
+    eABSENTSTATENOTSET: 4
+  };
+
+  function AsnAbsentState() {
+    this._type = 'AsnAbsentState';
+    this.u8sContactId = ''; // string},
+    this.u8sUsername = ''; // string},
+    this.stTimeFrom = ''; // string},
+    this.stTimeTo = ''; // string},
+    this.iAbsentState = 0; // number},
+    this.u8sMessage = ''; // string},
+    this.u8sAbsentReason = ''; // string},
+    this.iPresenceState = 0; // number},
+    this.optionalParams = {}; //  type: AsnOptionalParameters}
+  }
+
+  function AsnAbsentStateSetUserArgument() {
+    this._type = 'AsnAbsentStateSetUserArgument';
+    this.absentstate = {}; //  type: AsnAbsentState},
+    this.optionalParams = {}; //  type: AsnOptionalParameters}
+  }
+
+  function setNewPresence(state) {
+    let arg = new AsnAbsentStateSetUserArgument();
+    let newState = new AsnAbsentState();
+
+    newState.u8sContactId = user_contactid;
+
+    switch (state) {
+      case 'notabsent':
+        newState.iAbsentState = AsnAbsentStateEnum.eABSENTSTATENOTABSENT;
+        break;
+      case 'outofoffice':
+        newState.iAbsentState = AsnAbsentStateEnum.eABSENTSTATEOUTOFOFFICE;
+        break;
+      case 'busy':
+        newState.iAbsentState = AsnAbsentStateEnum.eABSENTSTATEBUSY;
+        break;
+      case 'donotdisturb':
+        newState.iAbsentState = AsnAbsentStateEnum.eABSENTSTATEDONOTDISTURB;
+        break;
+      default:
+        return;
+    }
+
+    arg.absentstate = newState;
+
+    rose_invoke("asnAbsentStateSetUser", arg);
+  }
+
+
+  function AsnAbsentStateResetArgument() {
+    this._type = 'AsnAbsentStateResetArgument';
+    this.u8sContactId = ''; // string},
+    this.optionalParams = {}; //  type: AsnOptionalParameters}
+  }
+
+  function resetState() {
+    let arg = new AsnAbsentStateResetArgument();
+    arg.u8sContactId = user_contactid;
+    rose_invoke("asnAbsentStateReset", arg);
+  }
+
+  const AsnPresenceStateEnum = {
+    eUNCONTROLLED: 0,
+    eAVAILABLE: 1,
+    eBUSY: 2,
+    eABSENT: 3,
+    eDONOTDISTURB: 4,
+    eOUTOFORDER: 7
+  };
+
+  const AsnPresenceStateMasks = {
+    ePresenceStateMask: 255,              // 0x000000ff
+    ePresenceStateFlagsMaskAdd: 16711680, // 0x00ff0000
+    ePresenceStateFlagsMask: 2130706432   // 0x7f000000
+  };
+
+  function setResultingPresence(asnPresence) {
+    // The asnUpdatePresence Event can occure from different reasons and not all of the contain the same
+    // datastructures and fields. So it is neccessary to check teh contents
+    if(!asnPresence)
+      return;
+
+    // ---- Actual, calculated presence of the user
+    const iPresenceState = asnPresence.iPresenceState;
+    let textPresence = '(' + iPresenceState + ') -> ';
+    if(iPresenceState) {
+      const pure_presence = iPresenceState & AsnPresenceStateMasks.ePresenceStateMask; // The magic number has a definition
+      
+      switch (pure_presence) {
+        case AsnPresenceStateEnum.eUNCONTROLLED:
+          textPresence += 'Uncontrolled ('+pure_presence+') - or the action has not changed the calculated presence of the user';
+          break;
+        case AsnPresenceStateEnum.eAVAILABLE:
+          textPresence += 'Available ('+pure_presence+')';
+          break;
+        case AsnPresenceStateEnum.eBUSY:
+          textPresence += 'Busy ('+pure_presence+')';
+          break;
+        case AsnPresenceStateEnum.eABSENT:
+         textPresence += 'Absent ('+pure_presence+')';
+          break;
+        case AsnPresenceStateEnum.eDONOTDISTURB:
+          textPresence += 'Do not disturb ('+pure_presence+')';
+          break;
+        case AsnPresenceStateEnum.eOUTOFORDER:
+          textPresence += 'Out of order ('+pure_presence+')';
+          break;
+        default:
+          textPresence += 'Unknown ('+pure_presence+')';
+      }
+      document.getElementById("actualpresence").value = textPresence;
+    }
+
+    // ---- Actual absent state of the user
+    let absentState = 0;
+    if(asnPresence.asnAbsentState && asnPresence.asnAbsentState.iAbsentState)
+      absentState = asnPresence.asnAbsentState.iAbsentState;
+
+      let absentText = ''
+    if(absentState || absentState === 0) {
+      switch(absentState)
+      {
+        case AsnAbsentStateEnum.eABSENTSTATEBUSY:
+          absentText = 'Busy';
+          break;
+        case AsnAbsentStateEnum.eABSENTSTATEDONOTDISTURB:
+          absentText = 'Do not disturb';
+          break;
+        case AsnAbsentStateEnum.eABSENTSTATENOTABSENT:
+          absentText = 'Available (not abensent)';
+          break;
+        case AsnAbsentStateEnum.eABSENTSTATENOTSET:
+          absentText = 'No manual state set';
+          break;
+        case AsnAbsentStateEnum.eABSENTSTATEOUTOFOFFICE:
+          absentText = 'Out of office';
+          break;
+      }
+    }
+    document.getElementById("actualabsentstate").value = absentText;
+  }
+
+</script>
+<script>$(document).ready(function () { $('body').bootstrapMaterialDesign(); });</script>
+
+</html>

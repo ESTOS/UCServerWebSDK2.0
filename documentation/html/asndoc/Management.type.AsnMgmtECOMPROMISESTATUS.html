@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnMgmtECOMPROMISESTATUS </h3>
+    <p></p>
+    <p></p>
+    <div class="typevalues">
+      <p>AsnMgmtECOMPROMISESTATUS is an Enumeration</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Value</th>
+        <th>Comment</th>
+        <tr>
+          <td>eECOMPROMISESTATUSVALID</td>
+          <td>number</td>
+          <td>0</td>
+          <td>Kein Missbrauch bekannt
+</td>
+        </tr>
+        <tr>
+          <td>eECOMPROMISESTATUSBLACKLISTEDINVALID</td>
+          <td>number</td>
+          <td>1</td>
+          <td>Blacklistet in der WaWi (auf Basis ProduktID Seriennummer)
+</td>
+        </tr>
+        <tr>
+          <td>eECOMPROMISESTATUSREBOUNDINVALID</td>
+          <td>number</td>
+          <td>2</td>
+          <td>Blacklistet in der WaWi (auf Basis ProduktID Seriennummer in Verbindung mit dem letzten Bindungsdatum (alle die aelter sind sind ungueltig))
+</td>
+        </tr>
+        <tr>
+          <td>eECOMPROMISESTATUSBLACKLISTEDTEMPORARY</td>
+          <td>number</td>
+          <td>3</td>
+          <td>Wie ECOMPROMISESTATUSBLACKLISTEDINVALID aber temporaer gueltig (Uebergangslizenz) (Ob wirklich gueltig steht im expired Flag)
+</td>
+        </tr>
+        <tr>
+          <td>eECOMPROMISESTATUSREBOUNDTEMPORARY</td>
+          <td>number</td>
+          <td>4</td>
+          <td>Wie ECOMPROMISESTATUSREBOUNDINVALID aber temporaer gueltig (Ueergangslizenz) (Ob wirklich gueltig steht im expired Flag)
+</td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

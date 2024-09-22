@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnServiceAgentList </h3>
+    <p>List of <a href="AgentServices.type.AsnServiceAgent.html">AsnServiceAgent</a> strutures
+</p>
+    <p></p>
+    <div class="typevalues">
+      <p>AsnServiceAgentList is an Array of AsnServiceAgent</p>
+      <p>AsnServiceAgent is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>u8sGroupID</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>ID of the agent group the agent or line number is member of. The combination of AgentID and GroupID is treated as unique for a service.<br>
+Groups are used to combine different Agents into one controlling UI component.<br>
+So it is possible to combine different phone lines of a user into one Agent-UI component for this user.<br>
+If different Agents should have an &quot;own&quot; Button in the UCClient, they should have different GroupIDs or vice versa.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sAgentID</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>ID of the Agent; should be a phone number like +498151368560 or a UserID like sip:sam.test@estos.de, which corresponds with the identity of the UCServer User.<br>
+Internally the Agent will be idetified with <agendid>/<groupid>@<serviceid>, so this combination has to be unique on the UCService.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sAgentDisplayName</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>A displayable name of the Agent to show in the UI of the UCClient. If not given, the above AgnentID will be shown.<br>
+This field is used while registration to give the agent a more readable name for the user interface.
+<p>For deregistering the agent, you can leave this field unset;
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iAgentState</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>While registration of the agent this field contains the initial agent state. Should be 0 if not known. Value can be one of AsnAgentStateEnum.<br>
+This field is also used for changing the state of the agent.
+<p>For deregistering the agent, you can leave this field unset;
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iPossibleAgentStates</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>The service defines in this bitfield, which agent states are supported/can be requested using the Bit enumeration AsnSupportedAgentStatesEnum.<br>
+eAGENTSTATELOGGEDOUT(1)					- &quot;log out&quot;<br>
+eAGENTSTATELOGGEDINNOTREADY(2),			- &quot;not ready&quot;<br>
+eAGENTSTATELOGGEDINREADY(4),				- &quot;ready&quot;<br>
+eAGENTSTATELOGGEDINBUSY(8),				- &quot;busy&quot;<br>
+eAGENTSTATELOGGEDINWORKINGAFTERCALL(16)	- &quot;working after call&quot;
+<p>For deregistering the agent, you can leave this field unset;
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iRequiredLoginLogoutParams</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>The Bitfield is set while registration of the agent and supports the following values from AsnAgentLoginRequiredParametersEnum:<br>
+eAGENTLOGINREQUIRESAGENTID(1),	 - AgentID Required (for example, the PIN)<br>
+eAGENTLOGINREQUIRESGROUPID(2),	 - GroupID Required			- not yet supported by ucclient<br>
+eAGENTLOGINREQUIRESPASSWORD(4),   - Password Required		- not yet supported by ucclient<br>
+eAGENTLOGINREQUIRESDEVICEID(8)	 - DeviceID Required		- not yet supported by ucclient<br>
+eAGENTLOGOUTREQUIRESPASSWORD(256) - Logout requires password	- not yet supported by ucclient
+<p>For deregistering the agent, you can leave this field unset;
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

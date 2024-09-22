@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnSetDynamicRightsArgument </h3>
+    <p>Argument for <a href="PresenceV2.asnSetDynamicRights.html">asnSetDynamicRights</a> to set/change access rights to contact data and its service informations
+</p>
+    <p><p>The argument must contain the contact ID of the contact which access rights list has to be modified, the contact ID<br>
+of the contact which gets/looses the rights and the rights itself.</p>
+<p>The rights can be set with a constant value (iDynamicRights) or more specialized with the optional <a href="Common.type.AsnUserDynamicRights.html">AsnUserDynamicRights</a> member<br>
+(not recommended, only use it for very special edge cases).</p>
+<p>The values for iDynamicRights are part of <a href="General.type.AsnPresenceRightsFlags.html">AsnPresenceRightsFlags</a> in the general module. The valid values are:</p>
+<ul>
+<li>eBlocked (0)</li>
+<li>ePublic (65536, 0x0001 0000)</li>
+<li>eCompany (131072, 0x0002 0000)</li>
+<li>eTeam (262144, 0x0004 0000)</li>
+<li>ePersonal (524288, 0x0008 0000)</li>
+</ul>
+</p>
+    <div class="typevalues">
+      <p>AsnSetDynamicRightsArgument is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>u8sOwnerContactID</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>ContactID of the contact who grants/changes the rights.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sRemoteContactID</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>ContactID of the contact to give to/change the rights.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>iDynamicRights</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Valid values are (taken from AsnPresenceRightsFlags):
+<ul>
+<li>eBlocked (0)</li>
+<li>ePublic (65536, 0x0001 0000)</li>
+<li>eCompany (131072, 0x0002 0000)</li>
+<li>eTeam (262144, 0x0004 0000)</li>
+<li>ePersonal (524288, 0x0008 0000)</li>
+</ul> 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>dynamicRights</p>
+          </td>
+          <td> 
+            <p><a href="Common.type.AsnUserDynamicRights.html">AsnUserDynamicRights</a></p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>Only use this member to give access rights, which are not part of the predefined patterns.<br /><br>
+<strong>This is not recommended</strong>, so you can leave this optional parameter unset.<br /><br>
+If these rights are set, the parameters u8sOwnerContactID a iDynamicRights are ignored.
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

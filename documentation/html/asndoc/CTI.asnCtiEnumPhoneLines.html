@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>asnCtiEnumPhoneLines</h3>
+    <p>Retrieve line information from the server.
+</p>
+    <p><p>To get information about the lines a user has access to on the server.<br /><br>
+There are four possible line types, which can be requested:</p>
+<ul>
+<li>userOwnLines: Own lines which the logged in user is owner of.</li>
+<li>userMonitorLines: Own lines plus the lines, the user has special access rights for.</li>
+<li>systemLocalLines: All lines that are local on the system.</li>
+<li>systemGlobalLines: All local lines plus all global known lines; for future use, current its the same as systemLocalLines.</li>
+</ul>
+<p>If attachChangeNotify is set to 1, the server will send <a href="CTI.asnCtiNotifyLineAddRemove.html">asnCtiNotifyLineAddRemove</a> events, if lines were added or removed for the given scope (or line type).</p>
+<p>The monitoring of the line lists can only be stopped by disconnecting from the server.</p>
+</p>
+    <p class="strong">ArgumentType: AsnCtiEnumPhoneLinesArgument</p>
+    <div class="typevalues">
+      <p>AsnCtiEnumPhoneLinesArgument is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>typeofLines</p>
+          </td>
+          <td> 
+            <p><a href="CTI.type.AsnCtiEnumPhoneLinesArgumentEnum.html">AsnCtiEnumPhoneLinesArgumentEnum</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Which lines shall be listed for the user (own, additional lines, all).
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>attachChangeNotify</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>Request events for line add/remove changes (1) or not (0).
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+    <p></p>
+    <p class="strong">ResultType: AsnCtiEnumPhoneLinesResult</p>
+    <div class="typevalues">
+      <p>AsnCtiEnumPhoneLinesResult is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>seqLines</p>
+          </td>
+          <td> 
+            <p><a href="CTI.type.AsnCtiLineInfoList.html">AsnCtiLineInfoList</a></p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>The list with line information requested.
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sLineMonitorCrossRefID</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p>yes</p>
+          </td>
+          <td> 
+            <p>LineMonitorCrossrefID for add/remove event from the server.
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+    <p></p>
+    <p class="strong">ErrorType: AsnRequestError</p>
+    <div class="typevalues">
+      <p>AsnRequestError is an Object</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Optional</th>
+        <th>Comment</th>
+        <tr>
+          <td> 
+            <p>iErrorDetail</p>
+          </td>
+          <td> 
+            <p>number</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>A number representing the error
+ 
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td> 
+            <p>u8sErrorString</p>
+          </td>
+          <td> 
+            <p>string</p>
+          </td>
+          <td> 
+            <p></p>
+          </td>
+          <td> 
+            <p>A string representing the error
+ 
+            </p>
+          </td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnAdministrativeMonitorContentSubscriptionFlags </h3>
+    <p>Flags describing which events (if so) the client wants to get from the server according to changes to the administrative Monitor Groups.
+</p>
+    <p></p>
+    <div class="typevalues">
+      <p>AsnAdministrativeMonitorContentSubscriptionFlags is an Enumeration</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Value</th>
+        <th>Comment</th>
+        <tr>
+          <td>eAdministrativeMonitorContentGroupNoEvents</td>
+          <td>number</td>
+          <td>0</td>
+          <td>Set value of 0 will prevent the server of sending events to the client. (See AsnGetAndSubscribeAdministrativeMonitorContentArgument for details).
+</td>
+        </tr>
+        <tr>
+          <td>eAdministrativeMonitorContentGroupChanges</td>
+          <td>number</td>
+          <td>1</td>
+          <td>If groups are changing on the server, an event will be send from the server to the client with the group(s) with the related groups.
+</td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="stylesheet.css">
+  </head>
+  <body>
+    <h3>AsnSupportedAgentStatesEnum </h3>
+    <p>Bit field values for the optional parameter &quot;SupportedAgentStates&quot; in <a href="Agent.type.AsnAgentGroupInfo.html">AsnAgentGroupInfo</a>
+</p>
+    <p><p>These bits indicate which states are supported for agents in the group.<br>
+If others are set, it is up to the PBX/ACD/UCServer to decide what the result will be, or whether it is rejected with an error.<br>
+To set or read the current value for an agent, use the values in the <a href="Agent.type.AsnAgentStateEnum.html">AsnAgentStateEnum</a></p>
+</p>
+    <div class="typevalues">
+      <p>AsnSupportedAgentStatesEnum is an Enumeration</p>
+      <table>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Value</th>
+        <th>Comment</th>
+        <tr>
+          <td>eAGENTSTATELOGGEDOUT</td>
+          <td>number</td>
+          <td>1</td>
+          <td>&quot;logout&quot; / &quot;no agent&quot;
+</td>
+        </tr>
+        <tr>
+          <td>eAGENTSTATELOGGEDINNOTREADY</td>
+          <td>number</td>
+          <td>2</td>
+          <td>&quot;not ready&quot;
+</td>
+        </tr>
+        <tr>
+          <td>eAGENTSTATELOGGEDINREADY</td>
+          <td>number</td>
+          <td>4</td>
+          <td>&quot;ready&quot;
+</td>
+        </tr>
+        <tr>
+          <td>eAGENTSTATELOGGEDINBUSY</td>
+          <td>number</td>
+          <td>8</td>
+          <td>&quot;busy&quot;
+</td>
+        </tr>
+        <tr>
+          <td>eAGENTSTATELOGGEDINWORKINGAFTERCALL</td>
+          <td>number</td>
+          <td>16</td>
+          <td>&quot;working after call&quot;
+</td>
+        </tr>
+      </table>
+      <!-- include typesample-->
+    </div>
+  </body>
+</html>

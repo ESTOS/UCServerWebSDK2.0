@@ -1,5 +1,14 @@
 # UCServerWebSDK2.0 *preview*
 
+## Disclaimer
+THE DOCUMENT IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE DOCUMENT OR THE USE OR OTHER DEALINGS IN
+THE DOCUMENT.
+
 ## Basics
 This is a preview version of the estos UCServer Web SDK2.0.
 The SDK is currently still in beta status, i.e. we can and will probably make structural changes to simplify and improve the application.
@@ -7,41 +16,41 @@ The SDK is currently still in beta status, i.e. we can and will probably make st
 The SDK provides the client and administration communication interface of the UCServer. It is therefore not a separate interface provided for the SDK, but the interface that our products also use.
 
 ### Functionality
-Communication between a client and the UCServer requires a standing connection. A WebSocket is used for this in the SDK; technically, this can also be a TCP connection.
+Communication between a client and the UCServer requires a persistent connection. In the SDK, this is achieved using a WebSocket; technically, a TCP connection can also be used.
 
-The interface (structures, methods, events) is described in full in [ASN.1](https://de.wikipedia.org/wiki/Abstract_Syntax_Notation_One). [ROSE](https://en.wikipedia.org/wiki/Remote_Operations_Service_Element_protocol) is used for framing the messages on the standing connection.
+The interface (structures, methods, events) is described in full in [ASN.1](https://de.wikipedia.org/wiki/Abstract_Syntax_Notation_One). [ROSE](https://en.wikipedia.org/wiki/Remote_Operations_Service_Element_protocol) is used for framing the messages on the persistent connection.
 
 The encoding of the messages is either [JSON](https://de.wikipedia.org/wiki/JavaScript_Object_Notation) or [BER](https://en.wikipedia.org/wiki/X.690#BER_encoding), whereby BER allows a much more compact transmission.
 
 ### ASN.1 files
 The asn.1 files describing the interface are located in the [interface/asn1](interface/asn1) folder. There is a separate asn.1 file for each scope / context. 
 
-Module | Function / Content
--------|-------------------
-[ENetROSEInterface.asn1](interface/asn1/ENetROSEInterface.asn1)|Unsorted functions which did not fit into other modules
-[ENetUC_Admin.asn1](interface/asn1/ENetUC_Admin.asn1)|Administrative functions which are available on the client interface
-[ENetUC_Agent.asn1](interface/asn1/ENetUC_Agent.asn1)|Agent Login Logout state interface
-[ENetUC_Appointments.asn1](interface/asn1/ENetUC_Appointments.asn1)|Appointment sync interface  
-[ENetUC_Auth.asn1](interface/asn1/ENetUC_Auth.asn1)|Authentication interface
-[ENetUC_AV.asn1](interface/asn1/ENetUC_AV.asn1)|Audio Video interface
-[ENetUC_BinaryTransfer.asn1](interface/asn1/ENetUC_BinaryTransfer.asn1)|Binary transfer (primarily for chat)
-[ENetUC_ChatV2.asn1](interface/asn1/ENetUC_ChatV2.asn1)|Chat interface
-[ENetUC_ClientCapabilities.asn1](interface/asn1/ENetUC_ClientCapabilities.asn1)|To exchange client capabilites
-[ENetUC_ClientContent.asn1](interface/asn1/ENetUC_ClientContent.asn1)|Favourites layout and structure
-[ENetUC_ClientPersistence.asn1](interface/asn1/ENetUC_ClientPersistence.asn1)|Allows a client to store and retrieve data on the server
-[ENetUC_Common.asn1](interface/asn1/ENetUC_Common.asn1)|Shared commonly used structures 
-[ENetUC_Common_Appointments.asn1](interface/asn1/ENetUC_Common_Appointments.asn1)|Shared appointment structures 
-[ENetUC_Common_AsnContact.asn1](interface/asn1/ENetUC_Common_AsnContact.asn1)|Shared contact structures
-[ENetUC_Common_Auth.asn1](interface/asn1/ENetUC_Common_Auth.asn1)|Shared auth structures
-[ENetUC_Common_SIPCTI.asn1](interface/asn1/ENetUC_Common_SIPCTI.asn1)|Shared sip and cti structures
-[ENetUC_CTI.asn1](interface/asn1/ENetUC_CTI.asn1)|Remot call control interface
-[ENetUC_Journal.asn1](interface/asn1/ENetUC_Journal.asn1)|Journal / call history interface
-[ENetUC_Mgmt.asn1](interface/asn1/ENetUC_Mgmt.asn1)|The server management interface (uses it´s own interface on the server side and thus is not available within the client interface)
-[ENetUC_PresenceV2.asn1](interface/asn1/ENetUC_PresenceV2.asn1)|Retrieve and subscribe presence of users (including your own) 
-[ENetUC_Ranking.asn1](interface/asn1/ENetUC_Ranking.asn1)|Control the ranking of acd agents
-[ENetUC_ServicesAgents.asn1](interface/asn1/ENetUC_ServicesAgents.asn1)|Server to server agent interface
-[ENetUC_Tasks.asn1](interface/asn1/ENetUC_Tasks.asn1)|Tasks interface
-[ENetUC_Transport.asn1](interface/asn1/ENetUC_Transport.asn1)|Some transport related functions
+| Module                                                                            | Function / Content                                                                                                                 |
+|-----------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------|
+| [ENetROSEInterface.asn1](interface/asn1/ENetROSEInterface.asn1)                   | Unsorted functions which did not fit into other modules                                                                            |
+| [ENetUC_Admin.asn1](interface/asn1/ENetUC_Admin.asn1)                             | Administrative functions which are available on the client interface                                                               |
+| [ENetUC_Agent.asn1](interface/asn1/ENetUC_Agent.asn1)                             | Agent Login Logout state interface                                                                                                 |
+| [ENetUC_Appointments.asn1](interface/asn1/ENetUC_Appointments.asn1)               | Appointment sync interface                                                                                                         |
+| [ENetUC_Auth.asn1](interface/asn1/ENetUC_Auth.asn1)                               | Authentication interface                                                                                                           |
+| [ENetUC_AV.asn1](interface/asn1/ENetUC_AV.asn1)                                   | Audio Video interface                                                                                                              |
+| [ENetUC_BinaryTransfer.asn1](interface/asn1/ENetUC_BinaryTransfer.asn1)           | Binary transfer (primarily for chat)                                                                                               |
+| [ENetUC_ChatV2.asn1](interface/asn1/ENetUC_ChatV2.asn1)                           | Chat interface                                                                                                                     |
+| [ENetUC_ClientCapabilities.asn1](interface/asn1/ENetUC_ClientCapabilities.asn1)   | To exchange client capabilities                                                                                                    |
+| [ENetUC_ClientContent.asn1](interface/asn1/ENetUC_ClientContent.asn1)             | Favourites layout and structure                                                                                                    |
+| [ENetUC_ClientPersistence.asn1](interface/asn1/ENetUC_ClientPersistence.asn1)     | Allows a client to store and retrieve data on the server                                                                           |
+| [ENetUC_Common.asn1](interface/asn1/ENetUC_Common.asn1)                           | Shared commonly used structures                                                                                                    |
+| [ENetUC_Common_Appointments.asn1](interface/asn1/ENetUC_Common_Appointments.asn1) | Shared appointment structures                                                                                                      |
+| [ENetUC_Common_AsnContact.asn1](interface/asn1/ENetUC_Common_AsnContact.asn1)     | Shared contact structures                                                                                                          |
+| [ENetUC_Common_Auth.asn1](interface/asn1/ENetUC_Common_Auth.asn1)                 | Shared auth structures                                                                                                             |
+| [ENetUC_Common_SIPCTI.asn1](interface/asn1/ENetUC_Common_SIPCTI.asn1)             | Shared sip and cti structures                                                                                                      |
+| [ENetUC_CTI.asn1](interface/asn1/ENetUC_CTI.asn1)                                 | Remote call control interface                                                                                                      |
+| [ENetUC_Journal.asn1](interface/asn1/ENetUC_Journal.asn1)                         | Journal / call history interface                                                                                                   |
+| [ENetUC_Mgmt.asn1](interface/asn1/ENetUC_Mgmt.asn1)                               | The server management interface (uses it´s own interface on the server side and thus is not available within the client interface) |
+| [ENetUC_PresenceV2.asn1](interface/asn1/ENetUC_PresenceV2.asn1)                   | Retrieve and subscribe presence of users (including your own)                                                                      |
+| [ENetUC_Ranking.asn1](interface/asn1/ENetUC_Ranking.asn1)                         | Control the ranking of acd agents                                                                                                  |
+| [ENetUC_ServicesAgents.asn1](interface/asn1/ENetUC_ServicesAgents.asn1)           | Server to server agent interface                                                                                                   |
+| [ENetUC_Tasks.asn1](interface/asn1/ENetUC_Tasks.asn1)                             | Tasks interface                                                                                                                    |
+| [ENetUC_Transport.asn1](interface/asn1/ENetUC_Transport.asn1)                     | Some transport related functions                                                                                                   |
 
 ### From ASN.1 to structures or a complete communication stub
 To compile the ASN.1 files, the estos enhanced snacc compiler is located in the [interface/esnacc-compiler](https://github.com/ESTOS/esnacc) folder.
@@ -77,13 +86,13 @@ The stub performs the following tasks:
 - Error handling
 
 ### Structure of the SDK
-Folder | Contents
--------|-------------------
-[interface](interface) | Interface, scripts and tooling 
-[interface/asn1](interface/asn1) | The ASN.1 files which describe the server interface
-[interface/esnacc-compiler](interface/esnacc-compiler) | the esnacc compiler to transpile the ASN.1 files
-[openAPI](openAPI) | A swagger ui like client to test functions
-[node-client](node-client) | A node sample client
+| Folder                                                 | Contents                                            |
+|--------------------------------------------------------|-----------------------------------------------------|
+| [interface](interface)                                 | Interface, scripts and tooling                      |
+| [interface/asn1](interface/asn1)                       | The ASN.1 files which describe the server interface |
+| [interface/esnacc-compiler](interface/esnacc-compiler) | the esnacc compiler to transpile the ASN.1 files    |
+| [openAPI](openAPI)                                     | A swagger ui like client to test functions          |
+| [node-client](node-client)                             | A node sample client                                |
 
 ### Connection setup
 There are several ways to establish a connection to UCServe as a client.
@@ -104,18 +113,18 @@ Once the connection is established, client and server uses ROSE messages to exch
 - Reject
 - Error
 
-An Invoke is used for synchronous calls and creates a result, reject or error. The result is create if the called side was able to process the request. An error is created if the function call failed. In case the argument was not deocdable or the called function is not implemented a reject is returned.
+An Invoke is used for synchronous calls and creates a result, reject or error. The result is created if the called side was able to process the request. An error is created if the function call failed. In case the argument cannot be decoded or the called function is not implemented a reject is returned.
 
-The [core rose messages](interface\esnacc-compiler\ROSE\SNACCROSE.asn1) are also described in asn1.
+The [core rose messages](interface/esnacc-compiler/ROSE/SNACCROSE.asn1) are also described in asn1.
 
-#### Lets take a look at some example ROSE messages
+#### Let's take a look at some example ROSE messages
 
 ##### Invoke from the client to the server
-(the argument is empty as not beeing relevant)
+(the argument is empty as not being relevant)
 ```json
 {
   "invoke": {
-    "argument": {}
+    "argument": {},
     "invokeID": 3,
     "operationID": 1510,
     "operationName": "asnCustomNoteSet"
@@ -124,7 +133,7 @@ The [core rose messages](interface\esnacc-compiler\ROSE\SNACCROSE.asn1) are also
 ```
 
 ##### Result from the server to the client
-(the result is empty as not beeing relevant)
+(the result is empty as not being relevant)
 The result reused the invokeID and thus let´s the caller associate a response with the original invoke. (This allows to implement the request completion logic)
 ```json
 {
@@ -139,12 +148,12 @@ The result reused the invokeID and thus let´s the caller associate a response w
 ```
 
 ##### Event from the server to the client
-(the argument is empty as not beeing relevant)
+(the argument is empty as not being relevant)
 Events simply use 99999 as invokeID.
 ```json
 {
   "invoke": {
-    "argument": {}
+    "argument": {},
     "invokeID": 99999,
     "operationID": 1511,
     "operationName": "asnUpdateMyCustomNote"
